@@ -83,6 +83,11 @@ export default function App() {
     price: "",
   });
 
+  const [cart, setCart] = useState<Record<string, number>>({});
+  const [customerFilter, setCustomerFilter] = useState<
+    "All" | InventoryItem["category"]
+  >("All");
+
   const roles: Role[] = [
     "guest",
     "customer",
@@ -158,6 +163,22 @@ export default function App() {
     [inventory]
   );
 
+  const customerItems = useMemo(() => {
+    return inventory.filter((item) => {
+      if (item.status !== "Ready" && item.status !== "Low Stock") return false;
+      if (customerFilter === "All") return true;
+      return item.category === customerFilter;
+    });
+  }, [inventory, customerFilter]);
+
+  const cartTotal = useMemo(() => {
+    return Object.entries(cart).reduce((sum, [name, qty]) => {
+      const item = inventory.find((entry) => entry.name === name);
+      if (!item) return sum;
+      return sum + item.price * qty;
+    }, 0);
+  }, [cart, inventory]);
+
   function addInventoryItem() {
     if (!newItem.name || !newItem.quantity || !newItem.price) return;
 
@@ -180,6 +201,24 @@ export default function App() {
       unit: "seedlings",
       status: "Growing",
       price: "",
+    });
+  }
+
+  function addToCart(item: InventoryItem) {
+    if (item.quantity <= 0) return;
+    setCart((prev) => ({
+      ...prev,
+      [item.name]: (prev[item.name] || 0) + 1,
+    }));
+  }
+
+  function removeFromCart(itemName: string) {
+    setCart((prev) => {
+      const next = { ...prev };
+      if (!next[itemName]) return next;
+      next[itemName] -= 1;
+      if (next[itemName] <= 0) delete next[itemName];
+      return next;
     });
   }
 
@@ -441,33 +480,196 @@ export default function App() {
             </div>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  function CustomerScreen() {
+    return (
+      <div>
+        <div style={{ marginBottom: 20 }}>
+          <button onClick={() => setScreen("home")} style={mutedButtonStyle}>
+            ← Back to Home
+          </button>
+        </div>
+
+        <div
+          style={{
+            background: "#2f6b3c",
+            color: "white",
+            padding: "14px 18px",
+            borderRadius: 12,
+            display: "inline-block",
+            fontWeight: 700,
+            marginBottom: 20,
+          }}
+        >
+          Customer Marketplace
+        </div>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 16,
-            marginTop: 20,
+            gridTemplateColumns: "2fr 1fr",
+            gap: 20,
+            alignItems: "start",
           }}
         >
           <div style={cardStyle}>
-            <h3 style={{ marginTop: 0 }}>Crop Planning</h3>
-            <p>Spring priorities: collards, tomatoes, broccoli, cilantro, spinach.</p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 12,
+                alignItems: "center",
+                marginBottom: 16,
+              }}
+            >
+              <h3 style={{ margin: 0 }}>Available Items</h3>
+
+              <select
+                value={customerFilter}
+                onChange={(e) =>
+                  setCustomerFilter(
+                    e.target.value as "All" | InventoryItem["category"]
+                  )
+                }
+                style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
+              >
+                <option value="All">All</option>
+                <option value="Seedling">Seedling</option>
+                <option value="Produce">Produce</option>
+                <option value="Herb">Herb</option>
+              </select>
+            </div>
+
+            <div style={{ display: "grid", gap: 12 }}>
+              {customerItems.map((item, index) => (
+                <div
+                  key={`${item.name}-${index}`}
+                  style={{
+                    border: "1px solid #ddd",
+                    borderRadius: 10,
+                    padding: 14,
+                    background: "#fff",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontSize: 18, fontWeight: 700 }}>{item.name}</div>
+                      <div style={{ color: "#5d6b57" }}>
+                        {item.category} • {item.quantity} {item.unit}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        background: statusColor(item.status),
+                        borderRadius: 999,
+                        padding: "6px 10px",
+                        fontWeight: 700,
+                        fontSize: 12,
+                      }}
+                    >
+                      {item.status}
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: 12,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div style={{ color: "#2f6b3c", fontWeight: 700 }}>
+                      ${item.price.toFixed(2)}
+                    </div>
+
+                    <button onClick={() => addToCart(item)} style={buttonStyle}>
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              {customerItems.length === 0 && (
+                <div style={{ color: "#5d6b57" }}>
+                  No items match this filter right now.
+                </div>
+              )}
+            </div>
           </div>
+
           <div style={cardStyle}>
-            <h3 style={{ marginTop: 0 }}>Harvest Status</h3>
-            <p>Ready this week: mustards, cilantro, select seedlings, spinach.</p>
-          </div>
-          <div style={cardStyle}>
-            <h3 style={{ marginTop: 0 }}>Pricing Logic</h3>
-            <p>Seedlings and produce can now be displayed with live pricing cards.</p>
+            <h3 style={{ marginTop: 0 }}>Cart</h3>
+
+            <div style={{ display: "grid", gap: 12 }}>
+              {Object.keys(cart).length === 0 && (
+                <div style={{ color: "#5d6b57" }}>Your cart is empty.</div>
+              )}
+
+              {Object.entries(cart).map(([name, qty]) => {
+                const item = inventory.find((entry) => entry.name === name);
+                if (!item) return null;
+
+                return (
+                  <div
+                    key={name}
+                    style={{
+                      border: "1px solid #ddd",
+                      borderRadius: 10,
+                      padding: 12,
+                    }}
+                  >
+                    <div style={{ fontWeight: 700 }}>{name}</div>
+                    <div style={{ color: "#5d6b57", marginBottom: 8 }}>
+                      {qty} × ${item.price.toFixed(2)}
+                    </div>
+                    <button
+                      onClick={() => removeFromCart(name)}
+                      style={mutedButtonStyle}
+                    >
+                      Remove One
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div
+              style={{
+                marginTop: 18,
+                paddingTop: 14,
+                borderTop: "1px solid #ddd",
+                fontWeight: 700,
+                fontSize: 18,
+              }}
+            >
+              Total: ${cartTotal.toFixed(2)}
+            </div>
+
+            <button
+              onClick={() => alert(`Checkout started. Total: $${cartTotal.toFixed(2)}`)}
+              style={{ ...buttonStyle, marginTop: 16, width: "100%" }}
+            >
+              Begin Checkout
+            </button>
           </div>
         </div>
       </div>
     );
   }
 
-  function BasicRoleScreen({ role }: { role: Exclude<Role, "grower"> }) {
+  function BasicRoleScreen({ role }: { role: Exclude<Role, "grower" | "customer"> }) {
     return (
       <div>
         <div style={{ marginBottom: 20 }}>
@@ -504,9 +706,10 @@ export default function App() {
       <div style={wrapStyle}>
         {screen === "home" && <HomeScreen />}
         {screen === "grower" && <GrowerScreen />}
-        {screen !== "home" && screen !== "grower" && (
-          <BasicRoleScreen role={screen} />
-        )}
+        {screen === "customer" && <CustomerScreen />}
+        {screen !== "home" &&
+          screen !== "grower" &&
+          screen !== "customer" && <BasicRoleScreen role={screen} />}
       </div>
     </div>
   );
