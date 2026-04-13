@@ -11,10 +11,16 @@ type Role =
 
 type Screen = "home" | Role;
 
-const HERO_IMAGE =
-  "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/GrowArea.jpg";
-const SECOND_IMAGE =
-  "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/GrowArea2.jpg";
+const ROLE_IMAGES = {
+  home: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/GrowArea.jpg",
+  guest: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0220.JPG",
+  customer: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0221.JPG",
+  grower: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/GrowArea2.jpg",
+  volunteer: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0222.JPG",
+  youth: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0223.JPG",
+  supervisor: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0225.JPG",
+  admin: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0237.JPG",
+};
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
@@ -41,7 +47,7 @@ export default function App() {
         return {
           color: "#4f6d4f",
           subtitle: "Story • Land • Invitation",
-          image: HERO_IMAGE,
+          image: ROLE_IMAGES.guest,
           cards: [
             { title: "Discover the Vision", text: "See how Bronson Family Farm connects land, people, and purpose." },
             { title: "Visit the Farm", text: "Preview how guests, partners, and supporters encounter the project." },
@@ -52,7 +58,7 @@ export default function App() {
         return {
           color: "#2f7a4a",
           subtitle: "Shopping • Pickup • Food Access",
-          image: HERO_IMAGE,
+          image: ROLE_IMAGES.customer,
           cards: [
             { title: "Browse Products", text: "View produce, seedlings, and future seasonal offerings." },
             { title: "Reserve Pickup", text: "Choose convenient community pickup or event-based ordering." },
@@ -63,7 +69,7 @@ export default function App() {
         return {
           color: "#7a5c2f",
           subtitle: "Food Production • Crop Planning • Market Readiness",
-          image: SECOND_IMAGE,
+          image: ROLE_IMAGES.grower,
           cards: [
             { title: "Manage Inventory", text: "Track production, harvest readiness, and items moving toward market." },
             { title: "Plan the Season", text: "Organize crop timing, planting priorities, and workflow." },
@@ -74,7 +80,7 @@ export default function App() {
         return {
           color: "#6a4f8f",
           subtitle: "Service • Events • Community Support",
-          image: SECOND_IMAGE,
+          image: ROLE_IMAGES.volunteer,
           cards: [
             { title: "See Opportunities", text: "Coordinate event support, farm assistance, and community service." },
             { title: "Join the Day", text: "Help power public experiences and daily operations." },
@@ -85,7 +91,7 @@ export default function App() {
         return {
           color: "#c26a1b",
           subtitle: "Learning • Responsibility • Pathways",
-          image: HERO_IMAGE,
+          image: ROLE_IMAGES.youth,
           cards: [
             { title: "Learn by Doing", text: "Gain real-world experience through structured farm-based work." },
             { title: "Build Skills", text: "Develop responsibility, teamwork, and leadership." },
@@ -96,7 +102,7 @@ export default function App() {
         return {
           color: "#355c8c",
           subtitle: "Guidance • Accountability • Growth",
-          image: SECOND_IMAGE,
+          image: ROLE_IMAGES.supervisor,
           cards: [
             { title: "Guide the Team", text: "Support youth and volunteers with clarity, structure, and coaching." },
             { title: "Track Progress", text: "Monitor tasks, development, and completion." },
@@ -107,7 +113,7 @@ export default function App() {
         return {
           color: "#1f4d4d",
           subtitle: "Operations • Oversight • Impact",
-          image: SECOND_IMAGE,
+          image: ROLE_IMAGES.admin,
           cards: [
             { title: "Oversee the System", text: "See the full ecosystem across production, programs, and engagement." },
             { title: "Support Decisions", text: "Use a clear executive view to guide operations and growth." },
@@ -380,7 +386,7 @@ export default function App() {
       >
         <div style={{ marginBottom: 24 }}>
           <HeroImage
-            image={HERO_IMAGE}
+            image={ROLE_IMAGES.home}
             title="Bronson Family Farm Ecosystem"
             subtitle="118+ Acres • Youngstown, Ohio • Appalachian Region"
             tall
@@ -420,26 +426,10 @@ export default function App() {
             marginBottom: 24,
           }}
         >
-          <StatCard
-            label="Land Base"
-            value="118+"
-            text="Acres positioned for long-term agricultural growth"
-          />
-          <StatCard
-            label="Workforce Model"
-            value="8"
-            text="Weeks of youth workforce development programming"
-          />
-          <StatCard
-            label="Production Focus"
-            value="3+"
-            text="Acres actively moving toward growing and demonstration use"
-          />
-          <StatCard
-            label="Community Vision"
-            value="1,000"
-            text="People envisioned for future impact through expansion"
-          />
+          <StatCard label="Land Base" value="118+" text="Acres positioned for long-term agricultural growth" />
+          <StatCard label="Workforce Model" value="8" text="Weeks of youth workforce development programming" />
+          <StatCard label="Production Focus" value="3+" text="Acres actively moving toward growing and demonstration use" />
+          <StatCard label="Community Vision" value="1,000" text="People envisioned for future impact through expansion" />
         </div>
 
         <div
@@ -465,95 +455,21 @@ export default function App() {
         </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <OverlayInfoCard
-            title="Grower Ecosystem"
-            text="Inventory, crop planning, pricing, and marketplace readiness."
-            image={SECOND_IMAGE}
-          />
-          <OverlayInfoCard
-            title="Workforce Pathways"
-            text="Youth development, supervision, and real-world skill building."
-            image={HERO_IMAGE}
-          />
-          <OverlayInfoCard
-            title="Customer Access"
-            text="Shopping, pickup flow, SNAP expansion, and community engagement."
-            image={SECOND_IMAGE}
-          />
+          <OverlayInfoCard title="Grower Ecosystem" text="Inventory, crop planning, pricing, and marketplace readiness." image={ROLE_IMAGES.grower} />
+          <OverlayInfoCard title="Workforce Pathways" text="Youth development, supervision, and real-world skill building." image={ROLE_IMAGES.youth} />
+          <OverlayInfoCard title="Customer Access" text="Shopping, pickup flow, SNAP expansion, and community engagement." image={ROLE_IMAGES.customer} />
         </div>
       </div>
     );
   }
 
-  if (screen === "guest") {
-    return (
-      <RoleDemoPage
-        role="guest"
-        title="Guest Experience"
-        description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation."
-      />
-    );
-  }
-
-  if (screen === "customer") {
-    return (
-      <RoleDemoPage
-        role="customer"
-        title="Customer Marketplace"
-        description="This is how the community accesses food. Customers can shop, reserve pickups, and eventually use SNAP—ensuring equitable food access."
-      />
-    );
-  }
-
-  if (screen === "grower") {
-    return (
-      <RoleDemoPage
-        role="grower"
-        title="Grower Dashboard"
-        description="This is where food begins. Growers track production, manage crops, and prepare inventory for market—creating a sustainable local food system."
-      />
-    );
-  }
-
-  if (screen === "volunteer") {
-    return (
-      <RoleDemoPage
-        role="volunteer"
-        title="Volunteer Hub"
-        description="This is where community support becomes action. Volunteers can help power events, daily farm activity, and public engagement."
-      />
-    );
-  }
-
-  if (screen === "youth") {
-    return (
-      <RoleDemoPage
-        role="youth"
-        title="Youth Workforce"
-        description="This is where workforce begins. Youth learn responsibility, gain real skills, and build pathways into agriculture, business, and community leadership."
-      />
-    );
-  }
-
-  if (screen === "supervisor") {
-    return (
-      <RoleDemoPage
-        role="supervisor"
-        title="Supervisor Console"
-        description="This is where accountability and development meet. Supervisors guide progress, support growth, and help ensure work is completed with excellence."
-      />
-    );
-  }
-
-  if (screen === "admin") {
-    return (
-      <RoleDemoPage
-        role="admin"
-        title="Admin Control Panel"
-        description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time."
-      />
-    );
-  }
+  if (screen === "guest") return <RoleDemoPage role="guest" title="Guest Experience" description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation." />;
+  if (screen === "customer") return <RoleDemoPage role="customer" title="Customer Marketplace" description="This is how the community accesses food. Customers can shop, reserve pickups, and eventually use SNAP—ensuring equitable food access." />;
+  if (screen === "grower") return <RoleDemoPage role="grower" title="Grower Dashboard" description="This is where food begins. Growers track production, manage crops, and prepare inventory for market—creating a sustainable local food system." />;
+  if (screen === "volunteer") return <RoleDemoPage role="volunteer" title="Volunteer Hub" description="This is where community support becomes action. Volunteers can help power events, daily farm activity, and public engagement." />;
+  if (screen === "youth") return <RoleDemoPage role="youth" title="Youth Workforce" description="This is where workforce begins. Youth learn responsibility, gain real skills, and build pathways into agriculture, business, and community leadership." />;
+  if (screen === "supervisor") return <RoleDemoPage role="supervisor" title="Supervisor Console" description="This is where accountability and development meet. Supervisors guide progress, support growth, and help ensure work is completed with excellence." />;
+  if (screen === "admin") return <RoleDemoPage role="admin" title="Admin Control Panel" description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time." />;
 
   return <HomeScreen />;
 }
