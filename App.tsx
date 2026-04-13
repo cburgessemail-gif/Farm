@@ -1,4 +1,5 @@
 import { useState } from "react";
+import GrowArea from "./GrowArea.jpg";
 
 type Role =
   | "guest"
@@ -51,7 +52,6 @@ export default function App() {
           fontFamily: "Arial, sans-serif",
         }}
       >
-        {/* HERO SECTION WITH YOUR REAL FARM IMAGE */}
         <div
           style={{
             position: "relative",
@@ -59,8 +59,7 @@ export default function App() {
             borderRadius: 20,
             overflow: "hidden",
             marginBottom: 24,
-            backgroundImage:
-              "linear-gradient(rgba(20,20,20,0.45), rgba(20,20,20,0.35)), url('/GrowArea.jpg')",
+            backgroundImage: `linear-gradient(rgba(20,20,20,0.45), rgba(20,20,20,0.35)), url(${GrowArea})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             display: "flex",
@@ -97,7 +96,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* ROLE ENTRY */}
         <div
           style={{
             background: "#eef3ec",
@@ -146,7 +144,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* INFO CARDS */}
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
           <div style={cardStyle}>
             <h3>Grower Ecosystem</h3>
