@@ -27,37 +27,43 @@ const MARKET_ITEMS = [
     name: "Collard Greens",
     price: "$10",
     unit: "5-seedling roll",
-    description: "Healthy starter bundle ready for transplanting.",
+    note: "Strong starter bundle ready for transplanting",
+    badge: "Popular",
   },
   {
     name: "Broccoli",
     price: "$5",
     unit: "3-seedling roll",
-    description: "Strong young broccoli starts for spring planting.",
+    note: "Healthy young starts for spring planting",
+    badge: "Ready Now",
   },
   {
     name: "Cilantro",
     price: "$3",
     unit: "5-seedling roll",
-    description: "Fresh herb starts for home cooks and growers.",
+    note: "Fresh herb starts for home cooks and growers",
+    badge: "Fresh",
   },
   {
     name: "Tomatoes",
     price: "$5",
     unit: "3-seedling roll",
-    description: "Seasonal tomato starts prepared for garden growth.",
+    note: "Seasonal tomato starts prepared for garden growth",
+    badge: "Best Seller",
   },
   {
     name: "Spinach",
     price: "$4",
     unit: "bundle",
-    description: "Nutritious leafy greens prepared for market pickup.",
+    note: "Nutritious greens prepared for market pickup",
+    badge: "Market Ready",
   },
   {
     name: "Mustards",
     price: "$4",
     unit: "bundle",
-    description: "Fresh market greens for community food access.",
+    note: "Flavorful greens for cooking and community food access",
+    badge: "Fresh",
   },
 ];
 
@@ -96,6 +102,7 @@ export default function App() {
           color: "#4f6d4f",
           subtitle: "Story • Land • Invitation",
           image: ROLE_IMAGES.guest,
+          imagePosition: "center 12%",
           cards: [
             { title: "Discover the Vision", text: "See how Bronson Family Farm connects land, people, and purpose." },
             { title: "Visit the Farm", text: "Preview how guests, partners, and supporters encounter the project." },
@@ -107,6 +114,7 @@ export default function App() {
           color: "#2f7a4a",
           subtitle: "Shopping • Pickup • Food Access",
           image: ROLE_IMAGES.customer,
+          imagePosition: "center center",
           cards: [
             { title: "Fresh Food", text: "See produce, seedlings, and farm-grown offerings." },
             { title: "Reserve Pickup", text: "Choose convenient community pickup options." },
@@ -118,6 +126,7 @@ export default function App() {
           color: "#7a5c2f",
           subtitle: "Food Production • Crop Planning • Market Readiness",
           image: ROLE_IMAGES.grower,
+          imagePosition: "center center",
           cards: [
             { title: "Manage Inventory", text: "Track production, harvest readiness, and items moving toward market." },
             { title: "Plan the Season", text: "Organize crop timing, planting priorities, and workflow." },
@@ -129,6 +138,7 @@ export default function App() {
           color: "#6a4f8f",
           subtitle: "Service • Events • Community Support",
           image: ROLE_IMAGES.volunteer,
+          imagePosition: "center center",
           cards: [
             { title: "See Opportunities", text: "Coordinate event support, farm assistance, and community service." },
             { title: "Join the Day", text: "Help power public experiences and daily operations." },
@@ -140,6 +150,7 @@ export default function App() {
           color: "#c26a1b",
           subtitle: "Learning • Responsibility • Pathways",
           image: ROLE_IMAGES.youth,
+          imagePosition: "center center",
           cards: [
             { title: "Learn by Doing", text: "Gain real-world experience through structured farm-based work." },
             { title: "Build Skills", text: "Develop responsibility, teamwork, and leadership." },
@@ -151,6 +162,7 @@ export default function App() {
           color: "#355c8c",
           subtitle: "Guidance • Accountability • Growth",
           image: ROLE_IMAGES.supervisor,
+          imagePosition: "center center",
           cards: [
             { title: "Guide the Team", text: "Support youth and volunteers with clarity, structure, and coaching." },
             { title: "Track Progress", text: "Monitor tasks, development, and completion." },
@@ -162,6 +174,7 @@ export default function App() {
           color: "#1f4d4d",
           subtitle: "Operations • Oversight • Impact",
           image: ROLE_IMAGES.admin,
+          imagePosition: "center center",
           cards: [
             { title: "Oversee the System", text: "See the full ecosystem across production, programs, and engagement." },
             { title: "Support Decisions", text: "Use a clear executive view to guide operations and growth." },
@@ -204,12 +217,14 @@ export default function App() {
     subtitle,
     children,
     tall = false,
+    backgroundPosition = "center center",
   }: {
     image: string;
     title: string;
     subtitle?: string;
     children?: React.ReactNode;
     tall?: boolean;
+    backgroundPosition?: string;
   }) {
     return (
       <div
@@ -230,6 +245,7 @@ export default function App() {
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            objectPosition: backgroundPosition,
           }}
         />
         <div
@@ -374,7 +390,12 @@ export default function App() {
         </button>
 
         <div style={{ marginBottom: 20 }}>
-          <HeroImage image={theme.image} title={title} subtitle={theme.subtitle}>
+          <HeroImage
+            image={theme.image}
+            title={title}
+            subtitle={theme.subtitle}
+            backgroundPosition={theme.imagePosition}
+          >
             <h1 style={{ margin: 0, fontSize: 38 }}>{title}</h1>
           </HeroImage>
         </div>
@@ -422,4 +443,347 @@ export default function App() {
   }
 
   function CustomerMarketplace() {
-    const theme = getRoleTheme("
+    const theme = getRoleTheme("customer");
+
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#f3eee3",
+          padding: 32,
+          fontFamily: "Arial, sans-serif",
+          color: "#1f1f1f",
+        }}
+      >
+        <button
+          onClick={() => setScreen("home")}
+          style={{
+            marginBottom: 20,
+            padding: "10px 14px",
+            borderRadius: 8,
+            border: "1px solid #b8b8b8",
+            background: "#ffffff",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          ← Back to Home
+        </button>
+
+        <div style={{ marginBottom: 20 }}>
+          <HeroImage
+            image={theme.image}
+            title="Customer Marketplace"
+            subtitle={theme.subtitle}
+            backgroundPosition={theme.imagePosition}
+          >
+            <h1 style={{ margin: 0, fontSize: 38 }}>Customer Marketplace</h1>
+          </HeroImage>
+        </div>
+
+        <div
+          style={{
+            ...baseCard,
+            borderTop: `6px solid ${theme.color}`,
+            marginBottom: 20,
+          }}
+        >
+          <p style={{ fontSize: 18, lineHeight: 1.6, marginTop: 0 }}>
+            Fresh food and seedlings are visible here, showing how Bronson Family Farm
+            connects production to community access.
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 16,
+          }}
+        >
+          {MARKET_ITEMS.map((item) => (
+            <div
+              key={item.name}
+              style={{
+                ...baseCard,
+                borderTop: `6px solid ${theme.color}`,
+              }}
+            >
+              <div
+                style={{
+                  display: "inline-block",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  padding: "4px 8px",
+                  borderRadius: 999,
+                  background: "#eef6ef",
+                  color: theme.color,
+                  marginBottom: 10,
+                }}
+              >
+                {item.badge}
+              </div>
+
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{item.name}</h3>
+              <div style={{ fontWeight: 700, fontSize: 24, marginBottom: 6 }}>
+                {item.price}
+              </div>
+              <div style={{ opacity: 0.75, marginBottom: 10 }}>{item.unit}</div>
+              <p style={{ minHeight: 48 }}>{item.note}</p>
+
+              <ActionButton
+                label="Reserve Item"
+                color={theme.color}
+                onClick={() => alert(`${item.name} added to demo reservation list`)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  function GrowerDashboard() {
+    const theme = getRoleTheme("grower");
+
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#f3eee3",
+          padding: 32,
+          fontFamily: "Arial, sans-serif",
+          color: "#1f1f1f",
+        }}
+      >
+        <button
+          onClick={() => setScreen("home")}
+          style={{
+            marginBottom: 20,
+            padding: "10px 14px",
+            borderRadius: 8,
+            border: "1px solid #b8b8b8",
+            background: "#ffffff",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          ← Back to Home
+        </button>
+
+        <div style={{ marginBottom: 20 }}>
+          <HeroImage
+            image={theme.image}
+            title="Grower Dashboard"
+            subtitle={theme.subtitle}
+            backgroundPosition={theme.imagePosition}
+          >
+            <h1 style={{ margin: 0, fontSize: 38 }}>Grower Dashboard</h1>
+          </HeroImage>
+        </div>
+
+        <div
+          style={{
+            ...baseCard,
+            borderTop: `6px solid ${theme.color}`,
+            marginBottom: 20,
+          }}
+        >
+          <p style={{ fontSize: 18, lineHeight: 1.6, marginTop: 0 }}>
+            This is where food begins. Growers track inventory, crop status,
+            and readiness for market.
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 16,
+          }}
+        >
+          {GROWER_ITEMS.map((item) => (
+            <div
+              key={item.name}
+              style={{
+                ...baseCard,
+                borderTop: `6px solid ${theme.color}`,
+              }}
+            >
+              <h3 style={{ marginTop: 0 }}>{item.name}</h3>
+              <p><strong>Status:</strong> {item.status}</p>
+              <p><strong>Quantity:</strong> {item.qty}</p>
+              <ActionButton
+                label="View Crop"
+                color={theme.color}
+                onClick={() => alert(`${item.name} opened in demo view`)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  function HomeScreen() {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#f3eee3",
+          padding: 32,
+          fontFamily: "Arial, sans-serif",
+          color: "#1f1f1f",
+        }}
+      >
+        <div style={{ marginBottom: 24 }}>
+          <HeroImage
+            image={ROLE_IMAGES.home}
+            title="Bronson Family Farm Ecosystem"
+            subtitle="118+ Acres • Youngstown, Ohio • Appalachian Region"
+            tall
+          >
+            <h1 style={{ fontSize: 44, lineHeight: 1.05, margin: 0 }}>
+              Bronson Family Farm Ecosystem
+            </h1>
+
+            <p
+              style={{
+                opacity: 0.95,
+                marginTop: 14,
+                marginBottom: 18,
+                fontSize: 18,
+                lineHeight: 1.5,
+                maxWidth: 680,
+              }}
+            >
+              A living model built on 118+ acres in Youngstown’s Appalachian
+              region—designed to restore food access, create workforce pathways,
+              and build a community-powered agricultural economy.
+            </p>
+
+            <ActionButton
+              label="Start Guided Demo"
+              color="#2e7d32"
+              onClick={() => setScreen("guest")}
+            />
+          </HeroImage>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 16,
+            marginBottom: 24,
+          }}
+        >
+          <StatCard label="Land Base" value="118+" text="Acres positioned for long-term agricultural growth" />
+          <StatCard label="Workforce Model" value="8" text="Weeks of youth workforce development programming" />
+          <StatCard label="Production Focus" value="3+" text="Acres actively moving toward growing and demonstration use" />
+          <StatCard label="Community Vision" value="1,000" text="People envisioned for future impact through expansion" />
+        </div>
+
+        <div
+          style={{
+            background: "#eef3ec",
+            padding: 20,
+            borderRadius: 16,
+            marginBottom: 24,
+          }}
+        >
+          <h2 style={{ marginTop: 0 }}>Enter the Ecosystem</h2>
+          <p>Choose a role to explore the platform.</p>
+
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button style={roleButtonStyle} onClick={() => setScreen("guest")}>Guest</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("customer")}>Customer</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("grower")}>Grower</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("volunteer")}>Volunteer</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("youth")}>Youth</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("supervisor")}>Supervisor</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("admin")}>Admin</button>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+          <OverlayInfoCard
+            title="Grower Ecosystem"
+            text="Inventory, crop planning, pricing, and marketplace readiness."
+            image={ROLE_IMAGES.grower}
+          />
+          <OverlayInfoCard
+            title="Workforce Pathways"
+            text="Youth development, supervision, and real-world skill building."
+            image={ROLE_IMAGES.youth}
+          />
+          <OverlayInfoCard
+            title="Customer Access"
+            text="Shopping, pickup flow, SNAP expansion, and community engagement."
+            image={ROLE_IMAGES.customer}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "guest") {
+    return (
+      <RoleDemoPage
+        role="guest"
+        title="Guest Experience"
+        description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation."
+      />
+    );
+  }
+
+  if (screen === "customer") {
+    return <CustomerMarketplace />;
+  }
+
+  if (screen === "grower") {
+    return <GrowerDashboard />;
+  }
+
+  if (screen === "volunteer") {
+    return (
+      <RoleDemoPage
+        role="volunteer"
+        title="Volunteer Hub"
+        description="This is where community support becomes action. Volunteers can help power events, daily farm activity, and public engagement."
+      />
+    );
+  }
+
+  if (screen === "youth") {
+    return (
+      <RoleDemoPage
+        role="youth"
+        title="Youth Workforce"
+        description="This is where workforce begins. Youth learn responsibility, gain real skills, and build pathways into agriculture, business, and community leadership."
+      />
+    );
+  }
+
+  if (screen === "supervisor") {
+    return (
+      <RoleDemoPage
+        role="supervisor"
+        title="Supervisor Console"
+        description="This is where accountability and development meet. Supervisors guide progress, support growth, and help ensure work is completed with excellence."
+      />
+    );
+  }
+
+  if (screen === "admin") {
+    return (
+      <RoleDemoPage
+        role="admin"
+        title="Admin Control Panel"
+        description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time."
+      />
+    );
+  }
+
+  return <HomeScreen />;
+}
