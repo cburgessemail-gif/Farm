@@ -152,6 +152,7 @@ function HomeScreen() {
           This live demo now combines visual storytelling with connected system
           logic across farm operations, customer purchasing, workforce
           development, and administrative oversight.
+          // force redeploy
         </p>
       </div>
     </div>
