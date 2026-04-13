@@ -11,8 +11,10 @@ type Role =
 
 type Screen = "home" | Role;
 
-const HERO_IMAGE = "/GrowArea.jpg";
-const SECOND_IMAGE = "/GrowArea2.jpg";
+const HERO_IMAGE =
+  "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/GrowArea.jpg";
+const SECOND_IMAGE =
+  "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/GrowArea2.jpg";
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
@@ -23,6 +25,8 @@ export default function App() {
     borderRadius: 12,
     flex: 1,
     minWidth: 240,
+    position: "relative",
+    overflow: "hidden",
   };
 
   const roleButtonStyle: React.CSSProperties = {
@@ -44,6 +48,65 @@ export default function App() {
     cursor: "pointer",
   };
 
+  function HeroImage({
+    image,
+    title,
+    children,
+    tall = false,
+  }: {
+    image: string;
+    title: string;
+    children?: React.ReactNode;
+    tall?: boolean;
+  }) {
+    return (
+      <div
+        style={{
+          position: "relative",
+          minHeight: tall ? 460 : 260,
+          borderRadius: 20,
+          overflow: "hidden",
+          backgroundColor: "#9aa39a",
+        }}
+      >
+        <img
+          src={image}
+          alt={title}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(rgba(20,20,20,0.45), rgba(20,20,20,0.30))",
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
+            color: "white",
+            padding: 32,
+            minHeight: tall ? 460 : 260,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            maxWidth: 780,
+          }}
+        >
+          {children}
+        </div>
+      </div>
+    );
+  }
+
   function HomeScreen() {
     return (
       <div
@@ -55,21 +118,8 @@ export default function App() {
           color: "#1f1f1f",
         }}
       >
-        <div
-          style={{
-            position: "relative",
-            minHeight: 460,
-            borderRadius: 20,
-            overflow: "hidden",
-            marginBottom: 24,
-            backgroundImage: `linear-gradient(rgba(20,20,20,0.45), rgba(20,20,20,0.35)), url('${HERO_IMAGE}')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            display: "flex",
-            alignItems: "flex-end",
-          }}
-        >
-          <div style={{ padding: 32, color: "white", maxWidth: 760 }}>
+        <div style={{ marginBottom: 24 }}>
+          <HeroImage image={HERO_IMAGE} title="Bronson Family Farm" tall>
             <div
               style={{
                 fontSize: 12,
@@ -107,7 +157,7 @@ export default function App() {
             >
               Start Guided Demo
             </button>
-          </div>
+          </HeroImage>
         </div>
 
         <div
@@ -199,54 +249,107 @@ export default function App() {
           <p>Choose a role to explore the platform.</p>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button style={roleButtonStyle} onClick={() => setScreen("guest")}>Guest</button>
-            <button style={roleButtonStyle} onClick={() => setScreen("customer")}>Customer</button>
-            <button style={roleButtonStyle} onClick={() => setScreen("grower")}>Grower</button>
-            <button style={roleButtonStyle} onClick={() => setScreen("volunteer")}>Volunteer</button>
-            <button style={roleButtonStyle} onClick={() => setScreen("youth")}>Youth</button>
-            <button style={roleButtonStyle} onClick={() => setScreen("supervisor")}>Supervisor</button>
-            <button style={roleButtonStyle} onClick={() => setScreen("admin")}>Admin</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("guest")}>
+              Guest
+            </button>
+            <button style={roleButtonStyle} onClick={() => setScreen("customer")}>
+              Customer
+            </button>
+            <button style={roleButtonStyle} onClick={() => setScreen("grower")}>
+              Grower
+            </button>
+            <button style={roleButtonStyle} onClick={() => setScreen("volunteer")}>
+              Volunteer
+            </button>
+            <button style={roleButtonStyle} onClick={() => setScreen("youth")}>
+              Youth
+            </button>
+            <button style={roleButtonStyle} onClick={() => setScreen("supervisor")}>
+              Supervisor
+            </button>
+            <button style={roleButtonStyle} onClick={() => setScreen("admin")}>
+              Admin
+            </button>
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div
-            style={{
-              ...cardStyle,
-              minHeight: 220,
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('${SECOND_IMAGE}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <h3>Grower Ecosystem</h3>
-            <p>Inventory, crop planning, pricing, and marketplace readiness.</p>
+          <div style={cardStyle}>
+            <img
+              src={SECOND_IMAGE}
+              alt="Grower"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))",
+              }}
+            />
+            <div style={{ position: "relative" }}>
+              <h3>Grower Ecosystem</h3>
+              <p>Inventory, crop planning, pricing, and marketplace readiness.</p>
+            </div>
           </div>
 
-          <div
-            style={{
-              ...cardStyle,
-              minHeight: 220,
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('${HERO_IMAGE}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <h3>Workforce Pathways</h3>
-            <p>Youth development, supervision, and real-world skill building.</p>
+          <div style={cardStyle}>
+            <img
+              src={HERO_IMAGE}
+              alt="Workforce"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))",
+              }}
+            />
+            <div style={{ position: "relative" }}>
+              <h3>Workforce Pathways</h3>
+              <p>Youth development, supervision, and real-world skill building.</p>
+            </div>
           </div>
 
-          <div
-            style={{
-              ...cardStyle,
-              minHeight: 220,
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('${SECOND_IMAGE}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <h3>Customer Access</h3>
-            <p>Shopping, pickup flow, SNAP expansion, and community engagement.</p>
+          <div style={cardStyle}>
+            <img
+              src={SECOND_IMAGE}
+              alt="Customer"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))",
+              }}
+            />
+            <div style={{ position: "relative" }}>
+              <h3>Customer Access</h3>
+              <p>Shopping, pickup flow, SNAP expansion, and community engagement.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -287,22 +390,10 @@ export default function App() {
           ← Back to Home
         </button>
 
-        <div
-          style={{
-            minHeight: 240,
-            borderRadius: 18,
-            overflow: "hidden",
-            marginBottom: 20,
-            backgroundImage: `linear-gradient(rgba(20,20,20,0.35), rgba(20,20,20,0.2)), url('${image}')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            display: "flex",
-            alignItems: "flex-end",
-          }}
-        >
-          <div style={{ padding: 24, color: "white" }}>
+        <div style={{ marginBottom: 20 }}>
+          <HeroImage image={image} title={title}>
             <h1 style={{ margin: 0 }}>{title}</h1>
-          </div>
+          </HeroImage>
         </div>
 
         <div
