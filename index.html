@@ -13,6 +13,7 @@ type RoleCard = {
   title: string;
   subtitle: string;
   image: string;
+  accent: string;
 };
 
 const APP_TITLE = "Bronson Family Farm";
@@ -22,26 +23,34 @@ const roleCards: RoleCard[] = [
   {
     key: "customer",
     title: "Customer Marketplace",
-    subtitle: "Shop Bubble Babies, produce, preorder pickup, and SNAP-ready pathways.",
+    subtitle:
+      "Bubble Babies, produce, preorder pickup, and SNAP-ready local access.",
     image: "/images/customer.jpg",
+    accent: "#3f7f4c",
   },
   {
     key: "grower",
     title: "Grower Ecosystem",
-    subtitle: "Learn, grow, track crops, access tools, and sell through the marketplace.",
+    subtitle:
+      "Learning, production, market readiness, and connected grower participation.",
     image: "/images/grower.jpg",
+    accent: "#5b8f46",
   },
   {
     key: "partner",
     title: "Partner / Funder",
-    subtitle: "See the investment opportunity, infrastructure needs, and impact model.",
+    subtitle:
+      "Infrastructure, workforce, off-grid development, and long-term community impact.",
     image: "/images/partner.jpg",
+    accent: "#7a6a3a",
   },
   {
     key: "community",
     title: "Community Experience",
-    subtitle: "Events, workshops, youth pathways, volunteering, and local engagement.",
+    subtitle:
+      "Events, workshops, youth pathways, volunteering, and shared belonging.",
     image: "/images/community.jpg",
+    accent: "#6e7d3e",
   },
 ];
 
@@ -67,12 +76,13 @@ function App() {
     }
   }, [screen]);
 
-  const goHome = () => setScreen("home");
-  const goRoles = () => setScreen("roles");
-
   return (
     <div style={styles.appShell}>
-      <TopBar title={currentTitle} onHome={goHome} onRoles={goRoles} />
+      <TopBar
+        title={currentTitle}
+        onHome={() => setScreen("home")}
+        onRoles={() => setScreen("roles")}
+      />
 
       {screen === "home" && <HomeScreen onStart={() => setScreen("roles")} />}
 
@@ -81,187 +91,213 @@ function App() {
       )}
 
       {screen === "customer" && (
-        <PageShell
-          title="Customer Marketplace"
-          subtitle="A welcoming path for shoppers, families, and supporters."
+        <PortalShell
           image="/images/customer.jpg"
-          onBack={goRoles}
+          title="Customer Marketplace"
+          subtitle="A welcoming buying experience built around local food, preorders, pickup, and practical access."
+          onBack={() => setScreen("roles")}
         >
-          <SectionGrid>
-            <InfoCard
-              title="What customers can do"
-              bullets={[
-                "Browse Bubble Babies growing rolls and seasonal produce",
-                "Reserve items for pickup",
-                "Access SNAP-friendly shopping pathways",
-                "Discover local growers and value-added producers",
-              ]}
+          <SectionTitle
+            title="Shop the Farm"
+            text="This is where interest becomes revenue. Customers can discover Bubble Babies, reserve produce, and connect directly to a real local food system."
+          />
+
+          <MarketplaceGrid>
+            <ProductCard
+              title="Bubble Babies"
+              subtitle="Seedling rolls designed for easy growing and practical take-home value."
+              price="Starting at $3–$10"
+              tag="Best known item"
             />
-            <InfoCard
-              title="Current sales model"
-              bullets={[
-                "Preorders help the farm plan harvest and reduce waste",
-                "Pickup-based fulfillment supports off-grid operations",
-                "Clear pricing and local access build community trust",
-                "The system can grow into full marketplace operations",
-              ]}
+            <ProductCard
+              title="Fresh Produce"
+              subtitle="Seasonal harvest available as inventory comes ready."
+              price="Seasonal pricing"
+              tag="Local harvest"
             />
-            <InfoCard
-              title="Featured offer"
-              bullets={[
-                "Bubble Babies seedling rolls",
-                "Fresh produce as available",
-                "Grower Supply Market engagement",
-                "Community-rooted local food access",
-              ]}
+            <ProductCard
+              title="Preorder Pickup"
+              subtitle="Reserve items in advance and pick up through farm or event pathways."
+              price="Planned convenience"
+              tag="Low waste"
             />
-            <CalloutCard
+            <ProductCard
+              title="SNAP-Ready Pathway"
+              subtitle="A system designed to support accessible food purchasing."
+              price="Community access"
+              tag="Inclusive"
+            />
+          </MarketplaceGrid>
+
+          <FeatureBand>
+            <FeatureMini
+              title="Why customers return"
+              text="Clear offers, local trust, practical pickup, and a welcoming connection to the land."
+            />
+            <FeatureMini
               title="Why this matters"
-              text="This portal turns interest into revenue. It shows that Bronson Family Farm is not just a vision — it is a real, usable food and commerce system."
+              text="This portal proves the farm is not abstract. It is usable, buyable, and growing."
             />
-          </SectionGrid>
-        </PageShell>
+            <FeatureMini
+              title="Strong next phase"
+              text="Wire this screen to real inventory, Bubble Babies pricing, and your order flow."
+            />
+          </FeatureBand>
+        </PortalShell>
       )}
 
       {screen === "grower" && (
-        <PageShell
-          title="Grower Ecosystem"
-          subtitle="A practical pathway for growers, learners, and future producers."
+        <PortalShell
           image="/images/grower.jpg"
-          onBack={goRoles}
+          title="Grower Ecosystem"
+          subtitle="A guided path for growers, learners, and regional participation in a shared agricultural economy."
+          onBack={() => setScreen("roles")}
         >
-          <SectionGrid>
+          <SectionTitle
+            title="Grow Into the System"
+            text="This experience shows how people enter, learn, participate, and eventually contribute products and knowledge back into the ecosystem."
+          />
+
+          <InfoGrid>
             <InfoCard
-              title="Grower journey"
+              title="Learn"
               bullets={[
-                "Learn how to grow successfully",
-                "Track planting, production, and readiness",
-                "Access shared knowledge and resources",
-                "Sell through a connected local ecosystem",
+                "Understand crop basics and seasonal timing",
+                "Access guidance for growing success",
+                "Build confidence through real participation",
               ]}
             />
             <InfoCard
-              title="What the ecosystem supports"
+              title="Produce"
               bullets={[
-                "Beginning growers",
-                "Returning growers",
-                "Urban agriculture learning",
-                "Regional collaboration across Mahoning Valley and Appalachia",
+                "Track what is planted and what is coming ready",
+                "Move from seedling to sellable output",
+                "Prepare for shared market access",
               ]}
             />
             <InfoCard
-              title="Platform direction"
+              title="Connect"
               bullets={[
-                "Role-based access",
-                "Education and operational guidance",
-                "Inventory and market readiness",
-                "Shared economic participation",
+                "Participate in a regional network",
+                "Join education, events, and shared learning",
+                "Build pathways to future economic participation",
               ]}
             />
-            <CalloutCard
-              title="Why this matters"
-              text="This is bigger than one farm. It creates a regional growing movement where people can learn, participate, and build economic strength together."
-            />
-          </SectionGrid>
-        </PageShell>
+          </InfoGrid>
+
+          <StoryCard
+            title="Why this portal matters"
+            text="This is the movement side of the platform. It turns agriculture into a pathway for confidence, skill, belonging, and regional economic participation."
+          />
+        </PortalShell>
       )}
 
       {screen === "partner" && (
-        <PageShell
-          title="Partner / Funder"
-          subtitle="A direct view into infrastructure, readiness, and long-term community impact."
+        <PortalShell
           image="/images/partner.jpg"
-          onBack={goRoles}
+          title="Partner / Funder"
+          subtitle="A direct look at the infrastructure, readiness, and legacy potential behind Bronson Family Farm."
+          onBack={() => setScreen("roles")}
         >
-          <SectionGrid>
-            <InfoCard
-              title="What this investment supports"
-              bullets={[
-                "Irrigation and water access",
-                "Deer-resistant fencing and site protection",
-                "Off-grid infrastructure and stability",
-                "Safe, scalable operations for food production and public engagement",
-              ]}
+          <SectionTitle
+            title="What Investment Makes Possible"
+            text="This portal helps partners immediately understand the opportunity: a visible land-based system with food, workforce, education, and community outcomes."
+          />
+
+          <InvestmentGrid>
+            <AskCard
+              amount="Infrastructure"
+              title="Water + Irrigation"
+              text="Reliable water access is essential for stable production and a usable demonstration site."
             />
-            <InfoCard
-              title="What makes this different"
-              bullets={[
-                "Generational vision",
-                "Workforce and youth development",
-                "Food access and local commerce",
-                "A practical zero-waste, off-grid operating model",
-              ]}
+            <AskCard
+              amount="Protection"
+              title="Deer-Resistant Fencing"
+              text="Site protection is necessary to preserve production, reduce loss, and support public confidence."
             />
-            <InfoCard
-              title="What funders see"
-              bullets={[
-                "A visible site with real community relevance",
-                "A usable economic and educational model",
-                "A platform that can scale",
-                "A project rooted in land, people, and legacy",
-              ]}
+            <AskCard
+              amount="Operations"
+              title="Off-Grid Stability"
+              text="Solar, storage, logistics, and field-ready systems strengthen daily operations."
             />
-            <CalloutCard
-              title="Why this matters"
-              text="This portal makes the ask understandable. It helps supporters see exactly what is needed and why this work deserves investment now."
+            <AskCard
+              amount="Legacy"
+              title="Workforce + Community Build"
+              text="This project creates practical pathways for youth, growers, families, and regional collaboration."
             />
-          </SectionGrid>
-        </PageShell>
+          </InvestmentGrid>
+
+          <StoryCard
+            title="Why this portal matters"
+            text="This is the ask made visible. It shows that funding does not disappear into theory — it builds something people can see, use, and return to."
+          />
+        </PortalShell>
       )}
 
       {screen === "community" && (
-        <PageShell
-          title="Community Experience"
-          subtitle="A welcoming public-facing path for families, neighbors, youth, and volunteers."
+        <PortalShell
           image="/images/community.jpg"
-          onBack={goRoles}
+          title="Community Experience"
+          subtitle="A public-facing path centered on belonging, outdoor learning, workshops, and regional engagement."
+          onBack={() => setScreen("roles")}
         >
-          <SectionGrid>
+          <SectionTitle
+            title="Gather, Learn, Participate"
+            text="This experience shows that the farm is not isolated land. It is a welcoming place where people come to learn, connect, and return."
+          />
+
+          <EventHeroCard
+            eventTitle="Growers Supply Market"
+            eventDate="Saturday, May 16, 2026 · 9:00 AM–2:00 PM"
+            eventText="A regional gathering around tools, ideas, workshops, demonstrations, growers, and the practical joy of learning how to grow."
+          />
+
+          <InfoGrid>
             <InfoCard
-              title="Community participation"
+              title="What people experience"
               bullets={[
-                "Attend events and demonstrations",
-                "Join workshops and seasonal learning",
-                "Volunteer and support farm activity",
-                "Connect youth to work, purpose, and outdoor learning",
+                "Hands-on learning",
+                "Family-friendly engagement",
+                "Outdoor community connection",
               ]}
             />
             <InfoCard
-              title="Signature experience"
+              title="What youth gain"
               bullets={[
-                "Growers Supply Market",
-                "Tools, ideas, and resources for growing",
-                "Regional collaboration",
-                "Hands-on engagement around food and land",
+                "Purpose and participation",
+                "Exposure to real work pathways",
+                "Confidence in outdoor learning",
               ]}
             />
             <InfoCard
-              title="Human impact"
+              title="What the region gains"
               bullets={[
-                "Build confidence",
-                "Increase food knowledge",
-                "Strengthen neighborhood participation",
-                "Create a welcoming return experience",
+                "Shared visibility for growing",
+                "A stronger local ecosystem",
+                "A welcoming place to return to",
               ]}
             />
-            <CalloutCard
-              title="Why this matters"
-              text="This portal shows that the farm is not isolated. It is a gathering point for education, belonging, practical help, and regional connection."
-            />
-          </SectionGrid>
-        </PageShell>
+          </InfoGrid>
+
+          <StoryCard
+            title="Why this portal matters"
+            text="This screen helps visitors feel the human side of the farm — not just infrastructure, but belonging, participation, and possibility."
+          />
+        </PortalShell>
       )}
     </div>
   );
 }
 
-type TopBarProps = {
+function TopBar({
+  title,
+  onHome,
+  onRoles,
+}: {
   title: string;
   onHome: () => void;
   onRoles: () => void;
-};
-
-function TopBar({ title, onHome, onRoles }: TopBarProps) {
+}) {
   return (
     <header style={styles.topBar}>
       <div style={styles.topBarLeft}>
@@ -283,22 +319,19 @@ function TopBar({ title, onHome, onRoles }: TopBarProps) {
   );
 }
 
-type HomeScreenProps = {
-  onStart: () => void;
-};
-
-function HomeScreen({ onStart }: HomeScreenProps) {
+function HomeScreen({ onStart }: { onStart: () => void }) {
   return (
     <div style={styles.heroWrap}>
       <BackgroundImage src="/images/home.jpg" />
 
       <div style={styles.heroOverlay}>
         <div style={styles.heroContent}>
-          <div style={styles.kicker}>Self-Guided Final Demo</div>
+          <div style={styles.kicker}>Final Guided Demo</div>
           <h1 style={styles.heroTitle}>Bronson Family Farm</h1>
           <p style={styles.heroText}>
-            A land-based, community-centered digital ecosystem connecting food,
-            growers, workforce development, education, and local investment.
+            A beautiful, self-guided digital ecosystem connecting food, land,
+            growers, community, education, and investment into one living
+            platform.
           </p>
 
           <div style={styles.heroButtonRow}>
@@ -309,9 +342,9 @@ function HomeScreen({ onStart }: HomeScreenProps) {
 
           <div style={styles.heroHighlights}>
             <HighlightChip text="Marketplace" />
-            <HighlightChip text="Grower Ecosystem" />
-            <HighlightChip text="Workforce Pathways" />
-            <HighlightChip text="Community Impact" />
+            <HighlightChip text="Growers" />
+            <HighlightChip text="Community" />
+            <HighlightChip text="Fundable Vision" />
           </div>
         </div>
       </div>
@@ -319,17 +352,18 @@ function HomeScreen({ onStart }: HomeScreenProps) {
   );
 }
 
-type RoleSelectionScreenProps = {
+function RoleSelectionScreen({
+  onSelect,
+}: {
   onSelect: (screen: Exclude<Screen, "home" | "roles">) => void;
-};
-
-function RoleSelectionScreen({ onSelect }: RoleSelectionScreenProps) {
+}) {
   return (
     <div style={styles.rolesWrap}>
       <div style={styles.rolesHeader}>
         <h2 style={styles.pageTitle}>Choose Your Experience</h2>
         <p style={styles.pageSubtitle}>
-          Each portal tells one part of the full Bronson Family Farm system.
+          Each portal reveals a different part of the Bronson Family Farm
+          ecosystem.
         </p>
       </div>
 
@@ -343,6 +377,12 @@ function RoleSelectionScreen({ onSelect }: RoleSelectionScreenProps) {
             <div style={styles.roleImageWrap}>
               <BackgroundImage src={card.image} rounded />
               <div style={styles.roleImageOverlay} />
+              <div
+                style={{
+                  ...styles.roleAccentBar,
+                  background: card.accent,
+                }}
+              />
               <div style={styles.roleImageTextWrap}>
                 <div style={styles.roleTitle}>{card.title}</div>
                 <div style={styles.roleSubtitle}>{card.subtitle}</div>
@@ -355,21 +395,19 @@ function RoleSelectionScreen({ onSelect }: RoleSelectionScreenProps) {
   );
 }
 
-type PageShellProps = {
-  title: string;
-  subtitle: string;
-  image: string;
-  onBack: () => void;
-  children: React.ReactNode;
-};
-
-function PageShell({
+function PortalShell({
+  image,
   title,
   subtitle,
-  image,
   onBack,
   children,
-}: PageShellProps) {
+}: {
+  image: string;
+  title: string;
+  subtitle: string;
+  onBack: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <div style={styles.pageWrap}>
       <div style={styles.pageHero}>
@@ -388,8 +426,61 @@ function PageShell({
   );
 }
 
-function SectionGrid({ children }: { children: React.ReactNode }) {
-  return <div style={styles.sectionGrid}>{children}</div>;
+function SectionTitle({ title, text }: { title: string; text: string }) {
+  return (
+    <div style={styles.sectionTitleWrap}>
+      <h3 style={styles.sectionTitle}>{title}</h3>
+      <p style={styles.sectionTitleText}>{text}</p>
+    </div>
+  );
+}
+
+function MarketplaceGrid({ children }: { children: React.ReactNode }) {
+  return <div style={styles.marketplaceGrid}>{children}</div>;
+}
+
+function ProductCard({
+  title,
+  subtitle,
+  price,
+  tag,
+}: {
+  title: string;
+  subtitle: string;
+  price: string;
+  tag: string;
+}) {
+  return (
+    <div style={styles.productCard}>
+      <div style={styles.productTag}>{tag}</div>
+      <h4 style={styles.productTitle}>{title}</h4>
+      <p style={styles.productSubtitle}>{subtitle}</p>
+      <div style={styles.productPrice}>{price}</div>
+    </div>
+  );
+}
+
+function FeatureBand({ children }: { children: React.ReactNode }) {
+  return <div style={styles.featureBand}>{children}</div>;
+}
+
+function FeatureMini({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div style={styles.featureMini}>
+      <div style={styles.featureMiniTitle}>{title}</div>
+      <div style={styles.featureMiniText}>{text}</div>
+    </div>
+  );
+}
+
+function InfoGrid({ children }: { children: React.ReactNode }) {
+  return <div style={styles.infoGrid}>{children}</div>;
 }
 
 function InfoCard({
@@ -401,11 +492,11 @@ function InfoCard({
 }) {
   return (
     <div style={styles.infoCard}>
-      <h3 style={styles.infoCardTitle}>{title}</h3>
+      <h4 style={styles.infoCardTitle}>{title}</h4>
       <ul style={styles.infoList}>
-        {bullets.map((item) => (
-          <li key={item} style={styles.infoListItem}>
-            {item}
+        {bullets.map((bullet) => (
+          <li key={bullet} style={styles.infoListItem}>
+            {bullet}
           </li>
         ))}
       </ul>
@@ -413,11 +504,52 @@ function InfoCard({
   );
 }
 
-function CalloutCard({ title, text }: { title: string; text: string }) {
+function StoryCard({ title, text }: { title: string; text: string }) {
   return (
-    <div style={styles.calloutCard}>
-      <h3 style={styles.calloutTitle}>{title}</h3>
-      <p style={styles.calloutText}>{text}</p>
+    <div style={styles.storyCard}>
+      <h4 style={styles.storyTitle}>{title}</h4>
+      <p style={styles.storyText}>{text}</p>
+    </div>
+  );
+}
+
+function InvestmentGrid({ children }: { children: React.ReactNode }) {
+  return <div style={styles.investmentGrid}>{children}</div>;
+}
+
+function AskCard({
+  amount,
+  title,
+  text,
+}: {
+  amount: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div style={styles.askCard}>
+      <div style={styles.askAmount}>{amount}</div>
+      <h4 style={styles.askTitle}>{title}</h4>
+      <p style={styles.askText}>{text}</p>
+    </div>
+  );
+}
+
+function EventHeroCard({
+  eventTitle,
+  eventDate,
+  eventText,
+}: {
+  eventTitle: string;
+  eventDate: string;
+  eventText: string;
+}) {
+  return (
+    <div style={styles.eventHeroCard}>
+      <div style={styles.eventLabel}>Signature Event</div>
+      <h4 style={styles.eventTitle}>{eventTitle}</h4>
+      <div style={styles.eventDate}>{eventDate}</div>
+      <p style={styles.eventText}>{eventText}</p>
     </div>
   );
 }
@@ -448,7 +580,7 @@ const styles: Record<string, React.CSSProperties> = {
   appShell: {
     minHeight: "100vh",
     background:
-      "linear-gradient(180deg, #f4f8f2 0%, #edf5ec 40%, #e6efe4 100%)",
+      "linear-gradient(180deg, #f6f8f2 0%, #eef3e8 45%, #e8efe2 100%)",
     color: "#17351f",
     fontFamily:
       'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -463,46 +595,45 @@ const styles: Record<string, React.CSSProperties> = {
     position: "sticky",
     top: 0,
     zIndex: 20,
-    background: "rgba(250, 252, 249, 0.92)",
+    background: "rgba(250,252,248,0.92)",
     backdropFilter: "blur(10px)",
-    borderBottom: "1px solid rgba(23, 53, 31, 0.08)",
+    borderBottom: "1px solid rgba(23,53,31,0.08)",
   },
 
   topBarLeft: {
-    minWidth: 0,
     flex: 1,
+    minWidth: 0,
   },
 
   brandTitle: {
     fontSize: 20,
     fontWeight: 800,
-    letterSpacing: 0.2,
   },
 
   brandSub: {
     fontSize: 12,
-    opacity: 0.78,
+    opacity: 0.76,
     marginTop: 2,
   },
 
   topBarCenter: {
-    fontSize: 16,
-    fontWeight: 700,
-    textAlign: "center",
     flex: 1,
+    textAlign: "center",
+    fontWeight: 800,
+    fontSize: 16,
   },
 
   topBarRight: {
+    flex: 1,
     display: "flex",
     justifyContent: "flex-end",
     gap: 10,
-    flex: 1,
   },
 
   navButton: {
     padding: "10px 16px",
     borderRadius: 14,
-    border: "1px solid rgba(23, 53, 31, 0.14)",
+    border: "1px solid rgba(23,53,31,0.14)",
     background: "#ffffff",
     color: "#17351f",
     fontWeight: 700,
@@ -517,7 +648,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#ffffff",
     fontWeight: 700,
     cursor: "pointer",
-    boxShadow: "0 10px 22px rgba(47, 107, 61, 0.22)",
+    boxShadow: "0 10px 22px rgba(47,107,61,0.22)",
   },
 
   heroWrap: {
@@ -532,7 +663,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundColor: "#d9e7d7",
+    backgroundColor: "#d9e6d6",
   },
 
   heroOverlay: {
@@ -543,18 +674,18 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "center",
     padding: 24,
     background:
-      "linear-gradient(180deg, rgba(247,250,246,0.50) 0%, rgba(247,250,246,0.62) 30%, rgba(247,250,246,0.76) 100%)",
+      "linear-gradient(180deg, rgba(248,250,245,0.38) 0%, rgba(248,250,245,0.50) 25%, rgba(248,250,245,0.70) 100%)",
   },
 
   heroContent: {
     width: "100%",
     maxWidth: 980,
-    padding: "42px 36px",
+    padding: "44px 36px",
     borderRadius: 28,
-    background: "rgba(255,255,255,0.58)",
+    background: "rgba(255,255,255,0.52)",
     backdropFilter: "blur(6px)",
-    boxShadow: "0 20px 60px rgba(23,53,31,0.12)",
-    border: "1px solid rgba(255,255,255,0.55)",
+    border: "1px solid rgba(255,255,255,0.62)",
+    boxShadow: "0 22px 60px rgba(23,53,31,0.12)",
   },
 
   kicker: {
@@ -562,7 +693,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "8px 14px",
     borderRadius: 999,
     background: "rgba(47,107,61,0.12)",
-    color: "#234f2f",
+    color: "#20452a",
     fontWeight: 700,
     fontSize: 13,
     marginBottom: 16,
@@ -581,12 +712,12 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: 760,
     fontSize: 18,
     lineHeight: 1.65,
-    color: "#26412d",
+    color: "#27432f",
   },
 
   heroButtonRow: {
     display: "flex",
-    gap: 14,
+    gap: 12,
     marginTop: 28,
     flexWrap: "wrap",
   },
@@ -600,33 +731,33 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 18,
     fontWeight: 800,
     cursor: "pointer",
-    boxShadow: "0 16px 34px rgba(47, 107, 61, 0.28)",
+    boxShadow: "0 16px 34px rgba(47,107,61,0.28)",
   },
 
   heroHighlights: {
     display: "flex",
-    gap: 10,
     flexWrap: "wrap",
+    gap: 10,
     marginTop: 28,
   },
 
   chip: {
     padding: "10px 14px",
     borderRadius: 999,
-    background: "rgba(255,255,255,0.72)",
+    background: "rgba(255,255,255,0.74)",
     border: "1px solid rgba(23,53,31,0.10)",
     fontSize: 13,
     fontWeight: 700,
   },
 
   rolesWrap: {
-    padding: "34px 24px 42px",
     maxWidth: 1280,
     margin: "0 auto",
+    padding: "34px 24px 44px",
   },
 
   rolesHeader: {
-    marginBottom: 20,
+    marginBottom: 22,
   },
 
   pageTitle: {
@@ -640,7 +771,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: 10,
     fontSize: 17,
     lineHeight: 1.6,
-    color: "#35533d",
+    color: "#34533d",
   },
 
   roleGrid: {
@@ -650,8 +781,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   roleCardButton: {
-    border: "none",
     background: "transparent",
+    border: "none",
     padding: 0,
     cursor: "pointer",
     textAlign: "left",
@@ -659,19 +790,28 @@ const styles: Record<string, React.CSSProperties> = {
 
   roleImageWrap: {
     position: "relative",
-    minHeight: 360,
+    minHeight: 370,
     borderRadius: 24,
     overflow: "hidden",
-    boxShadow: "0 16px 36px rgba(23,53,31,0.12)",
+    background: "#dae6d7",
+    boxShadow: "0 18px 40px rgba(23,53,31,0.12)",
     border: "1px solid rgba(23,53,31,0.08)",
-    background: "#dbe8d8",
   },
 
   roleImageOverlay: {
     position: "absolute",
     inset: 0,
     background:
-      "linear-gradient(180deg, rgba(17,37,22,0.08) 0%, rgba(17,37,22,0.18) 35%, rgba(17,37,22,0.64) 100%)",
+      "linear-gradient(180deg, rgba(17,37,22,0.08) 0%, rgba(17,37,22,0.18) 36%, rgba(17,37,22,0.64) 100%)",
+  },
+
+  roleAccentBar: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 8,
+    opacity: 0.95,
   },
 
   roleImageTextWrap: {
@@ -692,35 +832,34 @@ const styles: Record<string, React.CSSProperties> = {
   roleSubtitle: {
     fontSize: 15,
     lineHeight: 1.55,
-    opacity: 0.96,
+    opacity: 0.97,
   },
 
   pageWrap: {
     maxWidth: 1280,
     margin: "0 auto",
-    padding: "28px 24px 46px",
+    padding: "28px 24px 48px",
   },
 
   pageHero: {
     position: "relative",
-    minHeight: 300,
+    minHeight: 310,
     borderRadius: 24,
     overflow: "hidden",
+    background: "#dae6d7",
     boxShadow: "0 18px 44px rgba(23,53,31,0.12)",
     border: "1px solid rgba(23,53,31,0.08)",
-    background: "#dbe8d8",
   },
 
   pageHeroOverlay: {
     position: "relative",
-    zIndex: 1,
-    minHeight: 300,
+    minHeight: 310,
     padding: "22px 22px 28px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-end",
     background:
-      "linear-gradient(180deg, rgba(247,250,246,0.18) 0%, rgba(247,250,246,0.10) 15%, rgba(22,45,29,0.68) 100%)",
+      "linear-gradient(180deg, rgba(248,250,245,0.14) 0%, rgba(248,250,245,0.10) 16%, rgba(20,40,26,0.66) 100%)",
     color: "#ffffff",
   },
 
@@ -729,7 +868,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "auto",
     padding: "10px 14px",
     borderRadius: 14,
-    border: "1px solid rgba(255,255,255,0.32)",
+    border: "1px solid rgba(255,255,255,0.30)",
     background: "rgba(255,255,255,0.12)",
     color: "#ffffff",
     fontWeight: 700,
@@ -750,21 +889,116 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: 780,
     fontSize: 17,
     lineHeight: 1.6,
-    opacity: 0.96,
+    opacity: 0.97,
   },
 
   pageContent: {
     marginTop: 24,
   },
 
-  sectionGrid: {
+  sectionTitleWrap: {
+    marginBottom: 20,
+  },
+
+  sectionTitle: {
+    margin: 0,
+    fontSize: 28,
+    fontWeight: 900,
+    color: "#1e3f27",
+  },
+
+  sectionTitleText: {
+    marginTop: 10,
+    marginBottom: 0,
+    maxWidth: 900,
+    fontSize: 16,
+    lineHeight: 1.7,
+    color: "#35523d",
+  },
+
+  marketplaceGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 18,
+    marginBottom: 22,
+  },
+
+  productCard: {
+    background: "rgba(255,255,255,0.86)",
+    borderRadius: 22,
+    padding: 22,
+    border: "1px solid rgba(23,53,31,0.08)",
+    boxShadow: "0 12px 30px rgba(23,53,31,0.07)",
+  },
+
+  productTag: {
+    display: "inline-block",
+    padding: "7px 12px",
+    borderRadius: 999,
+    background: "rgba(47,107,61,0.10)",
+    color: "#235030",
+    fontSize: 12,
+    fontWeight: 800,
+    marginBottom: 14,
+  },
+
+  productTitle: {
+    margin: 0,
+    fontSize: 22,
+    fontWeight: 900,
+    color: "#1f4028",
+  },
+
+  productSubtitle: {
+    marginTop: 10,
+    marginBottom: 16,
+    fontSize: 15,
+    lineHeight: 1.6,
+    color: "#35513c",
+  },
+
+  productPrice: {
+    fontWeight: 900,
+    fontSize: 16,
+    color: "#2f6b3d",
+  },
+
+  featureBand: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: 16,
+  },
+
+  featureMini: {
+    padding: 20,
+    borderRadius: 20,
+    background:
+      "linear-gradient(180deg, rgba(47,107,61,0.08) 0%, rgba(47,107,61,0.14) 100%)",
+    border: "1px solid rgba(47,107,61,0.10)",
+  },
+
+  featureMiniTitle: {
+    fontWeight: 900,
+    fontSize: 18,
+    color: "#1f4328",
+    marginBottom: 8,
+  },
+
+  featureMiniText: {
+    fontSize: 15,
+    lineHeight: 1.6,
+    color: "#35513c",
+  },
+
+  infoGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
     gap: 18,
+    marginBottom: 20,
   },
 
   infoCard: {
-    background: "rgba(255,255,255,0.84)",
+    background: "rgba(255,255,255,0.86)",
     borderRadius: 22,
     padding: 22,
     border: "1px solid rgba(23,53,31,0.08)",
@@ -789,28 +1023,114 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#294431",
   },
 
-  calloutCard: {
-    background:
-      "linear-gradient(180deg, rgba(47,107,61,0.10) 0%, rgba(47,107,61,0.16) 100%)",
+  storyCard: {
+    padding: 24,
     borderRadius: 22,
-    padding: 22,
-    border: "1px solid rgba(47,107,61,0.12)",
+    background:
+      "linear-gradient(180deg, rgba(255,255,255,0.84) 0%, rgba(235,242,232,0.92) 100%)",
+    border: "1px solid rgba(23,53,31,0.08)",
     boxShadow: "0 12px 30px rgba(23,53,31,0.07)",
   },
 
-  calloutTitle: {
+  storyTitle: {
     margin: 0,
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 900,
-    color: "#20452a",
+    color: "#1e4027",
   },
 
-  calloutText: {
+  storyText: {
     marginTop: 12,
     marginBottom: 0,
-    lineHeight: 1.7,
-    color: "#26412d",
     fontSize: 16,
+    lineHeight: 1.75,
+    color: "#33513c",
+  },
+
+  investmentGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 18,
+    marginBottom: 20,
+  },
+
+  askCard: {
+    background: "rgba(255,255,255,0.88)",
+    borderRadius: 22,
+    padding: 22,
+    border: "1px solid rgba(23,53,31,0.08)",
+    boxShadow: "0 12px 30px rgba(23,53,31,0.07)",
+  },
+
+  askAmount: {
+    display: "inline-block",
+    padding: "7px 12px",
+    borderRadius: 999,
+    background: "rgba(122,106,58,0.12)",
+    color: "#64552b",
+    fontSize: 12,
+    fontWeight: 900,
+    marginBottom: 14,
+  },
+
+  askTitle: {
+    margin: 0,
+    fontSize: 21,
+    fontWeight: 900,
+    color: "#2a4025",
+  },
+
+  askText: {
+    marginTop: 10,
+    marginBottom: 0,
+    lineHeight: 1.65,
+    color: "#42503a",
+    fontSize: 15,
+  },
+
+  eventHeroCard: {
+    padding: 24,
+    borderRadius: 24,
+    marginBottom: 20,
+    background:
+      "linear-gradient(135deg, rgba(47,107,61,0.12) 0%, rgba(110,125,62,0.15) 100%)",
+    border: "1px solid rgba(47,107,61,0.10)",
+    boxShadow: "0 12px 30px rgba(23,53,31,0.07)",
+  },
+
+  eventLabel: {
+    display: "inline-block",
+    padding: "8px 12px",
+    borderRadius: 999,
+    background: "rgba(255,255,255,0.72)",
+    color: "#254a2e",
+    fontSize: 12,
+    fontWeight: 900,
+    marginBottom: 14,
+  },
+
+  eventTitle: {
+    margin: 0,
+    fontSize: 30,
+    lineHeight: 1.1,
+    fontWeight: 900,
+    color: "#1f4328",
+  },
+
+  eventDate: {
+    marginTop: 10,
+    fontSize: 15,
+    fontWeight: 800,
+    color: "#37523d",
+  },
+
+  eventText: {
+    marginTop: 12,
+    marginBottom: 0,
+    fontSize: 16,
+    lineHeight: 1.7,
+    color: "#37523d",
+    maxWidth: 900,
   },
 };
 
