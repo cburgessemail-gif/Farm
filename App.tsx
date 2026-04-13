@@ -320,8 +320,7 @@ export default function App() {
             borderRadius: 18,
             overflow: "hidden",
             marginBottom: 20,
-            backgroundImage:
-              `linear-gradient(rgba(20,20,20,0.35), rgba(20,20,20,0.2)), url('${image}')`,
+            backgroundImage: `linear-gradient(rgba(20,20,20,0.35), rgba(20,20,20,0.2)), url('${image}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             display: "flex",
