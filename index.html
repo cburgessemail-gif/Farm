@@ -16,6 +16,13 @@ type RoleCard = {
   accent: string;
 };
 
+type Product = {
+  name: string;
+  details: string;
+  price: string;
+  tag: string;
+};
+
 const APP_TITLE = "Bronson Family Farm";
 const APP_SUBTITLE = "Farm & Family Alliance Digital Ecosystem Demo";
 
@@ -51,6 +58,63 @@ const roleCards: RoleCard[] = [
       "Events, workshops, youth pathways, volunteering, and shared belonging.",
     image: "/images/community.jpg",
     accent: "#6e7d3e",
+  },
+];
+
+const bubbleBabiesProducts: Product[] = [
+  {
+    name: "Tomato Bubble Babies",
+    details: "3 seedlings per roll",
+    price: "$5",
+    tag: "Best seller",
+  },
+  {
+    name: "Pepper Bubble Babies",
+    details: "3 seedlings per roll",
+    price: "$5",
+    tag: "Sweet + hot",
+  },
+  {
+    name: "Cabbage Bubble Babies",
+    details: "3 seedlings per roll",
+    price: "$5",
+    tag: "Garden staple",
+  },
+  {
+    name: "Broccoli Bubble Babies",
+    details: "3 seedlings per roll",
+    price: "$5",
+    tag: "Cool season",
+  },
+  {
+    name: "Collard Bubble Babies",
+    details: "5 seedlings per roll",
+    price: "$10",
+    tag: "High demand",
+  },
+  {
+    name: "Cilantro Bubble Babies",
+    details: "5 seedlings per roll",
+    price: "$3",
+    tag: "Herb favorite",
+  },
+  {
+    name: "Spinach Bubble Babies",
+    details: "5 seedlings per roll",
+    price: "$3",
+    tag: "Leafy greens",
+  },
+  {
+    name: "Mustard Bubble Babies",
+    details: "5 seedlings per roll",
+    price: "$3",
+    tag: "Greens",
+  },
+  {
+    name: "Lettuce Bubble Babies",
+    details: "10 seedlings per roll",
+    price: "$5",
+    tag: "Family value",
   },
 ];
 
@@ -94,53 +158,69 @@ function App() {
         <PortalShell
           image="/images/customer.jpg"
           title="Customer Marketplace"
-          subtitle="A welcoming buying experience built around local food, preorders, pickup, and practical access."
+          subtitle="A welcoming buying experience built around local food, Bubble Babies, preorders, pickup, and practical access."
           onBack={() => setScreen("roles")}
         >
           <SectionTitle
             title="Shop the Farm"
-            text="This is where interest becomes revenue. Customers can discover Bubble Babies, reserve produce, and connect directly to a real local food system."
+            text="This portal now shows real starter pricing so the demo feels like a live local marketplace instead of a placeholder."
           />
 
+          <div style={styles.marketBanner}>
+            <div style={styles.marketBannerItem}>
+              <div style={styles.marketBannerLabel}>Preorders Preferred</div>
+              <div style={styles.marketBannerText}>
+                Preorders help the farm plan harvest, reduce waste, and prepare
+                pickup smoothly.
+              </div>
+            </div>
+            <div style={styles.marketBannerItem}>
+              <div style={styles.marketBannerLabel}>Pickup Model</div>
+              <div style={styles.marketBannerText}>
+                Orders can be picked up through farm events, market days, and
+                scheduled pathways.
+              </div>
+            </div>
+            <div style={styles.marketBannerItem}>
+              <div style={styles.marketBannerLabel}>SNAP Pathway</div>
+              <div style={styles.marketBannerText}>
+                The system is designed to support accessible purchasing and
+                community food access.
+              </div>
+            </div>
+          </div>
+
+          <div style={styles.productSectionHeader}>
+            <h3 style={styles.productSectionTitle}>Bubble Babies Pricing</h3>
+            <p style={styles.productSectionText}>
+              Seedlings are sold in rolled Bubble Babies units, not trays.
+            </p>
+          </div>
+
           <MarketplaceGrid>
-            <ProductCard
-              title="Bubble Babies"
-              subtitle="Seedling rolls designed for easy growing and practical take-home value."
-              price="Starting at $3–$10"
-              tag="Best known item"
-            />
-            <ProductCard
-              title="Fresh Produce"
-              subtitle="Seasonal harvest available as inventory comes ready."
-              price="Seasonal pricing"
-              tag="Local harvest"
-            />
-            <ProductCard
-              title="Preorder Pickup"
-              subtitle="Reserve items in advance and pick up through farm or event pathways."
-              price="Planned convenience"
-              tag="Low waste"
-            />
-            <ProductCard
-              title="SNAP-Ready Pathway"
-              subtitle="A system designed to support accessible food purchasing."
-              price="Community access"
-              tag="Inclusive"
-            />
+            {bubbleBabiesProducts.map((product) => (
+              <ProductCard
+                key={product.name}
+                title={product.name}
+                subtitle={product.details}
+                price={product.price}
+                tag={product.tag}
+              />
+            ))}
           </MarketplaceGrid>
 
           <FeatureBand>
             <FeatureMini
-              title="Why customers return"
-              text="Clear offers, local trust, practical pickup, and a welcoming connection to the land."
+              title="Why this works"
+              text="Customers can quickly understand what they are buying, how much it costs, and why this format is unique."
             />
             <FeatureMini
-              title="Why this matters"
-              text="This portal proves the farm is not abstract. It is usable, buyable, and growing."
+              title="What comes next"
+              text="This screen can be wired next to real online ordering, QR-based shopping, and live inventory."
             />
             <FeatureMini
-              title="Strong next phase"
-              text="Wire this screen to real inventory, Bubble Babies pricing, and your order flow."
+              title="Revenue story"
+              text="This portal proves Bronson Family Farm can move from vision to sales in a clear, welcoming way."
             />
           </FeatureBand>
         </PortalShell>
@@ -206,30 +286,47 @@ function App() {
 
           <InvestmentGrid>
             <AskCard
-              amount="Infrastructure"
+              amount="Priority Need"
               title="Water + Irrigation"
-              text="Reliable water access is essential for stable production and a usable demonstration site."
+              text="Reliable water access is essential for stable production, crop protection, and a usable demonstration site."
             />
             <AskCard
-              amount="Protection"
+              amount="Priority Need"
               title="Deer-Resistant Fencing"
-              text="Site protection is necessary to preserve production, reduce loss, and support public confidence."
+              text="Site protection reduces loss, strengthens confidence, and protects production across the growing season."
             />
             <AskCard
-              amount="Operations"
+              amount="Growth Need"
               title="Off-Grid Stability"
-              text="Solar, storage, logistics, and field-ready systems strengthen daily operations."
+              text="Solar, storage, security, and field-ready systems make the farm stronger and more independent."
             />
             <AskCard
-              amount="Legacy"
+              amount="Legacy Need"
               title="Workforce + Community Build"
-              text="This project creates practical pathways for youth, growers, families, and regional collaboration."
+              text="The farm creates pathways for youth, growers, families, and regional collaboration."
             />
           </InvestmentGrid>
 
+          <div style={styles.partnerPanel}>
+            <div style={styles.partnerPanelBox}>
+              <div style={styles.partnerPanelLabel}>The Ask</div>
+              <div style={styles.partnerPanelTitle}>
+                Invest in visible infrastructure that people can see, use, and
+                return to
+              </div>
+            </div>
+            <div style={styles.partnerPanelBox}>
+              <div style={styles.partnerPanelLabel}>The Value</div>
+              <div style={styles.partnerPanelTitle}>
+                Food access, workforce development, regional pride, and a
+                generational land-based model
+              </div>
+            </div>
+          </div>
+
           <StoryCard
             title="Why this portal matters"
-            text="This is the ask made visible. It shows that funding does not disappear into theory — it builds something people can see, use, and return to."
+            text="This is the ask made visible. It shows that funding does not disappear into theory — it builds something tangible, practical, and community-facing."
           />
         </PortalShell>
       )}
@@ -916,6 +1013,53 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#35523d",
   },
 
+  marketBanner: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: 16,
+    marginBottom: 22,
+  },
+
+  marketBannerItem: {
+    padding: 20,
+    borderRadius: 20,
+    background:
+      "linear-gradient(180deg, rgba(47,107,61,0.08) 0%, rgba(47,107,61,0.14) 100%)",
+    border: "1px solid rgba(47,107,61,0.10)",
+  },
+
+  marketBannerLabel: {
+    fontWeight: 900,
+    fontSize: 18,
+    color: "#1f4328",
+    marginBottom: 8,
+  },
+
+  marketBannerText: {
+    fontSize: 15,
+    lineHeight: 1.6,
+    color: "#35513c",
+  },
+
+  productSectionHeader: {
+    marginBottom: 16,
+  },
+
+  productSectionTitle: {
+    margin: 0,
+    fontSize: 24,
+    fontWeight: 900,
+    color: "#1f4028",
+  },
+
+  productSectionText: {
+    marginTop: 8,
+    marginBottom: 0,
+    fontSize: 15,
+    lineHeight: 1.6,
+    color: "#35513c",
+  },
+
   marketplaceGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
@@ -1086,6 +1230,40 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.65,
     color: "#42503a",
     fontSize: 15,
+  },
+
+  partnerPanel: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+    gap: 16,
+    marginBottom: 20,
+  },
+
+  partnerPanelBox: {
+    padding: 22,
+    borderRadius: 22,
+    background:
+      "linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(241,238,229,0.94) 100%)",
+    border: "1px solid rgba(122,106,58,0.10)",
+    boxShadow: "0 12px 30px rgba(23,53,31,0.07)",
+  },
+
+  partnerPanelLabel: {
+    display: "inline-block",
+    padding: "7px 12px",
+    borderRadius: 999,
+    background: "rgba(122,106,58,0.12)",
+    color: "#64552b",
+    fontSize: 12,
+    fontWeight: 900,
+    marginBottom: 12,
+  },
+
+  partnerPanelTitle: {
+    fontSize: 20,
+    lineHeight: 1.45,
+    fontWeight: 800,
+    color: "#2d3f28",
   },
 
   eventHeroCard: {
