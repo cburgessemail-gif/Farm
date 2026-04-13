@@ -51,11 +51,13 @@ export default function App() {
   function HeroImage({
     image,
     title,
+    subtitle,
     children,
     tall = false,
   }: {
     image: string;
     title: string;
+    subtitle?: string;
     children?: React.ReactNode;
     tall?: boolean;
   }) {
@@ -101,6 +103,19 @@ export default function App() {
             maxWidth: 780,
           }}
         >
+          {subtitle && (
+            <div
+              style={{
+                fontSize: 12,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+                opacity: 0.9,
+                marginBottom: 10,
+              }}
+            >
+              {subtitle}
+            </div>
+          )}
           {children}
         </div>
       </div>
@@ -119,19 +134,12 @@ export default function App() {
         }}
       >
         <div style={{ marginBottom: 24 }}>
-          <HeroImage image={HERO_IMAGE} title="Bronson Family Farm" tall>
-            <div
-              style={{
-                fontSize: 12,
-                letterSpacing: 2,
-                textTransform: "uppercase",
-                opacity: 0.9,
-                marginBottom: 10,
-              }}
-            >
-              118+ Acres • Youngstown, Ohio • Appalachian Region
-            </div>
-
+          <HeroImage
+            image={HERO_IMAGE}
+            title="Bronson Family Farm Ecosystem"
+            subtitle="118+ Acres • Youngstown, Ohio • Appalachian Region"
+            tall
+          >
             <h1 style={{ fontSize: 44, lineHeight: 1.05, margin: 0 }}>
               Bronson Family Farm Ecosystem
             </h1>
@@ -168,71 +176,27 @@ export default function App() {
             marginBottom: 24,
           }}
         >
-          <div
-            style={{
-              background: "#ffffff",
-              borderRadius: 16,
-              padding: 20,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-            }}
-          >
-            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>
-              Land Base
-            </div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>
-              118+
-            </div>
+          <div style={{ background: "#ffffff", borderRadius: 16, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>Land Base</div>
+            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>118+</div>
             <div>Acres positioned for long-term agricultural growth</div>
           </div>
 
-          <div
-            style={{
-              background: "#ffffff",
-              borderRadius: 16,
-              padding: 20,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-            }}
-          >
-            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>
-              Workforce Model
-            </div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>
-              8
-            </div>
+          <div style={{ background: "#ffffff", borderRadius: 16, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>Workforce Model</div>
+            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>8</div>
             <div>Weeks of youth workforce development programming</div>
           </div>
 
-          <div
-            style={{
-              background: "#ffffff",
-              borderRadius: 16,
-              padding: 20,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-            }}
-          >
-            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>
-              Production Focus
-            </div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>
-              3+
-            </div>
+          <div style={{ background: "#ffffff", borderRadius: 16, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>Production Focus</div>
+            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>3+</div>
             <div>Acres actively moving toward growing and demonstration use</div>
           </div>
 
-          <div
-            style={{
-              background: "#ffffff",
-              borderRadius: 16,
-              padding: 20,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-            }}
-          >
-            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>
-              Community Vision
-            </div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>
-              1,000
-            </div>
+          <div style={{ background: "#ffffff", borderRadius: 16, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>Community Vision</div>
+            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>1,000</div>
             <div>People envisioned for future impact through expansion</div>
           </div>
         </div>
@@ -249,51 +213,20 @@ export default function App() {
           <p>Choose a role to explore the platform.</p>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button style={roleButtonStyle} onClick={() => setScreen("guest")}>
-              Guest
-            </button>
-            <button style={roleButtonStyle} onClick={() => setScreen("customer")}>
-              Customer
-            </button>
-            <button style={roleButtonStyle} onClick={() => setScreen("grower")}>
-              Grower
-            </button>
-            <button style={roleButtonStyle} onClick={() => setScreen("volunteer")}>
-              Volunteer
-            </button>
-            <button style={roleButtonStyle} onClick={() => setScreen("youth")}>
-              Youth
-            </button>
-            <button style={roleButtonStyle} onClick={() => setScreen("supervisor")}>
-              Supervisor
-            </button>
-            <button style={roleButtonStyle} onClick={() => setScreen("admin")}>
-              Admin
-            </button>
+            <button style={roleButtonStyle} onClick={() => setScreen("guest")}>Guest</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("customer")}>Customer</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("grower")}>Grower</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("volunteer")}>Volunteer</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("youth")}>Youth</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("supervisor")}>Supervisor</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("admin")}>Admin</button>
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
           <div style={cardStyle}>
-            <img
-              src={SECOND_IMAGE}
-              alt="Grower"
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))",
-              }}
-            />
+            <img src={SECOND_IMAGE} alt="Grower" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))" }} />
             <div style={{ position: "relative" }}>
               <h3>Grower Ecosystem</h3>
               <p>Inventory, crop planning, pricing, and marketplace readiness.</p>
@@ -301,25 +234,8 @@ export default function App() {
           </div>
 
           <div style={cardStyle}>
-            <img
-              src={HERO_IMAGE}
-              alt="Workforce"
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))",
-              }}
-            />
+            <img src={HERO_IMAGE} alt="Workforce" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))" }} />
             <div style={{ position: "relative" }}>
               <h3>Workforce Pathways</h3>
               <p>Youth development, supervision, and real-world skill building.</p>
@@ -327,25 +243,8 @@ export default function App() {
           </div>
 
           <div style={cardStyle}>
-            <img
-              src={SECOND_IMAGE}
-              alt="Customer"
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))",
-              }}
-            />
+            <img src={SECOND_IMAGE} alt="Customer" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))" }} />
             <div style={{ position: "relative" }}>
               <h3>Customer Access</h3>
               <p>Shopping, pickup flow, SNAP expansion, and community engagement.</p>
@@ -358,12 +257,16 @@ export default function App() {
 
   function RoleLayout({
     title,
+    subtitle,
     description,
     image,
+    highlights,
   }: {
     title: string;
+    subtitle: string;
     description: string;
     image: string;
+    highlights: string[];
   }) {
     return (
       <div
@@ -391,8 +294,8 @@ export default function App() {
         </button>
 
         <div style={{ marginBottom: 20 }}>
-          <HeroImage image={image} title={title}>
-            <h1 style={{ margin: 0 }}>{title}</h1>
+          <HeroImage image={image} title={title} subtitle={subtitle}>
+            <h1 style={{ margin: 0, fontSize: 38 }}>{title}</h1>
           </HeroImage>
         </div>
 
@@ -408,6 +311,23 @@ export default function App() {
             {description}
           </p>
 
+          <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 20 }}>
+            {highlights.map((item) => (
+              <div
+                key={item}
+                style={{
+                  background: "#eef3ec",
+                  borderRadius: 12,
+                  padding: 16,
+                  minWidth: 220,
+                  flex: 1,
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+
           <div style={{ marginTop: 20 }}>
             <button style={actionButtonStyle} onClick={() => setScreen("home")}>
               Return to Overview
@@ -422,8 +342,14 @@ export default function App() {
     return (
       <RoleLayout
         title="Grower Dashboard"
+        subtitle="Food Production • Crop Planning • Market Readiness"
         description="This is where food begins. Growers track production, manage crops, and prepare inventory for market—creating a sustainable local food system."
         image={SECOND_IMAGE}
+        highlights={[
+          "Crop planning and seasonal production",
+          "Inventory and harvest readiness",
+          "Pricing for market and community access",
+        ]}
       />
     );
   }
@@ -432,8 +358,14 @@ export default function App() {
     return (
       <RoleLayout
         title="Customer Marketplace"
+        subtitle="Shopping • Pickup • Food Access"
         description="This is how the community accesses food. Customers can shop, reserve pickups, and eventually use SNAP—ensuring equitable food access."
         image={HERO_IMAGE}
+        highlights={[
+          "Farm products and pickup flow",
+          "Accessible food purchasing",
+          "Future SNAP-ready experience",
+        ]}
       />
     );
   }
@@ -442,8 +374,14 @@ export default function App() {
     return (
       <RoleLayout
         title="Admin Control Panel"
+        subtitle="Operations • Oversight • Impact"
         description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time."
         image={SECOND_IMAGE}
+        highlights={[
+          "System-wide oversight",
+          "Program and workforce visibility",
+          "Operational decision support",
+        ]}
       />
     );
   }
@@ -452,8 +390,14 @@ export default function App() {
     return (
       <RoleLayout
         title="Guest Experience"
+        subtitle="Story • Land • Invitation"
         description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation."
         image={HERO_IMAGE}
+        highlights={[
+          "Introduction to the farm vision",
+          "Public-facing story and welcome",
+          "Easy entry into partnership and support",
+        ]}
       />
     );
   }
@@ -462,8 +406,14 @@ export default function App() {
     return (
       <RoleLayout
         title="Volunteer Hub"
+        subtitle="Service • Events • Community Support"
         description="This is where community support becomes action. Volunteers can help power events, daily farm activity, and public engagement."
         image={SECOND_IMAGE}
+        highlights={[
+          "Volunteer coordination",
+          "Support for farm and public events",
+          "Hands-on community participation",
+        ]}
       />
     );
   }
@@ -472,8 +422,14 @@ export default function App() {
     return (
       <RoleLayout
         title="Youth Workforce"
+        subtitle="Learning • Responsibility • Pathways"
         description="This is where workforce begins. Youth learn responsibility, gain real skills, and build pathways into agriculture, business, and community leadership."
         image={HERO_IMAGE}
+        highlights={[
+          "8-week workforce development model",
+          "Real-world agricultural experience",
+          "Pathways into business and leadership",
+        ]}
       />
     );
   }
@@ -482,8 +438,14 @@ export default function App() {
     return (
       <RoleLayout
         title="Supervisor Console"
+        subtitle="Guidance • Accountability • Growth"
         description="This is where accountability and development meet. Supervisors guide progress, support growth, and help ensure work is completed with excellence."
         image={SECOND_IMAGE}
+        highlights={[
+          "Task oversight and accountability",
+          "Support for youth and team development",
+          "Progress monitoring and coaching",
+        ]}
       />
     );
   }
