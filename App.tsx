@@ -1,12 +1,15 @@
-import { useState } from "react";
-
 function HomeScreen() {
   return (
-    <div>
-      {/* HERO IMAGE */}
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f3eee3",
+        padding: 32,
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
       <div
         style={{
-          position: "relative",
           minHeight: 420,
           borderRadius: 20,
           overflow: "hidden",
@@ -32,11 +35,11 @@ function HomeScreen() {
             Youngstown, Ohio • Appalachian Region
           </div>
 
-          <h1 style={{ fontSize: 36, marginBottom: 12 }}>
+          <h1 style={{ fontSize: 42, margin: 0 }}>
             Bronson Family Farm Ecosystem
           </h1>
 
-          <p style={{ opacity: 0.9, marginBottom: 16 }}>
+          <p style={{ opacity: 0.9, marginTop: 12, marginBottom: 16 }}>
             A living model for food, workforce, and community-powered growth.
           </p>
 
@@ -47,7 +50,7 @@ function HomeScreen() {
               border: "none",
               background: "#2e7d32",
               color: "white",
-              fontWeight: 600,
+              fontWeight: 700,
             }}
           >
             Enter the Ecosystem
@@ -55,7 +58,6 @@ function HomeScreen() {
         </div>
       </div>
 
-      {/* ROLE SECTION */}
       <div
         style={{
           background: "#eef3ec",
@@ -78,7 +80,6 @@ function HomeScreen() {
         </div>
       </div>
 
-      {/* CARDS */}
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
         <div
           style={{
