@@ -11,6 +11,9 @@ type Role =
 
 type Screen = "home" | Role;
 
+const HERO_IMAGE = "/GrowArea.jpg";
+const SECOND_IMAGE = "/GrowArea2.jpg";
+
 export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
 
@@ -59,8 +62,7 @@ export default function App() {
             borderRadius: 20,
             overflow: "hidden",
             marginBottom: 24,
-            backgroundImage:
-              "linear-gradient(rgba(20,20,20,0.45), rgba(20,20,20,0.35)), url('/GrowArea.JPG')",
+            backgroundImage: `linear-gradient(rgba(20,20,20,0.45), rgba(20,20,20,0.35)), url('${HERO_IMAGE}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             display: "flex",
@@ -197,39 +199,13 @@ export default function App() {
           <p>Choose a role to explore the platform.</p>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button style={roleButtonStyle} onClick={() => setScreen("guest")}>
-              Guest
-            </button>
-            <button
-              style={roleButtonStyle}
-              onClick={() => setScreen("customer")}
-            >
-              Customer
-            </button>
-            <button
-              style={roleButtonStyle}
-              onClick={() => setScreen("grower")}
-            >
-              Grower
-            </button>
-            <button
-              style={roleButtonStyle}
-              onClick={() => setScreen("volunteer")}
-            >
-              Volunteer
-            </button>
-            <button style={roleButtonStyle} onClick={() => setScreen("youth")}>
-              Youth
-            </button>
-            <button
-              style={roleButtonStyle}
-              onClick={() => setScreen("supervisor")}
-            >
-              Supervisor
-            </button>
-            <button style={roleButtonStyle} onClick={() => setScreen("admin")}>
-              Admin
-            </button>
+            <button style={roleButtonStyle} onClick={() => setScreen("guest")}>Guest</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("customer")}>Customer</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("grower")}>Grower</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("volunteer")}>Volunteer</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("youth")}>Youth</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("supervisor")}>Supervisor</button>
+            <button style={roleButtonStyle} onClick={() => setScreen("admin")}>Admin</button>
           </div>
         </div>
 
@@ -238,8 +214,7 @@ export default function App() {
             style={{
               ...cardStyle,
               minHeight: 220,
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('/GrowArea2.JPG')",
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('${SECOND_IMAGE}')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -252,8 +227,7 @@ export default function App() {
             style={{
               ...cardStyle,
               minHeight: 220,
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('/GrowArea.JPG')",
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('${HERO_IMAGE}')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -266,8 +240,7 @@ export default function App() {
             style={{
               ...cardStyle,
               minHeight: 220,
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('/GrowArea2.JPG')",
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.9)), url('${SECOND_IMAGE}')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -345,10 +318,7 @@ export default function App() {
           </p>
 
           <div style={{ marginTop: 20 }}>
-            <button
-              style={actionButtonStyle}
-              onClick={() => setScreen("home")}
-            >
+            <button style={actionButtonStyle} onClick={() => setScreen("home")}>
               Return to Overview
             </button>
           </div>
@@ -362,7 +332,7 @@ export default function App() {
       <RoleLayout
         title="Grower Dashboard"
         description="This is where food begins. Growers track production, manage crops, and prepare inventory for market—creating a sustainable local food system."
-        image="/GrowArea2.JPG"
+        image={SECOND_IMAGE}
       />
     );
   }
@@ -372,7 +342,7 @@ export default function App() {
       <RoleLayout
         title="Customer Marketplace"
         description="This is how the community accesses food. Customers can shop, reserve pickups, and eventually use SNAP—ensuring equitable food access."
-        image="/GrowArea.JPG"
+        image={HERO_IMAGE}
       />
     );
   }
@@ -382,7 +352,7 @@ export default function App() {
       <RoleLayout
         title="Admin Control Panel"
         description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time."
-        image="/GrowArea2.JPG"
+        image={SECOND_IMAGE}
       />
     );
   }
@@ -392,7 +362,7 @@ export default function App() {
       <RoleLayout
         title="Guest Experience"
         description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation."
-        image="/GrowArea.JPG"
+        image={HERO_IMAGE}
       />
     );
   }
@@ -402,7 +372,7 @@ export default function App() {
       <RoleLayout
         title="Volunteer Hub"
         description="This is where community support becomes action. Volunteers can help power events, daily farm activity, and public engagement."
-        image="/GrowArea2.JPG"
+        image={SECOND_IMAGE}
       />
     );
   }
@@ -412,7 +382,7 @@ export default function App() {
       <RoleLayout
         title="Youth Workforce"
         description="This is where workforce begins. Youth learn responsibility, gain real skills, and build pathways into agriculture, business, and community leadership."
-        image="/GrowArea.JPG"
+        image={HERO_IMAGE}
       />
     );
   }
@@ -422,7 +392,7 @@ export default function App() {
       <RoleLayout
         title="Supervisor Console"
         description="This is where accountability and development meet. Supervisors guide progress, support growth, and help ensure work is completed with excellence."
-        image="/GrowArea2.JPG"
+        image={SECOND_IMAGE}
       />
     );
   }
