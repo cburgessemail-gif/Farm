@@ -22,6 +22,45 @@ const ROLE_IMAGES = {
   admin: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0237.JPG",
 };
 
+const MARKET_ITEMS = [
+  {
+    name: "Collard Greens",
+    price: "$10",
+    unit: "5-seedling roll",
+    description: "Healthy starter bundle ready for transplanting.",
+  },
+  {
+    name: "Broccoli",
+    price: "$5",
+    unit: "3-seedling roll",
+    description: "Strong young broccoli starts for spring planting.",
+  },
+  {
+    name: "Cilantro",
+    price: "$3",
+    unit: "5-seedling roll",
+    description: "Fresh herb starts for home cooks and growers.",
+  },
+  {
+    name: "Tomatoes",
+    price: "$5",
+    unit: "3-seedling roll",
+    description: "Seasonal tomato starts prepared for garden growth.",
+  },
+  {
+    name: "Mustards",
+    price: "$4",
+    unit: "bundle",
+    description: "Fresh market greens for community food access.",
+  },
+  {
+    name: "Spinach",
+    price: "$4",
+    unit: "bag",
+    description: "Nutritious leafy greens prepared for market pickup.",
+  },
+];
+
 export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
 
@@ -60,9 +99,9 @@ export default function App() {
           subtitle: "Shopping • Pickup • Food Access",
           image: ROLE_IMAGES.customer,
           cards: [
-            { title: "Browse Products", text: "View produce, seedlings, and future seasonal offerings." },
-            { title: "Reserve Pickup", text: "Choose convenient community pickup or event-based ordering." },
-            { title: "Expand Access", text: "Support a system designed for equitable food access and SNAP readiness." },
+            { title: "Fresh Food", text: "See produce, seedlings, and farm-grown offerings." },
+            { title: "Reserve Pickup", text: "Choose convenient community pickup options." },
+            { title: "Food Access", text: "Support a model built for equitable access and SNAP growth." },
           ],
         };
       case "grower":
@@ -373,6 +412,88 @@ export default function App() {
     );
   }
 
+  function CustomerMarketplace() {
+    const theme = getRoleTheme("customer");
+
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#f3eee3",
+          padding: 32,
+          fontFamily: "Arial, sans-serif",
+          color: "#1f1f1f",
+        }}
+      >
+        <button
+          onClick={() => setScreen("home")}
+          style={{
+            marginBottom: 20,
+            padding: "10px 14px",
+            borderRadius: 8,
+            border: "1px solid #b8b8b8",
+            background: "#ffffff",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          ← Back to Home
+        </button>
+
+        <div style={{ marginBottom: 20 }}>
+          <HeroImage
+            image={theme.image}
+            title="Customer Marketplace"
+            subtitle={theme.subtitle}
+          >
+            <h1 style={{ margin: 0, fontSize: 38 }}>Customer Marketplace</h1>
+          </HeroImage>
+        </div>
+
+        <div
+          style={{
+            ...baseCard,
+            borderTop: `6px solid ${theme.color}`,
+            marginBottom: 20,
+          }}
+        >
+          <p style={{ fontSize: 18, lineHeight: 1.6, marginTop: 0 }}>
+            Fresh food should be visible here. This marketplace now shows sample
+            Bronson Family Farm offerings, including seedlings and produce.
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 16,
+          }}
+        >
+          {MARKET_ITEMS.map((item) => (
+            <div
+              key={item.name}
+              style={{
+                ...baseCard,
+                borderTop: `6px solid ${theme.color}`,
+              }}
+            >
+              <h3 style={{ marginTop: 0 }}>{item.name}</h3>
+              <div style={{ fontWeight: 700, marginBottom: 8 }}>{item.price}</div>
+              <div style={{ opacity: 0.8, marginBottom: 8 }}>{item.unit}</div>
+              <p>{item.description}</p>
+              <ActionButton
+                label="Reserve Item"
+                color={theme.color}
+                onClick={() => alert(`${item.name} added to demo reservation list`)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   function HomeScreen() {
     return (
       <div
@@ -455,21 +576,89 @@ export default function App() {
         </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <OverlayInfoCard title="Grower Ecosystem" text="Inventory, crop planning, pricing, and marketplace readiness." image={ROLE_IMAGES.grower} />
-          <OverlayInfoCard title="Workforce Pathways" text="Youth development, supervision, and real-world skill building." image={ROLE_IMAGES.youth} />
-          <OverlayInfoCard title="Customer Access" text="Shopping, pickup flow, SNAP expansion, and community engagement." image={ROLE_IMAGES.customer} />
+          <OverlayInfoCard
+            title="Grower Ecosystem"
+            text="Inventory, crop planning, pricing, and marketplace readiness."
+            image={ROLE_IMAGES.grower}
+          />
+          <OverlayInfoCard
+            title="Workforce Pathways"
+            text="Youth development, supervision, and real-world skill building."
+            image={ROLE_IMAGES.youth}
+          />
+          <OverlayInfoCard
+            title="Customer Access"
+            text="Shopping, pickup flow, SNAP expansion, and community engagement."
+            image={ROLE_IMAGES.customer}
+          />
         </div>
       </div>
     );
   }
 
-  if (screen === "guest") return <RoleDemoPage role="guest" title="Guest Experience" description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation." />;
-  if (screen === "customer") return <RoleDemoPage role="customer" title="Customer Marketplace" description="This is how the community accesses food. Customers can shop, reserve pickups, and eventually use SNAP—ensuring equitable food access." />;
-  if (screen === "grower") return <RoleDemoPage role="grower" title="Grower Dashboard" description="This is where food begins. Growers track production, manage crops, and prepare inventory for market—creating a sustainable local food system." />;
-  if (screen === "volunteer") return <RoleDemoPage role="volunteer" title="Volunteer Hub" description="This is where community support becomes action. Volunteers can help power events, daily farm activity, and public engagement." />;
-  if (screen === "youth") return <RoleDemoPage role="youth" title="Youth Workforce" description="This is where workforce begins. Youth learn responsibility, gain real skills, and build pathways into agriculture, business, and community leadership." />;
-  if (screen === "supervisor") return <RoleDemoPage role="supervisor" title="Supervisor Console" description="This is where accountability and development meet. Supervisors guide progress, support growth, and help ensure work is completed with excellence." />;
-  if (screen === "admin") return <RoleDemoPage role="admin" title="Admin Control Panel" description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time." />;
+  if (screen === "guest") {
+    return (
+      <RoleDemoPage
+        role="guest"
+        title="Guest Experience"
+        description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation."
+      />
+    );
+  }
+
+  if (screen === "customer") {
+    return <CustomerMarketplace />;
+  }
+
+  if (screen === "grower") {
+    return (
+      <RoleDemoPage
+        role="grower"
+        title="Grower Dashboard"
+        description="This is where food begins. Growers track production, manage crops, and prepare inventory for market—creating a sustainable local food system."
+      />
+    );
+  }
+
+  if (screen === "volunteer") {
+    return (
+      <RoleDemoPage
+        role="volunteer"
+        title="Volunteer Hub"
+        description="This is where community support becomes action. Volunteers can help power events, daily farm activity, and public engagement."
+      />
+    );
+  }
+
+  if (screen === "youth") {
+    return (
+      <RoleDemoPage
+        role="youth"
+        title="Youth Workforce"
+        description="This is where workforce begins. Youth learn responsibility, gain real skills, and build pathways into agriculture, business, and community leadership."
+      />
+    );
+  }
+
+  if (screen === "supervisor") {
+    return (
+      <RoleDemoPage
+        role="supervisor"
+        title="Supervisor Console"
+        description="This is where accountability and development meet. Supervisors guide progress, support growth, and help ensure work is completed with excellence."
+      />
+    );
+  }
+
+  if (screen === "admin") {
+    return (
+      <RoleDemoPage
+        role="admin"
+        title="Admin Control Panel"
+        description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time."
+      />
+    );
+  }
 
   return <HomeScreen />;
 }
