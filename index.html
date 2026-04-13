@@ -21,6 +21,9 @@ type Product = {
   details: string;
   price: string;
   tag: string;
+  description: string;
+  pickup: string;
+  idealFor: string;
 };
 
 const APP_TITLE = "Bronson Family Farm";
@@ -67,59 +70,98 @@ const bubbleBabiesProducts: Product[] = [
     details: "3 seedlings per roll",
     price: "$5",
     tag: "Best seller",
+    description:
+      "A practical starter for home growers who want strong tomato seedlings in an easy-to-carry Bubble Babies roll.",
+    pickup: "Farm events, market days, and preorder pickup pathways",
+    idealFor: "Patio gardens, raised beds, and home food growing",
   },
   {
     name: "Pepper Bubble Babies",
     details: "3 seedlings per roll",
     price: "$5",
     tag: "Sweet + hot",
+    description:
+      "A flavorful starter option that supports both sweet and hot pepper growing for home cooks and garden lovers.",
+    pickup: "Farm events, preorder scheduling, and seasonal pickups",
+    idealFor: "Families, beginners, and kitchen gardeners",
   },
   {
     name: "Cabbage Bubble Babies",
     details: "3 seedlings per roll",
     price: "$5",
     tag: "Garden staple",
+    description:
+      "A dependable cool-season selection that gives customers a simple way to bring home a productive garden staple.",
+    pickup: "Preorder and event-based pickup",
+    idealFor: "Family gardens and seasonal growers",
   },
   {
     name: "Broccoli Bubble Babies",
     details: "3 seedlings per roll",
     price: "$5",
     tag: "Cool season",
+    description:
+      "A healthy and practical starter for customers looking to grow food with strong household value.",
+    pickup: "Scheduled pickup and market access points",
+    idealFor: "Health-focused households and home growers",
   },
   {
     name: "Collard Bubble Babies",
     details: "5 seedlings per roll",
     price: "$10",
     tag: "High demand",
+    description:
+      "A high-value greens option with strong regional and family appeal, offered in a fuller seedling count.",
+    pickup: "Preorders strongly encouraged",
+    idealFor: "Customers wanting strong leafy-green value",
   },
   {
     name: "Cilantro Bubble Babies",
     details: "5 seedlings per roll",
     price: "$3",
     tag: "Herb favorite",
+    description:
+      "An easy-entry herb option that gives shoppers a low-cost and useful kitchen favorite.",
+    pickup: "Event pickup and preorder pathway",
+    idealFor: "Cooks, herb lovers, and beginners",
   },
   {
     name: "Spinach Bubble Babies",
     details: "5 seedlings per roll",
     price: "$3",
     tag: "Leafy greens",
+    description:
+      "An accessible leafy-green starter with a simple price point and strong everyday meal value.",
+    pickup: "Seasonal pickup and preorders",
+    idealFor: "Families and healthy food households",
   },
   {
     name: "Mustard Bubble Babies",
     details: "5 seedlings per roll",
     price: "$3",
     tag: "Greens",
+    description:
+      "A flavorful greens option for customers who enjoy traditional garden varieties and practical home growing.",
+    pickup: "Farm and market pickup flow",
+    idealFor: "Greens lovers and regional food traditions",
   },
   {
     name: "Lettuce Bubble Babies",
     details: "10 seedlings per roll",
     price: "$5",
     tag: "Family value",
+    description:
+      "A strong value item with more seedlings per roll, designed for households that want quick salad-growing potential.",
+    pickup: "Preorder and event pickup",
+    idealFor: "Families, beginners, and raised-bed growers",
   },
 ];
 
 function App() {
   const [screen, setScreen] = useState<Screen>("home");
+  const [selectedProduct, setSelectedProduct] = useState<Product>(
+    bubbleBabiesProducts[0]
+  );
 
   const currentTitle = useMemo(() => {
     switch (screen) {
@@ -151,7 +193,14 @@ function App() {
       {screen === "home" && <HomeScreen onStart={() => setScreen("roles")} />}
 
       {screen === "roles" && (
-        <RoleSelectionScreen onSelect={(next) => setScreen(next)} />
+        <RoleSelectionScreen
+          onSelect={(next) => {
+            setScreen(next);
+            if (next === "customer") {
+              setSelectedProduct(bubbleBabiesProducts[0]);
+            }
+          }}
+        />
       )}
 
       {screen === "customer" && (
@@ -163,7 +212,7 @@ function App() {
         >
           <SectionTitle
             title="Shop the Farm"
-            text="This portal now shows real starter pricing so the demo feels like a live local marketplace instead of a placeholder."
+            text="This portal now feels more alive. Customers can click products and immediately see what makes each Bubble Babies offer useful and valuable."
           />
 
           <div style={styles.marketBanner}>
@@ -193,34 +242,43 @@ function App() {
           <div style={styles.productSectionHeader}>
             <h3 style={styles.productSectionTitle}>Bubble Babies Pricing</h3>
             <p style={styles.productSectionText}>
-              Seedlings are sold in rolled Bubble Babies units, not trays.
+              Click any item below. Seedlings are sold in rolled Bubble Babies
+              units, not trays.
             </p>
           </div>
 
-          <MarketplaceGrid>
-            {bubbleBabiesProducts.map((product) => (
-              <ProductCard
-                key={product.name}
-                title={product.name}
-                subtitle={product.details}
-                price={product.price}
-                tag={product.tag}
-              />
-            ))}
-          </MarketplaceGrid>
+          <div style={styles.customerShowcaseGrid}>
+            <div>
+              <MarketplaceGrid>
+                {bubbleBabiesProducts.map((product) => (
+                  <ProductCard
+                    key={product.name}
+                    title={product.name}
+                    subtitle={product.details}
+                    price={product.price}
+                    tag={product.tag}
+                    isActive={selectedProduct.name === product.name}
+                    onClick={() => setSelectedProduct(product)}
+                  />
+                ))}
+              </MarketplaceGrid>
+            </div>
+
+            <ProductDetailPanel product={selectedProduct} />
+          </div>
 
           <FeatureBand>
             <FeatureMini
               title="Why this works"
-              text="Customers can quickly understand what they are buying, how much it costs, and why this format is unique."
+              text="Customers can now browse, compare, and understand the value of each product without needing explanation."
             />
             <FeatureMini
               title="What comes next"
-              text="This screen can be wired next to real online ordering, QR-based shopping, and live inventory."
+              text="This panel can later connect to real product photos, QR codes, live inventory, and direct ordering."
             />
             <FeatureMini
               title="Revenue story"
-              text="This portal proves Bronson Family Farm can move from vision to sales in a clear, welcoming way."
+              text="This portal now behaves more like a true marketplace and helps the demo feel active instead of static."
             />
           </FeatureBand>
         </PortalShell>
@@ -541,18 +599,63 @@ function ProductCard({
   subtitle,
   price,
   tag,
+  isActive,
+  onClick,
 }: {
   title: string;
   subtitle: string;
   price: string;
   tag: string;
+  isActive?: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <div style={styles.productCard}>
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        ...styles.productCard,
+        ...(isActive ? styles.productCardActive : {}),
+      }}
+    >
       <div style={styles.productTag}>{tag}</div>
       <h4 style={styles.productTitle}>{title}</h4>
       <p style={styles.productSubtitle}>{subtitle}</p>
       <div style={styles.productPrice}>{price}</div>
+    </button>
+  );
+}
+
+function ProductDetailPanel({ product }: { product: Product }) {
+  return (
+    <div style={styles.productDetailPanel}>
+      <div style={styles.productDetailTop}>
+        <div style={styles.productDetailBadge}>Selected Product</div>
+        <div style={styles.productDetailPrice}>{product.price}</div>
+      </div>
+
+      <h3 style={styles.productDetailTitle}>{product.name}</h3>
+      <p style={styles.productDetailSubtitle}>{product.details}</p>
+
+      <div style={styles.productDetailBlock}>
+        <div style={styles.productDetailLabel}>About</div>
+        <div style={styles.productDetailText}>{product.description}</div>
+      </div>
+
+      <div style={styles.productDetailBlock}>
+        <div style={styles.productDetailLabel}>Pickup</div>
+        <div style={styles.productDetailText}>{product.pickup}</div>
+      </div>
+
+      <div style={styles.productDetailBlock}>
+        <div style={styles.productDetailLabel}>Ideal For</div>
+        <div style={styles.productDetailText}>{product.idealFor}</div>
+      </div>
+
+      <div style={styles.productDetailFooter}>
+        A live marketplace version of this panel can later connect to photos,
+        ordering, and QR-based checkout.
+      </div>
     </div>
   );
 }
@@ -1060,11 +1163,18 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#35513c",
   },
 
+  customerShowcaseGrid: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 2fr) minmax(320px, 1fr)",
+    gap: 20,
+    alignItems: "start",
+    marginBottom: 22,
+  },
+
   marketplaceGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: 18,
-    marginBottom: 22,
   },
 
   productCard: {
@@ -1073,6 +1183,15 @@ const styles: Record<string, React.CSSProperties> = {
     padding: 22,
     border: "1px solid rgba(23,53,31,0.08)",
     boxShadow: "0 12px 30px rgba(23,53,31,0.07)",
+    textAlign: "left",
+    cursor: "pointer",
+    width: "100%",
+  },
+
+  productCardActive: {
+    border: "2px solid #2f6b3d",
+    boxShadow: "0 18px 34px rgba(47,107,61,0.16)",
+    transform: "translateY(-2px)",
   },
 
   productTag: {
@@ -1105,6 +1224,89 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 900,
     fontSize: 16,
     color: "#2f6b3d",
+  },
+
+  productDetailPanel: {
+    background:
+      "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(236,244,233,0.96) 100%)",
+    borderRadius: 24,
+    padding: 24,
+    border: "1px solid rgba(23,53,31,0.08)",
+    boxShadow: "0 16px 36px rgba(23,53,31,0.10)",
+    position: "sticky",
+    top: 98,
+  },
+
+  productDetailTop: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    marginBottom: 16,
+    flexWrap: "wrap",
+  },
+
+  productDetailBadge: {
+    display: "inline-block",
+    padding: "8px 12px",
+    borderRadius: 999,
+    background: "rgba(47,107,61,0.10)",
+    color: "#235030",
+    fontSize: 12,
+    fontWeight: 900,
+  },
+
+  productDetailPrice: {
+    fontSize: 26,
+    fontWeight: 900,
+    color: "#2f6b3d",
+  },
+
+  productDetailTitle: {
+    margin: 0,
+    fontSize: 28,
+    lineHeight: 1.1,
+    fontWeight: 900,
+    color: "#1e4027",
+  },
+
+  productDetailSubtitle: {
+    marginTop: 8,
+    marginBottom: 18,
+    fontSize: 16,
+    lineHeight: 1.6,
+    color: "#35513c",
+  },
+
+  productDetailBlock: {
+    marginBottom: 16,
+    padding: "14px 16px",
+    borderRadius: 18,
+    background: "rgba(255,255,255,0.72)",
+    border: "1px solid rgba(23,53,31,0.06)",
+  },
+
+  productDetailLabel: {
+    fontSize: 12,
+    fontWeight: 900,
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+    color: "#5a6f5e",
+    marginBottom: 8,
+  },
+
+  productDetailText: {
+    fontSize: 15,
+    lineHeight: 1.65,
+    color: "#2f4636",
+  },
+
+  productDetailFooter: {
+    marginTop: 18,
+    fontSize: 14,
+    lineHeight: 1.6,
+    color: "#49604d",
+    fontWeight: 600,
   },
 
   featureBand: {
