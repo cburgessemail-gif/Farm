@@ -106,7 +106,7 @@ export default function App() {
   };
 
   const wrapStyle: React.CSSProperties = {
-    maxWidth: 1240,
+    maxWidth: 1280,
     margin: "0 auto",
     padding: 32,
   };
@@ -163,6 +163,11 @@ export default function App() {
     [inventory]
   );
 
+  const estimatedInventoryValue = useMemo(
+    () => inventory.reduce((sum, item) => sum + item.quantity * item.price, 0),
+    [inventory]
+  );
+
   const customerItems = useMemo(() => {
     return inventory.filter((item) => {
       if (item.status !== "Ready" && item.status !== "Low Stock") return false;
@@ -178,6 +183,11 @@ export default function App() {
       return sum + item.price * qty;
     }, 0);
   }, [cart, inventory]);
+
+  const totalCartItems = useMemo(
+    () => Object.values(cart).reduce((sum, qty) => sum + qty, 0),
+    [cart]
+  );
 
   const taskSummary = useMemo(() => {
     return {
@@ -925,7 +935,186 @@ export default function App() {
     );
   }
 
-  function BasicRoleScreen({ role }: { role: Exclude<Role, "grower" | "customer" | "youth" | "supervisor"> }) {
+  function AdminScreen() {
+    const lowStockItems = inventory.filter((item) => item.status === "Low Stock");
+    const readyItems = inventory.filter((item) => item.status === "Ready");
+
+    return (
+      <div>
+        <div style={{ marginBottom: 20 }}>
+          <button onClick={() => setScreen("home")} style={mutedButtonStyle}>
+            ← Back to Home
+          </button>
+        </div>
+
+        <div
+          style={{
+            background: "#2f6b3c",
+            color: "white",
+            padding: "14px 18px",
+            borderRadius: 12,
+            display: "inline-block",
+            fontWeight: 700,
+            marginBottom: 20,
+          }}
+        >
+          Admin Control Panel
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(5, 1fr)",
+            gap: 16,
+            marginBottom: 20,
+          }}
+        >
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>Inventory Lines</h3>
+            <div style={{ fontSize: 28, fontWeight: 700 }}>{inventory.length}</div>
+          </div>
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>Ready Inventory</h3>
+            <div style={{ fontSize: 28, fontWeight: 700 }}>{readyCount}</div>
+          </div>
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>Low Stock</h3>
+            <div style={{ fontSize: 28, fontWeight: 700 }}>{lowStockCount}</div>
+          </div>
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>Cart Items</h3>
+            <div style={{ fontSize: 28, fontWeight: 700 }}>{totalCartItems}</div>
+          </div>
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>Task Completion</h3>
+            <div style={{ fontSize: 28, fontWeight: 700 }}>{taskSummary.complete}</div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.2fr 1fr",
+            gap: 20,
+            alignItems: "start",
+            marginBottom: 20,
+          }}
+        >
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>System Snapshot</h3>
+            <div style={{ display: "grid", gap: 12 }}>
+              <div>
+                <strong>Total Units in Inventory:</strong> {totalUnits}
+              </div>
+              <div>
+                <strong>Estimated Inventory Value:</strong> ${estimatedInventoryValue.toFixed(2)}
+              </div>
+              <div>
+                <strong>Current Customer Cart Total:</strong> ${cartTotal.toFixed(2)}
+              </div>
+              <div>
+                <strong>Youth Tasks Assigned:</strong> {taskSummary.assigned}
+              </div>
+              <div>
+                <strong>Youth Tasks In Progress:</strong> {taskSummary.inProgress}
+              </div>
+              <div>
+                <strong>Youth Tasks Complete:</strong> {taskSummary.complete}
+              </div>
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>Priority Alerts</h3>
+            <div style={{ display: "grid", gap: 10 }}>
+              <div>
+                <strong>Low Stock Items:</strong>{" "}
+                {lowStockItems.length > 0
+                  ? lowStockItems.map((item) => item.name).join(", ")
+                  : "None"}
+              </div>
+              <div>
+                <strong>Ready for Marketplace:</strong>{" "}
+                {readyItems.length > 0
+                  ? readyItems.map((item) => item.name).join(", ")
+                  : "None"}
+              </div>
+              <div>
+                <strong>Customer Activity:</strong>{" "}
+                {totalCartItems > 0 ? `${totalCartItems} item(s) in cart` : "No active cart items"}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 20,
+            alignItems: "start",
+          }}
+        >
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>Inventory Watchlist</h3>
+            <div style={{ display: "grid", gap: 10 }}>
+              {inventory.map((item, index) => (
+                <div
+                  key={`${item.name}-${index}`}
+                  style={{
+                    border: "1px solid #ddd",
+                    borderRadius: 10,
+                    padding: 12,
+                  }}
+                >
+                  <div style={{ fontWeight: 700 }}>{item.name}</div>
+                  <div style={{ color: "#5d6b57" }}>
+                    {item.category} • {item.quantity} {item.unit} • ${item.price.toFixed(2)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>Workforce Watchlist</h3>
+            <div style={{ display: "grid", gap: 10 }}>
+              {youthTasks.map((task) => (
+                <div
+                  key={task.id}
+                  style={{
+                    border: "1px solid #ddd",
+                    borderRadius: 10,
+                    padding: 12,
+                  }}
+                >
+                  <div style={{ fontWeight: 700 }}>{task.youthName}</div>
+                  <div style={{ color: "#5d6b57" }}>
+                    {task.task} • {task.area}
+                  </div>
+                  <div style={{ marginTop: 6 }}>
+                    <span
+                      style={{
+                        background: taskStatusColor(task.status),
+                        borderRadius: 999,
+                        padding: "4px 8px",
+                        fontWeight: 700,
+                        fontSize: 12,
+                      }}
+                    >
+                      {task.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function BasicRoleScreen({ role }: { role: Exclude<Role, "grower" | "customer" | "youth" | "supervisor" | "admin"> }) {
     return (
       <div>
         <div style={{ marginBottom: 20 }}>
@@ -965,11 +1154,13 @@ export default function App() {
         {screen === "customer" && <CustomerScreen />}
         {screen === "youth" && <YouthScreen />}
         {screen === "supervisor" && <SupervisorScreen />}
+        {screen === "admin" && <AdminScreen />}
         {screen !== "home" &&
           screen !== "grower" &&
           screen !== "customer" &&
           screen !== "youth" &&
-          screen !== "supervisor" && <BasicRoleScreen role={screen} />}
+          screen !== "supervisor" &&
+          screen !== "admin" && <BasicRoleScreen role={screen} />}
       </div>
     </div>
   );
