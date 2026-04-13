@@ -1,5 +1,4 @@
 import { useState } from "react";
-import GrowArea from "./GrowArea.jpg";
 
 type Role =
   | "guest"
@@ -59,7 +58,8 @@ export default function App() {
             borderRadius: 20,
             overflow: "hidden",
             marginBottom: 24,
-            backgroundImage: `linear-gradient(rgba(20,20,20,0.45), rgba(20,20,20,0.35)), url(${GrowArea})`,
+            backgroundImage:
+              "linear-gradient(rgba(20,20,20,0.45), rgba(20,20,20,0.35)), url('/GrowArea.jpg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             display: "flex",
