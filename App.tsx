@@ -19,14 +19,11 @@ const SECOND_IMAGE =
 export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
 
-  const cardStyle: React.CSSProperties = {
-    background: "#f5f5f5",
-    padding: 16,
-    borderRadius: 12,
-    flex: 1,
-    minWidth: 240,
-    position: "relative",
-    overflow: "hidden",
+  const baseCard: React.CSSProperties = {
+    background: "#ffffff",
+    borderRadius: 14,
+    padding: 18,
+    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
   };
 
   const roleButtonStyle: React.CSSProperties = {
@@ -38,15 +35,114 @@ export default function App() {
     fontWeight: 600,
   };
 
-  const actionButtonStyle: React.CSSProperties = {
-    padding: "10px 16px",
-    borderRadius: 8,
-    border: "none",
-    background: "#2e7d32",
-    color: "white",
-    fontWeight: 700,
-    cursor: "pointer",
-  };
+  function getRoleTheme(role: Role) {
+    switch (role) {
+      case "guest":
+        return {
+          color: "#4f6d4f",
+          subtitle: "Story • Land • Invitation",
+          image: HERO_IMAGE,
+          cards: [
+            { title: "Discover the Vision", text: "See how Bronson Family Farm connects land, people, and purpose." },
+            { title: "Visit the Farm", text: "Preview how guests, partners, and supporters encounter the project." },
+            { title: "Get Involved", text: "Explore pathways to support, partner, volunteer, or invest." },
+          ],
+        };
+      case "customer":
+        return {
+          color: "#2f7a4a",
+          subtitle: "Shopping • Pickup • Food Access",
+          image: HERO_IMAGE,
+          cards: [
+            { title: "Browse Products", text: "View produce, seedlings, and future seasonal offerings." },
+            { title: "Reserve Pickup", text: "Choose convenient community pickup or event-based ordering." },
+            { title: "Expand Access", text: "Support a system designed for equitable food access and SNAP readiness." },
+          ],
+        };
+      case "grower":
+        return {
+          color: "#7a5c2f",
+          subtitle: "Food Production • Crop Planning • Market Readiness",
+          image: SECOND_IMAGE,
+          cards: [
+            { title: "Manage Inventory", text: "Track production, harvest readiness, and items moving toward market." },
+            { title: "Plan the Season", text: "Organize crop timing, planting priorities, and workflow." },
+            { title: "Prepare for Market", text: "Move crops from production into customer and community channels." },
+          ],
+        };
+      case "volunteer":
+        return {
+          color: "#6a4f8f",
+          subtitle: "Service • Events • Community Support",
+          image: SECOND_IMAGE,
+          cards: [
+            { title: "See Opportunities", text: "Coordinate event support, farm assistance, and community service." },
+            { title: "Join the Day", text: "Help power public experiences and daily operations." },
+            { title: "Strengthen the Mission", text: "Turn community goodwill into visible progress on the ground." },
+          ],
+        };
+      case "youth":
+        return {
+          color: "#c26a1b",
+          subtitle: "Learning • Responsibility • Pathways",
+          image: HERO_IMAGE,
+          cards: [
+            { title: "Learn by Doing", text: "Gain real-world experience through structured farm-based work." },
+            { title: "Build Skills", text: "Develop responsibility, teamwork, and leadership." },
+            { title: "Create Pathways", text: "Connect agricultural work to workforce and future opportunities." },
+          ],
+        };
+      case "supervisor":
+        return {
+          color: "#355c8c",
+          subtitle: "Guidance • Accountability • Growth",
+          image: SECOND_IMAGE,
+          cards: [
+            { title: "Guide the Team", text: "Support youth and volunteers with clarity, structure, and coaching." },
+            { title: "Track Progress", text: "Monitor tasks, development, and completion." },
+            { title: "Strengthen Outcomes", text: "Help turn activity into measurable growth and readiness." },
+          ],
+        };
+      case "admin":
+        return {
+          color: "#1f4d4d",
+          subtitle: "Operations • Oversight • Impact",
+          image: SECOND_IMAGE,
+          cards: [
+            { title: "Oversee the System", text: "See the full ecosystem across production, programs, and engagement." },
+            { title: "Support Decisions", text: "Use a clear executive view to guide operations and growth." },
+            { title: "Show Impact", text: "Present outcomes to funders, partners, and community stakeholders." },
+          ],
+        };
+    }
+  }
+
+  function ActionButton({
+    label,
+    color,
+    onClick,
+  }: {
+    label: string;
+    color: string;
+    onClick: () => void;
+  }) {
+    return (
+      <button
+        onClick={onClick}
+        style={{
+          padding: "10px 16px",
+          borderRadius: 8,
+          border: "none",
+          background: color,
+          color: "white",
+          fontWeight: 700,
+          cursor: "pointer",
+        }}
+      >
+        {label}
+      </button>
+    );
+  }
 
   function HeroImage({
     image,
@@ -100,7 +196,7 @@ export default function App() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-end",
-            maxWidth: 780,
+            maxWidth: 820,
           }}
         >
           {subtitle && (
@@ -117,6 +213,155 @@ export default function App() {
             </div>
           )}
           {children}
+        </div>
+      </div>
+    );
+  }
+
+  function StatCard({
+    label,
+    value,
+    text,
+  }: {
+    label: string;
+    value: string;
+    text: string;
+  }) {
+    return (
+      <div style={baseCard}>
+        <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>
+          {label}
+        </div>
+        <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>{value}</div>
+        <div>{text}</div>
+      </div>
+    );
+  }
+
+  function OverlayInfoCard({
+    title,
+    text,
+    image,
+  }: {
+    title: string;
+    text: string;
+    image: string;
+  }) {
+    return (
+      <div
+        style={{
+          ...baseCard,
+          minHeight: 220,
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <img
+          src={image}
+          alt={title}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))",
+          }}
+        />
+        <div style={{ position: "relative" }}>
+          <h3>{title}</h3>
+          <p>{text}</p>
+        </div>
+      </div>
+    );
+  }
+
+  function RoleDemoPage({
+    role,
+    title,
+    description,
+  }: {
+    role: Role;
+    title: string;
+    description: string;
+  }) {
+    const theme = getRoleTheme(role);
+
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#f3eee3",
+          padding: 32,
+          fontFamily: "Arial, sans-serif",
+          color: "#1f1f1f",
+        }}
+      >
+        <button
+          onClick={() => setScreen("home")}
+          style={{
+            marginBottom: 20,
+            padding: "10px 14px",
+            borderRadius: 8,
+            border: "1px solid #b8b8b8",
+            background: "#ffffff",
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          ← Back to Home
+        </button>
+
+        <div style={{ marginBottom: 20 }}>
+          <HeroImage image={theme.image} title={title} subtitle={theme.subtitle}>
+            <h1 style={{ margin: 0, fontSize: 38 }}>{title}</h1>
+          </HeroImage>
+        </div>
+
+        <div
+          style={{
+            ...baseCard,
+            borderTop: `6px solid ${theme.color}`,
+            marginBottom: 20,
+          }}
+        >
+          <p style={{ fontSize: 18, lineHeight: 1.6, marginTop: 0 }}>{description}</p>
+
+          <div style={{ marginTop: 20 }}>
+            <ActionButton
+              label="Return to Overview"
+              color={theme.color}
+              onClick={() => setScreen("home")}
+            />
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 16,
+          }}
+        >
+          {theme.cards.map((card) => (
+            <div
+              key={card.title}
+              style={{
+                ...baseCard,
+                borderLeft: `6px solid ${theme.color}`,
+              }}
+            >
+              <h3 style={{ marginTop: 0 }}>{card.title}</h3>
+              <p>{card.text}</p>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -159,12 +404,11 @@ export default function App() {
               and build a community-powered agricultural economy.
             </p>
 
-            <button
-              style={actionButtonStyle}
+            <ActionButton
+              label="Start Guided Demo"
+              color="#2e7d32"
               onClick={() => setScreen("grower")}
-            >
-              Start Guided Demo
-            </button>
+            />
           </HeroImage>
         </div>
 
@@ -176,29 +420,26 @@ export default function App() {
             marginBottom: 24,
           }}
         >
-          <div style={{ background: "#ffffff", borderRadius: 16, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>Land Base</div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>118+</div>
-            <div>Acres positioned for long-term agricultural growth</div>
-          </div>
-
-          <div style={{ background: "#ffffff", borderRadius: 16, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>Workforce Model</div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>8</div>
-            <div>Weeks of youth workforce development programming</div>
-          </div>
-
-          <div style={{ background: "#ffffff", borderRadius: 16, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>Production Focus</div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>3+</div>
-            <div>Acres actively moving toward growing and demonstration use</div>
-          </div>
-
-          <div style={{ background: "#ffffff", borderRadius: 16, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-            <div style={{ fontSize: 12, textTransform: "uppercase", opacity: 0.7 }}>Community Vision</div>
-            <div style={{ fontSize: 34, fontWeight: 700, marginTop: 8 }}>1,000</div>
-            <div>People envisioned for future impact through expansion</div>
-          </div>
+          <StatCard
+            label="Land Base"
+            value="118+"
+            text="Acres positioned for long-term agricultural growth"
+          />
+          <StatCard
+            label="Workforce Model"
+            value="8"
+            text="Weeks of youth workforce development programming"
+          />
+          <StatCard
+            label="Production Focus"
+            value="3+"
+            text="Acres actively moving toward growing and demonstration use"
+          />
+          <StatCard
+            label="Community Vision"
+            value="1,000"
+            text="People envisioned for future impact through expansion"
+          />
         </div>
 
         <div
@@ -224,228 +465,92 @@ export default function App() {
         </div>
 
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div style={cardStyle}>
-            <img src={SECOND_IMAGE} alt="Grower" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))" }} />
-            <div style={{ position: "relative" }}>
-              <h3>Grower Ecosystem</h3>
-              <p>Inventory, crop planning, pricing, and marketplace readiness.</p>
-            </div>
-          </div>
-
-          <div style={cardStyle}>
-            <img src={HERO_IMAGE} alt="Workforce" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))" }} />
-            <div style={{ position: "relative" }}>
-              <h3>Workforce Pathways</h3>
-              <p>Youth development, supervision, and real-world skill building.</p>
-            </div>
-          </div>
-
-          <div style={cardStyle}>
-            <img src={SECOND_IMAGE} alt="Customer" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.92))" }} />
-            <div style={{ position: "relative" }}>
-              <h3>Customer Access</h3>
-              <p>Shopping, pickup flow, SNAP expansion, and community engagement.</p>
-            </div>
-          </div>
+          <OverlayInfoCard
+            title="Grower Ecosystem"
+            text="Inventory, crop planning, pricing, and marketplace readiness."
+            image={SECOND_IMAGE}
+          />
+          <OverlayInfoCard
+            title="Workforce Pathways"
+            text="Youth development, supervision, and real-world skill building."
+            image={HERO_IMAGE}
+          />
+          <OverlayInfoCard
+            title="Customer Access"
+            text="Shopping, pickup flow, SNAP expansion, and community engagement."
+            image={SECOND_IMAGE}
+          />
         </div>
       </div>
     );
   }
 
-  function RoleLayout({
-    title,
-    subtitle,
-    description,
-    image,
-    highlights,
-  }: {
-    title: string;
-    subtitle: string;
-    description: string;
-    image: string;
-    highlights: string[];
-  }) {
+  if (screen === "guest") {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#f3eee3",
-          padding: 32,
-          fontFamily: "Arial, sans-serif",
-          color: "#1f1f1f",
-        }}
-      >
-        <button
-          onClick={() => setScreen("home")}
-          style={{
-            marginBottom: 20,
-            padding: "10px 14px",
-            borderRadius: 8,
-            border: "1px solid #b8b8b8",
-            background: "#ffffff",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
-        >
-          ← Back to Home
-        </button>
-
-        <div style={{ marginBottom: 20 }}>
-          <HeroImage image={image} title={title} subtitle={subtitle}>
-            <h1 style={{ margin: 0, fontSize: 38 }}>{title}</h1>
-          </HeroImage>
-        </div>
-
-        <div
-          style={{
-            background: "white",
-            borderRadius: 16,
-            padding: 24,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          }}
-        >
-          <p style={{ fontSize: 18, lineHeight: 1.6, marginTop: 0 }}>
-            {description}
-          </p>
-
-          <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 20 }}>
-            {highlights.map((item) => (
-              <div
-                key={item}
-                style={{
-                  background: "#eef3ec",
-                  borderRadius: 12,
-                  padding: 16,
-                  minWidth: 220,
-                  flex: 1,
-                }}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-
-          <div style={{ marginTop: 20 }}>
-            <button style={actionButtonStyle} onClick={() => setScreen("home")}>
-              Return to Overview
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (screen === "grower") {
-    return (
-      <RoleLayout
-        title="Grower Dashboard"
-        subtitle="Food Production • Crop Planning • Market Readiness"
-        description="This is where food begins. Growers track production, manage crops, and prepare inventory for market—creating a sustainable local food system."
-        image={SECOND_IMAGE}
-        highlights={[
-          "Crop planning and seasonal production",
-          "Inventory and harvest readiness",
-          "Pricing for market and community access",
-        ]}
+      <RoleDemoPage
+        role="guest"
+        title="Guest Experience"
+        description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation."
       />
     );
   }
 
   if (screen === "customer") {
     return (
-      <RoleLayout
+      <RoleDemoPage
+        role="customer"
         title="Customer Marketplace"
-        subtitle="Shopping • Pickup • Food Access"
         description="This is how the community accesses food. Customers can shop, reserve pickups, and eventually use SNAP—ensuring equitable food access."
-        image={HERO_IMAGE}
-        highlights={[
-          "Farm products and pickup flow",
-          "Accessible food purchasing",
-          "Future SNAP-ready experience",
-        ]}
       />
     );
   }
 
-  if (screen === "admin") {
+  if (screen === "grower") {
     return (
-      <RoleLayout
-        title="Admin Control Panel"
-        subtitle="Operations • Oversight • Impact"
-        description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time."
-        image={SECOND_IMAGE}
-        highlights={[
-          "System-wide oversight",
-          "Program and workforce visibility",
-          "Operational decision support",
-        ]}
-      />
-    );
-  }
-
-  if (screen === "guest") {
-    return (
-      <RoleLayout
-        title="Guest Experience"
-        subtitle="Story • Land • Invitation"
-        description="This is the front door to the vision. Guests encounter the story, the land, and the opportunity to become part of a larger community transformation."
-        image={HERO_IMAGE}
-        highlights={[
-          "Introduction to the farm vision",
-          "Public-facing story and welcome",
-          "Easy entry into partnership and support",
-        ]}
+      <RoleDemoPage
+        role="grower"
+        title="Grower Dashboard"
+        description="This is where food begins. Growers track production, manage crops, and prepare inventory for market—creating a sustainable local food system."
       />
     );
   }
 
   if (screen === "volunteer") {
     return (
-      <RoleLayout
+      <RoleDemoPage
+        role="volunteer"
         title="Volunteer Hub"
-        subtitle="Service • Events • Community Support"
         description="This is where community support becomes action. Volunteers can help power events, daily farm activity, and public engagement."
-        image={SECOND_IMAGE}
-        highlights={[
-          "Volunteer coordination",
-          "Support for farm and public events",
-          "Hands-on community participation",
-        ]}
       />
     );
   }
 
   if (screen === "youth") {
     return (
-      <RoleLayout
+      <RoleDemoPage
+        role="youth"
         title="Youth Workforce"
-        subtitle="Learning • Responsibility • Pathways"
         description="This is where workforce begins. Youth learn responsibility, gain real skills, and build pathways into agriculture, business, and community leadership."
-        image={HERO_IMAGE}
-        highlights={[
-          "8-week workforce development model",
-          "Real-world agricultural experience",
-          "Pathways into business and leadership",
-        ]}
       />
     );
   }
 
   if (screen === "supervisor") {
     return (
-      <RoleLayout
+      <RoleDemoPage
+        role="supervisor"
         title="Supervisor Console"
-        subtitle="Guidance • Accountability • Growth"
         description="This is where accountability and development meet. Supervisors guide progress, support growth, and help ensure work is completed with excellence."
-        image={SECOND_IMAGE}
-        highlights={[
-          "Task oversight and accountability",
-          "Support for youth and team development",
-          "Progress monitoring and coaching",
-        ]}
+      />
+    );
+  }
+
+  if (screen === "admin") {
+    return (
+      <RoleDemoPage
+        role="admin"
+        title="Admin Control Panel"
+        description="This is the command center. Leadership can track operations, workforce progress, and community impact in real time."
       />
     );
   }
