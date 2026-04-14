@@ -14,7 +14,7 @@ export default function App() {
   const [language, setLanguage] = useState<Language>("English");
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", minHeight: "100vh", background: "#f7f7f7" }}>
+    <div style={{ fontFamily: "Arial", minHeight: "100vh", background: "#f7f7f7" }}>
       <div
         style={{
           background: "red",
@@ -25,14 +25,14 @@ export default function App() {
           textAlign: "center",
         }}
       >
-        TEST - NEW APP IS LOADING
+        TEST - ROOT APP IS LOADING
       </div>
 
       <div
         style={{
           position: "fixed",
-          top: "20px",
-          right: "20px",
+          top: 20,
+          right: 20,
           zIndex: 9999,
           background: "white",
           border: "3px solid black",
