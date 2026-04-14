@@ -1,421 +1,149 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 type Language = "English" | "Spanish" | "Italian" | "Patwa" | "Hebrew";
 
-const copy: Record<
-  Language,
-  {
-    topBar: string;
-    brandTitle: string;
-    brandSub: string;
-    navExperience: string;
-    navWhy: string;
-    navImpact: string;
-    navPartner: string;
-    connect: string;
-    eyebrow: string;
-    headline: string;
-    description: string;
-    start: string;
-    partner: string;
-    chips: string[];
-  }
-> = {
+const copy = {
   English: {
-    topBar:
-      "🌱 Live Demo: Building a community-centered future through food, land, youth, and family.",
-    brandTitle: "Farm & Family Alliance",
-    brandSub: "Bronson Family Farm Ecosystem Demo",
-    navExperience: "Experience",
-    navWhy: "Why This Exists",
-    navImpact: "Impact",
-    navPartner: "Partner",
-    connect: "Connect Now",
-    eyebrow: "Community Agriculture. Workforce Pathways. Generational Vision.",
     headline: "Growing food, purpose, and possibility from the ground up.",
     description:
-      "This live platform introduces a land-based ecosystem designed to strengthen food access, train youth, support growers, activate community participation, and create a regenerative future rooted in Youngstown.",
+      "This live platform introduces a land-based ecosystem designed to strengthen food access, train youth, support growers, and activate community participation.",
     start: "Start the Farm Experience",
     partner: "Partner With the Mission",
-    chips: [
-      "Food Access",
-      "Youth Workforce",
-      "Regenerative Farming",
-      "Community Resilience",
-      "Live Demonstration Site",
-    ],
   },
-
   Spanish: {
-    topBar:
-      "🌱 Demostración en vivo: construyendo un futuro centrado en la comunidad a través de la alimentación, la tierra, la juventud y la familia.",
-    brandTitle: "Farm & Family Alliance",
-    brandSub: "Demostración del ecosistema de Bronson Family Farm",
-    navExperience: "Experiencia",
-    navWhy: "Por qué existe",
-    navImpact: "Impacto",
-    navPartner: "Aliarse",
-    connect: "Conectar ahora",
-    eyebrow: "Agricultura comunitaria. Caminos laborales. Visión generacional.",
     headline:
       "Cultivando alimentos, propósito y posibilidades desde la tierra.",
     description:
-      "Esta plataforma en vivo presenta un ecosistema basado en la tierra diseñado para fortalecer el acceso a los alimentos, capacitar a los jóvenes, apoyar a los productores, activar la participación comunitaria y crear un futuro regenerativo arraigado en Youngstown.",
-    start: "Comenzar la experiencia",
-    partner: "Apoyar la misión",
-    chips: [
-      "Acceso a alimentos",
-      "Fuerza laboral juvenil",
-      "Agricultura regenerativa",
-      "Resiliencia comunitaria",
-      "Sitio de demostración en vivo",
-    ],
+      "Esta plataforma fortalece el acceso a alimentos y la comunidad.",
+    start: "Comenzar la Experiencia",
+    partner: "Apoyar la Misión",
   },
-
   Italian: {
-    topBar:
-      "🌱 Demo dal vivo: costruire un futuro centrato sulla comunità attraverso cibo, terra, giovani e famiglia.",
-    brandTitle: "Farm & Family Alliance",
-    brandSub: "Demo dell'ecosistema Bronson Family Farm",
-    navExperience: "Esperienza",
-    navWhy: "Perché esiste",
-    navImpact: "Impatto",
-    navPartner: "Partnership",
-    connect: "Contattaci",
-    eyebrow: "Agricoltura comunitaria. Percorsi di lavoro. Visione generazionale.",
-    headline: "Coltivare cibo, scopo e possibilità partendo dalla terra.",
+    headline:
+      "Coltivare cibo, scopo e possibilità dalla terra.",
     description:
-      "Questa piattaforma dal vivo presenta un ecosistema basato sulla terra progettato per rafforzare l’accesso al cibo, formare i giovani, sostenere i coltivatori, attivare la partecipazione della comunità e creare un futuro rigenerativo radicato a Youngstown.",
-    start: "Inizia l’esperienza",
-    partner: "Sostieni la missione",
-    chips: [
-      "Accesso al cibo",
-      "Forza lavoro giovanile",
-      "Agricoltura rigenerativa",
-      "Resilienza comunitaria",
-      "Sito dimostrativo dal vivo",
-    ],
+      "Questa piattaforma crea un ecosistema per il futuro.",
+    start: "Inizia l'Esperienza",
+    partner: "Sostieni la Missione",
   },
-
   Patwa: {
-    topBar:
-      "🌱 Live demo: a build one community-centered future through food, land, youth, an family.",
-    brandTitle: "Farm & Family Alliance",
-    brandSub: "Bronson Family Farm Ecosystem Demo",
-    navExperience: "Experience",
-    navWhy: "Why dis deh yah",
-    navImpact: "Impact",
-    navPartner: "Partner",
-    connect: "Link Wid Wi",
-    eyebrow: "Community farming. Work pathway. Generational vision.",
-    headline: "Wi a grow food, purpose, an possibility fram di ground up.",
+    headline:
+      "Wi a grow food, purpose, an possibility fram di groun up.",
     description:
-      "Dis live platform show one land-based ecosystem weh design fi strengthen food access, train youth, support grower dem, activate community participation, an create one regenerative future root up ina Youngstown.",
-    start: "Start di farm experience",
-    partner: "Partner wid di mission",
-    chips: [
-      "Food access",
-      "Youth workforce",
-      "Regenerative farming",
-      "Community resilience",
-      "Live demonstration site",
-    ],
+      "Dis platform a build community an opportunity.",
+    start: "Start di Experience",
+    partner: "Support di Mission",
   },
-
   Hebrew: {
-    topBar:
-      "🌱 הדגמה חיה: בניית עתיד ממוקד קהילה דרך מזון, אדמה, נוער ומשפחה.",
-    brandTitle: "Farm & Family Alliance",
-    brandSub: "הדגמת המערכת האקולוגית של Bronson Family Farm",
-    navExperience: "חוויה",
-    navWhy: "למה זה קיים",
-    navImpact: "השפעה",
-    navPartner: "שותפות",
-    connect: "צרו קשר",
-    eyebrow: "חקלאות קהילתית. מסלולי עבודה. חזון בין-דורי.",
-    headline: "מגדלים מזון, מטרה ואפשרויות מהיסוד.",
+    headline:
+      "מגדלים מזון, מטרה ואפשרויות מהיסוד.",
     description:
-      "הפלטפורמה החיה הזו מציגה מערכת אקולוגית מבוססת אדמה שנועדה לחזק נגישות למזון, להכשיר צעירים, לתמוך במגדלים, להפעיל השתתפות קהילתית וליצור עתיד מתחדש שמושרש ביונגסטאון.",
-    start: "התחילו את חוויית החווה",
-    partner: "שתפו פעולה עם המשימה",
-    chips: [
-      "נגישות למזון",
-      "כוח עבודה צעיר",
-      "חקלאות מתחדשת",
-      "חוסן קהילתי",
-      "אתר הדגמה חי",
-    ],
+      "פלטפורמה זו מחזקת גישה למזון וקהילה.",
+    start: "התחל את החוויה",
+    partner: "תמוך במשימה",
   },
 };
 
 export default function App() {
   const [language, setLanguage] = useState<Language>("English");
-  const t = useMemo(() => copy[language], [language]);
-  const isHebrew = language === "Hebrew";
+
+  const t = copy[language];
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        fontFamily: "Arial, sans-serif",
-        background:
-          "linear-gradient(180deg, #f4f7f1 0%, #eef3ea 42%, #edf3ef 100%)",
-        color: "#173a22",
-        direction: isHebrew ? "rtl" : "ltr",
-      }}
-    >
+    <div style={{ fontFamily: "Arial, sans-serif" }}>
+      
+      {/* TOP BAR */}
       <div
         style={{
-          background: "#0d351c",
-          color: "#ffffff",
+          background: "#1f4f2c",
+          color: "white",
+          padding: "10px",
           textAlign: "center",
-          padding: "12px 18px",
-          fontWeight: 700,
-          fontSize: "14px",
+          fontWeight: "bold",
         }}
       >
-        {t.topBar}
+        🌱 Live Demo: Building a community-centered future
       </div>
 
+      {/* HEADER */}
       <header
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          gap: "20px",
           padding: "16px 32px",
-          background: "rgba(246, 248, 242, 0.95)",
-          borderBottom: "1px solid #dde6da",
-          flexWrap: "wrap",
+          background: "#f6f8f2",
+          borderBottom: "1px solid #ddd",
         }}
       >
         <div>
-          <div
-            style={{
-              fontSize: "26px",
-              fontWeight: 800,
-              lineHeight: 1.1,
-            }}
-          >
-            {t.brandTitle}
-          </div>
-          <div
-            style={{
-              fontSize: "14px",
-              color: "#687b6d",
-              marginTop: "4px",
-            }}
-          >
-            {t.brandSub}
-          </div>
+          <h2 style={{ margin: 0 }}>Farm & Family Alliance</h2>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "18px",
-            flexWrap: "wrap",
-            justifyContent: isHebrew ? "flex-start" : "flex-end",
-          }}
-        >
-          <span style={{ fontWeight: 700, color: "#48604d" }}>
-            {t.navExperience}
-          </span>
-          <span style={{ fontWeight: 700, color: "#48604d" }}>{t.navWhy}</span>
-          <span style={{ fontWeight: 700, color: "#48604d" }}>
-            {t.navImpact}
-          </span>
-          <span style={{ fontWeight: 700, color: "#48604d" }}>
-            {t.navPartner}
-          </span>
-
-          <button
-            style={{
-              padding: "12px 24px",
-              borderRadius: "999px",
-              border: "none",
-              background: "#2f6a4d",
-              color: "#fff",
-              fontWeight: 700,
-              cursor: "pointer",
-              boxShadow: "0 10px 22px rgba(47,106,77,0.18)",
-            }}
-          >
-            {t.connect}
-          </button>
-
+        {/* LANGUAGE SELECTOR (VISIBLE) */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ fontWeight: "bold" }}>Language:</span>
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value as Language)}
             style={{
-              padding: "10px 12px",
-              borderRadius: "10px",
-              border: "1px solid #cfd8cf",
-              background: "#ffffff",
-              color: "#1f4f2c",
-              fontSize: "15px",
-              fontWeight: 700,
-              minWidth: "150px",
+              padding: "8px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              border: "2px solid #1f4f2c",
             }}
           >
-            <option value="English">English</option>
-            <option value="Spanish">Spanish</option>
-            <option value="Italian">Italian</option>
-            <option value="Patwa">Patwa</option>
-            <option value="Hebrew">Hebrew</option>
+            <option>English</option>
+            <option>Spanish</option>
+            <option>Italian</option>
+            <option>Patwa</option>
+            <option>Hebrew</option>
           </select>
         </div>
       </header>
 
+      {/* HERO */}
       <main
         style={{
-          maxWidth: "1160px",
-          margin: "74px auto 0",
-          padding: "0 22px 80px",
+          padding: "60px 20px",
+          textAlign: "center",
         }}
       >
-        <section
-          style={{
-            maxWidth: "860px",
-            background: "rgba(255,255,255,0.72)",
-            borderRadius: "30px",
-            padding: "34px 32px 32px",
-            boxShadow: "0 16px 42px rgba(0,0,0,0.06)",
-            border: "1px solid rgba(22,58,34,0.08)",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              right: isHebrew ? "auto" : "40px",
-              left: isHebrew ? "40px" : "auto",
-              top: "38px",
-              width: "360px",
-              height: "520px",
-              opacity: 0.12,
-              background:
-                "radial-gradient(circle at 40% 30%, #b7cfb7 0%, #dfeadf 34%, transparent 70%)",
-              transform: "rotate(10deg)",
-              pointerEvents: "none",
-            }}
-          />
+        <h1 style={{ fontSize: "42px", color: "#1f4f2c" }}>
+          {t.headline}
+        </h1>
 
-          <div
+        <p style={{ maxWidth: "700px", margin: "20px auto" }}>
+          {t.description}
+        </p>
+
+        <div style={{ marginTop: "30px" }}>
+          <button
             style={{
-              display: "inline-block",
-              padding: "10px 16px",
-              borderRadius: "999px",
-              background: "#e6eee3",
-              color: "#214b2d",
-              fontWeight: 700,
-              fontSize: "14px",
-              marginBottom: "18px",
+              padding: "12px 20px",
+              marginRight: "10px",
+              background: "#2f6a4d",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              fontSize: "16px",
             }}
           >
-            {t.eyebrow}
-          </div>
+            {t.start}
+          </button>
 
-          <h1
+          <button
             style={{
-              margin: 0,
-              fontSize: "clamp(56px, 7vw, 84px)",
-              lineHeight: 0.98,
-              fontWeight: 800,
-              letterSpacing: "-1.8px",
-              maxWidth: "740px",
-              position: "relative",
-              zIndex: 1,
+              padding: "12px 20px",
+              background: "#e0e6e0",
+              border: "none",
+              borderRadius: "8px",
+              fontSize: "16px",
             }}
           >
-            {t.headline}
-          </h1>
-
-          <p
-            style={{
-              marginTop: "24px",
-              fontSize: "18px",
-              lineHeight: 1.7,
-              maxWidth: "760px",
-              color: "#274231",
-              position: "relative",
-              zIndex: 1,
-            }}
-          >
-            {t.description}
-          </p>
-
-          <div
-            style={{
-              marginTop: "30px",
-              display: "flex",
-              gap: "12px",
-              flexWrap: "wrap",
-              position: "relative",
-              zIndex: 1,
-            }}
-          >
-            <button
-              style={{
-                padding: "16px 24px",
-                borderRadius: "999px",
-                border: "none",
-                background: "#2f6a4d",
-                color: "#fff",
-                fontWeight: 800,
-                fontSize: "16px",
-                cursor: "pointer",
-              }}
-            >
-              {t.start}
-            </button>
-
-            <button
-              style={{
-                padding: "16px 24px",
-                borderRadius: "999px",
-                border: "1px solid #d7e2d7",
-                background: "#ffffff",
-                color: "#29503a",
-                fontWeight: 800,
-                fontSize: "16px",
-                cursor: "pointer",
-              }}
-            >
-              {t.partner}
-            </button>
-          </div>
-
-          <div
-            style={{
-              marginTop: "26px",
-              display: "flex",
-              gap: "12px",
-              flexWrap: "wrap",
-              position: "relative",
-              zIndex: 1,
-            }}
-          >
-            {t.chips.map((chip) => (
-              <div
-                key={chip}
-                style={{
-                  padding: "11px 15px",
-                  borderRadius: "999px",
-                  background: "#fbfcfb",
-                  border: "1px solid #e3e8e1",
-                  color: "#294b34",
-                  fontWeight: 700,
-                  fontSize: "15px",
-                }}
-              >
-                {chip}
-              </div>
-            ))}
-          </div>
-        </section>
+            {t.partner}
+          </button>
+        </div>
       </main>
     </div>
   );
