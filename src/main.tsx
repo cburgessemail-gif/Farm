@@ -1,27 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import App from "./App";
 
-function TestApp() {
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "black",
-        color: "yellow",
-        fontSize: "40px",
-        fontWeight: "bold",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      ROOT MAIN.TSX IS LOADING
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <TestApp />
+    <App />
   </React.StrictMode>
 );
