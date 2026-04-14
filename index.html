@@ -4,112 +4,889 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Farm & Family Alliance | Bronson Family Farm</title>
-
+    <meta
+      name="description"
+      content="A live community-centered farm and family ecosystem advancing food access, youth workforce development, regenerative agriculture, and regional resilience."
+    />
     <style>
+      :root {
+        --bg: #f4f7f1;
+        --surface: #ffffff;
+        --surface-soft: #eef4ea;
+        --text: #18311f;
+        --muted: #4d6855;
+        --line: #d6e3d4;
+        --green: #2d6a3d;
+        --green-dark: #1f4f2c;
+        --gold: #b48a3a;
+        --shadow: 0 18px 45px rgba(24, 49, 31, 0.08);
+        --radius: 22px;
+        --max: 1180px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f4f7f1;
-        color: #18311f;
+        font-family: Inter, Arial, Helvetica, sans-serif;
+        background: linear-gradient(180deg, #f7faf5 0%, #eef5ea 100%);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
       }
 
       .top-banner {
         background: #15311d;
         color: #fff;
         text-align: center;
-        padding: 12px;
-        font-weight: bold;
+        padding: 12px 16px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
       }
 
       .nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(10px);
+        background: rgba(247, 250, 245, 0.88);
+        border-bottom: 1px solid rgba(24, 49, 31, 0.08);
+      }
+
+      .nav-inner {
+        max-width: var(--max);
+        margin: 0 auto;
         padding: 16px 20px;
-        background: #fff;
-        border-bottom: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .brand-title {
+        font-size: 20px;
+        font-weight: 900;
+        line-height: 1.1;
+      }
+
+      .brand-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
       }
 
       .nav-links {
         display: flex;
-        gap: 14px;
-        align-items: center;
+        gap: 18px;
         flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .nav-links a,
+      .nav-links span {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+
+      .nav-links a:hover {
+        color: var(--green-dark);
       }
 
       .nav-cta {
-        background: #2d6a3d;
-        color: white;
-        padding: 10px 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--green);
+        color: #fff !important;
+        padding: 12px 18px;
         border-radius: 999px;
-        font-weight: bold;
+        font-weight: 800;
+        box-shadow: 0 12px 30px rgba(45, 106, 61, 0.22);
       }
 
-      select {
-        padding: 8px;
-        border-radius: 6px;
-        font-weight: bold;
+      .language-select {
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #cfd8cf;
+        background: #ffffff;
+        color: #1f4f2c;
+        font-size: 15px;
+        font-weight: 700;
       }
 
       .hero {
-        padding: 60px 20px;
-        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(247, 250, 245, 0.35) 0%, rgba(247, 250, 245, 0.65) 55%, rgba(247, 250, 245, 0.9) 100%),
+          url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
+        opacity: 0.9;
+      }
+
+      .hero-inner {
+        position: relative;
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 74px 20px 58px;
+      }
+
+      .hero-card {
+        max-width: 860px;
+        background: rgba(255, 255, 255, 0.66);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 30px;
+        box-shadow: var(--shadow);
+        padding: 34px 30px;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        background: rgba(45, 106, 61, 0.1);
+        color: var(--green-dark);
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 16px;
       }
 
       h1 {
-        font-size: 42px;
+        margin: 0;
+        font-size: clamp(38px, 6vw, 68px);
+        line-height: 0.98;
+        letter-spacing: -1.4px;
+      }
+
+      .hero-text {
+        margin: 18px 0 0;
+        max-width: 720px;
+        font-size: 19px;
+        line-height: 1.7;
+        color: #244130;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 22px;
+        border-radius: 999px;
+        font-size: 15px;
+        font-weight: 800;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn-primary {
+        background: var(--green);
+        color: #fff;
+        box-shadow: 0 14px 32px rgba(45, 106, 61, 0.22);
+      }
+
+      .btn-secondary {
+        background: #fff;
+        color: var(--green-dark);
+        border: 1px solid var(--line);
+      }
+
+      .hero-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 26px;
+      }
+
+      .chip {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(24, 49, 31, 0.08);
+        font-size: 13px;
+        font-weight: 700;
+        color: #2d4838;
+      }
+
+      .section {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 26px 20px 8px;
+      }
+
+      .section-head {
+        max-width: 840px;
+        margin-bottom: 22px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(30px, 4vw, 44px);
+        line-height: 1.05;
+        letter-spacing: -0.8px;
+      }
+
+      .section-head p {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.7;
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 24px;
+      }
+
+      .card h3 {
+        margin: 0 0 12px;
+        font-size: 22px;
+        line-height: 1.15;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .support-band {
+        padding-bottom: 20px;
+      }
+
+      .support-panel {
+        background: #16311d;
+        color: #fff;
+        border-radius: 28px;
+        padding: 30px;
+        box-shadow: 0 22px 46px rgba(24, 49, 31, 0.18);
+      }
+
+      .support-panel h2 {
+        margin: 0;
+        font-size: 38px;
+        line-height: 1.05;
+      }
+
+      .support-panel p {
+        margin: 14px 0 0;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 17px;
+        line-height: 1.7;
+        max-width: 820px;
+      }
+
+      .support-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .support-item {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 18px;
+      }
+
+      .support-item strong {
+        display: block;
+        font-size: 12px;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: #d9e8d9;
+        margin-bottom: 8px;
+      }
+
+      .support-item span {
+        font-size: 18px;
+        line-height: 1.5;
+        font-weight: 700;
+      }
+
+      .final-cta {
+        padding: 28px 20px 56px;
+      }
+
+      .final-cta-box {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+        text-align: center;
+      }
+
+      .final-cta-box h2 {
+        margin: 0;
+        font-size: 34px;
+        line-height: 1.08;
+      }
+
+      .final-cta-box p {
+        margin: 12px auto 0;
+        max-width: 740px;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.7;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.75);
+      }
+
+      .footer-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 960px) {
+        .grid-3,
+        .support-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .hero-inner {
+          padding-top: 56px;
+        }
+
+        .hero-card,
+        .support-panel,
+        .final-cta-box,
+        .card {
+          padding: 22px 18px;
+        }
+
+        .btn {
+          width: 100%;
+        }
       }
     </style>
   </head>
-
   <body>
-    <div class="top-banner">
-      🌱 Live Demo: Building a community-centered future
+    <div class="top-banner" id="topBanner">
+      🌱 Live Demo: Building a community-centered future through food, land, youth, and family.
     </div>
 
-    <div class="nav">
-      <div>
-        <strong>Farm & Family Alliance</strong>
+    <nav class="nav">
+      <div class="nav-inner">
+        <div class="brand">
+          <div class="brand-title" id="brandTitle">Farm &amp; Family Alliance</div>
+          <div class="brand-sub" id="brandSub">Bronson Family Farm Ecosystem Demo</div>
+        </div>
+
+        <div class="nav-links">
+          <a href="#demo" id="navExperience">Experience</a>
+          <a href="#why" id="navWhy">Why This Exists</a>
+          <a href="#impact" id="navImpact">Impact</a>
+          <a href="#support" id="navPartner">Partner</a>
+          <a class="nav-cta" href="mailto:cburgess@bronsonfamilyfarm.com" id="connectNow">Connect Now</a>
+
+          <select class="language-select" id="languageSelect">
+            <option value="English">English</option>
+            <option value="Spanish">Spanish</option>
+            <option value="Italian">Italian</option>
+            <option value="Patwa">Patwa</option>
+            <option value="Hebrew">Hebrew</option>
+          </select>
+        </div>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="hero-card">
+          <div class="eyebrow" id="eyebrow">
+            Community Agriculture. Workforce Pathways. Generational Vision.
+          </div>
+
+          <h1 id="headline">
+            Growing food, purpose, and possibility from the ground up.
+          </h1>
+
+          <p class="hero-text" id="heroText">
+            This live platform introduces a land-based ecosystem designed to strengthen food access,
+            train youth, support growers, activate community participation, and create a regenerative
+            future rooted in Youngstown.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#demo" id="startButton">Start the Farm Experience</a>
+            <a class="btn btn-secondary" href="#support" id="partnerButton">Partner With the Mission</a>
+          </div>
+
+          <div class="hero-chips">
+            <span class="chip" id="chip1">Food Access</span>
+            <span class="chip" id="chip2">Youth Workforce</span>
+            <span class="chip" id="chip3">Regenerative Farming</span>
+            <span class="chip" id="chip4">Community Resilience</span>
+            <span class="chip" id="chip5">Live Demonstration Site</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section" id="demo">
+      <div class="section-head">
+        <h2 id="demoTitle">Experience the Ecosystem</h2>
+        <p id="demoText">
+          Bronson Family Farm is more than a place. It is a living system where people can grow,
+          learn, gather, participate, and invest in a stronger future. This demonstration introduces
+          the pathways that connect land, food, training, and community.
+        </p>
       </div>
 
-      <div class="nav-links">
-        <span>Experience</span>
-        <span>Why This Exists</span>
-        <span>Impact</span>
-        <span>Partner</span>
-
-        <a class="nav-cta" href="#">Connect Now</a>
-
-        <!-- 🔥 LANGUAGE SELECTOR -->
-        <select id="language">
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="it">Italian</option>
-          <option value="pw">Patwa</option>
-          <option value="he">Hebrew</option>
-        </select>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3 id="card1Title">Grow Food</h3>
+          <p id="card1Text">
+            A working agricultural site designed to support production, education, and practical local
+            food access with a regenerative, community-centered model.
+          </p>
+        </div>
+        <div class="card">
+          <h3 id="card2Title">Train Youth</h3>
+          <p id="card2Text">
+            A hands-on environment where young people can build confidence, gain work habits, and
+            connect outdoor learning to real career pathways and purpose.
+          </p>
+        </div>
+        <div class="card">
+          <h3 id="card3Title">Strengthen Community</h3>
+          <p id="card3Text">
+            A welcoming place for events, workshops, family participation, volunteerism, and
+            relationship-building around food, land, and local resilience.
+          </p>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="hero">
-      <h1 id="headline">
-        Growing food, purpose, and possibility from the ground up.
-      </h1>
-    </div>
+    <section class="section" id="why">
+      <div class="section-head">
+        <h2 id="whyTitle">Why This Exists</h2>
+        <p id="whyText">
+          This work was built to restore connection — to land, to family, to food, to opportunity, and
+          to the kind of future communities deserve to inherit.
+        </p>
+      </div>
+    </section>
+
+    <section class="section support-band" id="support">
+      <div class="support-panel">
+        <h2 id="supportTitle">Support the Mission</h2>
+        <p id="supportText">
+          We are building a visible, community-facing agricultural ecosystem that supports food access,
+          youth development, family engagement, and long-term resilience.
+        </p>
+
+        <div class="support-grid">
+          <div class="support-item">
+            <strong id="need1Label">Current Need</strong>
+            <span id="need1Text">Irrigation and reliable water systems</span>
+          </div>
+          <div class="support-item">
+            <strong id="need2Label">Current Need</strong>
+            <span id="need2Text">Deer-resistant fencing and site protection</span>
+          </div>
+          <div class="support-item">
+            <strong id="need3Label">Growth Need</strong>
+            <span id="need3Text">Solar and off-grid infrastructure support</span>
+          </div>
+          <div class="support-item">
+            <strong id="need4Label">Long-Term Need</strong>
+            <span id="need4Text">Farmhouse and operations support for on-site stewardship</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div id="footerLeft">Farm &amp; Family Alliance | Bronson Family Farm Ecosystem Demo</div>
+        <div id="footerRight">Youngstown, Ohio | Community-Centered Agriculture &amp; Family Wellness</div>
+      </div>
+    </footer>
 
     <script>
       const translations = {
-        en: "Growing food, purpose, and possibility from the ground up.",
-        es: "Cultivando alimentos, propósito y posibilidades desde la tierra.",
-        it: "Coltivare cibo, scopo e possibilità dalla terra.",
-        pw: "Wi a grow food, purpose, an possibility fram di ground up.",
-        he: "מגדלים מזון, מטרה ואפשרויות מהיסוד."
+        English: {
+          topBanner:
+            "🌱 Live Demo: Building a community-centered future through food, land, youth, and family.",
+          brandTitle: "Farm & Family Alliance",
+          brandSub: "Bronson Family Farm Ecosystem Demo",
+          navExperience: "Experience",
+          navWhy: "Why This Exists",
+          navImpact: "Impact",
+          navPartner: "Partner",
+          connectNow: "Connect Now",
+          eyebrow: "Community Agriculture. Workforce Pathways. Generational Vision.",
+          headline: "Growing food, purpose, and possibility from the ground up.",
+          heroText:
+            "This live platform introduces a land-based ecosystem designed to strengthen food access, train youth, support growers, activate community participation, and create a regenerative future rooted in Youngstown.",
+          startButton: "Start the Farm Experience",
+          partnerButton: "Partner With the Mission",
+          chip1: "Food Access",
+          chip2: "Youth Workforce",
+          chip3: "Regenerative Farming",
+          chip4: "Community Resilience",
+          chip5: "Live Demonstration Site",
+          demoTitle: "Experience the Ecosystem",
+          demoText:
+            "Bronson Family Farm is more than a place. It is a living system where people can grow, learn, gather, participate, and invest in a stronger future. This demonstration introduces the pathways that connect land, food, training, and community.",
+          card1Title: "Grow Food",
+          card1Text:
+            "A working agricultural site designed to support production, education, and practical local food access with a regenerative, community-centered model.",
+          card2Title: "Train Youth",
+          card2Text:
+            "A hands-on environment where young people can build confidence, gain work habits, and connect outdoor learning to real career pathways and purpose.",
+          card3Title: "Strengthen Community",
+          card3Text:
+            "A welcoming place for events, workshops, family participation, volunteerism, and relationship-building around food, land, and local resilience.",
+          whyTitle: "Why This Exists",
+          whyText:
+            "This work was built to restore connection — to land, to family, to food, to opportunity, and to the kind of future communities deserve to inherit.",
+          supportTitle: "Support the Mission",
+          supportText:
+            "We are building a visible, community-facing agricultural ecosystem that supports food access, youth development, family engagement, and long-term resilience.",
+          need1Label: "Current Need",
+          need1Text: "Irrigation and reliable water systems",
+          need2Label: "Current Need",
+          need2Text: "Deer-resistant fencing and site protection",
+          need3Label: "Growth Need",
+          need3Text: "Solar and off-grid infrastructure support",
+          need4Label: "Long-Term Need",
+          need4Text: "Farmhouse and operations support for on-site stewardship",
+          footerLeft: "Farm & Family Alliance | Bronson Family Farm Ecosystem Demo",
+          footerRight: "Youngstown, Ohio | Community-Centered Agriculture & Family Wellness"
+        },
+
+        Spanish: {
+          topBanner:
+            "🌱 Demostración en vivo: construyendo un futuro centrado en la comunidad a través de la alimentación, la tierra, la juventud y la familia.",
+          brandTitle: "Farm & Family Alliance",
+          brandSub: "Demostración del ecosistema de Bronson Family Farm",
+          navExperience: "Experiencia",
+          navWhy: "Por qué existe",
+          navImpact: "Impacto",
+          navPartner: "Aliarse",
+          connectNow: "Conectar ahora",
+          eyebrow: "Agricultura comunitaria. Caminos laborales. Visión generacional.",
+          headline: "Cultivando alimentos, propósito y posibilidades desde la tierra.",
+          heroText:
+            "Esta plataforma en vivo presenta un ecosistema basado en la tierra diseñado para fortalecer el acceso a los alimentos, capacitar a los jóvenes, apoyar a los productores, activar la participación comunitaria y crear un futuro regenerativo arraigado en Youngstown.",
+          startButton: "Comenzar la experiencia",
+          partnerButton: "Apoyar la misión",
+          chip1: "Acceso a alimentos",
+          chip2: "Fuerza laboral juvenil",
+          chip3: "Agricultura regenerativa",
+          chip4: "Resiliencia comunitaria",
+          chip5: "Sitio de demostración en vivo",
+          demoTitle: "Experimente el ecosistema",
+          demoText:
+            "Bronson Family Farm es más que un lugar. Es un sistema vivo donde las personas pueden cultivar, aprender, reunirse, participar e invertir en un futuro más fuerte.",
+          card1Title: "Cultivar alimentos",
+          card1Text:
+            "Un sitio agrícola activo diseñado para apoyar la producción, la educación y el acceso práctico a alimentos locales.",
+          card2Title: "Capacitar a la juventud",
+          card2Text:
+            "Un entorno práctico donde los jóvenes pueden desarrollar confianza, hábitos de trabajo y conexión con trayectorias reales.",
+          card3Title: "Fortalecer la comunidad",
+          card3Text:
+            "Un lugar acogedor para eventos, talleres, participación familiar, voluntariado y construcción de relaciones.",
+          whyTitle: "Por qué existe",
+          whyText:
+            "Este trabajo fue construido para restaurar la conexión: con la tierra, con la familia, con los alimentos y con la oportunidad.",
+          supportTitle: "Apoye la misión",
+          supportText:
+            "Estamos construyendo un ecosistema agrícola visible y orientado a la comunidad que apoya el acceso a los alimentos, el desarrollo juvenil y la resiliencia.",
+          need1Label: "Necesidad actual",
+          need1Text: "Sistemas de riego y agua confiables",
+          need2Label: "Necesidad actual",
+          need2Text: "Cercas resistentes a los ciervos y protección del sitio",
+          need3Label: "Necesidad de crecimiento",
+          need3Text: "Apoyo solar e infraestructura fuera de la red",
+          need4Label: "Necesidad a largo plazo",
+          need4Text: "Casa de campo y apoyo operativo para administración en el lugar",
+          footerLeft: "Farm & Family Alliance | Demostración del ecosistema Bronson Family Farm",
+          footerRight: "Youngstown, Ohio | Agricultura centrada en la comunidad y bienestar familiar"
+        },
+
+        Italian: {
+          topBanner:
+            "🌱 Demo dal vivo: costruire un futuro centrato sulla comunità attraverso cibo, terra, giovani e famiglia.",
+          brandTitle: "Farm & Family Alliance",
+          brandSub: "Demo dell'ecosistema Bronson Family Farm",
+          navExperience: "Esperienza",
+          navWhy: "Perché esiste",
+          navImpact: "Impatto",
+          navPartner: "Partnership",
+          connectNow: "Contattaci",
+          eyebrow: "Agricoltura comunitaria. Percorsi di lavoro. Visione generazionale.",
+          headline: "Coltivare cibo, scopo e possibilità partendo dalla terra.",
+          heroText:
+            "Questa piattaforma dal vivo presenta un ecosistema basato sulla terra progettato per rafforzare l’accesso al cibo, formare i giovani, sostenere i coltivatori e attivare la partecipazione della comunità.",
+          startButton: "Inizia l’esperienza",
+          partnerButton: "Sostieni la missione",
+          chip1: "Accesso al cibo",
+          chip2: "Forza lavoro giovanile",
+          chip3: "Agricoltura rigenerativa",
+          chip4: "Resilienza comunitaria",
+          chip5: "Sito dimostrativo dal vivo",
+          demoTitle: "Vivi l’ecosistema",
+          demoText:
+            "Bronson Family Farm è più di un luogo. È un sistema vivente dove le persone possono coltivare, imparare, riunirsi, partecipare e investire in un futuro più forte.",
+          card1Title: "Coltivare cibo",
+          card1Text:
+            "Un sito agricolo attivo progettato per sostenere produzione, educazione e accesso pratico al cibo locale.",
+          card2Title: "Formare i giovani",
+          card2Text:
+            "Un ambiente pratico in cui i giovani possono sviluppare fiducia, abitudini di lavoro e connessione con percorsi reali.",
+          card3Title: "Rafforzare la comunità",
+          card3Text:
+            "Uno spazio accogliente per eventi, laboratori, partecipazione familiare e costruzione di relazioni.",
+          whyTitle: "Perché esiste",
+          whyText:
+            "Questo lavoro è nato per ristabilire connessioni: con la terra, con la famiglia, con il cibo e con le opportunità.",
+          supportTitle: "Sostieni la missione",
+          supportText:
+            "Stiamo costruendo un ecosistema agricolo visibile e rivolto alla comunità che sostiene l’accesso al cibo, lo sviluppo dei giovani e la resilienza.",
+          need1Label: "Bisogno attuale",
+          need1Text: "Irrigazione e sistemi idrici affidabili",
+          need2Label: "Bisogno attuale",
+          need2Text: "Recinzioni resistenti ai cervi e protezione del sito",
+          need3Label: "Bisogno di crescita",
+          need3Text: "Supporto solare e infrastrutture off-grid",
+          need4Label: "Bisogno a lungo termine",
+          need4Text: "Casa colonica e supporto operativo per la gestione sul posto",
+          footerLeft: "Farm & Family Alliance | Demo dell'ecosistema Bronson Family Farm",
+          footerRight: "Youngstown, Ohio | Agricoltura centrata sulla comunità e benessere familiare"
+        },
+
+        Patwa: {
+          topBanner:
+            "🌱 Live demo: a build one community-centered future through food, land, youth, an family.",
+          brandTitle: "Farm & Family Alliance",
+          brandSub: "Bronson Family Farm Ecosystem Demo",
+          navExperience: "Experience",
+          navWhy: "Why dis deh yah",
+          navImpact: "Impact",
+          navPartner: "Partner",
+          connectNow: "Link Wid Wi",
+          eyebrow: "Community farming. Work pathway. Generational vision.",
+          headline: "Wi a grow food, purpose, an possibility fram di ground up.",
+          heroText:
+            "Dis live platform show one land-based ecosystem weh design fi strengthen food access, train youth, support grower dem, activate community participation, an build one stronger future ina Youngstown.",
+          startButton: "Start di farm experience",
+          partnerButton: "Partner wid di mission",
+          chip1: "Food access",
+          chip2: "Youth workforce",
+          chip3: "Regenerative farming",
+          chip4: "Community resilience",
+          chip5: "Live demonstration site",
+          demoTitle: "Experience di ecosystem",
+          demoText:
+            "Bronson Family Farm a more dan one place. A one living system weh people can grow, learn, gather, participate, an invest ina one stronger future.",
+          card1Title: "Grow food",
+          card1Text:
+            "One working farm site build fi support production, education, an practical local food access.",
+          card2Title: "Train youth",
+          card2Text:
+            "One hands-on environment weh young people can build confidence, work habit, an real pathway.",
+          card3Title: "Strengthen community",
+          card3Text:
+            "One welcoming place fi event, workshop, family participation, volunteer work, an relationship building.",
+          whyTitle: "Why dis deh yah",
+          whyText:
+            "Dis work build fi restore connection — to land, family, food, opportunity, an di future community deserve.",
+          supportTitle: "Support di mission",
+          supportText:
+            "Wi a build one visible, community-facing agricultural ecosystem weh support food access, youth development, family engagement, an resilience.",
+          need1Label: "Current need",
+          need1Text: "Irrigation an reliable water system",
+          need2Label: "Current need",
+          need2Text: "Deer-resistant fencing an site protection",
+          need3Label: "Growth need",
+          need3Text: "Solar an off-grid infrastructure support",
+          need4Label: "Long-term need",
+          need4Text: "Farmhouse an operations support fi pon-site stewardship",
+          footerLeft: "Farm & Family Alliance | Bronson Family Farm Ecosystem Demo",
+          footerRight: "Youngstown, Ohio | Community-centered agriculture an family wellness"
+        },
+
+        Hebrew: {
+          topBanner:
+            "🌱 הדגמה חיה: בניית עתיד ממוקד קהילה דרך מזון, אדמה, נוער ומשפחה.",
+          brandTitle: "Farm & Family Alliance",
+          brandSub: "הדגמת המערכת האקולוגית של Bronson Family Farm",
+          navExperience: "חוויה",
+          navWhy: "למה זה קיים",
+          navImpact: "השפעה",
+          navPartner: "שותפות",
+          connectNow: "צרו קשר",
+          eyebrow: "חקלאות קהילתית. מסלולי עבודה. חזון בין-דורי.",
+          headline: "מגדלים מזון, מטרה ואפשרויות מהיסוד.",
+          heroText:
+            "הפלטפורמה החיה הזו מציגה מערכת אקולוגית מבוססת אדמה שנועדה לחזק נגישות למזון, להכשיר צעירים, לתמוך במגדלים ולהפעיל השתתפות קהילתית.",
+          startButton: "התחילו את חוויית החווה",
+          partnerButton: "שתפו פעולה עם המשימה",
+          chip1: "נגישות למזון",
+          chip2: "כוח עבודה צעיר",
+          chip3: "חקלאות מתחדשת",
+          chip4: "חוסן קהילתי",
+          chip5: "אתר הדגמה חי",
+          demoTitle: "חוו את המערכת האקולוגית",
+          demoText:
+            "Bronson Family Farm היא יותר ממקום. זו מערכת חיה שבה אנשים יכולים לגדל, ללמוד, להתכנס, להשתתף ולהשקיע בעתיד חזק יותר.",
+          card1Title: "לגדל מזון",
+          card1Text:
+            "אתר חקלאי פעיל שנועד לתמוך בייצור, בחינוך ובנגישות מעשית למזון מקומי.",
+          card2Title: "להכשיר צעירים",
+          card2Text:
+            "סביבה מעשית שבה צעירים יכולים לבנות ביטחון, הרגלי עבודה וקשר למסלולים אמיתיים.",
+          card3Title: "לחזק קהילה",
+          card3Text:
+            "מקום מזמין לאירועים, סדנאות, השתתפות משפחתית, התנדבות ובניית קשרים.",
+          whyTitle: "למה זה קיים",
+          whyText:
+            "העבודה הזו נבנתה כדי להשיב חיבור — לאדמה, למשפחה, למזון, להזדמנות ולעתיד שקהילות ראויות לו.",
+          supportTitle: "תמכו במשימה",
+          supportText:
+            "אנו בונים מערכת אקולוגית חקלאית גלויה ומוכוונת קהילה התומכת בנגישות למזון, בפיתוח נוער ובחוסן.",
+          need1Label: "צורך נוכחי",
+          need1Text: "השקיה ומערכות מים אמינות",
+          need2Label: "צורך נוכחי",
+          need2Text: "גידור עמיד לצבאים והגנת האתר",
+          need3Label: "צורך לצמיחה",
+          need3Text: "תמיכה סולארית ותשתיות מחוץ לרשת",
+          need4Label: "צורך ארוך טווח",
+          need4Text: "בית חווה ותמיכה תפעולית לניהול במקום",
+          footerLeft: "Farm & Family Alliance | הדגמת המערכת האקולוגית של Bronson Family Farm",
+          footerRight: "Youngstown, Ohio | חקלאות ממוקדת קהילה ורווחת המשפחה"
+        }
       };
 
-      document.getElementById("language").addEventListener("change", function () {
-        const lang = this.value;
-        document.getElementById("headline").innerText = translations[lang];
+      function applyLanguage(language) {
+        const t = translations[language];
+
+        document.documentElement.lang = language === "Hebrew" ? "he" : "en";
+        document.body.dir = language === "Hebrew" ? "rtl" : "ltr";
+
+        document.getElementById("topBanner").textContent = t.topBanner;
+        document.getElementById("brandTitle").textContent = t.brandTitle;
+        document.getElementById("brandSub").textContent = t.brandSub;
+        document.getElementById("navExperience").textContent = t.navExperience;
+        document.getElementById("navWhy").textContent = t.navWhy;
+        document.getElementById("navImpact").textContent = t.navImpact;
+        document.getElementById("navPartner").textContent = t.navPartner;
+        document.getElementById("connectNow").textContent = t.connectNow;
+        document.getElementById("eyebrow").textContent = t.eyebrow;
+        document.getElementById("headline").textContent = t.headline;
+        document.getElementById("heroText").textContent = t.heroText;
+        document.getElementById("startButton").textContent = t.startButton;
+        document.getElementById("partnerButton").textContent = t.partnerButton;
+        document.getElementById("chip1").textContent = t.chip1;
+        document.getElementById("chip2").textContent = t.chip2;
+        document.getElementById("chip3").textContent = t.chip3;
+        document.getElementById("chip4").textContent = t.chip4;
+        document.getElementById("chip5").textContent = t.chip5;
+        document.getElementById("demoTitle").textContent = t.demoTitle;
+        document.getElementById("demoText").textContent = t.demoText;
+        document.getElementById("card1Title").textContent = t.card1Title;
+        document.getElementById("card1Text").textContent = t.card1Text;
+        document.getElementById("card2Title").textContent = t.card2Title;
+        document.getElementById("card2Text").textContent = t.card2Text;
+        document.getElementById("card3Title").textContent = t.card3Title;
+        document.getElementById("card3Text").textContent = t.card3Text;
+        document.getElementById("whyTitle").textContent = t.whyTitle;
+        document.getElementById("whyText").textContent = t.whyText;
+        document.getElementById("supportTitle").textContent = t.supportTitle;
+        document.getElementById("supportText").textContent = t.supportText;
+        document.getElementById("need1Label").textContent = t.need1Label;
+        document.getElementById("need1Text").textContent = t.need1Text;
+        document.getElementById("need2Label").textContent = t.need2Label;
+        document.getElementById("need2Text").textContent = t.need2Text;
+        document.getElementById("need3Label").textContent = t.need3Label;
+        document.getElementById("need3Text").textContent = t.need3Text;
+        document.getElementById("need4Label").textContent = t.need4Label;
+        document.getElementById("need4Text").textContent = t.need4Text;
+        document.getElementById("footerLeft").textContent = t.footerLeft;
+        document.getElementById("footerRight").textContent = t.footerRight;
+      }
+
+      document.getElementById("languageSelect").addEventListener("change", function () {
+        applyLanguage(this.value);
       });
+
+      applyLanguage("English");
     </script>
   </body>
 </html>
