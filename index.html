@@ -12,7 +12,6 @@
       :root {
         --bg: #f4f7f1;
         --surface: #ffffff;
-        --surface-soft: #eef4ea;
         --text: #18311f;
         --muted: #4d6855;
         --line: #d6e3d4;
@@ -60,24 +59,25 @@
         top: 0;
         z-index: 20;
         backdrop-filter: blur(10px);
-        background: rgba(247, 250, 245, 0.92);
+        background: rgba(247, 250, 245, 0.94);
         border-bottom: 1px solid rgba(24, 49, 31, 0.08);
       }
 
       .nav-inner {
         max-width: var(--max);
         margin: 0 auto;
-        padding: 16px 20px;
+        padding: 14px 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 18px;
+        flex-wrap: wrap;
       }
 
       .brand {
         display: flex;
         flex-direction: column;
-        min-width: 0;
+        min-width: 220px;
       }
 
       .brand-title {
@@ -92,11 +92,20 @@
         margin-top: 4px;
       }
 
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        flex: 1;
+      }
+
       .nav-links {
         display: flex;
-        gap: 18px;
-        flex-wrap: wrap;
         align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
       }
 
       .nav-links a,
@@ -104,10 +113,18 @@
         font-size: 14px;
         font-weight: 700;
         color: var(--muted);
+        white-space: nowrap;
       }
 
       .nav-links a:hover {
         color: var(--green-dark);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
       }
 
       .nav-cta {
@@ -116,20 +133,23 @@
         justify-content: center;
         background: var(--green);
         color: #fff !important;
-        padding: 12px 18px;
+        padding: 10px 16px;
         border-radius: 999px;
         font-weight: 800;
+        font-size: 14px;
         box-shadow: 0 12px 30px rgba(45, 106, 61, 0.22);
+        white-space: nowrap;
       }
 
       .language-select {
-        padding: 10px 12px;
+        padding: 9px 10px;
         border-radius: 10px;
         border: 1px solid #cfd8cf;
         background: #ffffff;
         color: #1f4f2c;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 700;
+        min-width: 120px;
       }
 
       .hero {
@@ -210,11 +230,6 @@
         border-radius: 999px;
         font-size: 15px;
         font-weight: 800;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-      }
-
-      .btn:hover {
-        transform: translateY(-1px);
       }
 
       .btn-primary {
@@ -303,10 +318,6 @@
         color: var(--muted);
         font-size: 15px;
         line-height: 1.7;
-      }
-
-      .metric {
-        text-align: left;
       }
 
       .metric-number {
@@ -456,7 +467,13 @@
           align-items: flex-start;
         }
 
-        .nav-links {
+        .nav-right {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        .nav-links,
+        .nav-actions {
           width: 100%;
         }
       }
@@ -476,6 +493,10 @@
         .btn {
           width: 100%;
         }
+
+        .nav-links {
+          gap: 10px 14px;
+        }
       }
     </style>
   </head>
@@ -491,20 +512,25 @@
           <div class="brand-sub" id="brandSub">Bronson Family Farm Ecosystem Demo</div>
         </div>
 
-        <div class="nav-links">
-          <a href="#demo" id="navExperience">Experience</a>
-          <a href="#why" id="navWhy">Why This Exists</a>
-          <a href="#impact" id="navImpact">Impact</a>
-          <a href="#support" id="navPartner">Partner</a>
-          <a class="nav-cta" href="mailto:cburgess@bronsonfamilyfarm.com" id="connectNow">Connect Now</a>
+        <div class="nav-right">
+          <div class="nav-links">
+            <a href="#demo" id="navExperience">Experience</a>
+            <a href="#why" id="navWhy">Why This Exists</a>
+            <a href="#impact" id="navImpact">Impact</a>
+            <a href="#support" id="navPartner">Partner</a>
+          </div>
 
-          <select class="language-select" id="languageSelect">
-            <option value="English">English</option>
-            <option value="Spanish">Spanish</option>
-            <option value="Italian">Italian</option>
-            <option value="Patwa">Patwa</option>
-            <option value="Hebrew">Hebrew</option>
-          </select>
+          <div class="nav-actions">
+            <a class="nav-cta" href="mailto:cburgess@bronsonfamilyfarm.com" id="connectNow">Connect Now</a>
+
+            <select class="language-select" id="languageSelect">
+              <option value="English">English</option>
+              <option value="Spanish">Spanish</option>
+              <option value="Italian">Italian</option>
+              <option value="Patwa">Patwa</option>
+              <option value="Hebrew">Hebrew</option>
+            </select>
+          </div>
         </div>
       </div>
     </nav>
@@ -544,22 +570,22 @@
 
     <section class="section">
       <div class="grid grid-4">
-        <div class="card metric">
+        <div class="card">
           <div class="metric-number" id="metric1Number">3+</div>
           <h3 id="metric1Title">Core Pillars</h3>
           <p id="metric1Text">Food access, youth development, and regenerative agriculture working together.</p>
         </div>
-        <div class="card metric">
+        <div class="card">
           <div class="metric-number" id="metric2Number">1</div>
           <h3 id="metric2Title">Living Site</h3>
           <p id="metric2Text">A demonstration model that turns vision into visible community practice.</p>
         </div>
-        <div class="card metric">
+        <div class="card">
           <div class="metric-number" id="metric3Number">4</div>
           <h3 id="metric3Title">Current Needs</h3>
           <p id="metric3Text">Water, fencing, energy, and on-site stewardship to unlock stronger operations.</p>
         </div>
-        <div class="card metric">
+        <div class="card">
           <div class="metric-number" id="metric4Number">∞</div>
           <h3 id="metric4Title">Legacy Potential</h3>
           <p id="metric4Text">A platform designed to serve families, partners, and future generations.</p>
@@ -689,8 +715,7 @@
     <script>
       const translations = {
         English: {
-          topBanner:
-            "🌱 Live Demo: Building a community-centered future through food, land, youth, and family.",
+          topBanner: "🌱 Live Demo: Building a community-centered future through food, land, youth, and family.",
           brandTitle: "Farm & Family Alliance",
           brandSub: "Bronson Family Farm Ecosystem Demo",
           navExperience: "Experience",
@@ -700,8 +725,7 @@
           connectNow: "Connect Now",
           eyebrow: "Community Agriculture. Workforce Pathways. Generational Vision.",
           headline: "Growing food, purpose, and possibility from the ground up.",
-          heroText:
-            "This live platform introduces a land-based ecosystem designed to strengthen food access, train youth, support growers, activate community participation, and create a regenerative future rooted in Youngstown.",
+          heroText: "This live platform introduces a land-based ecosystem designed to strengthen food access, train youth, support growers, activate community participation, and create a regenerative future rooted in Youngstown.",
           startButton: "Start the Farm Experience",
           partnerButton: "Partner With the Mission",
           chip1: "Food Access",
@@ -718,28 +742,20 @@
           metric4Title: "Legacy Potential",
           metric4Text: "A platform designed to serve families, partners, and future generations.",
           demoTitle: "Experience the Ecosystem",
-          demoText:
-            "Bronson Family Farm is more than a place. It is a living system where people can grow, learn, gather, participate, and invest in a stronger future. This demonstration introduces the pathways that connect land, food, training, and community.",
+          demoText: "Bronson Family Farm is more than a place. It is a living system where people can grow, learn, gather, participate, and invest in a stronger future. This demonstration introduces the pathways that connect land, food, training, and community.",
           card1Title: "Grow Food",
-          card1Text:
-            "A working agricultural site designed to support production, education, and practical local food access with a regenerative, community-centered model.",
+          card1Text: "A working agricultural site designed to support production, education, and practical local food access with a regenerative, community-centered model.",
           card2Title: "Train Youth",
-          card2Text:
-            "A hands-on environment where young people can build confidence, gain work habits, and connect outdoor learning to real career pathways and purpose.",
+          card2Text: "A hands-on environment where young people can build confidence, gain work habits, and connect outdoor learning to real career pathways and purpose.",
           card3Title: "Strengthen Community",
-          card3Text:
-            "A welcoming place for events, workshops, family participation, volunteerism, and relationship-building around food, land, and local resilience.",
+          card3Text: "A welcoming place for events, workshops, family participation, volunteerism, and relationship-building around food, land, and local resilience.",
           whyTitle: "Why This Exists",
-          whyText:
-            "This work was built to restore connection — to land, to family, to food, to opportunity, and to the kind of future communities deserve to inherit.",
-          quoteText:
-            "Bronson Family Farm exists to bring people back into relationship with the land and with one another. It is a practical response to food insecurity, social disconnection, and limited pathways to meaningful participation.",
+          whyText: "This work was built to restore connection — to land, to family, to food, to opportunity, and to the kind of future communities deserve to inherit.",
+          quoteText: "Bronson Family Farm exists to bring people back into relationship with the land and with one another. It is a practical response to food insecurity, social disconnection, and limited pathways to meaningful participation.",
           differenceTitle: "What makes it different",
-          differenceText:
-            "This platform brings together agriculture, education, workforce development, food access, family-centered engagement, and off-grid resilience in one visible, usable place.",
+          differenceText: "This platform brings together agriculture, education, workforce development, food access, family-centered engagement, and off-grid resilience in one visible, usable place.",
           supportTitle: "Support the Mission",
-          supportText:
-            "We are building a visible, community-facing agricultural ecosystem that supports food access, youth development, family engagement, and long-term resilience.",
+          supportText: "We are building a visible, community-facing agricultural ecosystem that supports food access, youth development, family engagement, and long-term resilience.",
           need1Label: "Current Need",
           need1Text: "Irrigation and reliable water systems",
           need2Label: "Current Need",
@@ -751,17 +767,14 @@
           supportButton1: "Partner With Us",
           supportButton2: "Explore the Vision",
           finalTitle: "This is more than a website. It is an invitation.",
-          finalText:
-            "Whether you are a funder, partner, institution, grower, family member, or community supporter, this platform is here to help you see what is being built — and how you can be part of it.",
+          finalText: "Whether you are a funder, partner, institution, grower, family member, or community supporter, this platform is here to help you see what is being built — and how you can be part of it.",
           finalButton1: "Email to Connect",
           finalButton2: "Explore Again",
           footerLeft: "Farm & Family Alliance | Bronson Family Farm Ecosystem Demo",
           footerRight: "Youngstown, Ohio | Community-Centered Agriculture & Family Wellness"
         },
-
         Spanish: {
-          topBanner:
-            "🌱 Demostración en vivo: construyendo un futuro centrado en la comunidad a través de la alimentación, la tierra, la juventud y la familia.",
+          topBanner: "🌱 Demostración en vivo: construyendo un futuro centrado en la comunidad a través de la alimentación, la tierra, la juventud y la familia.",
           brandTitle: "Farm & Family Alliance",
           brandSub: "Demostración del ecosistema de Bronson Family Farm",
           navExperience: "Experiencia",
@@ -771,8 +784,7 @@
           connectNow: "Conectar ahora",
           eyebrow: "Agricultura comunitaria. Caminos laborales. Visión generacional.",
           headline: "Cultivando alimentos, propósito y posibilidades desde la tierra.",
-          heroText:
-            "Esta plataforma en vivo presenta un ecosistema basado en la tierra diseñado para fortalecer el acceso a los alimentos, capacitar a los jóvenes, apoyar a los productores, activar la participación comunitaria y crear un futuro regenerativo arraigado en Youngstown.",
+          heroText: "Esta plataforma en vivo presenta un ecosistema basado en la tierra diseñado para fortalecer el acceso a los alimentos, capacitar a los jóvenes, apoyar a los productores, activar la participación comunitaria y crear un futuro regenerativo arraigado en Youngstown.",
           startButton: "Comenzar la experiencia",
           partnerButton: "Apoyar la misión",
           chip1: "Acceso a alimentos",
@@ -789,28 +801,20 @@
           metric4Title: "Potencial de legado",
           metric4Text: "Una plataforma diseñada para servir a familias, socios y generaciones futuras.",
           demoTitle: "Experimente el ecosistema",
-          demoText:
-            "Bronson Family Farm es más que un lugar. Es un sistema vivo donde las personas pueden cultivar, aprender, reunirse, participar e invertir en un futuro más fuerte.",
+          demoText: "Bronson Family Farm es más que un lugar. Es un sistema vivo donde las personas pueden cultivar, aprender, reunirse, participar e invertir en un futuro más fuerte.",
           card1Title: "Cultivar alimentos",
-          card1Text:
-            "Un sitio agrícola activo diseñado para apoyar la producción, la educación y el acceso práctico a alimentos locales.",
+          card1Text: "Un sitio agrícola activo diseñado para apoyar la producción, la educación y el acceso práctico a alimentos locales.",
           card2Title: "Capacitar a la juventud",
-          card2Text:
-            "Un entorno práctico donde los jóvenes pueden desarrollar confianza, hábitos de trabajo y conexión con trayectorias reales.",
+          card2Text: "Un entorno práctico donde los jóvenes pueden desarrollar confianza, hábitos de trabajo y conexión con trayectorias reales.",
           card3Title: "Fortalecer la comunidad",
-          card3Text:
-            "Un lugar acogedor para eventos, talleres, participación familiar, voluntariado y construcción de relaciones.",
+          card3Text: "Un lugar acogedor para eventos, talleres, participación familiar, voluntariado y construcción de relaciones.",
           whyTitle: "Por qué existe",
-          whyText:
-            "Este trabajo fue construido para restaurar la conexión: con la tierra, con la familia, con los alimentos y con la oportunidad.",
-          quoteText:
-            "Bronson Family Farm existe para devolver a las personas a una relación con la tierra y entre sí. Es una respuesta práctica a la inseguridad alimentaria y a la desconexión social.",
+          whyText: "Este trabajo fue construido para restaurar la conexión: con la tierra, con la familia, con los alimentos y con la oportunidad.",
+          quoteText: "Bronson Family Farm existe para devolver a las personas a una relación con la tierra y entre sí. Es una respuesta práctica a la inseguridad alimentaria y a la desconexión social.",
           differenceTitle: "Qué la hace diferente",
-          differenceText:
-            "Esta plataforma reúne agricultura, educación, desarrollo laboral, acceso a alimentos, participación familiar y resiliencia fuera de la red en un solo lugar visible.",
+          differenceText: "Esta plataforma reúne agricultura, educación, desarrollo laboral, acceso a alimentos, participación familiar y resiliencia fuera de la red en un solo lugar visible.",
           supportTitle: "Apoye la misión",
-          supportText:
-            "Estamos construyendo un ecosistema agrícola visible y orientado a la comunidad que apoya el acceso a los alimentos, el desarrollo juvenil y la resiliencia.",
+          supportText: "Estamos construyendo un ecosistema agrícola visible y orientado a la comunidad que apoya el acceso a los alimentos, el desarrollo juvenil y la resiliencia.",
           need1Label: "Necesidad actual",
           need1Text: "Sistemas de riego y agua confiables",
           need2Label: "Necesidad actual",
@@ -822,17 +826,14 @@
           supportButton1: "Asóciese con nosotros",
           supportButton2: "Explore la visión",
           finalTitle: "Esto es más que un sitio web. Es una invitación.",
-          finalText:
-            "Ya sea que usted sea financiador, socio, institución, productor, familiar o simpatizante, esta plataforma está aquí para ayudarle a ver lo que se está construyendo.",
+          finalText: "Ya sea que usted sea financiador, socio, institución, productor, familiar o simpatizante, esta plataforma está aquí para ayudarle a ver lo que se está construyendo.",
           finalButton1: "Enviar correo",
           finalButton2: "Explorar de nuevo",
           footerLeft: "Farm & Family Alliance | Demostración del ecosistema Bronson Family Farm",
           footerRight: "Youngstown, Ohio | Agricultura centrada en la comunidad y bienestar familiar"
         },
-
         Italian: {
-          topBanner:
-            "🌱 Demo dal vivo: costruire un futuro centrato sulla comunità attraverso cibo, terra, giovani e famiglia.",
+          topBanner: "🌱 Demo dal vivo: costruire un futuro centrato sulla comunità attraverso cibo, terra, giovani e famiglia.",
           brandTitle: "Farm & Family Alliance",
           brandSub: "Demo dell'ecosistema Bronson Family Farm",
           navExperience: "Esperienza",
@@ -842,8 +843,7 @@
           connectNow: "Contattaci",
           eyebrow: "Agricoltura comunitaria. Percorsi di lavoro. Visione generazionale.",
           headline: "Coltivare cibo, scopo e possibilità partendo dalla terra.",
-          heroText:
-            "Questa piattaforma dal vivo presenta un ecosistema basato sulla terra progettato per rafforzare l’accesso al cibo, formare i giovani, sostenere i coltivatori e attivare la partecipazione della comunità.",
+          heroText: "Questa piattaforma dal vivo presenta un ecosistema basato sulla terra progettato per rafforzare l’accesso al cibo, formare i giovani, sostenere i coltivatori e attivare la partecipazione della comunità.",
           startButton: "Inizia l’esperienza",
           partnerButton: "Sostieni la missione",
           chip1: "Accesso al cibo",
@@ -860,28 +860,20 @@
           metric4Title: "Potenziale di eredità",
           metric4Text: "Una piattaforma progettata per servire famiglie, partner e generazioni future.",
           demoTitle: "Vivi l’ecosistema",
-          demoText:
-            "Bronson Family Farm è più di un luogo. È un sistema vivente dove le persone possono coltivare, imparare, riunirsi, partecipare e investire in un futuro più forte.",
+          demoText: "Bronson Family Farm è più di un luogo. È un sistema vivente dove le persone possono coltivare, imparare, riunirsi, partecipare e investire in un futuro più forte.",
           card1Title: "Coltivare cibo",
-          card1Text:
-            "Un sito agricolo attivo progettato per sostenere produzione, educazione e accesso pratico al cibo locale.",
+          card1Text: "Un sito agricolo attivo progettato per sostenere produzione, educazione e accesso pratico al cibo locale.",
           card2Title: "Formare i giovani",
-          card2Text:
-            "Un ambiente pratico in cui i giovani possono sviluppare fiducia, abitudini di lavoro e connessione con percorsi reali.",
+          card2Text: "Un ambiente pratico in cui i giovani possono sviluppare fiducia, abitudini di lavoro e connessione con percorsi reali.",
           card3Title: "Rafforzare la comunità",
-          card3Text:
-            "Uno spazio accogliente per eventi, laboratori, partecipazione familiare e costruzione di relazioni.",
+          card3Text: "Uno spazio accogliente per eventi, laboratori, partecipazione familiare e costruzione di relazioni.",
           whyTitle: "Perché esiste",
-          whyText:
-            "Questo lavoro è nato per ristabilire connessioni: con la terra, con la famiglia, con il cibo e con le opportunità.",
-          quoteText:
-            "Bronson Family Farm esiste per riportare le persone in relazione con la terra e tra loro. È una risposta pratica all’insicurezza alimentare e alla disconnessione sociale.",
+          whyText: "Questo lavoro è nato per ristabilire connessioni: con la terra, con la famiglia, con il cibo e con le opportunità.",
+          quoteText: "Bronson Family Farm esiste per riportare le persone in relazione con la terra e tra loro. È una risposta pratica all’insicurezza alimentare e alla disconnessione sociale.",
           differenceTitle: "Cosa la rende diversa",
-          differenceText:
-            "Questa piattaforma unisce agricoltura, educazione, sviluppo del lavoro, accesso al cibo, coinvolgimento familiare e resilienza off-grid in un unico luogo visibile.",
+          differenceText: "Questa piattaforma unisce agricoltura, educazione, sviluppo del lavoro, accesso al cibo, coinvolgimento familiare e resilienza off-grid in un unico luogo visibile.",
           supportTitle: "Sostieni la missione",
-          supportText:
-            "Stiamo costruendo un ecosistema agricolo visibile e rivolto alla comunità che sostiene l’accesso al cibo, lo sviluppo dei giovani e la resilienza.",
+          supportText: "Stiamo costruendo un ecosistema agricolo visibile e rivolto alla comunità che sostiene l’accesso al cibo, lo sviluppo dei giovani e la resilienza.",
           need1Label: "Bisogno attuale",
           need1Text: "Irrigazione e sistemi idrici affidabili",
           need2Label: "Bisogno attuale",
@@ -893,17 +885,14 @@
           supportButton1: "Collabora con noi",
           supportButton2: "Esplora la visione",
           finalTitle: "Questo è più di un sito web. È un invito.",
-          finalText:
-            "Che tu sia un finanziatore, un partner, un’istituzione, un coltivatore, un familiare o un sostenitore, questa piattaforma è qui per aiutarti a vedere ciò che si sta costruendo.",
+          finalText: "Che tu sia un finanziatore, un partner, un’istituzione, un coltivatore, un familiare o un sostenitore, questa piattaforma è qui per aiutarti a vedere ciò che si sta costruendo.",
           finalButton1: "Scrivici",
           finalButton2: "Esplora ancora",
           footerLeft: "Farm & Family Alliance | Demo dell'ecosistema Bronson Family Farm",
           footerRight: "Youngstown, Ohio | Agricoltura centrata sulla comunità e benessere familiare"
         },
-
         Patwa: {
-          topBanner:
-            "🌱 Live demo: a build one community-centered future through food, land, youth, an family.",
+          topBanner: "🌱 Live demo: a build one community-centered future through food, land, youth, an family.",
           brandTitle: "Farm & Family Alliance",
           brandSub: "Bronson Family Farm Ecosystem Demo",
           navExperience: "Experience",
@@ -913,8 +902,7 @@
           connectNow: "Link Wid Wi",
           eyebrow: "Community farming. Work pathway. Generational vision.",
           headline: "Wi a grow food, purpose, an possibility fram di ground up.",
-          heroText:
-            "Dis live platform show one land-based ecosystem weh design fi strengthen food access, train youth, support grower dem, activate community participation, an build one stronger future ina Youngstown.",
+          heroText: "Dis live platform show one land-based ecosystem weh design fi strengthen food access, train youth, support grower dem, activate community participation, an build one stronger future ina Youngstown.",
           startButton: "Start di farm experience",
           partnerButton: "Partner wid di mission",
           chip1: "Food access",
@@ -931,28 +919,20 @@
           metric4Title: "Legacy potential",
           metric4Text: "One platform build fi serve family, partner dem, an future generation.",
           demoTitle: "Experience di ecosystem",
-          demoText:
-            "Bronson Family Farm a more dan one place. A one living system weh people can grow, learn, gather, participate, an invest ina one stronger future.",
+          demoText: "Bronson Family Farm a more dan one place. A one living system weh people can grow, learn, gather, participate, an invest ina one stronger future.",
           card1Title: "Grow food",
-          card1Text:
-            "One working farm site build fi support production, education, an practical local food access.",
+          card1Text: "One working farm site build fi support production, education, an practical local food access.",
           card2Title: "Train youth",
-          card2Text:
-            "One hands-on environment weh young people can build confidence, work habit, an real pathway.",
+          card2Text: "One hands-on environment weh young people can build confidence, work habit, an real pathway.",
           card3Title: "Strengthen community",
-          card3Text:
-            "One welcoming place fi event, workshop, family participation, volunteer work, an relationship building.",
+          card3Text: "One welcoming place fi event, workshop, family participation, volunteer work, an relationship building.",
           whyTitle: "Why dis deh yah",
-          whyText:
-            "Dis work build fi restore connection — to land, family, food, opportunity, an di future community deserve.",
-          quoteText:
-            "Bronson Family Farm deh yah fi bring people back into relationship wid di land an wid one another. A practical response to food insecurity an social disconnection.",
+          whyText: "Dis work build fi restore connection — to land, family, food, opportunity, an di future community deserve.",
+          quoteText: "Bronson Family Farm deh yah fi bring people back into relationship wid di land an wid one another. A practical response to food insecurity an social disconnection.",
           differenceTitle: "Wah mek it different",
-          differenceText:
-            "Dis platform bring together farming, education, workforce development, food access, family engagement, an off-grid resilience inna one visible place.",
+          differenceText: "Dis platform bring together farming, education, workforce development, food access, family engagement, an off-grid resilience inna one visible place.",
           supportTitle: "Support di mission",
-          supportText:
-            "Wi a build one visible, community-facing agricultural ecosystem weh support food access, youth development, family engagement, an resilience.",
+          supportText: "Wi a build one visible, community-facing agricultural ecosystem weh support food access, youth development, family engagement, an resilience.",
           need1Label: "Current need",
           need1Text: "Irrigation an reliable water system",
           need2Label: "Current need",
@@ -964,17 +944,14 @@
           supportButton1: "Partner wid wi",
           supportButton2: "Explore di vision",
           finalTitle: "Dis more dan one website. A one invitation.",
-          finalText:
-            "Whether yuh a funder, partner, institution, grower, family member, or supporter, dis platform deh yah fi help yuh see wah a build.",
+          finalText: "Whether yuh a funder, partner, institution, grower, family member, or supporter, dis platform deh yah fi help yuh see wah a build.",
           finalButton1: "Email wi",
           finalButton2: "Explore again",
           footerLeft: "Farm & Family Alliance | Bronson Family Farm Ecosystem Demo",
           footerRight: "Youngstown, Ohio | Community-centered agriculture an family wellness"
         },
-
         Hebrew: {
-          topBanner:
-            "🌱 הדגמה חיה: בניית עתיד ממוקד קהילה דרך מזון, אדמה, נוער ומשפחה.",
+          topBanner: "🌱 הדגמה חיה: בניית עתיד ממוקד קהילה דרך מזון, אדמה, נוער ומשפחה.",
           brandTitle: "Farm & Family Alliance",
           brandSub: "הדגמת המערכת האקולוגית של Bronson Family Farm",
           navExperience: "חוויה",
@@ -984,8 +961,7 @@
           connectNow: "צרו קשר",
           eyebrow: "חקלאות קהילתית. מסלולי עבודה. חזון בין-דורי.",
           headline: "מגדלים מזון, מטרה ואפשרויות מהיסוד.",
-          heroText:
-            "הפלטפורמה החיה הזו מציגה מערכת אקולוגית מבוססת אדמה שנועדה לחזק נגישות למזון, להכשיר צעירים, לתמוך במגדלים ולהפעיל השתתפות קהילתית.",
+          heroText: "הפלטפורמה החיה הזו מציגה מערכת אקולוגית מבוססת אדמה שנועדה לחזק נגישות למזון, להכשיר צעירים, לתמוך במגדלים ולהפעיל השתתפות קהילתית.",
           startButton: "התחילו את חוויית החווה",
           partnerButton: "שתפו פעולה עם המשימה",
           chip1: "נגישות למזון",
@@ -1002,28 +978,20 @@
           metric4Title: "פוטנציאל מורשת",
           metric4Text: "פלטפורמה שנבנתה לשרת משפחות, שותפים ודורות עתידיים.",
           demoTitle: "חוו את המערכת האקולוגית",
-          demoText:
-            "Bronson Family Farm היא יותר ממקום. זו מערכת חיה שבה אנשים יכולים לגדל, ללמוד, להתכנס, להשתתף ולהשקיע בעתיד חזק יותר.",
+          demoText: "Bronson Family Farm היא יותר ממקום. זו מערכת חיה שבה אנשים יכולים לגדל, ללמוד, להתכנס, להשתתף ולהשקיע בעתיד חזק יותר.",
           card1Title: "לגדל מזון",
-          card1Text:
-            "אתר חקלאי פעיל שנועד לתמוך בייצור, בחינוך ובנגישות מעשית למזון מקומי.",
+          card1Text: "אתר חקלאי פעיל שנועד לתמוך בייצור, בחינוך ובנגישות מעשית למזון מקומי.",
           card2Title: "להכשיר צעירים",
-          card2Text:
-            "סביבה מעשית שבה צעירים יכולים לבנות ביטחון, הרגלי עבודה וקשר למסלולים אמיתיים.",
+          card2Text: "סביבה מעשית שבה צעירים יכולים לבנות ביטחון, הרגלי עבודה וקשר למסלולים אמיתיים.",
           card3Title: "לחזק קהילה",
-          card3Text:
-            "מקום מזמין לאירועים, סדנאות, השתתפות משפחתית, התנדבות ובניית קשרים.",
+          card3Text: "מקום מזמין לאירועים, סדנאות, השתתפות משפחתית, התנדבות ובניית קשרים.",
           whyTitle: "למה זה קיים",
-          whyText:
-            "העבודה הזו נבנתה כדי להשיב חיבור — לאדמה, למשפחה, למזון, להזדמנות ולעתיד שקהילות ראויות לו.",
-          quoteText:
-            "Bronson Family Farm קיימת כדי להחזיר אנשים למערכת יחסים עם האדמה ועם זה עם זה. זו תגובה מעשית לחוסר ביטחון תזונתי ולניתוק חברתי.",
+          whyText: "העבודה הזו נבנתה כדי להשיב חיבור — לאדמה, למשפחה, למזון, להזדמנות ולעתיד שקהילות ראויות לו.",
+          quoteText: "Bronson Family Farm קיימת כדי להחזיר אנשים למערכת יחסים עם האדמה ועם זה עם זה. זו תגובה מעשית לחוסר ביטחון תזונתי ולניתוק חברתי.",
           differenceTitle: "מה מייחד את זה",
-          differenceText:
-            "הפלטפורמה הזו מחברת חקלאות, חינוך, פיתוח כוח עבודה, נגישות למזון, מעורבות משפחתית וחוסן מחוץ לרשת במקום אחד גלוי ושימושי.",
+          differenceText: "הפלטפורמה הזו מחברת חקלאות, חינוך, פיתוח כוח עבודה, נגישות למזון, מעורבות משפחתית וחוסן מחוץ לרשת במקום אחד גלוי ושימושי.",
           supportTitle: "תמכו במשימה",
-          supportText:
-            "אנו בונים מערכת אקולוגית חקלאית גלויה ומוכוונת קהילה התומכת בנגישות למזון, בפיתוח נוער ובחוסן.",
+          supportText: "אנו בונים מערכת אקולוגית חקלאית גלויה ומוכוונת קהילה התומכת בנגישות למזון, בפיתוח נוער ובחוסן.",
           need1Label: "צורך נוכחי",
           need1Text: "השקיה ומערכות מים אמינות",
           need2Label: "צורך נוכחי",
@@ -1035,8 +1003,7 @@
           supportButton1: "שתפו פעולה איתנו",
           supportButton2: "גלו את החזון",
           finalTitle: "זה יותר מאתר. זו הזמנה.",
-          finalText:
-            "בין אם אתם מממנים, שותפים, מוסד, מגדלים, בני משפחה או תומכים, הפלטפורמה הזו כאן כדי לעזור לכם לראות מה נבנה.",
+          finalText: "בין אם אתם מממנים, שותפים, מוסד, מגדלים, בני משפחה או תומכים, הפלטפורמה הזו כאן כדי לעזור לכם לראות מה נבנה.",
           finalButton1: "שלחו אימייל",
           finalButton2: "חקרו שוב",
           footerLeft: "Farm & Family Alliance | הדגמת המערכת האקולוגית של Bronson Family Farm",
