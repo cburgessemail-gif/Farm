@@ -9,85 +9,97 @@ const translations: any = {
     partner: "Partner With the Mission",
   },
   Spanish: {
-    headline: "Cultivando alimentos, propósito y posibilidades desde la tierra.",
+    headline:
+      "Cultivando alimentos, propósito y posibilidades desde la tierra.",
     description:
       "Esta plataforma fortalece el acceso a alimentos y la comunidad.",
     start: "Comenzar la Experiencia",
     partner: "Apoyar la Misión",
   },
   Italian: {
-    headline: "Coltivare cibo, scopo e possibilità dalla terra.",
+    headline:
+      "Coltivare cibo, scopo e possibilità dalla terra.",
     description:
       "Questa piattaforma crea un ecosistema per il futuro.",
     start: "Inizia l'Esperienza",
     partner: "Sostieni la Missione",
   },
   Patwa: {
-    headline: "Wi a grow food, purpose, an possibility fram di ground up.",
+    headline:
+      "Wi a grow food, purpose, an possibility right from di ground.",
     description:
-      "Dis platform help di community grow strong.",
+      "Dis platform a build community an support di people dem.",
     start: "Start di Experience",
     partner: "Support di Mission",
   },
   Hebrew: {
-    headline: "מגדלים מזון, משמעות ואפשרויות מהאדמה.",
+    headline:
+      "מגדלים מזון, מטרה ואפשרויות מהיסוד.",
     description:
-      "פלטפורמה זו מחזקת את הקהילה והעתיד.",
+      "הפלטפורמה הזו מחזקת קהילה וגישה למזון.",
     start: "התחל את החוויה",
     partner: "תמוך במשימה",
   },
 };
 
 export default function App() {
-  const [language, setLanguage] = useState("English");
-  const t = translations[language];
+  const [lang, setLang] = useState("English");
+  const t = translations[lang];
 
   return (
-    <div style={{ padding: "40px", fontFamily: "Arial" }}>
-
-      {/* 🔴 TEST BANNER */}
-      <div style={{ background: "red", color: "white", padding: "12px", fontWeight: "bold" }}>
-        TEST - NEW VERSION LOADED
-      </div>
-
-      {/* 🌍 LANGUAGE DROPDOWN */}
-      <div style={{ textAlign: "right", marginTop: "20px" }}>
+    <div style={{ fontFamily: "Arial", padding: "40px" }}>
+      
+      {/* LANGUAGE SELECTOR */}
+      <div style={{ textAlign: "right", marginBottom: "20px" }}>
         <select
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
+          value={lang}
+          onChange={(e) => setLang(e.target.value)}
           style={{
             padding: "10px",
-            borderRadius: "8px",
+            borderRadius: "6px",
             fontSize: "16px",
           }}
         >
-          {Object.keys(translations).map((lang) => (
-            <option key={lang}>{lang}</option>
-          ))}
+          <option>English</option>
+          <option>Spanish</option>
+          <option>Italian</option>
+          <option>Patwa</option>
+          <option>Hebrew</option>
         </select>
       </div>
 
-      {/* 🧠 HEADLINE */}
-      <h1 style={{ fontSize: "48px", fontWeight: "bold", marginTop: "30px" }}>
+      {/* HERO */}
+      <h1 style={{ fontSize: "48px", fontWeight: "bold" }}>
         {t.headline}
       </h1>
 
-      {/* 📄 DESCRIPTION */}
-      <p style={{ fontSize: "18px", marginTop: "20px" }}>
+      <p style={{ marginTop: "20px", maxWidth: "700px" }}>
         {t.description}
       </p>
 
-      {/* 🔘 BUTTONS */}
       <div style={{ marginTop: "30px" }}>
-        <button style={{ marginRight: "10px", padding: "10px 20px" }}>
+        <button
+          style={{
+            padding: "12px 20px",
+            background: "green",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            marginRight: "10px",
+          }}
+        >
           {t.start}
         </button>
 
-        <button style={{ padding: "10px 20px" }}>
+        <button
+          style={{
+            padding: "12px 20px",
+            borderRadius: "6px",
+          }}
+        >
           {t.partner}
         </button>
       </div>
-
     </div>
   );
 }
