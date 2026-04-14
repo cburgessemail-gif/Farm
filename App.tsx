@@ -1,4 +1,6 @@
-import { useState } from "react";
+<div style={{ background: "red", color: "white", padding: "12px", fontWeight: "bold" }}>
+  TEST - NEW VERSION LOADED
+</div>import { useState } from "react";
 
 const translations: any = {
   English: {
