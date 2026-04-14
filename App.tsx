@@ -1,6 +1,4 @@
-<div style={{ background: "red", color: "white", padding: "12px", fontWeight: "bold" }}>
-  TEST - NEW VERSION LOADED
-</div>import { useState } from "react";
+import { useState } from "react";
 
 const translations: any = {
   English: {
@@ -13,28 +11,28 @@ const translations: any = {
   Spanish: {
     headline: "Cultivando alimentos, propósito y posibilidades desde la tierra.",
     description:
-      "Esta plataforma introduce un ecosistema basado en la tierra para fortalecer el acceso a alimentos y la comunidad.",
+      "Esta plataforma fortalece el acceso a alimentos y la comunidad.",
     start: "Comenzar la Experiencia",
     partner: "Apoyar la Misión",
   },
   Italian: {
     headline: "Coltivare cibo, scopo e possibilità dalla terra.",
     description:
-      "Questa piattaforma crea un ecosistema per nutrire comunità e futuro.",
+      "Questa piattaforma crea un ecosistema per il futuro.",
     start: "Inizia l'Esperienza",
     partner: "Sostieni la Missione",
   },
   Patwa: {
     headline: "Wi a grow food, purpose, an possibility fram di ground up.",
     description:
-      "Dis platform a build fi help di community grow strong an healthy.",
+      "Dis platform help di community grow strong.",
     start: "Start di Experience",
     partner: "Support di Mission",
   },
   Hebrew: {
     headline: "מגדלים מזון, משמעות ואפשרויות מהאדמה.",
     description:
-      "פלטפורמה זו יוצרת מערכת אקולוגית לחיזוק הקהילה והעתיד.",
+      "פלטפורמה זו מחזקת את הקהילה והעתיד.",
     start: "התחל את החוויה",
     partner: "תמוך במשימה",
   },
@@ -46,9 +44,14 @@ export default function App() {
 
   return (
     <div style={{ padding: "40px", fontFamily: "Arial" }}>
-      
-      {/* LANGUAGE SELECTOR */}
-      <div style={{ textAlign: "right", marginBottom: "20px" }}>
+
+      {/* 🔴 TEST BANNER */}
+      <div style={{ background: "red", color: "white", padding: "12px", fontWeight: "bold" }}>
+        TEST - NEW VERSION LOADED
+      </div>
+
+      {/* 🌍 LANGUAGE DROPDOWN */}
+      <div style={{ textAlign: "right", marginTop: "20px" }}>
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
@@ -64,17 +67,17 @@ export default function App() {
         </select>
       </div>
 
-      {/* HEADLINE */}
-      <h1 style={{ fontSize: "48px", fontWeight: "bold" }}>
+      {/* 🧠 HEADLINE */}
+      <h1 style={{ fontSize: "48px", fontWeight: "bold", marginTop: "30px" }}>
         {t.headline}
       </h1>
 
-      {/* DESCRIPTION */}
+      {/* 📄 DESCRIPTION */}
       <p style={{ fontSize: "18px", marginTop: "20px" }}>
         {t.description}
       </p>
 
-      {/* BUTTONS */}
+      {/* 🔘 BUTTONS */}
       <div style={{ marginTop: "30px" }}>
         <button style={{ marginRight: "10px", padding: "10px 20px" }}>
           {t.start}
@@ -84,6 +87,7 @@ export default function App() {
           {t.partner}
         </button>
       </div>
+
     </div>
   );
 }
