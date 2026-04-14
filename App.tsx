@@ -20,15 +20,15 @@ const translations: any = {
     headline:
       "Coltivare cibo, scopo e possibilità dalla terra.",
     description:
-      "Questa piattaforma crea un ecosistema per il futuro.",
+      "Questa piattaforma rafforza l’accesso al cibo e la comunità.",
     start: "Inizia l'Esperienza",
     partner: "Sostieni la Missione",
   },
   Patwa: {
     headline:
-      "Wi a grow food, purpose, an possibility right from di ground.",
+      "Wi a grow food, purpose, an possibility fram di ground up.",
     description:
-      "Dis platform a build community an support di people dem.",
+      "Dis platform a strengthen food access an di community.",
     start: "Start di Experience",
     partner: "Support di Mission",
   },
@@ -36,24 +36,24 @@ const translations: any = {
     headline:
       "מגדלים מזון, מטרה ואפשרויות מהיסוד.",
     description:
-      "הפלטפורמה הזו מחזקת קהילה וגישה למזון.",
+      "הפלטפורמה הזו מחזקת גישה למזון ואת הקהילה.",
     start: "התחל את החוויה",
     partner: "תמוך במשימה",
   },
 };
 
 export default function App() {
-  const [lang, setLang] = useState("English");
-  const t = translations[lang];
+  const [language, setLanguage] = useState("English");
+  const t = translations[language];
 
   return (
     <div style={{ fontFamily: "Arial", padding: "40px" }}>
       
-      {/* LANGUAGE SELECTOR */}
+      {/* LANGUAGE DROPDOWN */}
       <div style={{ textAlign: "right", marginBottom: "20px" }}>
         <select
-          value={lang}
-          onChange={(e) => setLang(e.target.value)}
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
           style={{
             padding: "10px",
             borderRadius: "6px",
@@ -68,7 +68,6 @@ export default function App() {
         </select>
       </div>
 
-      {/* HERO */}
       <h1 style={{ fontSize: "48px", fontWeight: "bold" }}>
         {t.headline}
       </h1>
