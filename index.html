@@ -1,944 +1,207 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Farm & Family Alliance | Bronson Family Farm</title>
-    <meta
-      name="description"
-      content="A live community-centered farm and family ecosystem advancing food access, youth workforce development, regenerative agriculture, and regional resilience."
-    />
-    <style>
-      :root {
-        --bg: #f4f7f1;
-        --surface: #ffffff;
-        --text: #18311f;
-        --muted: #4d6855;
-        --line: #d6e3d4;
-        --green: #2d6a3d;
-        --green-dark: #1f4f2c;
-        --green-deep: #15311d;
-        --gold: #b48a3a;
-        --shadow: 0 18px 45px rgba(24, 49, 31, 0.08);
-        --radius: 22px;
-        --max: 1180px;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        font-family: Inter, Arial, Helvetica, sans-serif;
-        background: linear-gradient(180deg, #f7faf5 0%, #eef5ea 100%);
-        color: var(--text);
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .top-banner {
-        background: var(--green-deep);
-        color: #fff;
-        text-align: center;
-        padding: 12px 16px;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-      }
-
-      .nav {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        backdrop-filter: blur(10px);
-        background: rgba(247, 250, 245, 0.94);
-        border-bottom: 1px solid rgba(24, 49, 31, 0.08);
-      }
-
-      .nav-inner {
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: 14px 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-        flex-wrap: wrap;
-      }
-
-      .brand {
-        display: flex;
-        flex-direction: column;
-        min-width: 220px;
-      }
-
-      .brand-title {
-        font-size: 20px;
-        font-weight: 900;
-        line-height: 1.1;
-      }
-
-      .brand-sub {
-        font-size: 12px;
-        color: var(--muted);
-        margin-top: 4px;
-      }
-
-      .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        flex: 1;
-      }
-
-      .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        flex-wrap: wrap;
-      }
-
-      .nav-links a,
-      .nav-links span {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--muted);
-        white-space: nowrap;
-      }
-
-      .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      .nav-cta {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--green);
-        color: #fff !important;
-        padding: 10px 16px;
-        border-radius: 999px;
-        font-weight: 800;
-        font-size: 14px;
-        box-shadow: 0 12px 30px rgba(45, 106, 61, 0.22);
-        white-space: nowrap;
-      }
-
-      .language-select {
-        padding: 9px 10px;
-        border-radius: 10px;
-        border: 1px solid #cfd8cf;
-        background: #ffffff;
-        color: #1f4f2c;
-        font-size: 14px;
-        font-weight: 700;
-        min-width: 120px;
-      }
-
-      .hero {
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(
-            180deg,
-            rgba(247, 250, 245, 0.28) 0%,
-            rgba(247, 250, 245, 0.58) 55%,
-            rgba(247, 250, 245, 0.9) 100%
-          ),
-          url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80")
-            center/cover no-repeat;
-        opacity: 0.95;
-      }
-
-      .hero-inner {
-        position: relative;
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: 74px 20px 48px;
-      }
-
-      .hero-card {
-        max-width: 900px;
-        background: rgba(255, 255, 255, 0.72);
-        border: 1px solid rgba(255, 255, 255, 0.65);
-        border-radius: 30px;
-        box-shadow: var(--shadow);
-        padding: 34px 30px;
-      }
-
-      .eyebrow {
-        display: inline-block;
-        background: rgba(45, 106, 61, 0.1);
-        color: var(--green-dark);
-        border-radius: 999px;
-        padding: 8px 14px;
-        font-size: 13px;
-        font-weight: 800;
-        margin-bottom: 16px;
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(38px, 6vw, 68px);
-        line-height: 0.98;
-        letter-spacing: -1.4px;
-      }
-
-      .hero-text {
-        margin: 18px 0 0;
-        max-width: 760px;
-        font-size: 19px;
-        line-height: 1.7;
-        color: #244130;
-      }
-
-      .hero-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 28px;
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 15px 22px;
-        border-radius: 999px;
-        font-size: 15px;
-        font-weight: 800;
-      }
-
-      .btn-primary {
-        background: var(--green);
-        color: #fff;
-        box-shadow: 0 14px 32px rgba(45, 106, 61, 0.22);
-      }
-
-      .btn-secondary {
-        background: #fff;
-        color: var(--green-dark);
-        border: 1px solid var(--line);
-      }
-
-      .hero-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 26px;
-      }
-
-      .chip {
-        padding: 10px 14px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.86);
-        border: 1px solid rgba(24, 49, 31, 0.08);
-        font-size: 13px;
-        font-weight: 700;
-        color: #2d4838;
-      }
-
-      .section {
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: 26px 20px 8px;
-      }
-
-      .section-head {
-        max-width: 860px;
-        margin-bottom: 22px;
-      }
-
-      .section-head h2 {
-        margin: 0;
-        font-size: clamp(30px, 4vw, 44px);
-        line-height: 1.05;
-        letter-spacing: -0.8px;
-      }
-
-      .section-head p {
-        margin: 12px 0 0;
-        color: var(--muted);
-        font-size: 17px;
-        line-height: 1.7;
-      }
-
-      .grid {
-        display: grid;
-        gap: 18px;
-      }
-
-      .grid-3 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .grid-4 {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .card {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        padding: 24px;
-      }
-
-      .card h3 {
-        margin: 0 0 12px;
-        font-size: 22px;
-        line-height: 1.15;
-      }
-
-      .card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.7;
-      }
-
-      .metric-number {
-        font-size: 34px;
-        font-weight: 900;
-        color: var(--green-dark);
-        margin-bottom: 8px;
-      }
-
-      .snapshot {
-        padding-top: 10px;
-      }
-
-      .snapshot-card {
-        background: linear-gradient(135deg, #16311d 0%, #244b2d 100%);
-        color: #fff;
-        border-radius: 28px;
-        padding: 30px;
-        box-shadow: 0 22px 46px rgba(24, 49, 31, 0.18);
-      }
-
-      .snapshot-card h2 {
-        margin: 0;
-        font-size: 38px;
-        line-height: 1.05;
-      }
-
-      .snapshot-card p {
-        margin: 14px 0 0;
-        color: rgba(255, 255, 255, 0.88);
-        font-size: 17px;
-        line-height: 1.7;
-        max-width: 860px;
-      }
-
-      .snapshot-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-        margin-top: 24px;
-      }
-
-      .snapshot-item {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 18px;
-        padding: 18px;
-      }
-
-      .snapshot-item strong {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 12px;
-        letter-spacing: 0.6px;
-        text-transform: uppercase;
-        color: #d6ead7;
-      }
-
-      .snapshot-item span {
-        font-size: 18px;
-        line-height: 1.5;
-        font-weight: 700;
-      }
-
-      .story-box {
-        display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
-        gap: 20px;
-      }
-
-      .quote-card {
-        background: linear-gradient(
-          135deg,
-          rgba(45, 106, 61, 0.08) 0%,
-          rgba(180, 138, 58, 0.08) 100%
-        );
-        border: 1px solid rgba(45, 106, 61, 0.12);
-      }
-
-      .quote-mark {
-        font-size: 48px;
-        line-height: 1;
-        color: var(--gold);
-        margin-bottom: 12px;
-      }
-
-      .quote-card p {
-        font-size: 20px;
-        line-height: 1.7;
-        color: #23402f;
-      }
-
-      .support-band {
-        padding-bottom: 20px;
-      }
-
-      .support-panel {
-        background: #16311d;
-        color: #fff;
-        border-radius: 28px;
-        padding: 30px;
-        box-shadow: 0 22px 46px rgba(24, 49, 31, 0.18);
-      }
-
-      .support-panel h2 {
-        margin: 0;
-        font-size: 38px;
-        line-height: 1.05;
-      }
-
-      .support-panel p {
-        margin: 14px 0 0;
-        color: rgba(255, 255, 255, 0.85);
-        font-size: 17px;
-        line-height: 1.7;
-        max-width: 820px;
-      }
-
-      .support-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-        margin-top: 24px;
-      }
-
-      .support-item {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 20px;
-        padding: 18px;
-      }
-
-      .support-item strong {
-        display: block;
-        font-size: 12px;
-        letter-spacing: 0.6px;
-        text-transform: uppercase;
-        color: #d9e8d9;
-        margin-bottom: 8px;
-      }
-
-      .support-item span {
-        font-size: 18px;
-        line-height: 1.5;
-        font-weight: 700;
-      }
-
-      .final-cta {
-        padding: 28px 20px 56px;
-      }
-
-      .final-cta-box {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: 26px;
-        box-shadow: var(--shadow);
-        padding: 28px;
-        text-align: center;
-      }
-
-      .final-cta-box h2 {
-        margin: 0;
-        font-size: 34px;
-        line-height: 1.08;
-      }
-
-      .final-cta-box p {
-        margin: 12px auto 0;
-        max-width: 740px;
-        color: var(--muted);
-        font-size: 17px;
-        line-height: 1.7;
-      }
-
-      .footer {
-        border-top: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.75);
-      }
-
-      .footer-inner {
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        gap: 18px;
-        flex-wrap: wrap;
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      @media (max-width: 960px) {
-        .grid-3,
-        .grid-4,
-        .story-box,
-        .support-grid,
-        .snapshot-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .nav-inner {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .nav-right {
-          width: 100%;
-          justify-content: flex-start;
-        }
-
-        .nav-links,
-        .nav-actions {
-          width: 100%;
-        }
-      }
-
-      @media (max-width: 640px) {
-        .hero-inner {
-          padding-top: 56px;
-        }
-
-        .hero-card,
-        .snapshot-card,
-        .support-panel,
-        .final-cta-box,
-        .card {
-          padding: 22px 18px;
-        }
-
-        .btn {
-          width: 100%;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="top-banner" id="topBanner">
-      🌱 Live Demo: Building a community-centered future through food, land, youth, and family.
-    </div>
-
-    <nav class="nav">
-      <div class="nav-inner">
-        <div class="brand">
-          <div class="brand-title" id="brandTitle">Farm &amp; Family Alliance</div>
-          <div class="brand-sub" id="brandSub">Bronson Family Farm Ecosystem Demo</div>
-        </div>
-
-        <div class="nav-right">
-          <div class="nav-links">
-            <a href="#demo" id="navExperience">Experience</a>
-            <a href="#why" id="navWhy">Why This Exists</a>
-            <a href="#impact" id="navImpact">Impact</a>
-            <a href="#support" id="navPartner">Partner</a>
-          </div>
-
-          <div class="nav-actions">
-            <a class="nav-cta" href="mailto:cburgess@bronsonfamilyfarm.com" id="connectNow">Connect Now</a>
-
-            <select class="language-select" id="languageSelect">
-              <option value="English">English</option>
-              <option value="Spanish">Spanish</option>
-              <option value="Italian">Italian</option>
-              <option value="Patwa">Patwa</option>
-              <option value="Hebrew">Hebrew</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <header class="hero">
-      <div class="hero-inner">
-        <div class="hero-card">
-          <div class="eyebrow" id="eyebrow">
-            Community Agriculture. Workforce Pathways. Generational Vision.
-          </div>
-
-          <h1 id="headline">
-            Growing food, purpose, and possibility from the ground up.
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+
+const roles = [
+  "Guest",
+  "Customer",
+  "Grower",
+  "Volunteer",
+  "Youth Worker",
+  "Supervisor",
+  "Admin",
+];
+
+export default function App() {
+  const [entered, setEntered] = useState(false);
+  const [activeRole, setActiveRole] = useState<string | null>(null);
+
+  // ENTRY SCREEN
+  if (!entered) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-gradient-to-b from-green-100 to-white">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <h1 className="text-5xl font-bold text-green-800 mb-6">
+            Bronson Family Farm
           </h1>
-
-          <p class="hero-text" id="heroText">
-            This live platform introduces a land-based ecosystem designed to strengthen food access,
-            train youth, support growers, activate community participation, and create a regenerative
-            future rooted in Youngstown.
+          <p className="text-lg text-gray-700 mb-8">
+            A Living Ecosystem for Growing, Learning, and Community
           </p>
 
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#demo" id="startButton">Start the Farm Experience</a>
-            <a class="btn btn-secondary" href="#support" id="partnerButton">Partner With the Mission</a>
-          </div>
-
-          <div class="hero-chips">
-            <span class="chip" id="chip1">Food Access</span>
-            <span class="chip" id="chip2">Youth Workforce</span>
-            <span class="chip" id="chip3">Regenerative Farming</span>
-            <span class="chip" id="chip4">Community Resilience</span>
-            <span class="chip" id="chip5">Live Demonstration Site</span>
-          </div>
-        </div>
+          <button
+            onClick={() => setEntered(true)}
+            className="px-8 py-4 bg-green-700 text-white rounded-2xl shadow-lg hover:bg-green-800 transition"
+          >
+            Enter the Farm
+          </button>
+        </motion.div>
       </div>
-    </header>
+    );
+  }
 
-    <section class="section snapshot">
-      <div class="snapshot-card">
-        <h2 id="snapshotTitle">Partner Snapshot</h2>
-        <p id="snapshotText">
-          This platform is designed to help funders, institutions, and partners quickly understand what is being built, what is needed now, and where their support can have visible impact.
-        </p>
+  // MAIN ECOSYSTEM
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white p-6 relative">
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-green-800">
+          🌲 Farm Ecosystem
+        </h2>
 
-        <div class="snapshot-grid">
-          <div class="snapshot-item">
-            <strong id="snapshot1Label">What this is</strong>
-            <span id="snapshot1Text">A living food, workforce, and family ecosystem</span>
-          </div>
-          <div class="snapshot-item">
-            <strong id="snapshot2Label">What it needs</strong>
-            <span id="snapshot2Text">Water, fencing, energy, and stewardship infrastructure</span>
-          </div>
-          <div class="snapshot-item">
-            <strong id="snapshot3Label">Why now</strong>
-            <span id="snapshot3Text">Because community resilience must be built before it is urgently needed</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="impact">
-      <div class="grid grid-4">
-        <div class="card">
-          <div class="metric-number" id="metric1Number">3+</div>
-          <h3 id="metric1Title">Core Pillars</h3>
-          <p id="metric1Text">Food access, youth development, and regenerative agriculture working together.</p>
-        </div>
-        <div class="card">
-          <div class="metric-number" id="metric2Number">1</div>
-          <h3 id="metric2Title">Living Site</h3>
-          <p id="metric2Text">A demonstration model that turns vision into visible community practice.</p>
-        </div>
-        <div class="card">
-          <div class="metric-number" id="metric3Number">4</div>
-          <h3 id="metric3Title">Current Needs</h3>
-          <p id="metric3Text">Water, fencing, energy, and on-site stewardship to unlock stronger operations.</p>
-        </div>
-        <div class="card">
-          <div class="metric-number" id="metric4Number">∞</div>
-          <h3 id="metric4Title">Legacy Potential</h3>
-          <p id="metric4Text">A platform designed to serve families, partners, and future generations.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="demo">
-      <div class="section-head">
-        <h2 id="demoTitle">Experience the Ecosystem</h2>
-        <p id="demoText">
-          Bronson Family Farm is more than a place. It is a living system where people can grow,
-          learn, gather, participate, and invest in a stronger future. This demonstration introduces
-          the pathways that connect land, food, training, and community.
-        </p>
+        <button
+          onClick={() => setActiveRole("SELECT")}
+          className="px-4 py-2 bg-green-700 text-white rounded-xl"
+        >
+          {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+        </button>
       </div>
 
-      <div class="grid grid-3">
-        <div class="card">
-          <h3 id="card1Title">Grow Food</h3>
-          <p id="card1Text">
-            A working agricultural site designed to support production, education, and practical local
-            food access with a regenerative, community-centered model.
+      {/* ECOSYSTEM GRID */}
+      <div className="grid md:grid-cols-3 gap-6">
+        {[
+          {
+            title: "🌾 Grow",
+            desc: "Production, crops, planning, soil, systems",
+          },
+          {
+            title: "🛒 Shop",
+            desc: "Marketplace, preorders, SNAP access",
+          },
+          {
+            title: "🎓 Learn",
+            desc: "Nutrition, growing, health, education",
+          },
+          {
+            title: "🤝 Participate",
+            desc: "Volunteer, workforce, youth programs",
+          },
+          {
+            title: "❤️ Community Impact",
+            desc: "Food access, wellness, regional impact",
+          },
+          {
+            title: "📅 Events",
+            desc: "Growers Supply Market, workshops, tours",
+          },
+        ].map((section, i) => (
+          <motion.div
+            key={i}
+            whileHover={{ scale: 1.05 }}
+            className="bg-white rounded-2xl p-6 shadow-md border"
+          >
+            <h3 className="text-xl font-semibold mb-2">
+              {section.title}
+            </h3>
+            <p className="text-gray-600">{section.desc}</p>
+
+            <button className="mt-4 text-green-700 font-semibold">
+              Explore →
+            </button>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* ROLE SELECTOR OVERLAY */}
+      {activeRole === "SELECT" && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-2xl shadow-xl w-[400px]">
+            <h3 className="text-xl font-bold mb-4">
+              Activate Your Role
+            </h3>
+
+            <div className="grid grid-cols-2 gap-3">
+              {roles.map((role) => (
+                <button
+                  key={role}
+                  onClick={() => setActiveRole(role)}
+                  className="px-3 py-2 bg-green-100 rounded-xl hover:bg-green-200"
+                >
+                  {role}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setActiveRole(null)}
+              className="mt-4 text-gray-500"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ROLE OVERLAY PANEL */}
+      {activeRole && activeRole !== "SELECT" && (
+        <motion.div
+          initial={{ x: 300 }}
+          animate={{ x: 0 }}
+          className="fixed right-0 top-0 h-full w-[300px] bg-white shadow-xl p-6"
+        >
+          <h3 className="text-xl font-bold mb-4">
+            {activeRole} Panel
+          </h3>
+
+          <p className="text-gray-600 mb-6">
+            You are now operating as a {activeRole}.
           </p>
-        </div>
-        <div class="card">
-          <h3 id="card2Title">Train Youth</h3>
-          <p id="card2Text">
-            A hands-on environment where young people can build confidence, gain work habits, and
-            connect outdoor learning to real career pathways and purpose.
-          </p>
-        </div>
-        <div class="card">
-          <h3 id="card3Title">Strengthen Community</h3>
-          <p id="card3Text">
-            A welcoming place for events, workshops, family participation, volunteerism, and
-            relationship-building around food, land, and local resilience.
-          </p>
-        </div>
-      </div>
-    </section>
 
-    <section class="section" id="why">
-      <div class="section-head">
-        <h2 id="whyTitle">Why This Exists</h2>
-        <p id="whyText">
-          This work was built to restore connection — to land, to family, to food, to opportunity, and
-          to the kind of future communities deserve to inherit.
-        </p>
-      </div>
+          {/* ROLE ACTIONS */}
+          {activeRole === "Customer" && (
+            <div>
+              <button className="mb-2 w-full bg-green-700 text-white py-2 rounded-xl">
+                Shop Now
+              </button>
+              <button className="w-full border py-2 rounded-xl">
+                View Orders
+              </button>
+            </div>
+          )}
 
-      <div class="story-box">
-        <div class="card quote-card">
-          <div class="quote-mark">“</div>
-          <p id="quoteText">
-            Bronson Family Farm exists to bring people back into relationship with the land and with one
-            another. It is a practical response to food insecurity, social disconnection, and limited
-            pathways to meaningful participation.
-          </p>
-        </div>
+          {activeRole === "Grower" && (
+            <div>
+              <button className="mb-2 w-full bg-green-700 text-white py-2 rounded-xl">
+                Manage Crops
+              </button>
+              <button className="w-full border py-2 rounded-xl">
+                Inventory
+              </button>
+            </div>
+          )}
 
-        <div class="card">
-          <h3 id="differenceTitle">What makes it different</h3>
-          <p id="differenceText">
-            This platform brings together agriculture, education, workforce development, food access,
-            family-centered engagement, and off-grid resilience in one visible, usable place.
-          </p>
-        </div>
-      </div>
-    </section>
+          {activeRole === "Volunteer" && (
+            <div>
+              <button className="mb-2 w-full bg-green-700 text-white py-2 rounded-xl">
+                Sign Up for Shift
+              </button>
+              <button className="w-full border py-2 rounded-xl">
+                My Hours
+              </button>
+            </div>
+          )}
 
-    <section class="section support-band" id="support">
-      <div class="support-panel">
-        <h2 id="supportTitle">Support the Mission</h2>
-        <p id="supportText">
-          We are building a visible, community-facing agricultural ecosystem that supports food access,
-          youth development, family engagement, and long-term resilience.
-        </p>
+          {activeRole === "Youth Worker" && (
+            <div>
+              <button className="mb-2 w-full bg-green-700 text-white py-2 rounded-xl">
+                Training Track
+              </button>
+              <button className="w-full border py-2 rounded-xl">
+                My Progress
+              </button>
+            </div>
+          )}
 
-        <div class="support-grid">
-          <div class="support-item">
-            <strong id="need1Label">Current Need</strong>
-            <span id="need1Text">Irrigation and reliable water systems</span>
-          </div>
-          <div class="support-item">
-            <strong id="need2Label">Current Need</strong>
-            <span id="need2Text">Deer-resistant fencing and site protection</span>
-          </div>
-          <div class="support-item">
-            <strong id="need3Label">Growth Need</strong>
-            <span id="need3Text">Solar and off-grid infrastructure support</span>
-          </div>
-          <div class="support-item">
-            <strong id="need4Label">Long-Term Need</strong>
-            <span id="need4Text">Farmhouse and operations support for on-site stewardship</span>
-          </div>
-        </div>
-
-        <div class="hero-actions" style="margin-top:24px;">
-          <a class="btn btn-primary" href="mailto:cburgess@bronsonfamilyfarm.com" id="supportButton1">Partner With Us</a>
-          <a class="btn btn-secondary" href="#demo" id="supportButton2">Explore the Vision</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section final-cta">
-      <div class="final-cta-box">
-        <h2 id="finalTitle">This is more than a website. It is an invitation.</h2>
-        <p id="finalText">
-          Whether you are a funder, partner, institution, grower, family member, or community supporter,
-          this platform is here to help you see what is being built — and how you can be part of it.
-        </p>
-        <div class="hero-actions" style="justify-content:center;">
-          <a class="btn btn-primary" href="mailto:cburgess@bronsonfamilyfarm.com" id="finalButton1">Email to Connect</a>
-          <a class="btn btn-secondary" href="#demo" id="finalButton2">Explore Again</a>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        <div id="footerLeft">Farm &amp; Family Alliance | Bronson Family Farm Ecosystem Demo</div>
-        <div id="footerRight">Youngstown, Ohio | Community-Centered Agriculture &amp; Family Wellness</div>
-      </div>
-    </footer>
-
-    <script>
-      const translations = {
-        English: {
-          topBanner: "🌱 Live Demo: Building a community-centered future through food, land, youth, and family.",
-          brandTitle: "Farm & Family Alliance",
-          brandSub: "Bronson Family Farm Ecosystem Demo",
-          navExperience: "Experience",
-          navWhy: "Why This Exists",
-          navImpact: "Impact",
-          navPartner: "Partner",
-          connectNow: "Connect Now",
-          eyebrow: "Community Agriculture. Workforce Pathways. Generational Vision.",
-          headline: "Growing food, purpose, and possibility from the ground up.",
-          heroText: "This live platform introduces a land-based ecosystem designed to strengthen food access, train youth, support growers, activate community participation, and create a regenerative future rooted in Youngstown.",
-          startButton: "Start the Farm Experience",
-          partnerButton: "Partner With the Mission",
-          chip1: "Food Access",
-          chip2: "Youth Workforce",
-          chip3: "Regenerative Farming",
-          chip4: "Community Resilience",
-          chip5: "Live Demonstration Site",
-          snapshotTitle: "Partner Snapshot",
-          snapshotText: "This platform is designed to help funders, institutions, and partners quickly understand what is being built, what is needed now, and where their support can have visible impact.",
-          snapshot1Label: "What this is",
-          snapshot1Text: "A living food, workforce, and family ecosystem",
-          snapshot2Label: "What it needs",
-          snapshot2Text: "Water, fencing, energy, and stewardship infrastructure",
-          snapshot3Label: "Why now",
-          snapshot3Text: "Because community resilience must be built before it is urgently needed",
-          metric1Title: "Core Pillars",
-          metric1Text: "Food access, youth development, and regenerative agriculture working together.",
-          metric2Title: "Living Site",
-          metric2Text: "A demonstration model that turns vision into visible community practice.",
-          metric3Title: "Current Needs",
-          metric3Text: "Water, fencing, energy, and on-site stewardship to unlock stronger operations.",
-          metric4Title: "Legacy Potential",
-          metric4Text: "A platform designed to serve families, partners, and future generations.",
-          demoTitle: "Experience the Ecosystem",
-          demoText: "Bronson Family Farm is more than a place. It is a living system where people can grow, learn, gather, participate, and invest in a stronger future. This demonstration introduces the pathways that connect land, food, training, and community.",
-          card1Title: "Grow Food",
-          card1Text: "A working agricultural site designed to support production, education, and practical local food access with a regenerative, community-centered model.",
-          card2Title: "Train Youth",
-          card2Text: "A hands-on environment where young people can build confidence, gain work habits, and connect outdoor learning to real career pathways and purpose.",
-          card3Title: "Strengthen Community",
-          card3Text: "A welcoming place for events, workshops, family participation, volunteerism, and relationship-building around food, land, and local resilience.",
-          whyTitle: "Why This Exists",
-          whyText: "This work was built to restore connection — to land, to family, to food, to opportunity, and to the kind of future communities deserve to inherit.",
-          quoteText: "Bronson Family Farm exists to bring people back into relationship with the land and with one another. It is a practical response to food insecurity, social disconnection, and limited pathways to meaningful participation.",
-          differenceTitle: "What makes it different",
-          differenceText: "This platform brings together agriculture, education, workforce development, food access, family-centered engagement, and off-grid resilience in one visible, usable place.",
-          supportTitle: "Support the Mission",
-          supportText: "We are building a visible, community-facing agricultural ecosystem that supports food access, youth development, family engagement, and long-term resilience.",
-          need1Label: "Current Need",
-          need1Text: "Irrigation and reliable water systems",
-          need2Label: "Current Need",
-          need2Text: "Deer-resistant fencing and site protection",
-          need3Label: "Growth Need",
-          need3Text: "Solar and off-grid infrastructure support",
-          need4Label: "Long-Term Need",
-          need4Text: "Farmhouse and operations support for on-site stewardship",
-          supportButton1: "Partner With Us",
-          supportButton2: "Explore the Vision",
-          finalTitle: "This is more than a website. It is an invitation.",
-          finalText: "Whether you are a funder, partner, institution, grower, family member, or community supporter, this platform is here to help you see what is being built — and how you can be part of it.",
-          finalButton1: "Email to Connect",
-          finalButton2: "Explore Again",
-          footerLeft: "Farm & Family Alliance | Bronson Family Farm Ecosystem Demo",
-          footerRight: "Youngstown, Ohio | Community-Centered Agriculture & Family Wellness"
-        }
-      };
-
-      function setText(id, value) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = value;
-      }
-
-      function applyLanguage(language) {
-        const t = translations[language] || translations.English;
-        const isHebrew = language === "Hebrew";
-        document.documentElement.lang = isHebrew ? "he" : "en";
-        document.body.dir = isHebrew ? "rtl" : "ltr";
-
-        setText("topBanner", t.topBanner);
-        setText("brandTitle", t.brandTitle);
-        setText("brandSub", t.brandSub);
-        setText("navExperience", t.navExperience);
-        setText("navWhy", t.navWhy);
-        setText("navImpact", t.navImpact);
-        setText("navPartner", t.navPartner);
-        setText("connectNow", t.connectNow);
-        setText("eyebrow", t.eyebrow);
-        setText("headline", t.headline);
-        setText("heroText", t.heroText);
-        setText("startButton", t.startButton);
-        setText("partnerButton", t.partnerButton);
-        setText("chip1", t.chip1);
-        setText("chip2", t.chip2);
-        setText("chip3", t.chip3);
-        setText("chip4", t.chip4);
-        setText("chip5", t.chip5);
-        setText("snapshotTitle", t.snapshotTitle);
-        setText("snapshotText", t.snapshotText);
-        setText("snapshot1Label", t.snapshot1Label);
-        setText("snapshot1Text", t.snapshot1Text);
-        setText("snapshot2Label", t.snapshot2Label);
-        setText("snapshot2Text", t.snapshot2Text);
-        setText("snapshot3Label", t.snapshot3Label);
-        setText("snapshot3Text", t.snapshot3Text);
-        setText("metric1Title", t.metric1Title);
-        setText("metric1Text", t.metric1Text);
-        setText("metric2Title", t.metric2Title);
-        setText("metric2Text", t.metric2Text);
-        setText("metric3Title", t.metric3Title);
-        setText("metric3Text", t.metric3Text);
-        setText("metric4Title", t.metric4Title);
-        setText("metric4Text", t.metric4Text);
-        setText("demoTitle", t.demoTitle);
-        setText("demoText", t.demoText);
-        setText("card1Title", t.card1Title);
-        setText("card1Text", t.card1Text);
-        setText("card2Title", t.card2Title);
-        setText("card2Text", t.card2Text);
-        setText("card3Title", t.card3Title);
-        setText("card3Text", t.card3Text);
-        setText("whyTitle", t.whyTitle);
-        setText("whyText", t.whyText);
-        setText("quoteText", t.quoteText);
-        setText("differenceTitle", t.differenceTitle);
-        setText("differenceText", t.differenceText);
-        setText("supportTitle", t.supportTitle);
-        setText("supportText", t.supportText);
-        setText("need1Label", t.need1Label);
-        setText("need1Text", t.need1Text);
-        setText("need2Label", t.need2Label);
-        setText("need2Text", t.need2Text);
-        setText("need3Label", t.need3Label);
-        setText("need3Text", t.need3Text);
-        setText("need4Label", t.need4Label);
-        setText("need4Text", t.need4Text);
-        setText("supportButton1", t.supportButton1);
-        setText("supportButton2", t.supportButton2);
-        setText("finalTitle", t.finalTitle);
-        setText("finalText", t.finalText);
-        setText("finalButton1", t.finalButton1);
-        setText("finalButton2", t.finalButton2);
-        setText("footerLeft", t.footerLeft);
-        setText("footerRight", t.footerRight);
-      }
-
-      document.getElementById("languageSelect").addEventListener("change", function () {
-        applyLanguage(this.value);
-      });
-
-      applyLanguage("English");
-    </script>
-  </body>
-</html>
+          <button
+            onClick={() => setActiveRole(null)}
+            className="mt-6 text-red-500"
+          >
+            Exit Role
+          </button>
+        </motion.div>
+      )}
+    </div>
+  );
+}
