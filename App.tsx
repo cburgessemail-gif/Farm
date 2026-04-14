@@ -49,7 +49,7 @@ export default function App() {
   return (
     <div style={{ fontFamily: "Arial", padding: "40px" }}>
       
-      {/* LANGUAGE DROPDOWN */}
+      {/* 🔥 LANGUAGE DROPDOWN */}
       <div style={{ textAlign: "right", marginBottom: "20px" }}>
         <select
           value={language}
