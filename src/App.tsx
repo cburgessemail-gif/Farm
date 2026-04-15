@@ -14,6 +14,7 @@ type Section = {
   desc: string;
   detail: string;
   highlights: string[];
+  image: string;
 };
 
 const sections: Section[] = [
@@ -28,18 +29,20 @@ const sections: Section[] = [
       "Field readiness and infrastructure",
       "Production systems and workflow",
     ],
+    image: "/images/grow.jpg",
   },
   {
     id: "shop",
     title: "🛒 Shop",
     desc: "Buy fresh produce and farm goods.",
     detail:
-      "See how customers browse products, build a cart, connect to the live GrownBy store, and return to the broader Bronson Family Farm ecosystem.",
+      "See how customers browse products, build a cart, connect to the live GrownBy store, and return to the broader farm experience.",
     highlights: [
       "Marketplace and preorder flow",
       "Pickup and customer access",
       "Farm goods and produce pathways",
     ],
+    image: "/images/shop.jpg",
   },
   {
     id: "learn",
@@ -52,6 +55,7 @@ const sections: Section[] = [
       "Food knowledge and wellness",
       "Knowledge hub and practical learning",
     ],
+    image: "/images/learn.jpg",
   },
   {
     id: "workforce",
@@ -64,6 +68,7 @@ const sections: Section[] = [
       "Responsibility and growth",
       "Career readiness and transition",
     ],
+    image: "/images/workforce.jpg",
   },
   {
     id: "community",
@@ -76,6 +81,7 @@ const sections: Section[] = [
       "Partnership and support pathways",
       "Community-centered engagement",
     ],
+    image: "/images/community.jpg",
   },
   {
     id: "events",
@@ -88,6 +94,7 @@ const sections: Section[] = [
       "Community gathering points",
       "Program and event activation",
     ],
+    image: "/images/events.jpg",
   },
 ];
 
@@ -246,6 +253,48 @@ function roleActions(role: string): string[] {
   }
 }
 
+function ImageBlock({
+  src,
+  alt,
+  height = 180,
+}: {
+  src: string;
+  alt: string;
+  height?: number;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <div
+        style={{
+          height,
+          borderRadius: "12px",
+          background:
+            "linear-gradient(135deg, #dfeee2 0%, #eef8f0 50%, #d7eadc 100%)",
+          border: "1px solid #cfe0d2",
+        }}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      style={{
+        width: "100%",
+        height,
+        objectFit: "cover",
+        borderRadius: "12px",
+        display: "block",
+        border: "1px solid #cfe0d2",
+      }}
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 function RoleModal({
   onClose,
   onSelect,
@@ -286,10 +335,12 @@ function RolePanel({
   activeRole,
   onExit,
   onSwitch,
+  onAction,
 }: {
   activeRole: string;
   onExit: () => void;
   onSwitch: () => void;
+  onAction: (action: string) => void;
 }) {
   return (
     <div style={styles.sidePanel}>
@@ -301,6 +352,7 @@ function RolePanel({
           <button
             key={action}
             style={index === 0 ? styles.sidePrimary : styles.sideSecondary}
+            onClick={() => onAction(action)}
           >
             {action}
           </button>
@@ -313,78 +365,6 @@ function RolePanel({
       <button style={styles.sideSecondary} onClick={onExit}>
         Exit Role
       </button>
-    </div>
-  );
-}
-
-function EntryScreen({ onEnter }: { onEnter: () => void }) {
-  return (
-    <div style={styles.center}>
-      <div style={styles.card}>
-        <div style={styles.eyebrow}>Bronson Family Farm Ecosystem Demo</div>
-        <h1 style={styles.title}>Bronson Family Farm</h1>
-        <p style={styles.subtitle}>
-          A Living Ecosystem for Growing, Learning, and Community
-        </p>
-        <p style={styles.entryText}>
-          Explore first. Activate a role when ready. Move from inspiration to
-          commerce, learning, workforce opportunity, and community engagement.
-        </p>
-        <button style={styles.button} onClick={onEnter}>
-          Enter the Farm
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function EcosystemHome({
-  activeRole,
-  onOpenRoles,
-  onSelectSection,
-}: {
-  activeRole: string | null;
-  onOpenRoles: () => void;
-  onSelectSection: (section: Section) => void;
-}) {
-  return (
-    <div style={styles.page}>
-      <div style={styles.header}>
-        <div>
-          <h2 style={styles.sectionTitle}>Farm Ecosystem</h2>
-          <p style={styles.headerText}>
-            Explore first. Activate a role when ready.
-          </p>
-        </div>
-
-        <button style={styles.button} onClick={onOpenRoles}>
-          {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-        </button>
-      </div>
-
-      <div style={styles.infoBox}>
-        <strong>Shared Exploration Layer</strong>
-        <p style={styles.infoText}>
-          Customers, volunteers, youth workers, growers, and partners can all
-          explore the ecosystem. Roles unlock actions without blocking access.
-        </p>
-      </div>
-
-      <div style={styles.grid}>
-        {sections.map((section) => (
-          <button
-            key={section.id}
-            style={styles.tileButton}
-            onClick={() => onSelectSection(section)}
-          >
-            <div style={styles.tile}>
-              <h3 style={styles.tileTitle}>{section.title}</h3>
-              <p style={styles.tileText}>{section.desc}</p>
-              <div style={styles.openText}>Open section →</div>
-            </div>
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
@@ -403,6 +383,9 @@ export default function App() {
   const [selectedWorkforceTrack, setSelectedWorkforceTrack] = useState<
     string | null
   >(null);
+  const [statusMessage, setStatusMessage] = useState<string>(
+    "Welcome to the Bronson Family Farm ecosystem."
+  );
 
   const cartCount = useMemo(
     () => Object.values(cart).reduce((sum, qty) => sum + qty, 0),
@@ -426,6 +409,7 @@ export default function App() {
       ...prev,
       [id]: (prev[id] || 0) + 1,
     }));
+    setStatusMessage("Item added to cart.");
   };
 
   const removeFromCart = (id: string) => {
@@ -441,15 +425,21 @@ export default function App() {
         [id]: current - 1,
       };
     });
+    setStatusMessage("Item updated in cart.");
   };
 
   const openGrownBy = () => {
     setShowReturnNotice(true);
+    setStatusMessage("Opened GrownBy in a new tab.");
     window.open(
       "https://grownby.com/farms/bronson-family-farm/shop",
       "_blank",
       "noopener,noreferrer"
     );
+  };
+
+  const handleRoleAction = (action: string) => {
+    setStatusMessage(`${action} opened.`);
   };
 
   const renderRoleUI = () => (
@@ -460,6 +450,7 @@ export default function App() {
           onSelect={(role) => {
             setActiveRole(role);
             setShowRoles(false);
+            setStatusMessage(`${role} role activated.`);
           }}
         />
       )}
@@ -467,25 +458,92 @@ export default function App() {
       {activeRole && (
         <RolePanel
           activeRole={activeRole}
-          onExit={() => setActiveRole(null)}
+          onExit={() => {
+            setActiveRole(null);
+            setStatusMessage("Role exited.");
+          }}
           onSwitch={() => setShowRoles(true)}
+          onAction={handleRoleAction}
         />
       )}
     </>
   );
 
   if (!entered) {
-    return <EntryScreen onEnter={() => setEntered(true)} />;
+    return (
+      <div style={styles.center}>
+        <div style={styles.card}>
+          <div style={styles.eyebrow}>Bronson Family Farm Ecosystem Demo</div>
+          <ImageBlock src="/images/hero-farm.jpg" alt="Bronson Family Farm hero" height={240} />
+          <h1 style={styles.title}>Bronson Family Farm</h1>
+          <p style={styles.subtitle}>
+            A Living Ecosystem for Growing, Learning, and Community
+          </p>
+          <p style={styles.entryText}>
+            Explore first. Activate a role when ready. Move from inspiration to
+            commerce, learning, workforce opportunity, and community engagement.
+          </p>
+          <button
+            style={styles.button}
+            onClick={() => {
+              setEntered(true);
+              setStatusMessage("Entered the farm ecosystem.");
+            }}
+          >
+            Enter the Farm
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!selectedSection) {
     return (
       <>
-        <EcosystemHome
-          activeRole={activeRole}
-          onOpenRoles={() => setShowRoles(true)}
-          onSelectSection={(section) => setSelectedSection(section)}
-        />
+        <div style={styles.page}>
+          <div style={styles.header}>
+            <div>
+              <h2 style={styles.sectionTitle}>Farm Ecosystem</h2>
+              <p style={styles.headerText}>
+                Explore first. Activate a role when ready.
+              </p>
+            </div>
+
+            <button style={styles.button} onClick={() => setShowRoles(true)}>
+              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+            </button>
+          </div>
+
+          <div style={styles.statusBar}>{statusMessage}</div>
+
+          <div style={styles.infoBox}>
+            <strong>Shared Exploration Layer</strong>
+            <p style={styles.infoText}>
+              Customers, volunteers, youth workers, growers, and partners can all
+              explore the ecosystem. Roles unlock actions without blocking access.
+            </p>
+          </div>
+
+          <div style={styles.grid}>
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                style={styles.tileButton}
+                onClick={() => {
+                  setSelectedSection(section);
+                  setStatusMessage(`${section.title} opened.`);
+                }}
+              >
+                <div style={styles.tile}>
+                  <ImageBlock src={section.image} alt={section.title} height={150} />
+                  <h3 style={styles.tileTitle}>{section.title}</h3>
+                  <p style={styles.tileText}>{section.desc}</p>
+                  <div style={styles.openText}>Open section →</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
         {renderRoleUI()}
       </>
     );
@@ -499,7 +557,10 @@ export default function App() {
             <div>
               <button
                 style={styles.backLink}
-                onClick={() => setSelectedSection(null)}
+                onClick={() => {
+                  setSelectedSection(null);
+                  setStatusMessage("Returned to ecosystem.");
+                }}
               >
                 ← Back to Ecosystem
               </button>
@@ -514,12 +575,13 @@ export default function App() {
             </button>
           </div>
 
+          <div style={styles.statusBar}>{statusMessage}</div>
+
           {showReturnNotice && (
             <div style={styles.returnBanner}>
               <strong>Live shop opened in a new tab.</strong>
               <p style={styles.returnBannerText}>
-                When you finish on GrownBy, come back to this Bronson Family
-                Farm tab to continue the experience.
+                When you finish on GrownBy, come back to this Bronson Family Farm tab to continue the experience.
               </p>
               <div style={styles.returnBannerActions}>
                 <button
@@ -530,7 +592,10 @@ export default function App() {
                 </button>
                 <button
                   style={styles.button}
-                  onClick={() => setSelectedSection(null)}
+                  onClick={() => {
+                    setSelectedSection(null);
+                    setStatusMessage("Returned to ecosystem.");
+                  }}
                 >
                   Return to Ecosystem
                 </button>
@@ -540,6 +605,7 @@ export default function App() {
 
           <div style={styles.pageHero}>
             <div style={styles.pageHeroMain}>
+              <ImageBlock src="/images/shop.jpg" alt="Shop section" height={220} />
               <h3 style={styles.pageHeading}>Marketplace Overview</h3>
               <p style={styles.pageBody}>
                 This is the first live section of the ecosystem. It shows how
@@ -628,17 +694,25 @@ export default function App() {
 
                 <button
                   style={styles.secondaryButton}
-                  onClick={() => setSelectedSection(null)}
+                  onClick={() => {
+                    setSelectedSection(null);
+                    setStatusMessage("Returned to farm experience.");
+                  }}
                 >
                   Return to Farm Experience
+                </button>
+
+                <button
+                  style={styles.secondaryButton}
+                  onClick={() => setStatusMessage("Pickup Information opened.")}
+                >
+                  Pickup Information
                 </button>
 
                 <div style={styles.pickupBox}>
                   <strong>Pickup Flow</strong>
                   <p style={styles.infoText}>
-                    Customers shop live on GrownBy, then return here to
-                    continue exploring pickup, education, events, and the
-                    broader Bronson Family Farm ecosystem.
+                    Customers shop live on GrownBy, then return here to continue exploring pickup, education, events, and the broader Bronson Family Farm ecosystem.
                   </p>
                 </div>
               </div>
@@ -658,7 +732,10 @@ export default function App() {
             <div>
               <button
                 style={styles.backLink}
-                onClick={() => setSelectedSection(null)}
+                onClick={() => {
+                  setSelectedSection(null);
+                  setStatusMessage("Returned to ecosystem.");
+                }}
               >
                 ← Back to Ecosystem
               </button>
@@ -673,13 +750,15 @@ export default function App() {
             </button>
           </div>
 
+          <div style={styles.statusBar}>{statusMessage}</div>
+
           <div style={styles.pageHero}>
             <div style={styles.pageHeroMain}>
+              <ImageBlock src="/images/learn.jpg" alt="Learn section" height={220} />
               <h3 style={styles.pageHeading}>Learning Overview</h3>
               <p style={styles.pageBody}>
                 This section shows how Bronson Family Farm can teach nutrition,
-                growing, wellness, and healthier living through simple,
-                welcoming learning pathways.
+                growing, wellness, and healthier living through simple, welcoming learning pathways.
               </p>
             </div>
 
@@ -700,7 +779,10 @@ export default function App() {
                   <button
                     key={module.id}
                     style={styles.learnCardButton}
-                    onClick={() => setSelectedLearnModule(module.id)}
+                    onClick={() => {
+                      setSelectedLearnModule(module.id);
+                      setStatusMessage(`${module.title} opened.`);
+                    }}
                   >
                     <div style={styles.learnCard}>
                       <div style={styles.productCategory}>{module.audience}</div>
@@ -718,8 +800,7 @@ export default function App() {
 
               {!activeLearnModule ? (
                 <p style={styles.infoText}>
-                  Select a learning module to preview how the education
-                  experience works.
+                  Select a learning module to preview how the education experience works.
                 </p>
               ) : (
                 <div>
@@ -736,19 +817,25 @@ export default function App() {
                   <div style={styles.pickupBox}>
                     <strong>What this module can become</strong>
                     <p style={styles.infoText}>
-                      This can expand into guided lessons, videos, printable
-                      handouts, workshop registration, and community health
-                      education.
+                      This can expand into guided lessons, videos, printable handouts, workshop registration, and community health education.
                     </p>
                   </div>
                 </div>
               )}
 
               <div style={styles.cartFooter}>
-                <button style={styles.button}>View Workshop Pathway</button>
+                <button
+                  style={styles.button}
+                  onClick={() => setStatusMessage("Workshop pathway opened.")}
+                >
+                  View Workshop Pathway
+                </button>
                 <button
                   style={styles.secondaryButton}
-                  onClick={() => setSelectedLearnModule(null)}
+                  onClick={() => {
+                    setSelectedLearnModule(null);
+                    setStatusMessage("Learning selection cleared.");
+                  }}
                 >
                   Clear Selection
                 </button>
@@ -769,7 +856,10 @@ export default function App() {
             <div>
               <button
                 style={styles.backLink}
-                onClick={() => setSelectedSection(null)}
+                onClick={() => {
+                  setSelectedSection(null);
+                  setStatusMessage("Returned to ecosystem.");
+                }}
               >
                 ← Back to Ecosystem
               </button>
@@ -784,8 +874,15 @@ export default function App() {
             </button>
           </div>
 
+          <div style={styles.statusBar}>{statusMessage}</div>
+
           <div style={styles.pageHero}>
             <div style={styles.pageHeroMain}>
+              <ImageBlock
+                src="/images/workforce.jpg"
+                alt="Workforce section"
+                height={220}
+              />
               <h3 style={styles.pageHeading}>Workforce Overview</h3>
               <p style={styles.pageBody}>
                 This section demonstrates how Bronson Family Farm can serve as a
@@ -811,7 +908,10 @@ export default function App() {
                   <button
                     key={track.id}
                     style={styles.learnCardButton}
-                    onClick={() => setSelectedWorkforceTrack(track.id)}
+                    onClick={() => {
+                      setSelectedWorkforceTrack(track.id);
+                      setStatusMessage(`${track.title} opened.`);
+                    }}
                   >
                     <div style={styles.learnCard}>
                       <div style={styles.productCategory}>Workforce Track</div>
@@ -829,8 +929,7 @@ export default function App() {
 
               {!activeWorkforceTrack ? (
                 <p style={styles.infoText}>
-                  Select a workforce track to preview how youth move through the
-                  experience.
+                  Select a workforce track to preview how youth move through the experience.
                 </p>
               ) : (
                 <div>
@@ -844,26 +943,32 @@ export default function App() {
                   <div style={styles.pickupBox}>
                     <strong>Program Value</strong>
                     <p style={styles.infoText}>
-                      This track reinforces work habits, responsibility,
-                      confidence, and a real sense of contribution.
+                      This track reinforces work habits, responsibility, confidence, and a real sense of contribution.
                     </p>
                   </div>
 
                   <div style={styles.pickupBox}>
                     <strong>What this can become</strong>
                     <p style={styles.infoText}>
-                      This can expand into attendance, progress tracking,
-                      supervisor observations, badges, and pathway documentation.
+                      This can expand into attendance, progress tracking, supervisor observations, badges, and pathway documentation.
                     </p>
                   </div>
                 </div>
               )}
 
               <div style={styles.cartFooter}>
-                <button style={styles.button}>Open Workforce Pathway</button>
+                <button
+                  style={styles.button}
+                  onClick={() => setStatusMessage("Workforce pathway opened.")}
+                >
+                  Open Workforce Pathway
+                </button>
                 <button
                   style={styles.secondaryButton}
-                  onClick={() => setSelectedWorkforceTrack(null)}
+                  onClick={() => {
+                    setSelectedWorkforceTrack(null);
+                    setStatusMessage("Workforce selection cleared.");
+                  }}
                 >
                   Clear Selection
                 </button>
@@ -883,7 +988,10 @@ export default function App() {
           <div>
             <button
               style={styles.backLink}
-              onClick={() => setSelectedSection(null)}
+              onClick={() => {
+                setSelectedSection(null);
+                setStatusMessage("Returned to ecosystem.");
+              }}
             >
               ← Back to Ecosystem
             </button>
@@ -896,8 +1004,11 @@ export default function App() {
           </button>
         </div>
 
+        <div style={styles.statusBar}>{statusMessage}</div>
+
         <div style={styles.pageHero}>
           <div style={styles.pageHeroMain}>
+            <ImageBlock src={selectedSection.image} alt={selectedSection.title} height={220} />
             <h3 style={styles.pageHeading}>Section Overview</h3>
             <p style={styles.pageBody}>{selectedSection.detail}</p>
           </div>
@@ -935,8 +1046,7 @@ export default function App() {
           <div style={styles.sectionBox}>
             <strong>Suggested next action</strong>
             <p style={styles.infoText}>
-              Shop, Learn, and Workforce now serve as the strongest real
-              sections in the demo.
+              Shop, Learn, and Workforce are now the strongest real sections in the demo.
             </p>
           </div>
         </div>
@@ -949,9 +1059,18 @@ export default function App() {
           )}
           <button
             style={styles.secondaryButton}
-            onClick={() => setSelectedSection(null)}
+            onClick={() => {
+              setSelectedSection(null);
+              setStatusMessage("Returned to ecosystem.");
+            }}
           >
             Return to Ecosystem
+          </button>
+          <button
+            style={styles.secondaryButton}
+            onClick={() => setStatusMessage(`${selectedSection.title} action opened.`)}
+          >
+            Open Section Action
           </button>
         </div>
       </div>
@@ -989,7 +1108,7 @@ const styles: any = {
     textTransform: "uppercase",
   },
   title: {
-    margin: 0,
+    margin: "18px 0 0 0",
     color: "#1f3d2b",
     fontSize: "40px",
   },
@@ -1066,6 +1185,15 @@ const styles: any = {
     margin: "8px 0 0 0",
     color: "#486452",
   },
+  statusBar: {
+    background: "#f8fcf9",
+    border: "1px solid #dbe8dd",
+    borderRadius: "12px",
+    padding: "14px 16px",
+    marginBottom: "20px",
+    color: "#2f6b3c",
+    fontWeight: 700,
+  },
   infoBox: {
     background: "#fff",
     padding: "20px",
@@ -1099,7 +1227,7 @@ const styles: any = {
     minHeight: "150px",
   },
   tileTitle: {
-    margin: "0 0 8px 0",
+    margin: "14px 0 8px 0",
     color: "#1f3d2b",
   },
   tileText: {
@@ -1192,7 +1320,7 @@ const styles: any = {
     border: "1px solid #cfe0d2",
   },
   pageHeading: {
-    marginTop: 0,
+    marginTop: "16px",
     marginBottom: "10px",
     color: "#1f3d2b",
   },
