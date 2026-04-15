@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-type Lang = "en" | "es";
+type Lang = "en" | "es" | "tl" | "it" | "jam" | "he";
 type Section = "home" | "grow" | "shop" | "story" | "workforce" | "community" | "events";
 
 const imagePaths: Record<string, string> = {
@@ -27,6 +27,8 @@ const labels = {
     askText:
       "Bronson Family Farm is building a working ecosystem where land, learning, food access, workforce development, and community renewal grow together.",
     askButton: "View the Opportunity",
+    openShop: "Open GrownBy Shop",
+    returnHome: "Return to Ecosystem",
     sections: {
       grow: "Grow",
       shop: "Shop",
@@ -71,6 +73,8 @@ const labels = {
     askText:
       "Bronson Family Farm está construyendo un ecosistema vivo donde la tierra, el aprendizaje, el acceso a alimentos, el desarrollo laboral y la renovación comunitaria crecen juntos.",
     askButton: "Ver la Oportunidad",
+    openShop: "Abrir tienda GrownBy",
+    returnHome: "Volver al Ecosistema",
     sections: {
       grow: "Cultivar",
       shop: "Comprar",
@@ -102,6 +106,190 @@ const labels = {
         "Esta área destaca mercados, recorridos, demostraciones públicas, encuentros educativos y la activación visible del ecosistema completo.",
     },
   },
+  tl: {
+    title: "Bronson Family Farm",
+    subtitle:
+      "Isang buhay na ecosystem na nakaugat sa pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
+    intro:
+      "Pinagdurugtong ng Bronson Family Farm ang pagkain, pamilya, trabaho, kalusugan, at pakikilahok ng komunidad sa pamamagitan ng isang buhay na sistemang nakabatay sa lupa.",
+    enter: "Pumasok sa Ecosystem",
+    back: "← Bumalik sa Ecosystem",
+    preview: "Tuklasin ang ecosystem",
+    askTitle: "Bakit ito mahalaga",
+    askText:
+      "Ang Bronson Family Farm ay bumubuo ng isang gumaganang ecosystem kung saan sabay-sabay na lumalago ang lupa, pagkatuto, access sa pagkain, pag-unlad sa trabaho, at pagbangon ng komunidad.",
+    askButton: "Tingnan ang Oportunidad",
+    openShop: "Buksan ang GrownBy Shop",
+    returnHome: "Bumalik sa Ecosystem",
+    sections: {
+      grow: "Pagtatanim",
+      shop: "Pamimili",
+      story: "Kuwento",
+      workforce: "Hanapbuhay",
+      community: "Komunidad",
+      events: "Mga Kaganapan",
+    },
+    sectionText: {
+      grow: "Pagpaplano ng tanim, produksyon, at pangangalaga.",
+      shop: "Sariwang produkto at tunay na daan sa pagbili.",
+      story: "Kasaysayan, bisyon, lugar, at layunin.",
+      workforce: "Oportunidad para sa kabataan at praktikal na pagkatuto.",
+      community: "Mga boluntaryo, pamilya, at mga katuwang.",
+      events: "Mga pamilihan, pagbisita, at aktibasyon.",
+    },
+    details: {
+      grow:
+        "Tuklasin ang pagpaplano ng tanim, daloy ng pagtatanim, kapasidad ng produksyon, pag-iisip sa irigasyon, at mga sistemang kailangan upang mapanatili ang tunay na produksyon sa bukid.",
+      shop:
+        "Kinakatawan ng bahaging ito ang sariwang produkto, value-added offerings, at ang daan mula sa pagkakakilala sa ecosystem hanggang sa aktuwal na pagbili sa Bronson Family Farm.",
+      story:
+        "Ang Bronson Family Farm ay higit pa sa isang bukid. Isa itong pananaw na nakaugat sa komunidad na hinubog ng pamana, lupa, paglilingkod, at paniniwalang ang pagbangon ay maaaring lumago mula sa lugar.",
+      workforce:
+        "Itinatampok ng bahaging ito ang oportunidad para sa kabataan, hands-on na pagkatuto, pananagutan, pagbuo ng kumpiyansa, at praktikal na landas tungo sa trabaho at pamumuno sa hinaharap.",
+      community:
+        "Ipinapakita ng bahaging ito kung paano makakapasok nang makabuluhan sa ecosystem ang mga boluntaryo, pamilya, tagasuporta, institusyon, at lokal na katuwang.",
+      events:
+        "Itinatampok ng bahaging ito ang mga pamilihan, pagbisita, pampublikong demonstrasyon, pang-edukasyong pagtitipon, at ang nakikitang pag-activate ng buong ecosystem.",
+    },
+  },
+  it: {
+    title: "Bronson Family Farm",
+    subtitle:
+      "Un ecosistema vivo radicato nel cibo, nella famiglia, nella terra, nell’apprendimento e nelle opportunità.",
+    intro:
+      "Bronson Family Farm unisce cibo, famiglia, lavoro, benessere e partecipazione della comunità attraverso un sistema vivo basato sulla terra.",
+    enter: "Entra nell’Ecosistema",
+    back: "← Torna all’Ecosistema",
+    preview: "Esplora l’ecosistema",
+    askTitle: "Perché è importante",
+    askText:
+      "Bronson Family Farm sta costruendo un ecosistema funzionante in cui terra, apprendimento, accesso al cibo, sviluppo del lavoro e rinnovamento della comunità crescono insieme.",
+    askButton: "Vedi l’Opportunità",
+    openShop: "Apri il negozio GrownBy",
+    returnHome: "Torna all’Ecosistema",
+    sections: {
+      grow: "Coltivare",
+      shop: "Acquistare",
+      story: "Storia",
+      workforce: "Lavoro",
+      community: "Comunità",
+      events: "Eventi",
+    },
+    sectionText: {
+      grow: "Pianificazione delle colture, produzione e cura.",
+      shop: "Prodotti freschi e percorsi reali di acquisto.",
+      story: "Storia, visione, luogo e scopo.",
+      workforce: "Opportunità giovanili e apprendimento pratico.",
+      community: "Volontari, famiglie e partner.",
+      events: "Mercati, visite e attivazione.",
+    },
+    details: {
+      grow:
+        "Esplora la pianificazione delle colture, il flusso di semina, la capacità produttiva, l’irrigazione e i sistemi necessari per sostenere una produzione agricola reale.",
+      shop:
+        "Questa area rappresenta prodotti freschi, offerte a valore aggiunto e il percorso dalla visibilità dell’ecosistema all’acquisto reale attraverso Bronson Family Farm.",
+      story:
+        "Bronson Family Farm è più di una fattoria. È una visione radicata nella comunità, plasmata da eredità, terra, servizio e dalla convinzione che il rinnovamento possa crescere da un luogo.",
+      workforce:
+        "Questa area mette in evidenza opportunità per i giovani, apprendimento pratico, responsabilità, crescita della fiducia e percorsi concreti verso il lavoro e la leadership futuri.",
+      community:
+        "Questa sezione mostra come volontari, famiglie, sostenitori, istituzioni e partner locali possano entrare nell’ecosistema in modi significativi.",
+      events:
+        "Questa area evidenzia mercati, visite, dimostrazioni pubbliche, incontri educativi e l’attivazione visibile dell’intero ecosistema.",
+    },
+  },
+  jam: {
+    title: "Bronson Family Farm",
+    subtitle:
+      "A wan livin ecosystem weh root inna food, family, land, learning, an opportunity.",
+    intro:
+      "Bronson Family Farm join up food, family, work, wellness, an community participation through a livin land-based system.",
+    enter: "Go Inna di Ecosystem",
+    back: "← Go Back to di Ecosystem",
+    preview: "Explore di ecosystem",
+    askTitle: "Why dis matter",
+    askText:
+      "Bronson Family Farm a build a workin ecosystem weh land, learning, food access, workforce development, an community renewal a grow together.",
+    askButton: "See di Opportunity",
+    openShop: "Open di GrownBy Shop",
+    returnHome: "Go Back to di Ecosystem",
+    sections: {
+      grow: "Grow",
+      shop: "Shop",
+      story: "Story",
+      workforce: "Workforce",
+      community: "Community",
+      events: "Events",
+    },
+    sectionText: {
+      grow: "Crop planning, production, an care.",
+      shop: "Fresh goods an real buying pathway.",
+      story: "History, vision, place, an purpose.",
+      workforce: "Youth opportunity an practical learning.",
+      community: "Volunteer, family, an partner dem.",
+      events: "Market, tour, an activation.",
+    },
+    details: {
+      grow:
+        "Explore crop planning, planting flow, growing capacity, irrigation thinking, an di systems needed fi keep up real farm production.",
+      shop:
+        "Dis area show fresh goods, value-added offerings, an di path from ecosystem visibility to real purchasing through Bronson Family Farm.",
+      story:
+        "Bronson Family Farm more than a farm. It a one community-rooted vision shape by legacy, land, service, an di belief seh renewal can grow from place.",
+      workforce:
+        "Dis area highlight youth opportunity, hands-on learning, responsibility, confidence-building, an practical pathway into future work an leadership.",
+      community:
+        "Dis section show how volunteer, family, supporter, institution, an local partner can step inna di ecosystem in meaningful ways.",
+      events:
+        "Dis area highlight market, tour, public demonstration, educational gathering, an di visible activation a di whole ecosystem.",
+    },
+  },
+  he: {
+    title: "Bronson Family Farm",
+    subtitle:
+      "מערכת אקולוגית חיה שמבוססת על מזון, משפחה, אדמה, למידה והזדמנות.",
+    intro:
+      "Bronson Family Farm מחברת בין מזון, משפחה, עבודה, בריאות והשתתפות קהילתית דרך מערכת חיה המבוססת על אדמה.",
+    enter: "כניסה למערכת האקולוגית",
+    back: "← חזרה למערכת האקולוגית",
+    preview: "גלו את המערכת האקולוגית",
+    askTitle: "למה זה חשוב",
+    askText:
+      "Bronson Family Farm בונה מערכת אקולוגית פעילה שבה אדמה, למידה, גישה למזון, פיתוח תעסוקתי והתחדשות קהילתית צומחים יחד.",
+    askButton: "צפו בהזדמנות",
+    openShop: "פתחו את חנות GrownBy",
+    returnHome: "חזרה למערכת האקולוגית",
+    sections: {
+      grow: "גידול",
+      shop: "קנייה",
+      story: "סיפור",
+      workforce: "כוח עבודה",
+      community: "קהילה",
+      events: "אירועים",
+    },
+    sectionText: {
+      grow: "תכנון גידולים, ייצור וטיפוח.",
+      shop: "מוצרים טריים ומסלולי רכישה חיים.",
+      story: "היסטוריה, חזון, מקום ומשמעות.",
+      workforce: "הזדמנות לנוער ולמידה מעשית.",
+      community: "מתנדבים, משפחות ושותפים.",
+      events: "שווקים, סיורים והפעלה.",
+    },
+    details: {
+      grow:
+        "גלו תכנון גידולים, זרימת שתילה, יכולת ייצור, חשיבה על השקיה והמערכות הדרושות כדי לקיים חקלאות אמיתית.",
+      shop:
+        "אזור זה מייצג מוצרים טריים, הצעות בעלות ערך מוסף והדרך מחשיפה במערכת האקולוגית לרכישה אמיתית דרך Bronson Family Farm.",
+      story:
+        "Bronson Family Farm היא יותר מחווה. זהו חזון קהילתי שמבוסס על מורשת, אדמה, שירות והאמונה שהתחדשות יכולה לצמוח ממקום.",
+      workforce:
+        "אזור זה מדגיש הזדמנויות לנוער, למידה מעשית, אחריות, בניית ביטחון עצמי ומסלולים מעשיים לעבודה ולהנהגה בעתיד.",
+      community:
+        "חלק זה מראה כיצד מתנדבים, משפחות, תומכים, מוסדות ושותפים מקומיים יכולים להיכנס למערכת האקולוגית בדרכים משמעותיות.",
+      events:
+        "אזור זה מדגיש שווקים, סיורים, הדגמות ציבוריות, מפגשים חינוכיים והפעלה נראית לעין של כל המערכת האקולוגית.",
+    },
+  },
 };
 
 export default function App() {
@@ -109,11 +297,22 @@ export default function App() {
   const [section, setSection] = useState<Section>("home");
 
   const t = labels[lang];
+  const isRTL = lang === "he";
+
+  const shellStyle = {
+    ...styles.shell,
+    direction: isRTL ? ("rtl" as const) : ("ltr" as const),
+  };
+
+  const sectionShellStyle = {
+    ...styles.sectionShell,
+    direction: isRTL ? ("rtl" as const) : ("ltr" as const),
+  };
 
   if (section === "home") {
     return (
       <div style={styles.page}>
-        <div style={styles.shell}>
+        <div style={shellStyle}>
           <div style={styles.topBar}>
             <div style={styles.eyebrow}>Bronson Family Farm Demo</div>
             <select
@@ -123,6 +322,10 @@ export default function App() {
             >
               <option value="en">English</option>
               <option value="es">Español</option>
+              <option value="tl">Tagalog</option>
+              <option value="it">Italiano</option>
+              <option value="jam">Patois</option>
+              <option value="he">עברית</option>
             </select>
           </div>
 
@@ -164,7 +367,7 @@ export default function App() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.sectionShell}>
+      <div style={sectionShellStyle}>
         <div style={styles.topBar}>
           <button style={styles.backButton} onClick={() => setSection("home")}>
             {t.back}
@@ -176,6 +379,10 @@ export default function App() {
           >
             <option value="en">English</option>
             <option value="es">Español</option>
+            <option value="tl">Tagalog</option>
+            <option value="it">Italiano</option>
+            <option value="jam">Patois</option>
+            <option value="he">עברית</option>
           </select>
         </div>
 
@@ -199,10 +406,10 @@ export default function App() {
                 )
               }
             >
-              Open GrownBy Shop
+              {t.openShop}
             </button>
             <button style={styles.secondaryButton} onClick={() => setSection("home")}>
-              Return to Ecosystem
+              {t.returnHome}
             </button>
           </div>
         )}
