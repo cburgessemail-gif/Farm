@@ -187,9 +187,26 @@ export default function App() {
   const [selectedWorkforce, setSelectedWorkforce] = useState<string | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
   const [heroFailed, setHeroFailed] = useState(false);
-  const [sectionImageFailed, setSectionImageFailed] = useState<Record<string, boolean>>({});
+  const [sectionImageFailed, setSectionImageFailed] = useState<Record<string, boolean>>(
+    {}
+  );
 
   const ui = labels[lang];
+
+  const roleToSection = (currentRole: string | null): SectionId | null => {
+    switch (currentRole) {
+      case "Grower Tools":
+        return "grow";
+      case "Sales Tools":
+        return "shop";
+      case "Volunteer Tools":
+        return "community";
+      case "Youth Tools":
+        return "workforce";
+      default:
+        return null;
+    }
+  };
 
   const addToCart = (id: string) => {
     setCart((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
@@ -229,9 +246,15 @@ export default function App() {
 
       <button
         style={styles.primaryButton}
-        onClick={() =>
-          setStatus(role ? `Role active: ${role}` : "Use the Role Actions panel on the right.")
-        }
+        onClick={() => {
+          const target = roleToSection(role);
+          if (target) {
+            setSection(target);
+            setStatus(`${sectionData[target].title} opened from active role.`);
+          } else {
+            setStatus("Use the Role Actions panel on the right.");
+          }
+        }}
       >
         {role ? `Role: ${role}` : ui.activateRole}
       </button>
@@ -320,6 +343,26 @@ export default function App() {
     );
   };
 
+  const renderHomeCardImage = (key: Exclude<keyof typeof imagePaths, "hero">) => {
+    if (sectionImageFailed[`home-${key}`]) {
+      return <div style={styles.cardImageFallback} />;
+    }
+
+    return (
+      <img
+        src={imagePaths[key]}
+        alt={sectionData[key].title}
+        style={styles.cardImage}
+        onError={() =>
+          setSectionImageFailed((prev) => ({
+            ...prev,
+            [`home-${key}`]: true,
+          }))
+        }
+      />
+    );
+  };
+
   if (!entered) {
     return (
       <div style={styles.center}>
@@ -389,17 +432,12 @@ export default function App() {
                   key={id}
                   style={styles.sectionCard}
                   onClick={() => {
-                    if (id === "shop") {
-                      setSection("shop");
-                      setStatus("Shop opened.");
-                    } else {
-                      setSection(id);
-                      setStatus(`${item.title} opened.`);
-                    }
+                    setSection(id);
+                    setStatus(`${item.title} opened.`);
                   }}
                 >
                   <div style={styles.sectionCardAccent} />
-                  <div style={styles.sectionIcon}>{item.icon}</div>
+                  {renderHomeCardImage(id)}
                   <h4 style={styles.sectionCardTitle}>{item.title}</h4>
                   <p style={styles.sectionCardText}>{item.desc}</p>
                 </button>
@@ -819,9 +857,23 @@ const styles: Record<string, React.CSSProperties> = {
     background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
     marginBottom: "16px",
   },
-  sectionIcon: {
-    fontSize: "30px",
-    marginBottom: "10px",
+  cardImage: {
+    width: "100%",
+    height: "140px",
+    objectFit: "cover",
+    borderRadius: "12px",
+    display: "block",
+    marginBottom: "14px",
+    border: "1px solid #d6e4d9",
+  },
+  cardImageFallback: {
+    width: "100%",
+    height: "140px",
+    borderRadius: "12px",
+    display: "block",
+    marginBottom: "14px",
+    border: "1px solid #d6e4d9",
+    background: "linear-gradient(135deg, #e8f1ea 0%, #dfeae2 100%)",
   },
   sectionCardTitle: {
     margin: "0 0 8px 0",
