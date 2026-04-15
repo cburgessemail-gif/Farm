@@ -1,87 +1,91 @@
-import { useState } from "react";
+import React, { useState } from "react";
+
+type Lang = "en" | "es" | "tl";
+type SectionId = "grow" | "shop" | "story" | "workforce" | "community" | "events";
+
+const labels = {
+  en: {
+    title: "Bronson Family Farm",
+    subtitle:
+      "A living ecosystem rooted in food, family, land, learning, and opportunity.",
+    intro:
+      "Bronson Family Farm is more than a farm. It is a community-centered ecosystem connecting fresh food, workforce development, health, education, and long-term renewal.",
+    enter: "Enter the Ecosystem",
+    ecosystem: "Farm Ecosystem",
+    explore: "Explore first. Activate a role when ready.",
+    activateRole: "Activate My Role",
+    back: "← Back to Ecosystem",
+    open: "Open",
+    enterSection: "Enter section",
+  },
+  es: {
+    title: "Bronson Family Farm",
+    subtitle:
+      "Un ecosistema vivo con raíces en la comida, la familia, la tierra y el aprendizaje.",
+    intro:
+      "Bronson Family Farm es más que una granja. Es un ecosistema comunitario.",
+    enter: "Entrar al Ecosistema",
+    ecosystem: "Ecosistema de la Granja",
+    explore: "Explore primero.",
+    activateRole: "Activar rol",
+    back: "← Regresar",
+    open: "Abrir",
+    enterSection: "Entrar",
+  },
+  tl: {
+    title: "Bronson Family Farm",
+    subtitle: "Isang buhay na ecosystem.",
+    intro: "Higit pa sa isang bukid.",
+    enter: "Pumasok",
+    ecosystem: "Ecosystem",
+    explore: "Mag-explore muna.",
+    activateRole: "Piliin ang Role",
+    back: "← Bumalik",
+    open: "Buksan",
+    enterSection: "Buksan",
+  },
+};
+
+const sectionData = {
+  grow: { icon: "🌱", title: "Grow", desc: "Crop planning and production." },
+  shop: { icon: "🛒", title: "Shop", desc: "Buy farm goods." },
+  story: { icon: "📖", title: "Story", desc: "Farm history and purpose." },
+  workforce: { icon: "👩🏽‍🌾", title: "Workforce", desc: "Youth programs." },
+  community: { icon: "🤝", title: "Community", desc: "Volunteers and partners." },
+  events: { icon: "📅", title: "Events", desc: "Markets and gatherings." },
+};
 
 export default function App() {
+  const [lang, setLang] = useState<Lang>("en");
   const [entered, setEntered] = useState(false);
+  const [section, setSection] = useState<SectionId | null>(null);
   const [role, setRole] = useState<string | null>(null);
-  const [section, setSection] = useState("home");
-  const [lang, setLang] = useState("en");
+  const [status, setStatus] = useState("Welcome to the ecosystem.");
 
-  const t = {
-    en: {
-      enter: "Enter the Ecosystem",
-      title: "Bronson Family Farm",
-      subtitle:
-        "A living ecosystem rooted in food, family, land, learning, and opportunity.",
-      description:
-        "Bronson Family Farm is more than a farm. It is a community-centered ecosystem connecting food, workforce, health, education, and generational renewal.",
-      sections: {
-        story: "Our Story",
-        ecosystem: "The Ecosystem",
-        airport: "The Airport",
-        workforce: "Workforce",
-        shop: "Shop",
-        community: "Community",
-      },
-      roles: "Activate Role",
-      actions: {
-        grow: "Start Growing Plan",
-        sell: "Sell Products",
-        volunteer: "Join Volunteer Day",
-        youth: "Join Youth Program",
-      },
-      back: "Back",
-    },
-    es: {
-      enter: "Entrar al Ecosistema",
-      title: "Bronson Family Farm",
-      subtitle:
-        "Un ecosistema vivo con raíces en la comida, la familia, la tierra y el aprendizaje.",
-      description:
-        "Bronson Family Farm es más que una granja. Es un ecosistema comunitario que conecta alimentos, trabajo, salud y educación.",
-      sections: {
-        story: "Nuestra Historia",
-        ecosystem: "El Ecosistema",
-        airport: "El Aeropuerto",
-        workforce: "Fuerza Laboral",
-        shop: "Tienda",
-        community: "Comunidad",
-      },
-      roles: "Activar Rol",
-      actions: {
-        grow: "Comenzar Plan de Cultivo",
-        sell: "Vender Productos",
-        volunteer: "Unirse como Voluntario",
-        youth: "Programa Juvenil",
-      },
-      back: "Regresar",
-    },
-  };
-
-  const current = t[lang];
+  const ui = labels[lang];
 
   if (!entered) {
     return (
-      <div style={styles.page}>
+      <div style={styles.center}>
         <div style={styles.card}>
-          <h4 style={{ letterSpacing: 2 }}>
-            BRONSON FAMILY FARM ECOSYSTEM DEMO
-          </h4>
+          <h4>BRONSON FAMILY FARM DEMO</h4>
 
           <select
             value={lang}
-            onChange={(e) => setLang(e.target.value)}
+            onChange={(e) => setLang(e.target.value as Lang)}
             style={styles.select}
           >
             <option value="en">English</option>
             <option value="es">Español</option>
+            <option value="tl">Tagalog</option>
           </select>
 
-          <h1>{current.title}</h1>
-          <p>{current.subtitle}</p>
-          <p style={{ maxWidth: 600 }}>{current.description}</p>
+          <h1>{ui.title}</h1>
+          <p>{ui.subtitle}</p>
+          <p>{ui.intro}</p>
 
-          <button style={styles.primary} onClick={() => setEntered(true)}>
-            {current.enter}
+          <button style={styles.button} onClick={() => setEntered(true)}>
+            {ui.enter}
           </button>
         </div>
       </div>
@@ -90,67 +94,73 @@ export default function App() {
 
   return (
     <div style={styles.layout}>
-      {/* MAIN CONTENT */}
+      {/* MAIN */}
       <div style={styles.main}>
-        <button style={styles.back} onClick={() => setEntered(false)}>
-          {current.back}
-        </button>
+        {section && (
+          <button style={styles.back} onClick={() => setSection(null)}>
+            {ui.back}
+          </button>
+        )}
 
-        <h2>{current.title}</h2>
+        <h2>{ui.ecosystem}</h2>
+        <p>{ui.explore}</p>
 
-        {/* NAVIGATION CARDS */}
-        <div style={styles.grid}>
-          {Object.entries(current.sections).map(([key, label]) => (
-            <div
-              key={key}
-              style={styles.cardItem}
-              onClick={() => {
-                if (key === "shop") {
-                  window.open(
-                    "https://grownby.com/farms/bronson-family-farm/shop",
-                    "_blank"
-                  );
-                } else {
-                  setSection(key);
-                }
-              }}
-            >
-              <div style={styles.icon}>🌱</div>
-              <h4>{label}</h4>
-            </div>
-          ))}
-        </div>
+        <div style={styles.status}>{status}</div>
 
-        {/* CONTENT AREA */}
-        <div style={styles.contentBox}>
-          {section === "story" && <p>History of Bronson Family Farm...</p>}
-          {section === "ecosystem" && <p>The full ecosystem model...</p>}
-          {section === "airport" && <p>Lansdowne Airport integration...</p>}
-          {section === "workforce" && <p>Youth workforce pipeline...</p>}
-          {section === "community" && <p>Community engagement...</p>}
-        </div>
+        {/* CARDS */}
+        {!section && (
+          <div style={styles.grid}>
+            {(Object.keys(sectionData) as SectionId[]).map((id) => {
+              const item = sectionData[id];
+              return (
+                <div
+                  key={id}
+                  style={styles.cardItem}
+                  onClick={() => {
+                    if (id === "shop") {
+                      window.open(
+                        "https://grownby.com/farms/bronson-family-farm/shop",
+                        "_blank"
+                      );
+                    } else {
+                      setSection(id);
+                      setStatus(`${item.title} opened.`);
+                    }
+                  }}
+                >
+                  <div style={styles.icon}>{item.icon}</div>
+                  <h4>{item.title}</h4>
+                  <p>{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* SECTION CONTENT */}
+        {section && (
+          <div style={styles.content}>
+            <h3>{sectionData[section].title}</h3>
+            <p>This is the {section} section of the ecosystem.</p>
+          </div>
+        )}
       </div>
 
       {/* TOOLBOX PANEL */}
       <div style={styles.sidebar}>
-        <h4>{current.roles}</h4>
+        <h4>Role Actions</h4>
+        <p style={{ fontSize: 14 }}>
+          The center shows where to go. This panel shows what you can do.
+        </p>
 
-        <button onClick={() => setRole("grow")}>
-          {current.actions.grow}
-        </button>
-        <button onClick={() => setRole("sell")}>
-          {current.actions.sell}
-        </button>
-        <button onClick={() => setRole("volunteer")}>
-          {current.actions.volunteer}
-        </button>
-        <button onClick={() => setRole("youth")}>
-          {current.actions.youth}
-        </button>
+        <button onClick={() => setRole("Grower Tools")}>Grower Tools</button>
+        <button onClick={() => setRole("Sales Tools")}>Sales Tools</button>
+        <button onClick={() => setRole("Volunteer Tools")}>Volunteer Tools</button>
+        <button onClick={() => setRole("Youth Tools")}>Youth Tools</button>
 
         {role && (
           <div style={{ marginTop: 20 }}>
-            <strong>Active:</strong> {role}
+            <strong>Active toolbox:</strong> {role}
           </div>
         )}
       </div>
@@ -159,27 +169,25 @@ export default function App() {
 }
 
 const styles: any = {
-  page: {
+  center: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
-    background: "#dce7df",
+    background: "#eaf5ee",
   },
   card: {
     background: "white",
     padding: 40,
     borderRadius: 12,
     textAlign: "center",
-    border: "2px solid #2f5d3a",
   },
-  primary: {
+  button: {
     marginTop: 20,
     padding: "10px 20px",
-    background: "#2f5d3a",
+    background: "#2f6b3c",
     color: "white",
     border: "none",
-    borderRadius: 6,
   },
   layout: {
     display: "flex",
@@ -193,7 +201,6 @@ const styles: any = {
     flex: 1,
     background: "#eef4ef",
     padding: 20,
-    borderLeft: "1px solid #ccc",
   },
   grid: {
     display: "grid",
@@ -205,24 +212,25 @@ const styles: any = {
     background: "white",
     padding: 20,
     borderRadius: 10,
-    textAlign: "center",
     cursor: "pointer",
-    border: "1px solid #ddd",
   },
   icon: {
     fontSize: 24,
-    marginBottom: 10,
   },
-  contentBox: {
-    marginTop: 30,
+  content: {
+    marginTop: 20,
+    background: "white",
     padding: 20,
-    background: "#f5f8f6",
-    borderRadius: 10,
-  },
-  select: {
-    marginBottom: 10,
   },
   back: {
+    marginBottom: 10,
+  },
+  status: {
+    marginTop: 10,
+    color: "#2f6b3c",
+    fontWeight: "bold",
+  },
+  select: {
     marginBottom: 10,
   },
 };
