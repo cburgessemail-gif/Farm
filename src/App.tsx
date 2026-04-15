@@ -8,87 +8,20 @@ type SectionId =
   | "community"
   | "events";
 
+type Lang = "en" | "es" | "tl" | "it" | "pat" | "he";
+
 type Section = {
   id: SectionId;
-  title: string;
-  desc: string;
-  detail: string;
-  highlights: string[];
+  icon: string;
 };
 
-const sections: Section[] = [
-  {
-    id: "grow",
-    title: "🌱 Grow",
-    desc: "Crop planning, planting, production, and farm systems.",
-    detail:
-      "Explore crop planning, field readiness, seasonal growing, irrigation thinking, infrastructure, and the systems that support Bronson Family Farm’s production capacity.",
-    highlights: [
-      "Seasonal crop planning",
-      "Field readiness and infrastructure",
-      "Production systems and workflow",
-    ],
-  },
-  {
-    id: "shop",
-    title: "🛒 Shop",
-    desc: "Buy fresh produce and farm goods.",
-    detail:
-      "See how customers browse products, build a cart, connect to the live GrownBy store, and return to the broader farm experience.",
-    highlights: [
-      "Marketplace and preorder flow",
-      "Pickup and customer access",
-      "Farm goods and produce pathways",
-    ],
-  },
-  {
-    id: "story",
-    title: "📖 Story & Ecosystem",
-    desc: "History, place, purpose, and how the ecosystem works.",
-    detail:
-      "This section explains the history of Bronson Family Farm, the family legacy behind it, the Lansdowne airport context, and how food, health, learning, workforce, and commerce connect into one living ecosystem.",
-    highlights: [
-      "Bronson Family Farm history and family legacy",
-      "Lansdowne airport and land context",
-      "The full ecosystem: food, health, learning, workforce, and commerce",
-    ],
-  },
-  {
-    id: "workforce",
-    title: "👩🏽‍🌾 Workforce",
-    desc: "Youth training and job pathways.",
-    detail:
-      "Follow the youth workforce pathway from participation to training, responsibility, skill-building, and future career readiness.",
-    highlights: [
-      "Youth training pathway",
-      "Responsibility and growth",
-      "Career readiness and transition",
-    ],
-  },
-  {
-    id: "community",
-    title: "🤝 Community",
-    desc: "Volunteers, families, and partnerships.",
-    detail:
-      "See how volunteers, families, supporters, funders, and partners enter the ecosystem and strengthen the work together.",
-    highlights: [
-      "Volunteer and family participation",
-      "Partner and supporter pathways",
-      "Community-centered engagement",
-    ],
-  },
-  {
-    id: "events",
-    title: "📅 Events",
-    desc: "Markets, tours, demonstrations, and community days.",
-    detail:
-      "Experience how markets, tours, workshops, and seasonal gathering points activate the full farm ecosystem and bring people into the work.",
-    highlights: [
-      "Markets and tours",
-      "Community gathering points",
-      "Program and event activation",
-    ],
-  },
+const SECTION_ORDER: Section[] = [
+  { id: "grow", icon: "🌱" },
+  { id: "shop", icon: "🛒" },
+  { id: "story", icon: "📖" },
+  { id: "workforce", icon: "👩🏽‍🌾" },
+  { id: "community", icon: "🤝" },
+  { id: "events", icon: "📅" },
 ];
 
 const roles = [
@@ -101,139 +34,236 @@ const roles = [
   "Admin",
 ];
 
-const shopItems = [
-  {
-    id: "bubble-babies",
-    name: "Bubble Babies Starter Roll",
-    price: 5,
-    category: "Seedlings",
-    note: "Great for early growing and transplant readiness.",
-  },
-  {
-    id: "lettuce-bundle",
-    name: "Lettuce Seedling Bundle",
-    price: 5,
-    category: "Seedlings",
-    note: "Tender young seedlings ready for planting.",
-  },
-  {
-    id: "collard-bundle",
-    name: "Collard Green Bundle",
-    price: 10,
-    category: "Greens",
-    note: "A strong community favorite with good volume.",
-  },
-  {
-    id: "pepper-pack",
-    name: "Pepper Seedling Pack",
-    price: 5,
-    category: "Seedlings",
-    note: "Mixed pepper varieties for kitchen and garden.",
-  },
-  {
-    id: "spinach-pack",
-    name: "Spinach Seedling Pack",
-    price: 3,
-    category: "Greens",
-    note: "Easy entry point for home growers and families.",
-  },
-  {
-    id: "market-box",
-    name: "Bronson Market Box",
-    price: 20,
-    category: "Produce",
-    note: "A simple mixed farm box for pickup.",
-  },
-];
+const languageLabels: Record<Lang, string> = {
+  en: "English",
+  es: "Español",
+  tl: "Tagalog",
+  it: "Italiano",
+  pat: "Patois",
+  he: "עברית",
+};
 
-const storyModules = [
-  {
-    id: "history",
-    title: "The Bronson Family Farm Story",
-    audience: "History and legacy",
-    description:
-      "How family legacy, community purpose, and the move to Youngstown shaped Bronson Family Farm.",
+const copy = {
+  en: {
+    enterTitle: "Bronson Family Farm",
+    enterSubtitle:
+      "A living ecosystem rooted in food, family, land, learning, and opportunity.",
+    enterBody:
+      "Bronson Family Farm is more than a farm. It is a community-centered ecosystem growing from the Lansdowne area of Youngstown—connecting fresh food, workforce development, health, education, and long-term family and regional renewal.",
+    enterButton: "Enter the Ecosystem",
+    ecosystemTitle: "Farm Ecosystem",
+    ecosystemSubtitle: "Explore first. Activate a role when ready.",
+    infoEyebrow: "Explore the Full System",
+    infoTitle: "One ecosystem. Multiple entry points.",
+    infoBody:
+      "Bronson Family Farm connects food, story, workforce, commerce, community, and events into one living system. Begin anywhere. Roles unlock added actions without limiting exploration.",
+    activateRole: "Activate My Role",
+    roleActionsLabel: "Role Actions",
+    backToEcosystem: "← Back to Ecosystem",
+    enterSection: "Enter section",
+    open: "Open",
+    returnToEcosystem: "Return to Ecosystem",
+    openSectionAction: "Open Section Action",
+    communityTitle: "Join the Ecosystem",
+    communityBody:
+      "Whether you are a grower, volunteer, partner, or supporter, there is a place for you at Bronson Family Farm. This ecosystem grows through participation, shared knowledge, and community action.",
   },
-  {
-    id: "ecosystem",
-    title: "Why the Ecosystem Matters",
-    audience: "How it all connects",
-    description:
-      "How food, health, workforce, learning, commerce, and community support one another inside a single living system.",
+  es: {
+    enterTitle: "Bronson Family Farm",
+    enterSubtitle:
+      "Un ecosistema vivo con raíces en la comida, la familia, la tierra, el aprendizaje y la oportunidad.",
+    enterBody:
+      "Bronson Family Farm es más que una granja. Es un ecosistema centrado en la comunidad que crece desde el área de Lansdowne en Youngstown, conectando alimentos frescos, desarrollo laboral, salud, educación y renovación familiar y regional a largo plazo.",
+    enterButton: "Entrar al Ecosistema",
+    ecosystemTitle: "Ecosistema de la Granja",
+    ecosystemSubtitle: "Explore primero. Active un rol cuando esté listo.",
+    infoEyebrow: "Explore el Sistema Completo",
+    infoTitle: "Un ecosistema. Múltiples puntos de entrada.",
+    infoBody:
+      "Bronson Family Farm conecta comida, historia, fuerza laboral, comercio, comunidad y eventos en un solo sistema vivo.",
+    activateRole: "Activar mi rol",
+    roleActionsLabel: "Acciones del rol",
+    backToEcosystem: "← Volver al Ecosistema",
+    enterSection: "Entrar a la sección",
+    open: "Abrir",
+    returnToEcosystem: "Volver al Ecosistema",
+    openSectionAction: "Abrir acción de la sección",
+    communityTitle: "Únase al Ecosistema",
+    communityBody:
+      "Ya sea productor, voluntario, socio o partidario, hay un lugar para usted en Bronson Family Farm.",
   },
-  {
-    id: "airport",
-    title: "The Lansdowne Airport Context",
-    audience: "Land and airport setting",
-    description:
-      "Why the airport setting matters, what makes the site unique, and how the farm vision grows within that landscape.",
+  tl: {
+    enterTitle: "Bronson Family Farm",
+    enterSubtitle:
+      "Isang buhay na ecosystem na nakaugat sa pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
+    enterBody:
+      "Ang Bronson Family Farm ay higit pa sa isang bukid. Isa itong ecosystem na nakatuon sa komunidad sa Lansdowne area ng Youngstown.",
+    enterButton: "Pumasok sa Ecosystem",
+    ecosystemTitle: "Farm Ecosystem",
+    ecosystemSubtitle: "Mag-explore muna. Pumili ng role kapag handa na.",
+    infoEyebrow: "Galugarin ang Buong Sistema",
+    infoTitle: "Isang ecosystem. Maraming daan papasok.",
+    infoBody:
+      "Pinagdurugtong ng Bronson Family Farm ang pagkain, kuwento, trabaho, kalakalan, komunidad, at mga kaganapan.",
+    activateRole: "Piliin ang Aking Role",
+    roleActionsLabel: "Mga Aksiyon ng Role",
+    backToEcosystem: "← Bumalik sa Ecosystem",
+    enterSection: "Buksan ang seksyon",
+    open: "Buksan",
+    returnToEcosystem: "Bumalik sa Ecosystem",
+    openSectionAction: "Buksan ang aksiyon ng seksyon",
+    communityTitle: "Sumali sa Ecosystem",
+    communityBody:
+      "May lugar para sa iyo sa Bronson Family Farm bilang grower, volunteer, partner, o supporter.",
   },
-  {
-    id: "health",
-    title: "Health, Food, and Learning",
-    audience: "Wellness and education",
-    description:
-      "How nutrition, natural food, wellness, and practical education fit inside the larger farm mission.",
+  it: {
+    enterTitle: "Bronson Family Farm",
+    enterSubtitle:
+      "Un ecosistema vivo radicato in cibo, famiglia, terra, apprendimento e opportunità.",
+    enterBody:
+      "Bronson Family Farm è più di una fattoria. È un ecosistema centrato sulla comunità nell’area di Lansdowne a Youngstown.",
+    enterButton: "Entra nell’Ecosistema",
+    ecosystemTitle: "Ecosistema della Fattoria",
+    ecosystemSubtitle: "Esplora prima. Attiva un ruolo quando sei pronto.",
+    infoEyebrow: "Esplora l’intero sistema",
+    infoTitle: "Un ecosistema. Molti punti di accesso.",
+    infoBody:
+      "Bronson Family Farm unisce cibo, storia, lavoro, commercio, comunità ed eventi in un unico sistema vivente.",
+    activateRole: "Attiva il mio ruolo",
+    roleActionsLabel: "Azioni del ruolo",
+    backToEcosystem: "← Torna all’Ecosistema",
+    enterSection: "Entra nella sezione",
+    open: "Apri",
+    returnToEcosystem: "Torna all’Ecosistema",
+    openSectionAction: "Apri azione sezione",
+    communityTitle: "Unisciti all’Ecosistema",
+    communityBody:
+      "Che tu sia volontario, partner o sostenitore, c’è un posto per te a Bronson Family Farm.",
   },
-];
+  pat: {
+    enterTitle: "Bronson Family Farm",
+    enterSubtitle:
+      "A livin ecosystem built pon food, family, land, learning, an opportunity.",
+    enterBody:
+      "Bronson Family Farm more than a farm. A community-centered ecosystem a grow from Lansdowne inna Youngstown.",
+    enterButton: "Enter di Ecosystem",
+    ecosystemTitle: "Farm Ecosystem",
+    ecosystemSubtitle: "Explore fus. Choose yuh role when yuh ready.",
+    infoEyebrow: "Explore di Whole System",
+    infoTitle: "One ecosystem. Nuff entry points.",
+    infoBody:
+      "Bronson Family Farm connect food, story, workforce, commerce, community, an events inna one livin system.",
+    activateRole: "Activate Mi Role",
+    roleActionsLabel: "Role Actions",
+    backToEcosystem: "← Guh Back to di Ecosystem",
+    enterSection: "Enter section",
+    open: "Open",
+    returnToEcosystem: "Return to Ecosystem",
+    openSectionAction: "Open Section Action",
+    communityTitle: "Join di Ecosystem",
+    communityBody:
+      "Whether yuh a grower, volunteer, partner, or supporter, yuh have a place yahso.",
+  },
+  he: {
+    enterTitle: "Bronson Family Farm",
+    enterSubtitle:
+      "מערכת אקולוגית חיה שמבוססת על מזון, משפחה, אדמה, למידה והזדמנות.",
+    enterBody:
+      "Bronson Family Farm היא יותר מחווה. זו מערכת אקולוגית קהילתית שצומחת מאזור לנסדאון ביונגסטאון.",
+    enterButton: "כניסה למערכת",
+    ecosystemTitle: "מערכת החווה",
+    ecosystemSubtitle: "אפשר לחקור קודם. לבחור תפקיד כשמוכנים.",
+    infoEyebrow: "לחקור את כל המערכת",
+    infoTitle: "מערכת אחת. נקודות כניסה רבות.",
+    infoBody:
+      "Bronson Family Farm מחברת מזון, סיפור, כוח עבודה, מסחר, קהילה ואירועים במערכת חיה אחת.",
+    activateRole: "בחירת תפקיד",
+    roleActionsLabel: "פעולות תפקיד",
+    backToEcosystem: "← חזרה למערכת",
+    enterSection: "כניסה לאזור",
+    open: "פתיחה",
+    returnToEcosystem: "חזרה למערכת",
+    openSectionAction: "פתיחת פעולה",
+    communityTitle: "להצטרף למערכת",
+    communityBody:
+      "בין אם אתם מתנדבים, שותפים או תומכים, יש לכם מקום ב-Bronson Family Farm.",
+  },
+} as const;
 
-const workforceTracks = [
-  {
-    id: "orientation",
-    title: "Orientation",
-    description:
-      "Introduces safety, expectations, time awareness, accountability, and how the farm ecosystem works.",
+const sectionContent = {
+  en: {
+    grow: {
+      title: "Grow",
+      desc: "Crop planning, planting, production, and farm systems.",
+      detail:
+        "Explore crop planning, field readiness, seasonal growing, irrigation thinking, infrastructure, and the systems that support Bronson Family Farm’s production capacity.",
+      highlights: [
+        "Seasonal crop planning",
+        "Field readiness and infrastructure",
+        "Production systems and workflow",
+      ],
+    },
+    shop: {
+      title: "Shop",
+      desc: "Buy fresh produce and farm goods.",
+      detail:
+        "See how customers browse products, build a cart, connect to the live GrownBy store, and return to the broader farm experience.",
+      highlights: [
+        "Marketplace and preorder flow",
+        "Pickup and customer access",
+        "Farm goods and produce pathways",
+      ],
+    },
+    story: {
+      title: "Story & Ecosystem",
+      desc: "History, place, purpose, and how the ecosystem works.",
+      detail:
+        "This section explains the history of Bronson Family Farm, the family legacy behind it, the Lansdowne airport context, and how food, health, learning, workforce, and commerce connect into one living ecosystem.",
+      highlights: [
+        "Bronson Family Farm history and family legacy",
+        "Lansdowne airport and land context",
+        "The full ecosystem: food, health, learning, workforce, and commerce",
+      ],
+    },
+    workforce: {
+      title: "Workforce",
+      desc: "Youth training and job pathways.",
+      detail:
+        "Follow the youth workforce pathway from participation to training, responsibility, skill-building, and future career readiness.",
+      highlights: [
+        "Youth training pathway",
+        "Responsibility and growth",
+        "Career readiness and transition",
+      ],
+    },
+    community: {
+      title: "Community",
+      desc: "Volunteers, families, and partnerships.",
+      detail:
+        "See how volunteers, families, supporters, funders, and partners enter the ecosystem and strengthen the work together.",
+      highlights: [
+        "Volunteer and family participation",
+        "Partner and supporter pathways",
+        "Community-centered engagement",
+      ],
+    },
+    events: {
+      title: "Events",
+      desc: "Markets, tours, demonstrations, and community days.",
+      detail:
+        "Experience how markets, tours, workshops, and seasonal gathering points activate the full farm ecosystem and bring people into the work.",
+      highlights: [
+        "Markets and tours",
+        "Community gathering points",
+        "Program and event activation",
+      ],
+    },
   },
-  {
-    id: "fieldwork",
-    title: "Field Work",
-    description:
-      "Hands-on learning in planting, maintenance, harvest support, teamwork, and daily task completion.",
-  },
-  {
-    id: "life-skills",
-    title: "Life & Work Skills",
-    description:
-      "Builds communication, responsibility, problem-solving, follow-through, and workplace readiness.",
-  },
-  {
-    id: "pathways",
-    title: "Future Pathways",
-    description:
-      "Connects youth to long-term opportunity through confidence, experience, and practical career exposure.",
-  },
-];
+} as const;
 
-const communityPaths = [
-  {
-    id: "volunteer",
-    title: "Volunteer",
-    description:
-      "Support planting, events, setup, logistics, and hands-on community activity.",
-    action: "Volunteer Interest",
-  },
-  {
-    id: "partner",
-    title: "Partner",
-    description:
-      "Bring your organization into a growing ecosystem for food, workforce, health, and regional renewal.",
-    action: "Partner Interest",
-  },
-  {
-    id: "supporter",
-    title: "Support",
-    description:
-      "Help expand food access, workforce training, and community impact through financial or in-kind support.",
-    action: "Support Interest",
-  },
-  {
-    id: "family",
-    title: "Families",
-    description:
-      "Join the learning, events, nutrition, and community-building experience.",
-    action: "Family Interest",
-  },
-];
+function t(lang: Lang) {
+  return copy[lang] ?? copy.en;
+}
 
 function roleDescription(role: string) {
   switch (role) {
@@ -318,14 +348,17 @@ function RolePanel({
   onExit,
   onSwitch,
   onAction,
+  label,
 }: {
   activeRole: string;
   onExit: () => void;
   onSwitch: () => void;
   onAction: (action: string) => void;
+  label: string;
 }) {
   return (
     <div style={styles.sidePanel}>
+      <div style={styles.sideEyebrow}>{label}</div>
       <h3 style={styles.sideTitle}>{activeRole}</h3>
       <p style={styles.sideText}>{roleDescription(activeRole)}</p>
 
@@ -352,10 +385,11 @@ function RolePanel({
 }
 
 export default function App() {
+  const [lang, setLang] = useState<Lang>("en");
   const [entered, setEntered] = useState(false);
   const [showRoles, setShowRoles] = useState(false);
   const [activeRole, setActiveRole] = useState<string | null>(null);
-  const [selectedSection, setSelectedSection] = useState<Section | null>(null);
+  const [selectedSection, setSelectedSection] = useState<SectionId | null>(null);
 
   const [cart, setCart] = useState<Record<string, number>>({});
   const [showReturnNotice, setShowReturnNotice] = useState(false);
@@ -368,6 +402,9 @@ export default function App() {
   const [statusMessage, setStatusMessage] = useState<string>(
     "Welcome to the Bronson Family Farm ecosystem."
   );
+
+  const ui = t(lang);
+  const content = sectionContent.en;
 
   const cartCount = useMemo(
     () => Object.values(cart).reduce((sum, qty) => sum + qty, 0),
@@ -446,6 +483,7 @@ export default function App() {
           }}
           onSwitch={() => setShowRoles(true)}
           onAction={handleRoleAction}
+          label={ui.roleActionsLabel}
         />
       )}
     </>
@@ -454,18 +492,23 @@ export default function App() {
   if (!entered) {
     return (
       <div style={styles.center}>
+        <div style={styles.languageBar}>
+          {Object.entries(languageLabels).map(([code, label]) => (
+            <button
+              key={code}
+              style={lang === code ? styles.langButtonActive : styles.langButton}
+              onClick={() => setLang(code as Lang)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         <div style={styles.card}>
           <div style={styles.eyebrow}>Bronson Family Farm Ecosystem Demo</div>
-          <h1 style={styles.title}>Bronson Family Farm</h1>
-          <p style={styles.subtitle}>
-            A living ecosystem rooted in food, family, land, learning, and opportunity.
-          </p>
-          <p style={styles.entryText}>
-            Bronson Family Farm is more than a farm. It is a community-centered
-            ecosystem growing from the Lansdowne area of Youngstown—connecting
-            fresh food, workforce development, health, education, and long-term
-            family and regional renewal.
-          </p>
+          <h1 style={styles.title}>{ui.enterTitle}</h1>
+          <p style={styles.subtitle}>{ui.enterSubtitle}</p>
+          <p style={styles.entryText}>{ui.enterBody}</p>
           <button
             style={styles.button}
             onClick={() => {
@@ -473,7 +516,7 @@ export default function App() {
               setStatusMessage("Entered the farm ecosystem.");
             }}
           >
-            Enter the Ecosystem
+            {ui.enterButton}
           </button>
         </div>
       </div>
@@ -486,53 +529,67 @@ export default function App() {
         <div style={styles.page}>
           <div style={styles.header}>
             <div>
-              <h2 style={styles.sectionTitle}>Farm Ecosystem</h2>
-              <p style={styles.headerText}>
-                Explore first. Activate a role when ready.
-              </p>
+              <h2 style={styles.sectionTitle}>{ui.ecosystemTitle}</h2>
+              <p style={styles.headerText}>{ui.ecosystemSubtitle}</p>
             </div>
 
-            <button style={styles.button} onClick={() => setShowRoles(true)}>
-              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-            </button>
+            <div style={styles.topControls}>
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value as Lang)}
+                style={styles.langSelect}
+              >
+                {Object.entries(languageLabels).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+
+              <button style={styles.button} onClick={() => setShowRoles(true)}>
+                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
+              </button>
+            </div>
           </div>
 
           <div style={styles.statusBar}>{statusMessage}</div>
 
           <div style={styles.infoBox}>
-            <div style={styles.infoEyebrow}>Explore the Full System</div>
-            <h3 style={styles.infoTitle}>One ecosystem. Multiple entry points.</h3>
-            <p style={styles.infoText}>
-              Bronson Family Farm connects food, story, workforce, commerce, community,
-              and events into one living system. Begin anywhere. Roles unlock added
-              actions without limiting exploration.
-            </p>
+            <div style={styles.infoEyebrow}>{ui.infoEyebrow}</div>
+            <h3 style={styles.infoTitle}>{ui.infoTitle}</h3>
+            <p style={styles.infoText}>{ui.infoBody}</p>
           </div>
 
           <div style={styles.grid}>
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                style={styles.tileButton}
-                onClick={() => {
-                  setSelectedSection(section);
-                  setStatusMessage(`${section.title} opened.`);
-                }}
-              >
-                <div style={styles.tile}>
-                  <div style={styles.sectionAccent} />
-                  <div style={styles.tileTopRow}>
-                    <h3 style={styles.tileTitle}>{section.title}</h3>
-                    <span style={styles.tileBadge}>Open</span>
+            {SECTION_ORDER.map((section) => {
+              const s = content[section.id];
+              return (
+                <button
+                  key={section.id}
+                  style={styles.tileButton}
+                  onClick={() => {
+                    setSelectedSection(section.id);
+                    setStatusMessage(`${s.title} opened.`);
+                  }}
+                >
+                  <div style={styles.tile}>
+                    <div style={styles.sectionAccent} />
+                    <div style={styles.tileTopRow}>
+                      <div style={styles.tileIconWrap}>
+                        <span style={styles.tileIcon}>{section.icon}</span>
+                        <h3 style={styles.tileTitle}>{s.title}</h3>
+                      </div>
+                      <span style={styles.tileBadge}>{ui.open}</span>
+                    </div>
+                    <p style={styles.tileText}>{s.desc}</p>
+                    <div style={styles.tileFooter}>
+                      <span style={styles.openText}>{ui.enterSection}</span>
+                      <span style={styles.arrow}>→</span>
+                    </div>
                   </div>
-                  <p style={styles.tileText}>{section.desc}</p>
-                  <div style={styles.tileFooter}>
-                    <span style={styles.openText}>Enter section</span>
-                    <span style={styles.arrow}>→</span>
-                  </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </div>
         {renderRoleUI()}
@@ -540,7 +597,7 @@ export default function App() {
     );
   }
 
-  if (selectedSection.id === "shop") {
+  if (selectedSection === "shop") {
     return (
       <>
         <div style={styles.page}>
@@ -553,17 +610,30 @@ export default function App() {
                   setStatusMessage("Returned to ecosystem.");
                 }}
               >
-                ← Back to Ecosystem
+                {ui.backToEcosystem}
               </button>
-              <h2 style={styles.sectionTitle}>🛒 Shop</h2>
+              <h2 style={styles.sectionTitle}>🛒 {content.shop.title}</h2>
               <p style={styles.headerText}>
                 A working marketplace demo for Bronson Family Farm.
               </p>
             </div>
 
-            <button style={styles.button} onClick={() => setShowRoles(true)}>
-              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-            </button>
+            <div style={styles.topControls}>
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value as Lang)}
+                style={styles.langSelect}
+              >
+                {Object.entries(languageLabels).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <button style={styles.button} onClick={() => setShowRoles(true)}>
+                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
+              </button>
+            </div>
           </div>
 
           <div style={styles.statusBar}>{statusMessage}</div>
@@ -588,7 +658,7 @@ export default function App() {
                     setStatusMessage("Returned to ecosystem.");
                   }}
                 >
-                  Return to Ecosystem
+                  {ui.returnToEcosystem}
                 </button>
               </div>
             </div>
@@ -598,11 +668,7 @@ export default function App() {
             <div style={styles.pageHeroMain}>
               <div style={styles.sectionAccentLarge} />
               <h3 style={styles.pageHeading}>Marketplace Overview</h3>
-              <p style={styles.pageBody}>
-                This is the first live section of the ecosystem. It shows how
-                customers can browse products, build a cart, connect to the live
-                GrownBy store, and return to the broader farm experience.
-              </p>
+              <p style={styles.pageBody}>{content.shop.detail}</p>
             </div>
 
             <div style={styles.pageHeroSide}>
@@ -620,7 +686,7 @@ export default function App() {
                   return (
                     <div key={item.id} style={styles.productCard}>
                       <div style={styles.productCategory}>{item.category}</div>
-                      <h3 style={styles.tileTitle}>{item.name}</h3>
+                      <h3 style={styles.productTitle}>{item.name}</h3>
                       <p style={styles.tileText}>{item.note}</p>
                       <div style={styles.priceRow}>
                         <strong style={styles.priceText}>
@@ -699,13 +765,6 @@ export default function App() {
                 >
                   Pickup Information
                 </button>
-
-                <div style={styles.pickupBox}>
-                  <strong>Pickup Flow</strong>
-                  <p style={styles.infoText}>
-                    Customers shop live on GrownBy, then return here to continue exploring pickup, story, events, and the broader Bronson Family Farm ecosystem.
-                  </p>
-                </div>
               </div>
             </div>
           </div>
@@ -715,7 +774,7 @@ export default function App() {
     );
   }
 
-  if (selectedSection.id === "story") {
+  if (selectedSection === "story") {
     return (
       <>
         <div style={styles.page}>
@@ -728,17 +787,28 @@ export default function App() {
                   setStatusMessage("Returned to ecosystem.");
                 }}
               >
-                ← Back to Ecosystem
+                {ui.backToEcosystem}
               </button>
-              <h2 style={styles.sectionTitle}>📖 Story & Ecosystem</h2>
-              <p style={styles.headerText}>
-                History, place, purpose, and how the ecosystem works.
-              </p>
+              <h2 style={styles.sectionTitle}>📖 {content.story.title}</h2>
+              <p style={styles.headerText}>{content.story.desc}</p>
             </div>
 
-            <button style={styles.button} onClick={() => setShowRoles(true)}>
-              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-            </button>
+            <div style={styles.topControls}>
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value as Lang)}
+                style={styles.langSelect}
+              >
+                {Object.entries(languageLabels).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <button style={styles.button} onClick={() => setShowRoles(true)}>
+                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
+              </button>
+            </div>
           </div>
 
           <div style={styles.statusBar}>{statusMessage}</div>
@@ -851,7 +921,7 @@ export default function App() {
     );
   }
 
-  if (selectedSection.id === "workforce") {
+  if (selectedSection === "workforce") {
     return (
       <>
         <div style={styles.page}>
@@ -864,17 +934,28 @@ export default function App() {
                   setStatusMessage("Returned to ecosystem.");
                 }}
               >
-                ← Back to Ecosystem
+                {ui.backToEcosystem}
               </button>
-              <h2 style={styles.sectionTitle}>👩🏽‍🌾 Workforce</h2>
-              <p style={styles.headerText}>
-                Youth opportunity, responsibility, and pathway-building.
-              </p>
+              <h2 style={styles.sectionTitle}>👩🏽‍🌾 {content.workforce.title}</h2>
+              <p style={styles.headerText}>{content.workforce.desc}</p>
             </div>
 
-            <button style={styles.button} onClick={() => setShowRoles(true)}>
-              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-            </button>
+            <div style={styles.topControls}>
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value as Lang)}
+                style={styles.langSelect}
+              >
+                {Object.entries(languageLabels).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <button style={styles.button} onClick={() => setShowRoles(true)}>
+                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
+              </button>
+            </div>
           </div>
 
           <div style={styles.statusBar}>{statusMessage}</div>
@@ -883,11 +964,7 @@ export default function App() {
             <div style={styles.pageHeroMain}>
               <div style={styles.sectionAccentLarge} />
               <h3 style={styles.pageHeading}>Workforce Overview</h3>
-              <p style={styles.pageBody}>
-                This section demonstrates how Bronson Family Farm can serve as a
-                living classroom for youth workforce development, responsibility,
-                confidence, and future opportunity.
-              </p>
+              <p style={styles.pageBody}>{content.workforce.detail}</p>
             </div>
 
             <div style={styles.pageHeroSide}>
@@ -980,7 +1057,7 @@ export default function App() {
     );
   }
 
-  if (selectedSection.id === "community") {
+  if (selectedSection === "community") {
     return (
       <>
         <div style={styles.page}>
@@ -993,17 +1070,28 @@ export default function App() {
                   setStatusMessage("Returned to ecosystem.");
                 }}
               >
-                ← Back to Ecosystem
+                {ui.backToEcosystem}
               </button>
-              <h2 style={styles.sectionTitle}>🤝 Community</h2>
-              <p style={styles.headerText}>
-                Volunteers, families, supporters, and partners.
-              </p>
+              <h2 style={styles.sectionTitle}>🤝 {content.community.title}</h2>
+              <p style={styles.headerText}>{content.community.desc}</p>
             </div>
 
-            <button style={styles.button} onClick={() => setShowRoles(true)}>
-              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-            </button>
+            <div style={styles.topControls}>
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value as Lang)}
+                style={styles.langSelect}
+              >
+                {Object.entries(languageLabels).map(([code, label]) => (
+                  <option key={code} value={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <button style={styles.button} onClick={() => setShowRoles(true)}>
+                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
+              </button>
+            </div>
           </div>
 
           <div style={styles.statusBar}>{statusMessage}</div>
@@ -1011,19 +1099,14 @@ export default function App() {
           <div style={styles.pageHero}>
             <div style={styles.pageHeroMain}>
               <div style={styles.sectionAccentLarge} />
-              <h3 style={styles.pageHeading}>Join the Ecosystem</h3>
-              <p style={styles.pageBody}>
-                Whether you are a grower, volunteer, partner, or supporter,
-                there is a place for you at Bronson Family Farm. This ecosystem
-                grows through participation, shared knowledge, and community action.
-              </p>
+              <h3 style={styles.pageHeading}>{ui.communityTitle}</h3>
+              <p style={styles.pageBody}>{ui.communityBody}</p>
             </div>
 
             <div style={styles.pageHeroSide}>
               <strong>Community Focus</strong>
               <p style={styles.infoText}>
-                This section helps people see how they can step into the farm
-                ecosystem in a practical and immediate way.
+                This section helps people see how they can step into the farm ecosystem in a practical and immediate way.
               </p>
             </div>
           </div>
@@ -1049,6 +1132,8 @@ export default function App() {
     );
   }
 
+  const active = content[selectedSection];
+
   return (
     <>
       <div style={styles.page}>
@@ -1061,15 +1146,30 @@ export default function App() {
                 setStatusMessage("Returned to ecosystem.");
               }}
             >
-              ← Back to Ecosystem
+              {ui.backToEcosystem}
             </button>
-            <h2 style={styles.sectionTitle}>{selectedSection.title}</h2>
-            <p style={styles.headerText}>{selectedSection.desc}</p>
+            <h2 style={styles.sectionTitle}>
+              {SECTION_ORDER.find((s) => s.id === selectedSection)?.icon} {active.title}
+            </h2>
+            <p style={styles.headerText}>{active.desc}</p>
           </div>
 
-          <button style={styles.button} onClick={() => setShowRoles(true)}>
-            {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-          </button>
+          <div style={styles.topControls}>
+            <select
+              value={lang}
+              onChange={(e) => setLang(e.target.value as Lang)}
+              style={styles.langSelect}
+            >
+              {Object.entries(languageLabels).map(([code, label]) => (
+                <option key={code} value={code}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            <button style={styles.button} onClick={() => setShowRoles(true)}>
+              {activeRole ? `Role: ${activeRole}` : ui.activateRole}
+            </button>
+          </div>
         </div>
 
         <div style={styles.statusBar}>{statusMessage}</div>
@@ -1078,7 +1178,7 @@ export default function App() {
           <div style={styles.pageHeroMain}>
             <div style={styles.sectionAccentLarge} />
             <h3 style={styles.pageHeading}>Section Overview</h3>
-            <p style={styles.pageBody}>{selectedSection.detail}</p>
+            <p style={styles.pageBody}>{active.detail}</p>
           </div>
 
           <div style={styles.pageHeroSide}>
@@ -1095,7 +1195,7 @@ export default function App() {
           <div style={styles.sectionBox}>
             <strong>Highlights</strong>
             <ul style={styles.list}>
-              {selectedSection.highlights.map((item) => (
+              {active.highlights.map((item) => (
                 <li key={item} style={styles.listItem}>
                   {item}
                 </li>
@@ -1122,7 +1222,7 @@ export default function App() {
         <div style={styles.sectionActions}>
           {!activeRole && (
             <button style={styles.button} onClick={() => setShowRoles(true)}>
-              Activate Role
+              {ui.activateRole}
             </button>
           )}
           <button
@@ -1132,13 +1232,13 @@ export default function App() {
               setStatusMessage("Returned to ecosystem.");
             }}
           >
-            Return to Ecosystem
+            {ui.returnToEcosystem}
           </button>
           <button
             style={styles.secondaryButton}
-            onClick={() => setStatusMessage(`${selectedSection.title} action opened.`)}
+            onClick={() => setStatusMessage(`${active.title} action opened.`)}
           >
-            Open Section Action
+            {ui.openSectionAction}
           </button>
         </div>
       </div>
@@ -1166,6 +1266,47 @@ const styles: any = {
     boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
     maxWidth: "760px",
     width: "100%",
+  },
+  languageBar: {
+    position: "fixed",
+    top: "16px",
+    left: "16px",
+    right: "16px",
+    display: "flex",
+    gap: "8px",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  langButton: {
+    padding: "8px 10px",
+    borderRadius: "999px",
+    border: "1px solid #cfe0d2",
+    background: "#fff",
+    cursor: "pointer",
+    fontSize: "12px",
+  },
+  langButtonActive: {
+    padding: "8px 10px",
+    borderRadius: "999px",
+    border: "1px solid #2f6b3c",
+    background: "#eef8f0",
+    color: "#2f6b3c",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: 700,
+  },
+  langSelect: {
+    padding: "10px 12px",
+    borderRadius: "8px",
+    border: "1px solid #cfe0d2",
+    background: "#fff",
+    fontSize: "14px",
+  },
+  topControls: {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+    flexWrap: "wrap",
   },
   eyebrow: {
     marginBottom: "12px",
@@ -1328,10 +1469,24 @@ const styles: any = {
     alignItems: "flex-start",
     gap: "12px",
   },
+  tileIconWrap: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  },
+  tileIcon: {
+    fontSize: "26px",
+    lineHeight: 1,
+  },
   tileTitle: {
     margin: "0 0 8px 0",
     color: "#1f3d2b",
     fontSize: "22px",
+  },
+  productTitle: {
+    margin: "0 0 8px 0",
+    color: "#1f3d2b",
+    fontSize: "20px",
   },
   tileBadge: {
     display: "inline-block",
@@ -1639,6 +1794,13 @@ const styles: any = {
     display: "flex",
     flexDirection: "column",
     gap: "12px",
+  },
+  sideEyebrow: {
+    color: "#2f6b3c",
+    fontSize: "12px",
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
   },
   sideTitle: {
     marginTop: 0,
