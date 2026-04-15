@@ -456,7 +456,6 @@ export default function App() {
       <div style={styles.center}>
         <div style={styles.card}>
           <div style={styles.eyebrow}>Bronson Family Farm Ecosystem Demo</div>
-          <div style={styles.heroBlock} />
           <h1 style={styles.title}>Bronson Family Farm</h1>
           <p style={styles.subtitle}>
             A living ecosystem rooted in food, family, land, learning, and opportunity.
@@ -501,10 +500,12 @@ export default function App() {
           <div style={styles.statusBar}>{statusMessage}</div>
 
           <div style={styles.infoBox}>
-            <strong>Shared Exploration Layer</strong>
+            <div style={styles.infoEyebrow}>Explore the Full System</div>
+            <h3 style={styles.infoTitle}>One ecosystem. Multiple entry points.</h3>
             <p style={styles.infoText}>
-              Customers, volunteers, youth workers, growers, and partners can all
-              explore the ecosystem. Roles unlock actions without blocking access.
+              Bronson Family Farm connects food, story, workforce, commerce, community,
+              and events into one living system. Begin anywhere. Roles unlock added
+              actions without limiting exploration.
             </p>
           </div>
 
@@ -520,9 +521,15 @@ export default function App() {
               >
                 <div style={styles.tile}>
                   <div style={styles.sectionAccent} />
-                  <h3 style={styles.tileTitle}>{section.title}</h3>
+                  <div style={styles.tileTopRow}>
+                    <h3 style={styles.tileTitle}>{section.title}</h3>
+                    <span style={styles.tileBadge}>Open</span>
+                  </div>
                   <p style={styles.tileText}>{section.desc}</p>
-                  <div style={styles.openText}>Open section →</div>
+                  <div style={styles.tileFooter}>
+                    <span style={styles.openText}>Enter section</span>
+                    <span style={styles.arrow}>→</span>
+                  </div>
                 </div>
               </button>
             ))}
@@ -1168,14 +1175,6 @@ const styles: any = {
     letterSpacing: "0.08em",
     textTransform: "uppercase",
   },
-  heroBlock: {
-    height: "220px",
-    borderRadius: "12px",
-    background:
-      "linear-gradient(135deg, #dfeee2 0%, #eef8f0 50%, #d7eadc 100%)",
-    border: "1px solid #cfe0d2",
-    marginBottom: "18px",
-  },
   title: {
     margin: "0",
     color: "#1f3d2b",
@@ -1265,10 +1264,24 @@ const styles: any = {
   },
   infoBox: {
     background: "#fff",
-    padding: "20px",
-    borderRadius: "12px",
+    padding: "24px",
+    borderRadius: "14px",
     border: "1px solid #cfe0d2",
     marginBottom: "24px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
+  },
+  infoEyebrow: {
+    color: "#2f6b3c",
+    fontSize: "13px",
+    fontWeight: 700,
+    letterSpacing: "0.06em",
+    textTransform: "uppercase",
+    marginBottom: "8px",
+  },
+  infoTitle: {
+    margin: "0 0 10px 0",
+    color: "#1f3d2b",
+    fontSize: "28px",
   },
   infoText: {
     margin: "10px 0 0 0",
@@ -1290,10 +1303,12 @@ const styles: any = {
   tile: {
     background: "#fff",
     padding: "20px",
-    borderRadius: "12px",
+    borderRadius: "14px",
     border: "1px solid #cfe0d2",
     boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
-    minHeight: "180px",
+    minHeight: "190px",
+    display: "flex",
+    flexDirection: "column",
   },
   sectionAccent: {
     height: "10px",
@@ -1307,20 +1322,47 @@ const styles: any = {
     background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
     marginBottom: "18px",
   },
+  tileTopRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: "12px",
+  },
   tileTitle: {
     margin: "0 0 8px 0",
     color: "#1f3d2b",
+    fontSize: "22px",
+  },
+  tileBadge: {
+    display: "inline-block",
+    padding: "4px 10px",
+    borderRadius: "999px",
+    background: "#eef8f0",
+    color: "#2f6b3c",
+    fontSize: "12px",
+    fontWeight: 700,
+    whiteSpace: "nowrap",
   },
   tileText: {
     margin: 0,
     color: "#4e6657",
     lineHeight: 1.5,
   },
+  tileFooter: {
+    marginTop: "18px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   openText: {
-    marginTop: "16px",
     color: "#2f6b3c",
     fontWeight: 700,
     fontSize: "14px",
+  },
+  arrow: {
+    color: "#2f6b3c",
+    fontWeight: 700,
+    fontSize: "18px",
   },
   overlay: {
     position: "fixed",
