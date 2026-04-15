@@ -4,13 +4,13 @@ type Lang = "en" | "es";
 type Section = "home" | "grow" | "shop" | "story" | "workforce" | "community" | "events";
 
 const imagePaths: Record<string, string> = {
-  hero: "/images/GrowArea.jpg",
-  grow: "/images/GrowArea2.jpg",
-  shop: "/images/GrowArea2.jpg",
-  story: "/images/SAM_0220.JPG",
-  workforce: "/images/SAM_0221.JPG",
-  community: "/images/SAM_0221.JPG",
-  events: "/images/SAM_0220.JPG",
+  hero: "/GrowArea.jpg",
+  grow: "/GrowArea2.jpg",
+  shop: "/GrowArea.jpg",
+  story: "/GrowArea2.jpg",
+  workforce: "/GrowArea.jpg",
+  community: "/GrowArea2.jpg",
+  events: "/GrowArea.jpg",
 };
 
 const labels = {
@@ -18,11 +18,15 @@ const labels = {
     title: "Bronson Family Farm",
     subtitle:
       "A living ecosystem rooted in food, family, land, learning, and opportunity.",
-    enter: "Enter the Ecosystem",
-    back: "← Back",
-    preview: "Explore the ecosystem",
     intro:
       "Bronson Family Farm connects food, family, workforce, wellness, and community participation through a living land-based system.",
+    enter: "Enter the Ecosystem",
+    back: "← Back to Ecosystem",
+    preview: "Explore the ecosystem",
+    askTitle: "Why this matters",
+    askText:
+      "Bronson Family Farm is building a working ecosystem where land, learning, food access, workforce development, and community renewal grow together.",
+    askButton: "View the Opportunity",
     sections: {
       grow: "Grow",
       shop: "Shop",
@@ -32,23 +36,41 @@ const labels = {
       events: "Events",
     },
     sectionText: {
-      grow: "Crop planning and production.",
-      shop: "Fresh goods and pathways to purchase.",
-      story: "History, vision, and place.",
+      grow: "Crop planning, production, and stewardship.",
+      shop: "Fresh goods and live purchasing pathways.",
+      story: "History, vision, place, and purpose.",
       workforce: "Youth opportunity and practical learning.",
       community: "Volunteers, families, and partners.",
-      events: "Gatherings, markets, and activation.",
+      events: "Markets, tours, and activation.",
+    },
+    details: {
+      grow:
+        "Explore crop planning, planting flow, growing capacity, irrigation thinking, and the systems needed to sustain real farm production.",
+      shop:
+        "This area represents fresh goods, value-added offerings, and the path from ecosystem visibility to real purchasing through Bronson Family Farm.",
+      story:
+        "Bronson Family Farm is more than a farm. It is a community-rooted vision shaped by legacy, land, service, and the belief that renewal can grow from place.",
+      workforce:
+        "This area highlights youth opportunity, hands-on learning, responsibility, confidence-building, and practical pathways into future work and leadership.",
+      community:
+        "This section shows how volunteers, families, supporters, institutions, and local partners can step into the ecosystem in meaningful ways.",
+      events:
+        "This area highlights markets, tours, public demonstrations, educational gatherings, and the visible activation of the full ecosystem.",
     },
   },
   es: {
     title: "Bronson Family Farm",
     subtitle:
-      "Un ecosistema vivo con raíces en la comida, la familia y la tierra.",
-    enter: "Entrar al Ecosistema",
-    back: "← Volver",
-    preview: "Explorar el ecosistema",
+      "Un ecosistema vivo con raíces en la comida, la familia, la tierra y la oportunidad.",
     intro:
       "Bronson Family Farm conecta alimentos, familia, trabajo, bienestar y participación comunitaria a través de un sistema vivo basado en la tierra.",
+    enter: "Entrar al Ecosistema",
+    back: "← Volver al Ecosistema",
+    preview: "Explorar el ecosistema",
+    askTitle: "Por qué importa",
+    askText:
+      "Bronson Family Farm está construyendo un ecosistema vivo donde la tierra, el aprendizaje, el acceso a alimentos, el desarrollo laboral y la renovación comunitaria crecen juntos.",
+    askButton: "Ver la Oportunidad",
     sections: {
       grow: "Cultivar",
       shop: "Comprar",
@@ -58,29 +80,28 @@ const labels = {
       events: "Eventos",
     },
     sectionText: {
-      grow: "Planificación de cultivos y producción.",
-      shop: "Productos frescos y rutas de compra.",
-      story: "Historia, visión y lugar.",
+      grow: "Planificación de cultivos, producción y cuidado.",
+      shop: "Productos frescos y rutas reales de compra.",
+      story: "Historia, visión, lugar y propósito.",
       workforce: "Oportunidad juvenil y aprendizaje práctico.",
       community: "Voluntarios, familias y aliados.",
-      events: "Encuentros, mercados y activación.",
+      events: "Mercados, recorridos y activación.",
+    },
+    details: {
+      grow:
+        "Explore la planificación de cultivos, el flujo de siembra, la capacidad de producción y los sistemas necesarios para sostener una granja real.",
+      shop:
+        "Esta área representa productos frescos, ofertas con valor agregado y el camino desde la visibilidad del ecosistema hasta la compra real.",
+      story:
+        "Bronson Family Farm es más que una granja. Es una visión comunitaria formada por legado, tierra, servicio y la creencia de que la renovación puede crecer desde el lugar.",
+      workforce:
+        "Esta área destaca la oportunidad juvenil, el aprendizaje práctico, la responsabilidad y las rutas hacia el trabajo y el liderazgo futuros.",
+      community:
+        "Esta sección muestra cómo voluntarios, familias, instituciones y aliados locales pueden entrar al ecosistema de manera significativa.",
+      events:
+        "Esta área destaca mercados, recorridos, demostraciones públicas, encuentros educativos y la activación visible del ecosistema completo.",
     },
   },
-};
-
-const sectionDetails: Record<Exclude<Section, "home">, string> = {
-  grow:
-    "Explore crop planning, planting flow, irrigation thinking, and the systems that support Bronson Family Farm’s growing capacity.",
-  shop:
-    "This area represents fresh goods, value-added offerings, and the path from ecosystem visibility to real purchasing.",
-  story:
-    "This section introduces the farm story, the broader ecosystem vision, and the meaning of place, legacy, and long-term renewal.",
-  workforce:
-    "This area highlights youth opportunity, hands-on learning, practical responsibility, and pathways toward long-term growth.",
-  community:
-    "This section shows how volunteers, families, supporters, and partners can step into the ecosystem in practical ways.",
-  events:
-    "This area highlights markets, tours, demonstrations, and gathering points that activate the ecosystem in public view.",
 };
 
 export default function App() {
@@ -92,7 +113,7 @@ export default function App() {
   if (section === "home") {
     return (
       <div style={styles.page}>
-        <div style={styles.heroShell}>
+        <div style={styles.shell}>
           <div style={styles.topBar}>
             <div style={styles.eyebrow}>Bronson Family Farm Demo</div>
             <select
@@ -111,9 +132,19 @@ export default function App() {
           <p style={styles.subtitle}>{t.subtitle}</p>
           <p style={styles.intro}>{t.intro}</p>
 
-          <button style={styles.primaryButton} onClick={() => setSection("grow")}>
-            {t.enter}
-          </button>
+          <div style={styles.heroButtons}>
+            <button style={styles.primaryButton} onClick={() => setSection("grow")}>
+              {t.enter}
+            </button>
+            <button style={styles.secondaryButton} onClick={() => setSection("story")}>
+              {t.askButton}
+            </button>
+          </div>
+
+          <div style={styles.askPanel}>
+            <h3 style={styles.askTitle}>{t.askTitle}</h3>
+            <p style={styles.askText}>{t.askText}</p>
+          </div>
 
           <div style={styles.previewHeader}>{t.preview}</div>
 
@@ -155,7 +186,7 @@ export default function App() {
         />
 
         <h2 style={styles.sectionTitle}>{t.sections[section]}</h2>
-        <p style={styles.sectionText}>{sectionDetails[section]}</p>
+        <p style={styles.sectionText}>{t.details[section]}</p>
 
         {section === "shop" && (
           <div style={styles.ctaRow}>
@@ -201,7 +232,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
   },
-  heroShell: {
+  shell: {
     width: "100%",
     maxWidth: "1180px",
     background: "#f8faf8",
@@ -274,9 +305,14 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.6,
     color: "#486452",
   },
+  heroButtons: {
+    display: "flex",
+    gap: "12px",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    marginBottom: "24px",
+  },
   primaryButton: {
-    display: "block",
-    margin: "0 auto 28px auto",
     padding: "14px 24px",
     background: "#2f6b3c",
     color: "#ffffff",
@@ -295,6 +331,24 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     fontSize: "16px",
     fontWeight: 700,
+  },
+  askPanel: {
+    background: "#ffffff",
+    border: "1px solid #d2ddd4",
+    borderRadius: "18px",
+    padding: "18px",
+    marginBottom: "24px",
+  },
+  askTitle: {
+    margin: "0 0 8px 0",
+    fontSize: "22px",
+    color: "#173b24",
+  },
+  askText: {
+    margin: 0,
+    fontSize: "17px",
+    lineHeight: 1.6,
+    color: "#486452",
   },
   previewHeader: {
     fontSize: "18px",
