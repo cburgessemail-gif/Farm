@@ -195,6 +195,7 @@ export default function App() {
   const [activeRole, setActiveRole] = useState<string | null>(null);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
+  const [showReturnNotice, setShowReturnNotice] = useState(false);
 
   const cartCount = useMemo(
     () => Object.values(cart).reduce((sum, qty) => sum + qty, 0),
@@ -230,6 +231,7 @@ export default function App() {
   };
 
   const openGrownBy = () => {
+    setShowReturnNotice(true);
     window.open(
       "https://grownby.com/farms/bronson-family-farm/shop",
       "_blank",
@@ -272,13 +274,35 @@ export default function App() {
           </button>
         </div>
 
+        {showReturnNotice && (
+          <div style={styles.returnBanner}>
+            <strong>Live shop opened in a new tab.</strong>
+            <p style={styles.returnBannerText}>
+              When you finish on GrownBy, come back to this tab to continue the farm experience.
+            </p>
+            <div style={styles.returnBannerActions}>
+              <button
+                style={styles.secondaryButton}
+                onClick={() => setShowReturnNotice(false)}
+              >
+                Continue Here
+              </button>
+              <button
+                style={styles.button}
+                onClick={() => setSelectedSection(null)}
+              >
+                Return to Ecosystem
+              </button>
+            </div>
+          </div>
+        )}
+
         <div style={styles.pageHero}>
           <div style={styles.pageHeroMain}>
             <h3 style={styles.pageHeading}>Marketplace Overview</h3>
             <p style={styles.pageBody}>
-              This is the first live section of the ecosystem. It shows how
-              customers can browse products, build a cart, and move toward
-              preorder and pickup.
+              This is the first live section of the ecosystem. It shows how customers
+              can browse products, build a cart, and move toward preorder and pickup.
             </p>
           </div>
 
@@ -360,14 +384,19 @@ export default function App() {
                 Shop Live on GrownBy →
               </button>
 
-              <button style={styles.secondaryButton}>
-                Pickup Information
+              <button
+                style={styles.secondaryButton}
+                onClick={() => setSelectedSection(null)}
+              >
+                Return to Farm Experience
               </button>
 
-              <p style={styles.infoText}>
-                When finished shopping, return to this tab to continue exploring
-                the farm ecosystem.
-              </p>
+              <div style={styles.pickupBox}>
+                <strong>Pickup Flow</strong>
+                <p style={styles.infoText}>
+                  Customers shop live on GrownBy, then return here to continue exploring pickup, education, events, and the broader farm ecosystem.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -448,8 +477,7 @@ export default function App() {
           <div style={styles.sectionBox}>
             <strong>Suggested next action</strong>
             <p style={styles.infoText}>
-              Shop is now the first fully real section. The others can follow
-              this same pattern.
+              Shop now completes a live external-commerce loop. The next section to make real should be Workforce or Learn.
             </p>
           </div>
         </div>
@@ -789,7 +817,7 @@ const styles: any = {
   },
   shopLayout: {
     display: "grid",
-    gridTemplateColumns: "minmax(0, 2fr) minmax(300px, 1fr)",
+    gridTemplateColumns: "minmax(0, 2fr) minmax(320px, 1fr)",
     gap: "20px",
     alignItems: "start",
   },
@@ -875,6 +903,30 @@ const styles: any = {
     alignItems: "center",
     color: "#1f3d2b",
     fontSize: "18px",
+  },
+  pickupBox: {
+    background: "#f8fcf9",
+    border: "1px solid #dbe8dd",
+    borderRadius: "12px",
+    padding: "16px",
+  },
+  returnBanner: {
+    background: "#fff7e6",
+    border: "1px solid #f0d9a6",
+    borderRadius: "12px",
+    padding: "18px",
+    marginBottom: "20px",
+  },
+  returnBannerText: {
+    margin: "8px 0 0 0",
+    color: "#6a5830",
+    lineHeight: 1.5,
+  },
+  returnBannerActions: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+    marginTop: "14px",
   },
   sidePanel: {
     position: "fixed",
