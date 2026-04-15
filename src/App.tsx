@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import heroImg from "./GrowArea.jpg";
-import growImg from "./GrowArea2.jpg";
-import storyImg from "./SAM_0220.JPG";
-import communityImg from "./SAM_0221.JPG";
+
+import heroImg from "../GrowArea.jpg";
+import growImg from "../GrowArea2.jpg";
+import storyImg from "../SAM_0220.JPG";
+import communityImg from "../SAM_0221.JPG";
 
 type Lang = "en" | "es" | "tl";
 type SectionId = "grow" | "shop" | "story" | "workforce" | "community" | "events";
@@ -19,7 +20,6 @@ const labels = {
     explore: "Explore first. Activate a role when ready.",
     activateRole: "Activate My Role",
     back: "← Back to Ecosystem",
-    communityTitle: "Join the Ecosystem",
   },
   es: {
     title: "Bronson Family Farm",
@@ -32,7 +32,6 @@ const labels = {
     explore: "Explore primero. Active un rol cuando esté listo.",
     activateRole: "Activar rol",
     back: "← Regresar",
-    communityTitle: "Únase al Ecosistema",
   },
   tl: {
     title: "Bronson Family Farm",
@@ -45,7 +44,6 @@ const labels = {
     explore: "Mag-explore muna. Pumili ng role kapag handa na.",
     activateRole: "Piliin ang Role",
     back: "← Bumalik",
-    communityTitle: "Sumali sa Ecosystem",
   },
 };
 
@@ -69,7 +67,7 @@ const sectionData = {
     title: "Story",
     desc: "Farm history and purpose.",
     detail:
-      "Bronson Family Farm is rooted in family legacy, community restoration, and the belief that land can do more than produce crops.",
+      "Bronson Family Farm is rooted in family legacy, community restoration, and the belief that land can do more than produce crops. This section can introduce the story, the ecosystem, and the Lansdowne airport context.",
   },
   workforce: {
     icon: "👩🏽‍🌾",
@@ -186,10 +184,6 @@ export default function App() {
   const [selectedStory, setSelectedStory] = useState<string | null>(null);
   const [selectedWorkforce, setSelectedWorkforce] = useState<string | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
-  const [heroFailed, setHeroFailed] = useState(false);
-  const [sectionImageFailed, setSectionImageFailed] = useState<Record<string, boolean>>(
-    {}
-  );
 
   const ui = labels[lang];
 
@@ -323,46 +317,6 @@ export default function App() {
     </aside>
   );
 
-  const renderSectionImage = (key: keyof typeof imagePaths) => {
-    if (sectionImageFailed[key]) {
-      return <div style={styles.sectionImageFallback} />;
-    }
-
-    return (
-      <img
-        src={imagePaths[key]}
-        alt={key}
-        style={styles.sectionImage}
-        onError={() =>
-          setSectionImageFailed((prev) => ({
-            ...prev,
-            [key]: true,
-          }))
-        }
-      />
-    );
-  };
-
-  const renderHomeCardImage = (key: Exclude<keyof typeof imagePaths, "hero">) => {
-    if (sectionImageFailed[`home-${key}`]) {
-      return <div style={styles.cardImageFallback} />;
-    }
-
-    return (
-      <img
-        src={imagePaths[key]}
-        alt={sectionData[key].title}
-        style={styles.cardImage}
-        onError={() =>
-          setSectionImageFailed((prev) => ({
-            ...prev,
-            [`home-${key}`]: true,
-          }))
-        }
-      />
-    );
-  };
-
   if (!entered) {
     return (
       <div style={styles.center}>
@@ -381,16 +335,11 @@ export default function App() {
             </select>
           </div>
 
-          {!heroFailed ? (
-            <img
-              src={imagePaths.hero}
-              alt="Bronson Family Farm"
-              style={styles.heroImage}
-              onError={() => setHeroFailed(true)}
-            />
-          ) : (
-            <div style={styles.heroImageFallback} />
-          )}
+          <img
+            src={imagePaths.hero}
+            alt="Bronson Family Farm"
+            style={styles.heroImage}
+          />
 
           <h1 style={styles.heroTitle}>{ui.title}</h1>
           <p style={styles.heroSubtitle}>{ui.subtitle}</p>
@@ -437,7 +386,11 @@ export default function App() {
                   }}
                 >
                   <div style={styles.sectionCardAccent} />
-                  {renderHomeCardImage(id)}
+                  <img
+                    src={imagePaths[id]}
+                    alt={item.title}
+                    style={styles.cardImage}
+                  />
                   <h4 style={styles.sectionCardTitle}>{item.title}</h4>
                   <p style={styles.sectionCardText}>{item.desc}</p>
                 </button>
@@ -477,12 +430,11 @@ export default function App() {
         <div style={styles.status}>{status}</div>
 
         <section style={styles.content}>
-          {section === "grow" && renderSectionImage("grow")}
-          {section === "shop" && renderSectionImage("shop")}
-          {section === "story" && renderSectionImage("story")}
-          {section === "workforce" && renderSectionImage("workforce")}
-          {section === "community" && renderSectionImage("community")}
-          {section === "events" && renderSectionImage("events")}
+          <img
+            src={imagePaths[section]}
+            alt={sectionData[section].title}
+            style={styles.sectionImage}
+          />
 
           <div style={styles.contentAccent} />
           <h3 style={styles.contentTitle}>
@@ -677,16 +629,6 @@ const styles: Record<string, React.CSSProperties> = {
     margin: "0 auto 24px auto",
     border: "1px solid #d6e4d9",
   },
-  heroImageFallback: {
-    width: "100%",
-    maxWidth: "820px",
-    height: "320px",
-    borderRadius: "16px",
-    display: "block",
-    margin: "0 auto 24px auto",
-    border: "1px solid #d6e4d9",
-    background: "linear-gradient(135deg, #e8f1ea 0%, #dfeae2 100%)",
-  },
   heroTitle: {
     margin: "0 0 16px 0",
     fontSize: "56px",
@@ -866,15 +808,6 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "14px",
     border: "1px solid #d6e4d9",
   },
-  cardImageFallback: {
-    width: "100%",
-    height: "140px",
-    borderRadius: "12px",
-    display: "block",
-    marginBottom: "14px",
-    border: "1px solid #d6e4d9",
-    background: "linear-gradient(135deg, #e8f1ea 0%, #dfeae2 100%)",
-  },
   sectionCardTitle: {
     margin: "0 0 8px 0",
     fontSize: "24px",
@@ -902,15 +835,6 @@ const styles: Record<string, React.CSSProperties> = {
     display: "block",
     marginBottom: "22px",
     border: "1px solid #d6e4d9",
-  },
-  sectionImageFallback: {
-    width: "100%",
-    height: "280px",
-    borderRadius: "16px",
-    display: "block",
-    marginBottom: "22px",
-    border: "1px solid #d6e4d9",
-    background: "linear-gradient(135deg, #e8f1ea 0%, #dfeae2 100%)",
   },
   contentAccent: {
     height: "12px",
