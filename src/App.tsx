@@ -1,12 +1,28 @@
 import React, { useMemo, useState } from "react";
 
-const sections = [
+type SectionId =
+  | "grow"
+  | "shop"
+  | "learn"
+  | "workforce"
+  | "community"
+  | "events";
+
+type Section = {
+  id: SectionId;
+  title: string;
+  desc: string;
+  detail: string;
+  highlights: string[];
+};
+
+const sections: Section[] = [
   {
     id: "grow",
     title: "🌱 Grow",
-    desc: "Crop planning, planting, and production.",
+    desc: "Crop planning, planting, production, and farm systems.",
     detail:
-      "Explore crop planning, field readiness, growing cycles, irrigation thinking, and the systems needed to support farm production.",
+      "Explore crop planning, field readiness, seasonal growing, irrigation thinking, infrastructure, and the systems that support Bronson Family Farm’s production capacity.",
     highlights: [
       "Seasonal crop planning",
       "Field readiness and infrastructure",
@@ -18,7 +34,7 @@ const sections = [
     title: "🛒 Shop",
     desc: "Buy fresh produce and farm goods.",
     detail:
-      "See how customers will preorder, shop farm goods, access pickup pathways, and connect to a community-centered marketplace.",
+      "See how customers browse products, build a cart, connect to the live GrownBy store, and return to the broader Bronson Family Farm ecosystem.",
     highlights: [
       "Marketplace and preorder flow",
       "Pickup and customer access",
@@ -28,9 +44,9 @@ const sections = [
   {
     id: "learn",
     title: "📚 Learn",
-    desc: "Workshops, guides, and knowledge hub.",
+    desc: "Workshops, guides, wellness, and knowledge hub.",
     detail:
-      "Discover education, wellness, food knowledge, practical growing guidance, and future learning tools for families and growers.",
+      "Discover education, nutrition, wellness, growing guidance, and practical learning modules designed for families, new growers, and community members.",
     highlights: [
       "Workshops and guides",
       "Food knowledge and wellness",
@@ -42,7 +58,7 @@ const sections = [
     title: "👩🏽‍🌾 Workforce",
     desc: "Youth training and job pathways.",
     detail:
-      "Follow the youth workforce pathway from participation to training, responsibility, and future career readiness.",
+      "Follow the youth workforce pathway from participation to training, responsibility, skill-building, and future career readiness.",
     highlights: [
       "Youth training pathway",
       "Responsibility and growth",
@@ -54,7 +70,7 @@ const sections = [
     title: "🤝 Community",
     desc: "Volunteers, families, and partnerships.",
     detail:
-      "See how volunteers, families, supporters, and partners enter the ecosystem and strengthen the work together.",
+      "See how volunteers, families, supporters, funders, and partners enter the ecosystem and strengthen the work together.",
     highlights: [
       "Volunteer and family participation",
       "Partnership and support pathways",
@@ -64,9 +80,9 @@ const sections = [
   {
     id: "events",
     title: "📅 Events",
-    desc: "Markets, tours, and community days.",
+    desc: "Markets, tours, demonstrations, and community days.",
     detail:
-      "Experience how markets, tours, workshops, and community gathering points activate the full farm ecosystem.",
+      "Experience how markets, workshops, tours, and seasonal gathering points activate the full farm ecosystem and bring people into the work.",
     highlights: [
       "Markets and tours",
       "Community gathering points",
@@ -161,7 +177,74 @@ const learnModules = [
   },
 ];
 
-type Section = (typeof sections)[0];
+const workforceTracks = [
+  {
+    id: "orientation",
+    title: "Orientation",
+    description:
+      "Introduces safety, expectations, time awareness, accountability, and how the farm ecosystem works.",
+  },
+  {
+    id: "fieldwork",
+    title: "Field Work",
+    description:
+      "Hands-on learning in planting, maintenance, harvest support, teamwork, and daily task completion.",
+  },
+  {
+    id: "life-skills",
+    title: "Life & Work Skills",
+    description:
+      "Builds communication, responsibility, problem-solving, follow-through, and workplace readiness.",
+  },
+  {
+    id: "pathways",
+    title: "Future Pathways",
+    description:
+      "Connects youth to long-term opportunity through confidence, experience, and practical career exposure.",
+  },
+];
+
+function roleDescription(role: string) {
+  switch (role) {
+    case "Guest":
+      return "Explore the ecosystem, learn the story, and view public experiences.";
+    case "Customer":
+      return "Explore freely while unlocking shopping, preorder, and order-related actions.";
+    case "Grower":
+      return "Explore the ecosystem while accessing crop, inventory, and fulfillment tools.";
+    case "Volunteer":
+      return "Explore the full ecosystem while accessing service opportunities, shifts, and support pathways.";
+    case "Youth Worker":
+      return "Explore the ecosystem while accessing training, progress, and assigned work pathways.";
+    case "Supervisor":
+      return "Explore everything while unlocking oversight, coordination, and evaluation tools.";
+    case "Admin":
+      return "Explore the ecosystem with full operational visibility and platform control.";
+    default:
+      return "Explore the ecosystem.";
+  }
+}
+
+function roleActions(role: string): string[] {
+  switch (role) {
+    case "Guest":
+      return ["Explore the Farm", "View Public Events", "Learn the Mission"];
+    case "Customer":
+      return ["Shop Products", "View Pickup Flow", "Review Orders"];
+    case "Grower":
+      return ["Manage Crops", "Update Inventory", "View Fulfillment"];
+    case "Volunteer":
+      return ["Sign Up for Shift", "View Orientation", "Track Service"];
+    case "Youth Worker":
+      return ["Open Training Track", "View Progress", "See Assignments"];
+    case "Supervisor":
+      return ["View Team Dashboard", "Assign Tasks", "Review Progress"];
+    case "Admin":
+      return ["Open Operations", "View Reports", "Manage Platform"];
+    default:
+      return ["Explore"];
+  }
+}
 
 function RoleModal({
   onClose,
@@ -185,7 +268,8 @@ function RoleModal({
               style={styles.roleButton}
               onClick={() => onSelect(role)}
             >
-              {role}
+              <div style={styles.roleButtonTitle}>{role}</div>
+              <div style={styles.roleButtonText}>{roleDescription(role)}</div>
             </button>
           ))}
         </div>
@@ -201,21 +285,106 @@ function RoleModal({
 function RolePanel({
   activeRole,
   onExit,
+  onSwitch,
 }: {
   activeRole: string;
   onExit: () => void;
+  onSwitch: () => void;
 }) {
   return (
     <div style={styles.sidePanel}>
       <h3 style={styles.sideTitle}>{activeRole}</h3>
-      <p style={styles.sideText}>
-        Role activated. You can still explore the full ecosystem.
-      </p>
+      <p style={styles.sideText}>{roleDescription(activeRole)}</p>
 
-      <button style={styles.sidePrimary}>Open Role Actions</button>
+      <div style={styles.sideActionGroup}>
+        {roleActions(activeRole).map((action, index) => (
+          <button
+            key={action}
+            style={index === 0 ? styles.sidePrimary : styles.sideSecondary}
+          >
+            {action}
+          </button>
+        ))}
+      </div>
+
+      <button style={styles.sideSecondary} onClick={onSwitch}>
+        Switch Role
+      </button>
       <button style={styles.sideSecondary} onClick={onExit}>
         Exit Role
       </button>
+    </div>
+  );
+}
+
+function EntryScreen({ onEnter }: { onEnter: () => void }) {
+  return (
+    <div style={styles.center}>
+      <div style={styles.card}>
+        <div style={styles.eyebrow}>Bronson Family Farm Ecosystem Demo</div>
+        <h1 style={styles.title}>Bronson Family Farm</h1>
+        <p style={styles.subtitle}>
+          A Living Ecosystem for Growing, Learning, and Community
+        </p>
+        <p style={styles.entryText}>
+          Explore first. Activate a role when ready. Move from inspiration to
+          commerce, learning, workforce opportunity, and community engagement.
+        </p>
+        <button style={styles.button} onClick={onEnter}>
+          Enter the Farm
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function EcosystemHome({
+  activeRole,
+  onOpenRoles,
+  onSelectSection,
+}: {
+  activeRole: string | null;
+  onOpenRoles: () => void;
+  onSelectSection: (section: Section) => void;
+}) {
+  return (
+    <div style={styles.page}>
+      <div style={styles.header}>
+        <div>
+          <h2 style={styles.sectionTitle}>Farm Ecosystem</h2>
+          <p style={styles.headerText}>
+            Explore first. Activate a role when ready.
+          </p>
+        </div>
+
+        <button style={styles.button} onClick={onOpenRoles}>
+          {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+        </button>
+      </div>
+
+      <div style={styles.infoBox}>
+        <strong>Shared Exploration Layer</strong>
+        <p style={styles.infoText}>
+          Customers, volunteers, youth workers, growers, and partners can all
+          explore the ecosystem. Roles unlock actions without blocking access.
+        </p>
+      </div>
+
+      <div style={styles.grid}>
+        {sections.map((section) => (
+          <button
+            key={section.id}
+            style={styles.tileButton}
+            onClick={() => onSelectSection(section)}
+          >
+            <div style={styles.tile}>
+              <h3 style={styles.tileTitle}>{section.title}</h3>
+              <p style={styles.tileText}>{section.desc}</p>
+              <div style={styles.openText}>Open section →</div>
+            </div>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -225,11 +394,15 @@ export default function App() {
   const [showRoles, setShowRoles] = useState(false);
   const [activeRole, setActiveRole] = useState<string | null>(null);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
+
   const [cart, setCart] = useState<Record<string, number>>({});
   const [showReturnNotice, setShowReturnNotice] = useState(false);
   const [selectedLearnModule, setSelectedLearnModule] = useState<string | null>(
     null
   );
+  const [selectedWorkforceTrack, setSelectedWorkforceTrack] = useState<
+    string | null
+  >(null);
 
   const cartCount = useMemo(
     () => Object.values(cart).reduce((sum, qty) => sum + qty, 0),
@@ -241,6 +414,12 @@ export default function App() {
       shopItems.reduce((sum, item) => sum + (cart[item.id] || 0) * item.price, 0),
     [cart]
   );
+
+  const activeLearnModule =
+    learnModules.find((module) => module.id === selectedLearnModule) ?? null;
+
+  const activeWorkforceTrack =
+    workforceTracks.find((track) => track.id === selectedWorkforceTrack) ?? null;
 
   const addToCart = (id: string) => {
     setCart((prev) => ({
@@ -273,317 +452,439 @@ export default function App() {
     );
   };
 
+  const renderRoleUI = () => (
+    <>
+      {showRoles && (
+        <RoleModal
+          onClose={() => setShowRoles(false)}
+          onSelect={(role) => {
+            setActiveRole(role);
+            setShowRoles(false);
+          }}
+        />
+      )}
+
+      {activeRole && (
+        <RolePanel
+          activeRole={activeRole}
+          onExit={() => setActiveRole(null)}
+          onSwitch={() => setShowRoles(true)}
+        />
+      )}
+    </>
+  );
+
   if (!entered) {
+    return <EntryScreen onEnter={() => setEntered(true)} />;
+  }
+
+  if (!selectedSection) {
     return (
-      <div style={styles.center}>
-        <div style={styles.card}>
-          <h1 style={styles.title}>Bronson Family Farm</h1>
-          <p style={styles.subtitle}>
-            A Living Ecosystem for Growing, Learning, and Community
-          </p>
-          <button style={styles.button} onClick={() => setEntered(true)}>
-            Enter the Farm
-          </button>
-        </div>
-      </div>
+      <>
+        <EcosystemHome
+          activeRole={activeRole}
+          onOpenRoles={() => setShowRoles(true)}
+          onSelectSection={(section) => setSelectedSection(section)}
+        />
+        {renderRoleUI()}
+      </>
     );
   }
 
-  if (selectedSection?.id === "shop") {
+  if (selectedSection.id === "shop") {
     return (
-      <div style={styles.page}>
-        <div style={styles.header}>
-          <div>
-            <button style={styles.backLink} onClick={() => setSelectedSection(null)}>
-              ← Back to Ecosystem
-            </button>
-            <h2 style={styles.sectionTitle}>🛒 Shop</h2>
-            <p style={styles.headerText}>
-              A working marketplace demo for Bronson Family Farm.
-            </p>
-          </div>
-
-          <button style={styles.button} onClick={() => setShowRoles(true)}>
-            {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-          </button>
-        </div>
-
-        {showReturnNotice && (
-          <div style={styles.returnBanner}>
-            <strong>Live shop opened in a new tab.</strong>
-            <p style={styles.returnBannerText}>
-              When you finish on GrownBy, come back to this tab to continue the farm experience.
-            </p>
-            <div style={styles.returnBannerActions}>
+      <>
+        <div style={styles.page}>
+          <div style={styles.header}>
+            <div>
               <button
-                style={styles.secondaryButton}
-                onClick={() => setShowReturnNotice(false)}
-              >
-                Continue Here
-              </button>
-              <button
-                style={styles.button}
+                style={styles.backLink}
                 onClick={() => setSelectedSection(null)}
               >
-                Return to Ecosystem
+                ← Back to Ecosystem
               </button>
-            </div>
-          </div>
-        )}
-
-        <div style={styles.pageHero}>
-          <div style={styles.pageHeroMain}>
-            <h3 style={styles.pageHeading}>Marketplace Overview</h3>
-            <p style={styles.pageBody}>
-              This is the first live section of the ecosystem. It shows how customers
-              can browse products, build a cart, and move toward preorder and pickup.
-            </p>
-          </div>
-
-          <div style={styles.pageHeroSide}>
-            <strong>Cart Summary</strong>
-            <p style={styles.infoText}>Items: {cartCount}</p>
-            <p style={styles.infoText}>Total: ${cartTotal.toFixed(2)}</p>
-          </div>
-        </div>
-
-        <div style={styles.shopLayout}>
-          <div>
-            <div style={styles.productGrid}>
-              {shopItems.map((item) => {
-                const qty = cart[item.id] || 0;
-                return (
-                  <div key={item.id} style={styles.productCard}>
-                    <div style={styles.productCategory}>{item.category}</div>
-                    <h3 style={styles.tileTitle}>{item.name}</h3>
-                    <p style={styles.tileText}>{item.note}</p>
-                    <div style={styles.priceRow}>
-                      <strong style={styles.priceText}>
-                        ${item.price.toFixed(2)}
-                      </strong>
-                      <div style={styles.qtyControls}>
-                        <button
-                          style={styles.smallButton}
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          −
-                        </button>
-                        <span style={styles.qtyText}>{qty}</span>
-                        <button
-                          style={styles.smallButton}
-                          onClick={() => addToCart(item.id)}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div style={styles.cartPanel}>
-            <h3 style={styles.pageHeading}>Current Cart</h3>
-
-            {cartCount === 0 ? (
-              <p style={styles.infoText}>No items added yet.</p>
-            ) : (
-              <div style={styles.cartList}>
-                {shopItems
-                  .filter((item) => cart[item.id])
-                  .map((item) => (
-                    <div key={item.id} style={styles.cartItem}>
-                      <div>
-                        <strong>{item.name}</strong>
-                        <p style={styles.cartMeta}>
-                          Qty: {cart[item.id]} × ${item.price.toFixed(2)}
-                        </p>
-                      </div>
-                      <strong>
-                        ${((cart[item.id] || 0) * item.price).toFixed(2)}
-                      </strong>
-                    </div>
-                  ))}
-              </div>
-            )}
-
-            <div style={styles.cartFooter}>
-              <div style={styles.cartTotalRow}>
-                <span>Total</span>
-                <strong>${cartTotal.toFixed(2)}</strong>
-              </div>
-
-              <button style={styles.button} onClick={openGrownBy}>
-                Shop Live on GrownBy →
-              </button>
-
-              <button
-                style={styles.secondaryButton}
-                onClick={() => setSelectedSection(null)}
-              >
-                Return to Farm Experience
-              </button>
-
-              <div style={styles.pickupBox}>
-                <strong>Pickup Flow</strong>
-                <p style={styles.infoText}>
-                  Customers shop live on GrownBy, then return here to continue exploring pickup, education, events, and the broader farm ecosystem.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {showRoles && (
-          <RoleModal
-            onClose={() => setShowRoles(false)}
-            onSelect={(role) => {
-              setActiveRole(role);
-              setShowRoles(false);
-            }}
-          />
-        )}
-
-        {activeRole && (
-          <RolePanel
-            activeRole={activeRole}
-            onExit={() => setActiveRole(null)}
-          />
-        )}
-      </div>
-    );
-  }
-
-  if (selectedSection?.id === "learn") {
-    const activeModule =
-      learnModules.find((module) => module.id === selectedLearnModule) ?? null;
-
-    return (
-      <div style={styles.page}>
-        <div style={styles.header}>
-          <div>
-            <button style={styles.backLink} onClick={() => setSelectedSection(null)}>
-              ← Back to Ecosystem
-            </button>
-            <h2 style={styles.sectionTitle}>📚 Learn</h2>
-            <p style={styles.headerText}>
-              Education, wellness, and practical community learning.
-            </p>
-          </div>
-
-          <button style={styles.button} onClick={() => setShowRoles(true)}>
-            {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-          </button>
-        </div>
-
-        <div style={styles.pageHero}>
-          <div style={styles.pageHeroMain}>
-            <h3 style={styles.pageHeading}>Learning Overview</h3>
-            <p style={styles.pageBody}>
-              This section shows how Bronson Family Farm can teach nutrition,
-              growing, wellness, and healthier living through simple, welcoming
-              learning pathways.
-            </p>
-          </div>
-
-          <div style={styles.pageHeroSide}>
-            <strong>Current role context</strong>
-            <p style={styles.infoText}>
-              {activeRole
-                ? `You are exploring as ${activeRole}. Learning stays open while your role unlocks added actions.`
-                : "You are exploring without an active role selected."}
-            </p>
-          </div>
-        </div>
-
-        <div style={styles.learnLayout}>
-          <div>
-            <div style={styles.learnGrid}>
-              {learnModules.map((module) => (
-                <button
-                  key={module.id}
-                  style={styles.learnCardButton}
-                  onClick={() => setSelectedLearnModule(module.id)}
-                >
-                  <div style={styles.learnCard}>
-                    <div style={styles.productCategory}>{module.audience}</div>
-                    <h3 style={styles.tileTitle}>{module.title}</h3>
-                    <p style={styles.tileText}>{module.description}</p>
-                    <div style={styles.openText}>Open learning module →</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={styles.learnPanel}>
-            <h3 style={styles.pageHeading}>Learning Focus</h3>
-
-            {!activeModule ? (
-              <p style={styles.infoText}>
-                Select a learning module to preview how the education experience works.
+              <h2 style={styles.sectionTitle}>🛒 Shop</h2>
+              <p style={styles.headerText}>
+                A working marketplace demo for Bronson Family Farm.
               </p>
-            ) : (
-              <div>
-                <div style={styles.pickupBox}>
-                  <strong>{activeModule.title}</strong>
-                  <p style={styles.infoText}>{activeModule.description}</p>
+            </div>
+
+            <button style={styles.button} onClick={() => setShowRoles(true)}>
+              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+            </button>
+          </div>
+
+          {showReturnNotice && (
+            <div style={styles.returnBanner}>
+              <strong>Live shop opened in a new tab.</strong>
+              <p style={styles.returnBannerText}>
+                When you finish on GrownBy, come back to this Bronson Family
+                Farm tab to continue the experience.
+              </p>
+              <div style={styles.returnBannerActions}>
+                <button
+                  style={styles.secondaryButton}
+                  onClick={() => setShowReturnNotice(false)}
+                >
+                  Continue Here
+                </button>
+                <button
+                  style={styles.button}
+                  onClick={() => setSelectedSection(null)}
+                >
+                  Return to Ecosystem
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div style={styles.pageHero}>
+            <div style={styles.pageHeroMain}>
+              <h3 style={styles.pageHeading}>Marketplace Overview</h3>
+              <p style={styles.pageBody}>
+                This is the first live section of the ecosystem. It shows how
+                customers can browse products, build a cart, connect to the live
+                GrownBy store, and return to the broader farm experience.
+              </p>
+            </div>
+
+            <div style={styles.pageHeroSide}>
+              <strong>Cart Summary</strong>
+              <p style={styles.infoText}>Items: {cartCount}</p>
+              <p style={styles.infoText}>Total: ${cartTotal.toFixed(2)}</p>
+            </div>
+          </div>
+
+          <div style={styles.shopLayout}>
+            <div>
+              <div style={styles.productGrid}>
+                {shopItems.map((item) => {
+                  const qty = cart[item.id] || 0;
+                  return (
+                    <div key={item.id} style={styles.productCard}>
+                      <div style={styles.productCategory}>{item.category}</div>
+                      <h3 style={styles.tileTitle}>{item.name}</h3>
+                      <p style={styles.tileText}>{item.note}</p>
+                      <div style={styles.priceRow}>
+                        <strong style={styles.priceText}>
+                          ${item.price.toFixed(2)}
+                        </strong>
+                        <div style={styles.qtyControls}>
+                          <button
+                            style={styles.smallButton}
+                            onClick={() => removeFromCart(item.id)}
+                          >
+                            −
+                          </button>
+                          <span style={styles.qtyText}>{qty}</span>
+                          <button
+                            style={styles.smallButton}
+                            onClick={() => addToCart(item.id)}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div style={styles.cartPanel}>
+              <h3 style={styles.pageHeading}>Current Cart</h3>
+
+              {cartCount === 0 ? (
+                <p style={styles.infoText}>No items added yet.</p>
+              ) : (
+                <div style={styles.cartList}>
+                  {shopItems
+                    .filter((item) => cart[item.id])
+                    .map((item) => (
+                      <div key={item.id} style={styles.cartItem}>
+                        <div>
+                          <strong>{item.name}</strong>
+                          <p style={styles.cartMeta}>
+                            Qty: {cart[item.id]} × ${item.price.toFixed(2)}
+                          </p>
+                        </div>
+                        <strong>
+                          ${((cart[item.id] || 0) * item.price).toFixed(2)}
+                        </strong>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              <div style={styles.cartFooter}>
+                <div style={styles.cartTotalRow}>
+                  <span>Total</span>
+                  <strong>${cartTotal.toFixed(2)}</strong>
                 </div>
 
-                <div style={styles.pickupBox}>
-                  <strong>Audience</strong>
-                  <p style={styles.infoText}>{activeModule.audience}</p>
-                </div>
+                <button style={styles.button} onClick={openGrownBy}>
+                  Shop Live on GrownBy →
+                </button>
+
+                <button
+                  style={styles.secondaryButton}
+                  onClick={() => setSelectedSection(null)}
+                >
+                  Return to Farm Experience
+                </button>
 
                 <div style={styles.pickupBox}>
-                  <strong>What this module can become</strong>
+                  <strong>Pickup Flow</strong>
                   <p style={styles.infoText}>
-                    This can expand into guided lessons, videos, printable handouts,
-                    workshop registration, and community health education.
+                    Customers shop live on GrownBy, then return here to
+                    continue exploring pickup, education, events, and the
+                    broader Bronson Family Farm ecosystem.
                   </p>
                 </div>
               </div>
-            )}
-
-            <div style={styles.cartFooter}>
-              <button style={styles.button}>View Workshop Pathway</button>
-              <button
-                style={styles.secondaryButton}
-                onClick={() => setSelectedLearnModule(null)}
-              >
-                Clear Selection
-              </button>
             </div>
           </div>
         </div>
-
-        {showRoles && (
-          <RoleModal
-            onClose={() => setShowRoles(false)}
-            onSelect={(role) => {
-              setActiveRole(role);
-              setShowRoles(false);
-            }}
-          />
-        )}
-
-        {activeRole && (
-          <RolePanel
-            activeRole={activeRole}
-            onExit={() => setActiveRole(null)}
-          />
-        )}
-      </div>
+        {renderRoleUI()}
+      </>
     );
   }
 
-  if (selectedSection) {
+  if (selectedSection.id === "learn") {
     return (
+      <>
+        <div style={styles.page}>
+          <div style={styles.header}>
+            <div>
+              <button
+                style={styles.backLink}
+                onClick={() => setSelectedSection(null)}
+              >
+                ← Back to Ecosystem
+              </button>
+              <h2 style={styles.sectionTitle}>📚 Learn</h2>
+              <p style={styles.headerText}>
+                Education, wellness, and practical community learning.
+              </p>
+            </div>
+
+            <button style={styles.button} onClick={() => setShowRoles(true)}>
+              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+            </button>
+          </div>
+
+          <div style={styles.pageHero}>
+            <div style={styles.pageHeroMain}>
+              <h3 style={styles.pageHeading}>Learning Overview</h3>
+              <p style={styles.pageBody}>
+                This section shows how Bronson Family Farm can teach nutrition,
+                growing, wellness, and healthier living through simple,
+                welcoming learning pathways.
+              </p>
+            </div>
+
+            <div style={styles.pageHeroSide}>
+              <strong>Current role context</strong>
+              <p style={styles.infoText}>
+                {activeRole
+                  ? `You are exploring as ${activeRole}. Learning stays open while your role unlocks added actions.`
+                  : "You are exploring without an active role selected."}
+              </p>
+            </div>
+          </div>
+
+          <div style={styles.learnLayout}>
+            <div>
+              <div style={styles.learnGrid}>
+                {learnModules.map((module) => (
+                  <button
+                    key={module.id}
+                    style={styles.learnCardButton}
+                    onClick={() => setSelectedLearnModule(module.id)}
+                  >
+                    <div style={styles.learnCard}>
+                      <div style={styles.productCategory}>{module.audience}</div>
+                      <h3 style={styles.tileTitle}>{module.title}</h3>
+                      <p style={styles.tileText}>{module.description}</p>
+                      <div style={styles.openText}>Open learning module →</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={styles.learnPanel}>
+              <h3 style={styles.pageHeading}>Learning Focus</h3>
+
+              {!activeLearnModule ? (
+                <p style={styles.infoText}>
+                  Select a learning module to preview how the education
+                  experience works.
+                </p>
+              ) : (
+                <div>
+                  <div style={styles.pickupBox}>
+                    <strong>{activeLearnModule.title}</strong>
+                    <p style={styles.infoText}>{activeLearnModule.description}</p>
+                  </div>
+
+                  <div style={styles.pickupBox}>
+                    <strong>Audience</strong>
+                    <p style={styles.infoText}>{activeLearnModule.audience}</p>
+                  </div>
+
+                  <div style={styles.pickupBox}>
+                    <strong>What this module can become</strong>
+                    <p style={styles.infoText}>
+                      This can expand into guided lessons, videos, printable
+                      handouts, workshop registration, and community health
+                      education.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div style={styles.cartFooter}>
+                <button style={styles.button}>View Workshop Pathway</button>
+                <button
+                  style={styles.secondaryButton}
+                  onClick={() => setSelectedLearnModule(null)}
+                >
+                  Clear Selection
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {renderRoleUI()}
+      </>
+    );
+  }
+
+  if (selectedSection.id === "workforce") {
+    return (
+      <>
+        <div style={styles.page}>
+          <div style={styles.header}>
+            <div>
+              <button
+                style={styles.backLink}
+                onClick={() => setSelectedSection(null)}
+              >
+                ← Back to Ecosystem
+              </button>
+              <h2 style={styles.sectionTitle}>👩🏽‍🌾 Workforce</h2>
+              <p style={styles.headerText}>
+                Youth opportunity, responsibility, and pathway-building.
+              </p>
+            </div>
+
+            <button style={styles.button} onClick={() => setShowRoles(true)}>
+              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+            </button>
+          </div>
+
+          <div style={styles.pageHero}>
+            <div style={styles.pageHeroMain}>
+              <h3 style={styles.pageHeading}>Workforce Overview</h3>
+              <p style={styles.pageBody}>
+                This section demonstrates how Bronson Family Farm can serve as a
+                living classroom for youth workforce development, responsibility,
+                confidence, and future opportunity.
+              </p>
+            </div>
+
+            <div style={styles.pageHeroSide}>
+              <strong>Current role context</strong>
+              <p style={styles.infoText}>
+                {activeRole
+                  ? `You are exploring as ${activeRole}. Workforce stays open while your role unlocks added actions.`
+                  : "You are exploring without an active role selected."}
+              </p>
+            </div>
+          </div>
+
+          <div style={styles.learnLayout}>
+            <div>
+              <div style={styles.learnGrid}>
+                {workforceTracks.map((track) => (
+                  <button
+                    key={track.id}
+                    style={styles.learnCardButton}
+                    onClick={() => setSelectedWorkforceTrack(track.id)}
+                  >
+                    <div style={styles.learnCard}>
+                      <div style={styles.productCategory}>Workforce Track</div>
+                      <h3 style={styles.tileTitle}>{track.title}</h3>
+                      <p style={styles.tileText}>{track.description}</p>
+                      <div style={styles.openText}>Open track →</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={styles.learnPanel}>
+              <h3 style={styles.pageHeading}>Track Focus</h3>
+
+              {!activeWorkforceTrack ? (
+                <p style={styles.infoText}>
+                  Select a workforce track to preview how youth move through the
+                  experience.
+                </p>
+              ) : (
+                <div>
+                  <div style={styles.pickupBox}>
+                    <strong>{activeWorkforceTrack.title}</strong>
+                    <p style={styles.infoText}>
+                      {activeWorkforceTrack.description}
+                    </p>
+                  </div>
+
+                  <div style={styles.pickupBox}>
+                    <strong>Program Value</strong>
+                    <p style={styles.infoText}>
+                      This track reinforces work habits, responsibility,
+                      confidence, and a real sense of contribution.
+                    </p>
+                  </div>
+
+                  <div style={styles.pickupBox}>
+                    <strong>What this can become</strong>
+                    <p style={styles.infoText}>
+                      This can expand into attendance, progress tracking,
+                      supervisor observations, badges, and pathway documentation.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div style={styles.cartFooter}>
+                <button style={styles.button}>Open Workforce Pathway</button>
+                <button
+                  style={styles.secondaryButton}
+                  onClick={() => setSelectedWorkforceTrack(null)}
+                >
+                  Clear Selection
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {renderRoleUI()}
+      </>
+    );
+  }
+
+  return (
+    <>
       <div style={styles.page}>
         <div style={styles.header}>
           <div>
-            <button style={styles.backLink} onClick={() => setSelectedSection(null)}>
+            <button
+              style={styles.backLink}
+              onClick={() => setSelectedSection(null)}
+            >
               ← Back to Ecosystem
             </button>
             <h2 style={styles.sectionTitle}>{selectedSection.title}</h2>
@@ -634,7 +935,8 @@ export default function App() {
           <div style={styles.sectionBox}>
             <strong>Suggested next action</strong>
             <p style={styles.infoText}>
-              Shop and Learn are now the strongest real sections in the demo.
+              Shop, Learn, and Workforce now serve as the strongest real
+              sections in the demo.
             </p>
           </div>
         </div>
@@ -652,80 +954,9 @@ export default function App() {
             Return to Ecosystem
           </button>
         </div>
-
-        {showRoles && (
-          <RoleModal
-            onClose={() => setShowRoles(false)}
-            onSelect={(role) => {
-              setActiveRole(role);
-              setShowRoles(false);
-            }}
-          />
-        )}
-
-        {activeRole && (
-          <RolePanel
-            activeRole={activeRole}
-            onExit={() => setActiveRole(null)}
-          />
-        )}
       </div>
-    );
-  }
-
-  return (
-    <div style={styles.page}>
-      <div style={styles.header}>
-        <div>
-          <h2 style={styles.sectionTitle}>Farm Ecosystem</h2>
-          <p style={styles.headerText}>
-            Explore first. Activate a role when ready.
-          </p>
-        </div>
-
-        <button style={styles.button} onClick={() => setShowRoles(true)}>
-          {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
-        </button>
-      </div>
-
-      <div style={styles.infoBox}>
-        <strong>Shared Exploration Layer</strong>
-        <p style={styles.infoText}>
-          Customers, volunteers, youth workers, growers, and partners can all
-          explore the ecosystem. Roles unlock actions without blocking access.
-        </p>
-      </div>
-
-      <div style={styles.grid}>
-        {sections.map((section) => (
-          <button
-            key={section.id}
-            style={styles.tileButton}
-            onClick={() => setSelectedSection(section)}
-          >
-            <div style={styles.tile}>
-              <h3 style={styles.tileTitle}>{section.title}</h3>
-              <p style={styles.tileText}>{section.desc}</p>
-              <div style={styles.openText}>Open section →</div>
-            </div>
-          </button>
-        ))}
-      </div>
-
-      {showRoles && (
-        <RoleModal
-          onClose={() => setShowRoles(false)}
-          onSelect={(role) => {
-            setActiveRole(role);
-            setShowRoles(false);
-          }}
-        />
-      )}
-
-      {activeRole && (
-        <RolePanel activeRole={activeRole} onExit={() => setActiveRole(null)} />
-      )}
-    </div>
+      {renderRoleUI()}
+    </>
   );
 }
 
@@ -746,8 +977,16 @@ const styles: any = {
     border: "2px solid #2f6b3c",
     textAlign: "center",
     boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-    maxWidth: "720px",
+    maxWidth: "760px",
     width: "100%",
+  },
+  eyebrow: {
+    marginBottom: "12px",
+    color: "#2f6b3c",
+    fontSize: "13px",
+    fontWeight: 700,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
   },
   title: {
     margin: 0,
@@ -755,9 +994,14 @@ const styles: any = {
     fontSize: "40px",
   },
   subtitle: {
-    margin: "16px 0 24px 0",
+    margin: "16px 0 14px 0",
     fontSize: "18px",
     color: "#3f5f4a",
+  },
+  entryText: {
+    margin: "0 0 24px 0",
+    color: "#4e6657",
+    lineHeight: 1.6,
   },
   button: {
     padding: "12px 20px",
@@ -884,7 +1128,7 @@ const styles: any = {
     background: "#fff",
     borderRadius: "16px",
     padding: "24px",
-    maxWidth: "700px",
+    maxWidth: "860px",
     width: "100%",
     boxShadow: "0 18px 40px rgba(0,0,0,0.15)",
   },
@@ -899,7 +1143,7 @@ const styles: any = {
   },
   roleGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: "12px",
   },
   roleButton: {
@@ -910,6 +1154,16 @@ const styles: any = {
     cursor: "pointer",
     color: "#1f3d2b",
     fontSize: "15px",
+    textAlign: "left",
+  },
+  roleButtonTitle: {
+    fontWeight: 700,
+    marginBottom: "6px",
+  },
+  roleButtonText: {
+    color: "#486452",
+    lineHeight: 1.4,
+    fontSize: "13px",
   },
   cancelButton: {
     marginTop: "18px",
@@ -1131,6 +1385,9 @@ const styles: any = {
     padding: "24px",
     boxSizing: "border-box",
     zIndex: 10,
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
   },
   sideTitle: {
     marginTop: 0,
@@ -1139,7 +1396,12 @@ const styles: any = {
   sideText: {
     color: "#4e6657",
     lineHeight: 1.5,
-    marginBottom: "20px",
+    marginBottom: "8px",
+  },
+  sideActionGroup: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
   },
   sidePrimary: {
     width: "100%",
@@ -1149,7 +1411,6 @@ const styles: any = {
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
-    marginBottom: "10px",
   },
   sideSecondary: {
     width: "100%",
