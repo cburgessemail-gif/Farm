@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 type SectionId =
   | "grow"
   | "shop"
-  | "learn"
+  | "story"
   | "workforce"
   | "community"
   | "events";
@@ -45,15 +45,15 @@ const sections: Section[] = [
     image: "/images/shop.jpg",
   },
   {
-    id: "learn",
-    title: "📚 Learn",
-    desc: "Workshops, guides, wellness, and knowledge hub.",
+    id: "story",
+    title: "📖 Story & Ecosystem",
+    desc: "History, place, purpose, and how the ecosystem works.",
     detail:
-      "Discover education, nutrition, wellness, growing guidance, and practical learning modules designed for families, new growers, and community members.",
+      "This section explains the history of Bronson Family Farm, the family legacy behind it, the Lansdowne airport context, and how growing, health, commerce, learning, and opportunity connect into one ecosystem.",
     highlights: [
-      "Workshops and guides",
-      "Food knowledge and wellness",
-      "Knowledge hub and practical learning",
+      "Bronson Family Farm history and family legacy",
+      "Lansdowne airport and land context",
+      "The full ecosystem: food, health, learning, workforce, and commerce",
     ],
     image: "/images/learn.jpg",
   },
@@ -153,34 +153,34 @@ const shopItems = [
   },
 ];
 
-const learnModules = [
+const storyModules = [
   {
-    id: "nutrition",
-    title: "Nutrition & Natural Food",
-    audience: "Families and community members",
+    id: "history",
+    title: "Our Story",
+    audience: "Bronson Family Farm history",
     description:
-      "Learn the difference between natural food and processed food, and how nutrition choices affect everyday health and energy.",
+      "How family legacy, community purpose, and the move to Youngstown shaped Bronson Family Farm.",
   },
   {
-    id: "growing",
-    title: "Growing Basics",
-    audience: "New and aspiring growers",
+    id: "ecosystem",
+    title: "The Ecosystem",
+    audience: "How it all connects",
     description:
-      "Simple entry points for planting, seedling care, seasonal growing, and building confidence in local food production.",
+      "How food, health, workforce, learning, commerce, and community support one another inside a single living system.",
   },
   {
-    id: "wellness",
-    title: "Health & Wellness",
-    audience: "Growers, workers, and families",
+    id: "airport",
+    title: "The Lansdowne Site",
+    audience: "Land and airport context",
     description:
-      "Explore how diet, movement, and practical wellness habits support healthier living for work, play, and daily life.",
+      "Why the airport setting matters, what makes the site unique, and how the farm vision grows within that landscape.",
   },
   {
-    id: "diabetes",
-    title: "Type II Diabetes Support",
-    audience: "Adults and caregivers",
+    id: "health",
+    title: "Health, Nutrition & Learning",
+    audience: "Wellness and education",
     description:
-      "Understand food choices, healthier habits, and practical strategies that support diabetes maintenance and daily decision-making.",
+      "How nutrition, natural food, wellness, and practical education fit inside the larger farm mission.",
   },
 ];
 
@@ -377,7 +377,7 @@ export default function App() {
 
   const [cart, setCart] = useState<Record<string, number>>({});
   const [showReturnNotice, setShowReturnNotice] = useState(false);
-  const [selectedLearnModule, setSelectedLearnModule] = useState<string | null>(
+  const [selectedStoryModule, setSelectedStoryModule] = useState<string | null>(
     null
   );
   const [selectedWorkforceTrack, setSelectedWorkforceTrack] = useState<
@@ -398,8 +398,8 @@ export default function App() {
     [cart]
   );
 
-  const activeLearnModule =
-    learnModules.find((module) => module.id === selectedLearnModule) ?? null;
+  const activeStoryModule =
+    storyModules.find((module) => module.id === selectedStoryModule) ?? null;
 
   const activeWorkforceTrack =
     workforceTracks.find((track) => track.id === selectedWorkforceTrack) ?? null;
@@ -474,14 +474,18 @@ export default function App() {
       <div style={styles.center}>
         <div style={styles.card}>
           <div style={styles.eyebrow}>Bronson Family Farm Ecosystem Demo</div>
-          <ImageBlock src="/images/hero-farm.jpg" alt="Bronson Family Farm hero" height={240} />
+          <ImageBlock
+            src="/images/hero-farm.jpg"
+            alt="Bronson Family Farm hero"
+            height={240}
+          />
           <h1 style={styles.title}>Bronson Family Farm</h1>
           <p style={styles.subtitle}>
             A Living Ecosystem for Growing, Learning, and Community
           </p>
           <p style={styles.entryText}>
             Explore first. Activate a role when ready. Move from inspiration to
-            commerce, learning, workforce opportunity, and community engagement.
+            commerce, story, workforce opportunity, and community engagement.
           </p>
           <button
             style={styles.button}
@@ -712,7 +716,7 @@ export default function App() {
                 <div style={styles.pickupBox}>
                   <strong>Pickup Flow</strong>
                   <p style={styles.infoText}>
-                    Customers shop live on GrownBy, then return here to continue exploring pickup, education, events, and the broader Bronson Family Farm ecosystem.
+                    Customers shop live on GrownBy, then return here to continue exploring pickup, story, events, and the broader Bronson Family Farm ecosystem.
                   </p>
                 </div>
               </div>
@@ -724,7 +728,7 @@ export default function App() {
     );
   }
 
-  if (selectedSection.id === "learn") {
+  if (selectedSection.id === "story") {
     return (
       <>
         <div style={styles.page}>
@@ -739,9 +743,9 @@ export default function App() {
               >
                 ← Back to Ecosystem
               </button>
-              <h2 style={styles.sectionTitle}>📚 Learn</h2>
+              <h2 style={styles.sectionTitle}>📖 Story & Ecosystem</h2>
               <p style={styles.headerText}>
-                Education, wellness, and practical community learning.
+                History, place, purpose, and how the ecosystem works.
               </p>
             </div>
 
@@ -754,11 +758,17 @@ export default function App() {
 
           <div style={styles.pageHero}>
             <div style={styles.pageHeroMain}>
-              <ImageBlock src="/images/learn.jpg" alt="Learn section" height={220} />
-              <h3 style={styles.pageHeading}>Learning Overview</h3>
+              <ImageBlock
+                src="/images/learn.jpg"
+                alt="Story and ecosystem section"
+                height={220}
+              />
+              <h3 style={styles.pageHeading}>Story Overview</h3>
               <p style={styles.pageBody}>
-                This section shows how Bronson Family Farm can teach nutrition,
-                growing, wellness, and healthier living through simple, welcoming learning pathways.
+                This section explains the history of Bronson Family Farm, the
+                family legacy behind it, the Lansdowne airport context, and how
+                food, health, learning, workforce, and commerce connect into one
+                living ecosystem.
               </p>
             </div>
 
@@ -766,7 +776,7 @@ export default function App() {
               <strong>Current role context</strong>
               <p style={styles.infoText}>
                 {activeRole
-                  ? `You are exploring as ${activeRole}. Learning stays open while your role unlocks added actions.`
+                  ? `You are exploring as ${activeRole}. Story stays open while your role unlocks added actions.`
                   : "You are exploring without an active role selected."}
               </p>
             </div>
@@ -775,12 +785,12 @@ export default function App() {
           <div style={styles.learnLayout}>
             <div>
               <div style={styles.learnGrid}>
-                {learnModules.map((module) => (
+                {storyModules.map((module) => (
                   <button
                     key={module.id}
                     style={styles.learnCardButton}
                     onClick={() => {
-                      setSelectedLearnModule(module.id);
+                      setSelectedStoryModule(module.id);
                       setStatusMessage(`${module.title} opened.`);
                     }}
                   >
@@ -788,7 +798,7 @@ export default function App() {
                       <div style={styles.productCategory}>{module.audience}</div>
                       <h3 style={styles.tileTitle}>{module.title}</h3>
                       <p style={styles.tileText}>{module.description}</p>
-                      <div style={styles.openText}>Open learning module →</div>
+                      <div style={styles.openText}>Open story module →</div>
                     </div>
                   </button>
                 ))}
@@ -796,28 +806,37 @@ export default function App() {
             </div>
 
             <div style={styles.learnPanel}>
-              <h3 style={styles.pageHeading}>Learning Focus</h3>
+              <h3 style={styles.pageHeading}>Story Focus</h3>
 
-              {!activeLearnModule ? (
+              {!activeStoryModule ? (
                 <p style={styles.infoText}>
-                  Select a learning module to preview how the education experience works.
+                  Select a story module to preview how the history and ecosystem
+                  are explained.
                 </p>
               ) : (
                 <div>
                   <div style={styles.pickupBox}>
-                    <strong>{activeLearnModule.title}</strong>
-                    <p style={styles.infoText}>{activeLearnModule.description}</p>
-                  </div>
-
-                  <div style={styles.pickupBox}>
-                    <strong>Audience</strong>
-                    <p style={styles.infoText}>{activeLearnModule.audience}</p>
-                  </div>
-
-                  <div style={styles.pickupBox}>
-                    <strong>What this module can become</strong>
+                    <strong>{activeStoryModule.title}</strong>
                     <p style={styles.infoText}>
-                      This can expand into guided lessons, videos, printable handouts, workshop registration, and community health education.
+                      {activeStoryModule.description}
+                    </p>
+                  </div>
+
+                  <div style={styles.pickupBox}>
+                    <strong>Why it matters</strong>
+                    <p style={styles.infoText}>
+                      This part of the demo explains not just what Bronson Family
+                      Farm does, but why it exists, where it lives, and why it
+                      matters to Youngstown and future generations.
+                    </p>
+                  </div>
+
+                  <div style={styles.pickupBox}>
+                    <strong>What this can become</strong>
+                    <p style={styles.infoText}>
+                      This can expand into timelines, family legacy visuals,
+                      airport context, site maps, and narrated ecosystem
+                      storytelling.
                     </p>
                   </div>
                 </div>
@@ -826,15 +845,15 @@ export default function App() {
               <div style={styles.cartFooter}>
                 <button
                   style={styles.button}
-                  onClick={() => setStatusMessage("Workshop pathway opened.")}
+                  onClick={() => setStatusMessage("Story pathway opened.")}
                 >
-                  View Workshop Pathway
+                  View Story Pathway
                 </button>
                 <button
                   style={styles.secondaryButton}
                   onClick={() => {
-                    setSelectedLearnModule(null);
-                    setStatusMessage("Learning selection cleared.");
+                    setSelectedStoryModule(null);
+                    setStatusMessage("Story selection cleared.");
                   }}
                 >
                   Clear Selection
@@ -1046,7 +1065,7 @@ export default function App() {
           <div style={styles.sectionBox}>
             <strong>Suggested next action</strong>
             <p style={styles.infoText}>
-              Shop, Learn, and Workforce are now the strongest real sections in the demo.
+              Shop, Story, and Workforce are now the strongest real sections in the demo.
             </p>
           </div>
         </div>
