@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 
-type Lang = "en" | "es" | "tl" | "it" | "jam" | "he";
+type Lang = "en" | "es" | "tl" | "it" | "patwa" | "he";
 type Section = "home" | "grow" | "shop" | "story" | "workforce" | "community" | "events";
 
 const imagePaths: Record<string, string> = {
   hero: "/GrowArea.jpg",
-  grow: "/GrowArea2.jpg",
+  grow: "/GrowArea.jpg",
   shop: "/GrowArea.jpg",
   story: "/GrowArea2.jpg",
-  workforce: "/GrowArea.jpg",
+  workforce: "/GrowArea2.jpg",
   community: "/GrowArea2.jpg",
-  events: "/GrowArea.jpg",
+  events: "/GrowArea2.jpg",
 };
 
 const labels = {
@@ -198,7 +198,7 @@ const labels = {
         "Questa area evidenzia mercati, visite, dimostrazioni pubbliche, incontri educativi e l’attivazione visibile dell’intero ecosistema.",
     },
   },
-  jam: {
+  patwa: {
     title: "Bronson Family Farm",
     subtitle:
       "A wan livin ecosystem weh root inna food, family, land, learning, an opportunity.",
@@ -324,7 +324,7 @@ export default function App() {
               <option value="es">Español</option>
               <option value="tl">Tagalog</option>
               <option value="it">Italiano</option>
-              <option value="jam">Patois</option>
+              <option value="patwa">Patwa</option>
               <option value="he">עברית</option>
             </select>
           </div>
@@ -381,7 +381,7 @@ export default function App() {
             <option value="es">Español</option>
             <option value="tl">Tagalog</option>
             <option value="it">Italiano</option>
-            <option value="jam">Patois</option>
+            <option value="patwa">Patwa</option>
             <option value="he">עברית</option>
           </select>
         </div>
