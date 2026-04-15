@@ -1,434 +1,127 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
-type SectionId =
-  | "grow"
-  | "shop"
-  | "story"
-  | "workforce"
-  | "community"
-  | "events";
+type Lang = "en" | "es" | "tl";
+type SectionId = "grow" | "shop" | "story" | "workforce" | "community" | "events";
 
-type Lang = "en" | "es" | "tl" | "it" | "pat" | "he";
-
-type Section = {
-  id: SectionId;
-  icon: string;
-};
-
-const SECTION_ORDER: Section[] = [
-  { id: "grow", icon: "🌱" },
-  { id: "shop", icon: "🛒" },
-  { id: "story", icon: "📖" },
-  { id: "workforce", icon: "👩🏽‍🌾" },
-  { id: "community", icon: "🤝" },
-  { id: "events", icon: "📅" },
-];
-
-const roles = [
-  "Guest",
-  "Customer",
-  "Grower",
-  "Volunteer",
-  "Youth Worker",
-  "Supervisor",
-  "Admin",
-];
-
-const languageLabels: Record<Lang, string> = {
-  en: "English",
-  es: "Español",
-  tl: "Tagalog",
-  it: "Italiano",
-  pat: "Patois",
-  he: "עברית",
-};
-
-const copy = {
+const labels = {
   en: {
-    enterTitle: "Bronson Family Farm",
-    enterSubtitle:
-      "A living ecosystem rooted in food, family, land, learning, and opportunity.",
-    enterBody:
-      "Bronson Family Farm is more than a farm. It is a community-centered ecosystem growing from the Lansdowne area of Youngstown—connecting fresh food, workforce development, health, education, and long-term family and regional renewal.",
-    enterButton: "Enter the Ecosystem",
-    ecosystemTitle: "Farm Ecosystem",
-    ecosystemSubtitle: "Explore first. Activate a role when ready.",
-    infoEyebrow: "Explore the Full System",
-    infoTitle: "One ecosystem. Multiple entry points.",
-    infoBody:
-      "Bronson Family Farm connects food, story, workforce, commerce, community, and events into one living system. Begin anywhere. Roles unlock added actions without limiting exploration.",
+    title: "Bronson Family Farm",
+    subtitle: "A living ecosystem rooted in food, family, land, learning, and opportunity.",
+    intro:
+      "Bronson Family Farm is more than a farm. It is a community-centered ecosystem connecting fresh food, workforce development, health, education, and long-term renewal.",
+    enter: "Enter the Ecosystem",
+    ecosystem: "Farm Ecosystem",
+    explore: "Explore first. Activate a role when ready.",
     activateRole: "Activate My Role",
-    roleActionsLabel: "Role Actions",
-    backToEcosystem: "← Back to Ecosystem",
-    enterSection: "Enter section",
+    roleActions: "Role Actions",
+    back: "← Back to Ecosystem",
     open: "Open",
-    returnToEcosystem: "Return to Ecosystem",
-    openSectionAction: "Open Section Action",
+    enterSection: "Enter section",
     communityTitle: "Join the Ecosystem",
-    communityBody:
-      "Whether you are a grower, volunteer, partner, or supporter, there is a place for you at Bronson Family Farm. This ecosystem grows through participation, shared knowledge, and community action.",
   },
   es: {
-    enterTitle: "Bronson Family Farm",
-    enterSubtitle:
-      "Un ecosistema vivo con raíces en la comida, la familia, la tierra, el aprendizaje y la oportunidad.",
-    enterBody:
-      "Bronson Family Farm es más que una granja. Es un ecosistema centrado en la comunidad que crece desde el área de Lansdowne en Youngstown, conectando alimentos frescos, desarrollo laboral, salud, educación y renovación familiar y regional a largo plazo.",
-    enterButton: "Entrar al Ecosistema",
-    ecosystemTitle: "Ecosistema de la Granja",
-    ecosystemSubtitle: "Explore primero. Active un rol cuando esté listo.",
-    infoEyebrow: "Explore el Sistema Completo",
-    infoTitle: "Un ecosistema. Múltiples puntos de entrada.",
-    infoBody:
-      "Bronson Family Farm conecta comida, historia, fuerza laboral, comercio, comunidad y eventos en un solo sistema vivo.",
+    title: "Bronson Family Farm",
+    subtitle: "Un ecosistema vivo con raíces en la comida, la familia, la tierra, el aprendizaje y la oportunidad.",
+    intro:
+      "Bronson Family Farm es más que una granja. Es un ecosistema centrado en la comunidad que conecta alimentos frescos, desarrollo laboral, salud y educación.",
+    enter: "Entrar al Ecosistema",
+    ecosystem: "Ecosistema de la Granja",
+    explore: "Explore primero. Active un rol cuando esté listo.",
     activateRole: "Activar mi rol",
-    roleActionsLabel: "Acciones del rol",
-    backToEcosystem: "← Volver al Ecosistema",
-    enterSection: "Entrar a la sección",
+    roleActions: "Acciones del rol",
+    back: "← Volver al Ecosistema",
     open: "Abrir",
-    returnToEcosystem: "Volver al Ecosistema",
-    openSectionAction: "Abrir acción de la sección",
+    enterSection: "Entrar a la sección",
     communityTitle: "Únase al Ecosistema",
-    communityBody:
-      "Ya sea productor, voluntario, socio o partidario, hay un lugar para usted en Bronson Family Farm.",
   },
   tl: {
-    enterTitle: "Bronson Family Farm",
-    enterSubtitle:
-      "Isang buhay na ecosystem na nakaugat sa pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
-    enterBody:
-      "Ang Bronson Family Farm ay higit pa sa isang bukid. Isa itong ecosystem na nakatuon sa komunidad sa Lansdowne area ng Youngstown.",
-    enterButton: "Pumasok sa Ecosystem",
-    ecosystemTitle: "Farm Ecosystem",
-    ecosystemSubtitle: "Mag-explore muna. Pumili ng role kapag handa na.",
-    infoEyebrow: "Galugarin ang Buong Sistema",
-    infoTitle: "Isang ecosystem. Maraming daan papasok.",
-    infoBody:
-      "Pinagdurugtong ng Bronson Family Farm ang pagkain, kuwento, trabaho, kalakalan, komunidad, at mga kaganapan.",
+    title: "Bronson Family Farm",
+    subtitle: "Isang buhay na ecosystem na nakaugat sa pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
+    intro:
+      "Ang Bronson Family Farm ay higit pa sa isang bukid. Isa itong ecosystem na nag-uugnay sa pagkain, trabaho, kalusugan, at pagkatuto.",
+    enter: "Pumasok sa Ecosystem",
+    ecosystem: "Farm Ecosystem",
+    explore: "Mag-explore muna. Pumili ng role kapag handa na.",
     activateRole: "Piliin ang Aking Role",
-    roleActionsLabel: "Mga Aksiyon ng Role",
-    backToEcosystem: "← Bumalik sa Ecosystem",
-    enterSection: "Buksan ang seksyon",
+    roleActions: "Mga Aksiyon ng Role",
+    back: "← Bumalik sa Ecosystem",
     open: "Buksan",
-    returnToEcosystem: "Bumalik sa Ecosystem",
-    openSectionAction: "Buksan ang aksiyon ng seksyon",
+    enterSection: "Buksan ang seksyon",
     communityTitle: "Sumali sa Ecosystem",
-    communityBody:
-      "May lugar para sa iyo sa Bronson Family Farm bilang grower, volunteer, partner, o supporter.",
   },
-  it: {
-    enterTitle: "Bronson Family Farm",
-    enterSubtitle:
-      "Un ecosistema vivo radicato in cibo, famiglia, terra, apprendimento e opportunità.",
-    enterBody:
-      "Bronson Family Farm è più di una fattoria. È un ecosistema centrato sulla comunità nell’area di Lansdowne a Youngstown.",
-    enterButton: "Entra nell’Ecosistema",
-    ecosystemTitle: "Ecosistema della Fattoria",
-    ecosystemSubtitle: "Esplora prima. Attiva un ruolo quando sei pronto.",
-    infoEyebrow: "Esplora l’intero sistema",
-    infoTitle: "Un ecosistema. Molti punti di accesso.",
-    infoBody:
-      "Bronson Family Farm unisce cibo, storia, lavoro, commercio, comunità ed eventi in un unico sistema vivente.",
-    activateRole: "Attiva il mio ruolo",
-    roleActionsLabel: "Azioni del ruolo",
-    backToEcosystem: "← Torna all’Ecosistema",
-    enterSection: "Entra nella sezione",
-    open: "Apri",
-    returnToEcosystem: "Torna all’Ecosistema",
-    openSectionAction: "Apri azione sezione",
-    communityTitle: "Unisciti all’Ecosistema",
-    communityBody:
-      "Che tu sia volontario, partner o sostenitore, c’è un posto per te a Bronson Family Farm.",
+};
+
+const sectionData = {
+  grow: {
+    icon: "🌱",
+    title: "Grow",
+    desc: "Crop planning, planting, production, and farm systems.",
+    detail:
+      "Explore crop planning, field readiness, seasonal growing, irrigation thinking, infrastructure, and the systems that support Bronson Family Farm’s production capacity.",
   },
-  pat: {
-    enterTitle: "Bronson Family Farm",
-    enterSubtitle:
-      "A livin ecosystem built pon food, family, land, learning, an opportunity.",
-    enterBody:
-      "Bronson Family Farm more than a farm. A community-centered ecosystem a grow from Lansdowne inna Youngstown.",
-    enterButton: "Enter di Ecosystem",
-    ecosystemTitle: "Farm Ecosystem",
-    ecosystemSubtitle: "Explore fus. Choose yuh role when yuh ready.",
-    infoEyebrow: "Explore di Whole System",
-    infoTitle: "One ecosystem. Nuff entry points.",
-    infoBody:
-      "Bronson Family Farm connect food, story, workforce, commerce, community, an events inna one livin system.",
-    activateRole: "Activate Mi Role",
-    roleActionsLabel: "Role Actions",
-    backToEcosystem: "← Guh Back to di Ecosystem",
-    enterSection: "Enter section",
-    open: "Open",
-    returnToEcosystem: "Return to Ecosystem",
-    openSectionAction: "Open Section Action",
-    communityTitle: "Join di Ecosystem",
-    communityBody:
-      "Whether yuh a grower, volunteer, partner, or supporter, yuh have a place yahso.",
+  shop: {
+    icon: "🛒",
+    title: "Shop",
+    desc: "Buy fresh produce and farm goods.",
+    detail:
+      "Browse products, build a sample cart, and connect to the live GrownBy store in a new tab.",
   },
-  he: {
-    enterTitle: "Bronson Family Farm",
-    enterSubtitle:
-      "מערכת אקולוגית חיה שמבוססת על מזון, משפחה, אדמה, למידה והזדמנות.",
-    enterBody:
-      "Bronson Family Farm היא יותר מחווה. זו מערכת אקולוגית קהילתית שצומחת מאזור לנסדאון ביונגסטאון.",
-    enterButton: "כניסה למערכת",
-    ecosystemTitle: "מערכת החווה",
-    ecosystemSubtitle: "אפשר לחקור קודם. לבחור תפקיד כשמוכנים.",
-    infoEyebrow: "לחקור את כל המערכת",
-    infoTitle: "מערכת אחת. נקודות כניסה רבות.",
-    infoBody:
-      "Bronson Family Farm מחברת מזון, סיפור, כוח עבודה, מסחר, קהילה ואירועים במערכת חיה אחת.",
-    activateRole: "בחירת תפקיד",
-    roleActionsLabel: "פעולות תפקיד",
-    backToEcosystem: "← חזרה למערכת",
-    enterSection: "כניסה לאזור",
-    open: "פתיחה",
-    returnToEcosystem: "חזרה למערכת",
-    openSectionAction: "פתיחת פעולה",
-    communityTitle: "להצטרף למערכת",
-    communityBody:
-      "בין אם אתם מתנדבים, שותפים או תומכים, יש לכם מקום ב-Bronson Family Farm.",
+  story: {
+    icon: "📖",
+    title: "Story & Ecosystem",
+    desc: "History, place, purpose, and how the ecosystem works.",
+    detail:
+      "Learn the history of Bronson Family Farm, the family legacy behind it, the Lansdowne airport context, and how food, health, learning, workforce, and commerce connect.",
   },
-} as const;
-
-const sectionContent = {
-  en: {
-    grow: {
-      title: "Grow",
-      desc: "Crop planning, planting, production, and farm systems.",
-      detail:
-        "Explore crop planning, field readiness, seasonal growing, irrigation thinking, infrastructure, and the systems that support Bronson Family Farm’s production capacity.",
-      highlights: [
-        "Seasonal crop planning",
-        "Field readiness and infrastructure",
-        "Production systems and workflow",
-      ],
-    },
-    shop: {
-      title: "Shop",
-      desc: "Buy fresh produce and farm goods.",
-      detail:
-        "See how customers browse products, build a cart, connect to the live GrownBy store, and return to the broader farm experience.",
-      highlights: [
-        "Marketplace and preorder flow",
-        "Pickup and customer access",
-        "Farm goods and produce pathways",
-      ],
-    },
-    story: {
-      title: "Story & Ecosystem",
-      desc: "History, place, purpose, and how the ecosystem works.",
-      detail:
-        "This section explains the history of Bronson Family Farm, the family legacy behind it, the Lansdowne airport context, and how food, health, learning, workforce, and commerce connect into one living ecosystem.",
-      highlights: [
-        "Bronson Family Farm history and family legacy",
-        "Lansdowne airport and land context",
-        "The full ecosystem: food, health, learning, workforce, and commerce",
-      ],
-    },
-    workforce: {
-      title: "Workforce",
-      desc: "Youth training and job pathways.",
-      detail:
-        "Follow the youth workforce pathway from participation to training, responsibility, skill-building, and future career readiness.",
-      highlights: [
-        "Youth training pathway",
-        "Responsibility and growth",
-        "Career readiness and transition",
-      ],
-    },
-    community: {
-      title: "Community",
-      desc: "Volunteers, families, and partnerships.",
-      detail:
-        "See how volunteers, families, supporters, funders, and partners enter the ecosystem and strengthen the work together.",
-      highlights: [
-        "Volunteer and family participation",
-        "Partner and supporter pathways",
-        "Community-centered engagement",
-      ],
-    },
-    events: {
-      title: "Events",
-      desc: "Markets, tours, demonstrations, and community days.",
-      detail:
-        "Experience how markets, tours, workshops, and seasonal gathering points activate the full farm ecosystem and bring people into the work.",
-      highlights: [
-        "Markets and tours",
-        "Community gathering points",
-        "Program and event activation",
-      ],
-    },
+  workforce: {
+    icon: "👩🏽‍🌾",
+    title: "Workforce",
+    desc: "Youth training and job pathways.",
+    detail:
+      "Follow the youth workforce pathway from participation to training, responsibility, skill-building, and future opportunity.",
   },
-} as const;
+  community: {
+    icon: "🤝",
+    title: "Community",
+    desc: "Volunteers, families, and partnerships.",
+    detail:
+      "See how volunteers, supporters, families, and partners enter the ecosystem and strengthen the work together.",
+  },
+  events: {
+    icon: "📅",
+    title: "Events",
+    desc: "Markets, tours, demonstrations, and community days.",
+    detail:
+      "Experience how markets, tours, and seasonal gatherings activate the full farm ecosystem.",
+  },
+};
 
-function t(lang: Lang) {
-  return copy[lang] ?? copy.en;
-}
+const roles = ["Guest", "Customer", "Grower", "Volunteer", "Youth Worker", "Supervisor", "Admin"];
 
-function roleDescription(role: string) {
-  switch (role) {
-    case "Guest":
-      return "Explore the ecosystem, learn the story, and view public experiences.";
-    case "Customer":
-      return "Explore freely while unlocking shopping, preorder, and order-related actions.";
-    case "Grower":
-      return "Explore the ecosystem while accessing crop, inventory, and fulfillment tools.";
-    case "Volunteer":
-      return "Explore the full ecosystem while accessing service opportunities, shifts, and support pathways.";
-    case "Youth Worker":
-      return "Explore the ecosystem while accessing training, progress, and assigned work pathways.";
-    case "Supervisor":
-      return "Explore everything while unlocking oversight, coordination, and evaluation tools.";
-    case "Admin":
-      return "Explore the ecosystem with full operational visibility and platform control.";
-    default:
-      return "Explore the ecosystem.";
-  }
-}
-
-function roleActions(role: string): string[] {
-  switch (role) {
-    case "Guest":
-      return ["Explore the Farm", "View Public Events", "Learn the Mission"];
-    case "Customer":
-      return ["Shop Products", "View Pickup Flow", "Review Orders"];
-    case "Grower":
-      return ["Manage Crops", "Update Inventory", "View Fulfillment"];
-    case "Volunteer":
-      return ["Sign Up for Shift", "View Orientation", "Track Service"];
-    case "Youth Worker":
-      return ["Open Training Track", "View Progress", "See Assignments"];
-    case "Supervisor":
-      return ["View Team Dashboard", "Assign Tasks", "Review Progress"];
-    case "Admin":
-      return ["Open Operations", "View Reports", "Manage Platform"];
-    default:
-      return ["Explore"];
-  }
-}
-
-function RoleModal({
-  onClose,
-  onSelect,
-}: {
-  onClose: () => void;
-  onSelect: (role: string) => void;
-}) {
-  return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <h3 style={styles.modalTitle}>Select Your Role</h3>
-        <p style={styles.modalText}>
-          Choose a role without losing access to the full ecosystem.
-        </p>
-
-        <div style={styles.roleGrid}>
-          {roles.map((role) => (
-            <button
-              key={role}
-              style={styles.roleButton}
-              onClick={() => onSelect(role)}
-            >
-              <div style={styles.roleButtonTitle}>{role}</div>
-              <div style={styles.roleButtonText}>{roleDescription(role)}</div>
-            </button>
-          ))}
-        </div>
-
-        <button style={styles.cancelButton} onClick={onClose}>
-          Cancel
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function RolePanel({
-  activeRole,
-  onExit,
-  onSwitch,
-  onAction,
-  label,
-}: {
-  activeRole: string;
-  onExit: () => void;
-  onSwitch: () => void;
-  onAction: (action: string) => void;
-  label: string;
-}) {
-  return (
-    <div style={styles.sidePanel}>
-      <div style={styles.sideEyebrow}>{label}</div>
-      <h3 style={styles.sideTitle}>{activeRole}</h3>
-      <p style={styles.sideText}>{roleDescription(activeRole)}</p>
-
-      <div style={styles.sideActionGroup}>
-        {roleActions(activeRole).map((action, index) => (
-          <button
-            key={action}
-            style={index === 0 ? styles.sidePrimary : styles.sideSecondary}
-            onClick={() => onAction(action)}
-          >
-            {action}
-          </button>
-        ))}
-      </div>
-
-      <button style={styles.sideSecondary} onClick={onSwitch}>
-        Switch Role
-      </button>
-      <button style={styles.sideSecondary} onClick={onExit}>
-        Exit Role
-      </button>
-    </div>
-  );
-}
+const shopItems = [
+  { id: "bubble", name: "Bubble Babies Starter Roll", price: 5 },
+  { id: "lettuce", name: "Lettuce Seedling Bundle", price: 5 },
+  { id: "collards", name: "Collard Green Bundle", price: 10 },
+  { id: "pepper", name: "Pepper Seedling Pack", price: 5 },
+];
 
 export default function App() {
   const [lang, setLang] = useState<Lang>("en");
   const [entered, setEntered] = useState(false);
+  const [section, setSection] = useState<SectionId | null>(null);
   const [showRoles, setShowRoles] = useState(false);
-  const [activeRole, setActiveRole] = useState<string | null>(null);
-  const [selectedSection, setSelectedSection] = useState<SectionId | null>(null);
-
+  const [role, setRole] = useState<string | null>(null);
+  const [status, setStatus] = useState("Welcome to the Bronson Family Farm ecosystem.");
   const [cart, setCart] = useState<Record<string, number>>({});
-  const [showReturnNotice, setShowReturnNotice] = useState(false);
-  const [selectedStoryModule, setSelectedStoryModule] = useState<string | null>(
-    null
-  );
-  const [selectedWorkforceTrack, setSelectedWorkforceTrack] = useState<
-    string | null
-  >(null);
-  const [statusMessage, setStatusMessage] = useState<string>(
-    "Welcome to the Bronson Family Farm ecosystem."
-  );
 
-  const ui = t(lang);
-  const content = sectionContent.en;
+  const ui = labels[lang];
 
-  const cartCount = useMemo(
-    () => Object.values(cart).reduce((sum, qty) => sum + qty, 0),
-    [cart]
-  );
-
-  const cartTotal = useMemo(
-    () =>
-      shopItems.reduce((sum, item) => sum + (cart[item.id] || 0) * item.price, 0),
-    [cart]
-  );
-
-  const activeStoryModule =
-    storyModules.find((module) => module.id === selectedStoryModule) ?? null;
-
-  const activeWorkforceTrack =
-    workforceTracks.find((track) => track.id === selectedWorkforceTrack) ?? null;
+  const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
+  const cartTotal = shopItems.reduce((sum, item) => sum + (cart[item.id] || 0) * item.price, 0);
 
   const addToCart = (id: string) => {
-    setCart((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1,
-    }));
-    setStatusMessage("Item added to cart.");
+    setCart((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
+    setStatus("Item added to cart.");
   };
 
   const removeFromCart = (id: string) => {
@@ -439,271 +132,222 @@ export default function App() {
         delete next[id];
         return next;
       }
-      return {
-        ...prev,
-        [id]: current - 1,
-      };
+      return { ...prev, [id]: current - 1 };
     });
-    setStatusMessage("Item updated in cart.");
+    setStatus("Item updated in cart.");
   };
 
   const openGrownBy = () => {
-    setShowReturnNotice(true);
-    setStatusMessage("Opened GrownBy in a new tab.");
     window.open(
       "https://grownby.com/farms/bronson-family-farm/shop",
       "_blank",
       "noopener,noreferrer"
     );
+    setStatus("Opened GrownBy in a new tab.");
   };
 
-  const handleRoleAction = (action: string) => {
-    setStatusMessage(`${action} opened.`);
+  const roleActionLabel = (selectedRole: string | null) => {
+    if (!selectedRole) return ui.roleActions;
+    return `${ui.roleActions}: ${selectedRole}`;
   };
 
-  const renderRoleUI = () => (
-    <>
-      {showRoles && (
-        <RoleModal
-          onClose={() => setShowRoles(false)}
-          onSelect={(role) => {
-            setActiveRole(role);
-            setShowRoles(false);
-            setStatusMessage(`${role} role activated.`);
-          }}
-        />
-      )}
-
-      {activeRole && (
-        <RolePanel
-          activeRole={activeRole}
-          onExit={() => {
-            setActiveRole(null);
-            setStatusMessage("Role exited.");
-          }}
-          onSwitch={() => setShowRoles(true)}
-          onAction={handleRoleAction}
-          label={ui.roleActionsLabel}
-        />
-      )}
-    </>
+  const renderTopControls = () => (
+    <div style={styles.topControls}>
+      <select
+        value={lang}
+        onChange={(e) => setLang(e.target.value as Lang)}
+        style={styles.select}
+      >
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="tl">Tagalog</option>
+      </select>
+      <button style={styles.primaryButton} onClick={() => setShowRoles(true)}>
+        {role ? `Role: ${role}` : ui.activateRole}
+      </button>
+    </div>
   );
+
+  const renderRolePanel = () =>
+    role ? (
+      <div style={styles.rolePanel}>
+        <div style={styles.roleEyebrow}>{roleActionLabel(role)}</div>
+        <h3 style={styles.roleTitle}>{role}</h3>
+        <p style={styles.roleText}>The main screen is where you go. This side panel is what you can do as this role.</p>
+        <button style={styles.primaryButton} onClick={() => setStatus(`${role} action opened.`)}>
+          Open Main Action
+        </button>
+        <button style={styles.secondaryButton} onClick={() => setShowRoles(true)}>
+          Switch Role
+        </button>
+        <button
+          style={styles.secondaryButton}
+          onClick={() => {
+            setRole(null);
+            setStatus("Role exited.");
+          }}
+        >
+          Exit Role
+        </button>
+      </div>
+    ) : null;
+
+  const renderRoleModal = () =>
+    showRoles ? (
+      <div style={styles.overlay}>
+        <div style={styles.modal}>
+          <h3 style={styles.modalTitle}>Select Your Role</h3>
+          <p style={styles.modalText}>Choose a role without losing access to the full ecosystem.</p>
+          <div style={styles.roleGrid}>
+            {roles.map((r) => (
+              <button
+                key={r}
+                style={styles.roleCard}
+                onClick={() => {
+                  setRole(r);
+                  setShowRoles(false);
+                  setStatus(`${r} role activated.`);
+                }}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+          <button style={styles.secondaryButton} onClick={() => setShowRoles(false)}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    ) : null;
 
   if (!entered) {
     return (
-      <div style={styles.center}>
-        <div style={styles.languageBar}>
-          {Object.entries(languageLabels).map(([code, label]) => (
-            <button
-              key={code}
-              style={lang === code ? styles.langButtonActive : styles.langButton}
-              onClick={() => setLang(code as Lang)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <div style={styles.card}>
+      <div style={styles.pageCenter}>
+        <div style={styles.entryCard}>
           <div style={styles.eyebrow}>Bronson Family Farm Ecosystem Demo</div>
-          <h1 style={styles.title}>{ui.enterTitle}</h1>
-          <p style={styles.subtitle}>{ui.enterSubtitle}</p>
-          <p style={styles.entryText}>{ui.enterBody}</p>
+          <div style={styles.topControlsEntry}>
+            <select
+              value={lang}
+              onChange={(e) => setLang(e.target.value as Lang)}
+              style={styles.select}
+            >
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="tl">Tagalog</option>
+            </select>
+          </div>
+          <h1 style={styles.entryTitle}>{ui.title}</h1>
+          <p style={styles.entrySubtitle}>{ui.subtitle}</p>
+          <p style={styles.entryText}>{ui.intro}</p>
           <button
-            style={styles.button}
+            style={styles.primaryButton}
             onClick={() => {
               setEntered(true);
-              setStatusMessage("Entered the farm ecosystem.");
+              setStatus("Entered the farm ecosystem.");
             }}
           >
-            {ui.enterButton}
+            {ui.enter}
           </button>
         </div>
       </div>
     );
   }
 
-  if (!selectedSection) {
+  if (section === null) {
     return (
-      <>
-        <div style={styles.page}>
+      <div style={styles.page}>
+        <div style={styles.mainContent}>
           <div style={styles.header}>
             <div>
-              <h2 style={styles.sectionTitle}>{ui.ecosystemTitle}</h2>
-              <p style={styles.headerText}>{ui.ecosystemSubtitle}</p>
+              <h2 style={styles.pageTitle}>{ui.ecosystem}</h2>
+              <p style={styles.pageSubtitle}>{ui.explore}</p>
             </div>
-
-            <div style={styles.topControls}>
-              <select
-                value={lang}
-                onChange={(e) => setLang(e.target.value as Lang)}
-                style={styles.langSelect}
-              >
-                {Object.entries(languageLabels).map(([code, label]) => (
-                  <option key={code} value={code}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-
-              <button style={styles.button} onClick={() => setShowRoles(true)}>
-                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
-              </button>
-            </div>
+            {renderTopControls()}
           </div>
 
-          <div style={styles.statusBar}>{statusMessage}</div>
+          <div style={styles.statusBar}>{status}</div>
 
           <div style={styles.infoBox}>
             <div style={styles.infoEyebrow}>{ui.infoEyebrow}</div>
             <h3 style={styles.infoTitle}>{ui.infoTitle}</h3>
-            <p style={styles.infoText}>{ui.infoBody}</p>
+            <p style={styles.infoBody}>{ui.infoBody}</p>
           </div>
 
-          <div style={styles.grid}>
-            {SECTION_ORDER.map((section) => {
-              const s = content[section.id];
+          <div style={styles.cardGrid}>
+            {(Object.keys(sectionData) as SectionId[]).map((id) => {
+              const item = sectionData[id];
               return (
                 <button
-                  key={section.id}
-                  style={styles.tileButton}
+                  key={id}
+                  style={styles.sectionCard}
                   onClick={() => {
-                    setSelectedSection(section.id);
-                    setStatusMessage(`${s.title} opened.`);
+                    setSection(id);
+                    setStatus(`${item.title} opened.`);
                   }}
                 >
-                  <div style={styles.tile}>
-                    <div style={styles.sectionAccent} />
-                    <div style={styles.tileTopRow}>
-                      <div style={styles.tileIconWrap}>
-                        <span style={styles.tileIcon}>{section.icon}</span>
-                        <h3 style={styles.tileTitle}>{s.title}</h3>
-                      </div>
-                      <span style={styles.tileBadge}>{ui.open}</span>
+                  <div style={styles.cardAccent} />
+                  <div style={styles.cardHeader}>
+                    <div style={styles.cardIconTitle}>
+                      <span style={styles.cardIcon}>{item.icon}</span>
+                      <span style={styles.cardTitle}>{item.title}</span>
                     </div>
-                    <p style={styles.tileText}>{s.desc}</p>
-                    <div style={styles.tileFooter}>
-                      <span style={styles.openText}>{ui.enterSection}</span>
-                      <span style={styles.arrow}>→</span>
-                    </div>
+                    <span style={styles.openBadge}>{ui.open}</span>
+                  </div>
+                  <div style={styles.cardDesc}>{item.desc}</div>
+                  <div style={styles.cardFooter}>
+                    <span style={styles.enterLink}>{ui.enterSection}</span>
+                    <span style={styles.arrow}>→</span>
                   </div>
                 </button>
               );
             })}
           </div>
         </div>
-        {renderRoleUI()}
-      </>
+
+        {renderRolePanel()}
+        {renderRoleModal()}
+      </div>
     );
   }
 
-  if (selectedSection === "shop") {
+  if (section === "shop") {
     return (
-      <>
-        <div style={styles.page}>
+      <div style={styles.page}>
+        <div style={styles.mainContent}>
           <div style={styles.header}>
             <div>
-              <button
-                style={styles.backLink}
-                onClick={() => {
-                  setSelectedSection(null);
-                  setStatusMessage("Returned to ecosystem.");
-                }}
-              >
-                {ui.backToEcosystem}
+              <button style={styles.backButton} onClick={() => setSection(null)}>
+                {ui.back}
               </button>
-              <h2 style={styles.sectionTitle}>🛒 {content.shop.title}</h2>
-              <p style={styles.headerText}>
-                A working marketplace demo for Bronson Family Farm.
-              </p>
+              <h2 style={styles.pageTitle}>🛒 Shop</h2>
+              <p style={styles.pageSubtitle}>{sectionData.shop.desc}</p>
             </div>
-
-            <div style={styles.topControls}>
-              <select
-                value={lang}
-                onChange={(e) => setLang(e.target.value as Lang)}
-                style={styles.langSelect}
-              >
-                {Object.entries(languageLabels).map(([code, label]) => (
-                  <option key={code} value={code}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              <button style={styles.button} onClick={() => setShowRoles(true)}>
-                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
-              </button>
-            </div>
+            {renderTopControls()}
           </div>
 
-          <div style={styles.statusBar}>{statusMessage}</div>
+          <div style={styles.statusBar}>{status}</div>
 
-          {showReturnNotice && (
-            <div style={styles.returnBanner}>
-              <strong>Live shop opened in a new tab.</strong>
-              <p style={styles.returnBannerText}>
-                When you finish on GrownBy, come back to this Bronson Family Farm tab to continue the experience.
-              </p>
-              <div style={styles.returnBannerActions}>
-                <button
-                  style={styles.secondaryButton}
-                  onClick={() => setShowReturnNotice(false)}
-                >
-                  Continue Here
-                </button>
-                <button
-                  style={styles.button}
-                  onClick={() => {
-                    setSelectedSection(null);
-                    setStatusMessage("Returned to ecosystem.");
-                  }}
-                >
-                  {ui.returnToEcosystem}
-                </button>
-              </div>
-            </div>
-          )}
+          <div style={styles.twoCol}>
+            <div style={styles.panel}>
+              <div style={styles.cardAccentLarge} />
+              <h3 style={styles.panelTitle}>Marketplace Overview</h3>
+              <p style={styles.panelText}>{sectionData.shop.detail}</p>
 
-          <div style={styles.pageHero}>
-            <div style={styles.pageHeroMain}>
-              <div style={styles.sectionAccentLarge} />
-              <h3 style={styles.pageHeading}>Marketplace Overview</h3>
-              <p style={styles.pageBody}>{content.shop.detail}</p>
-            </div>
-
-            <div style={styles.pageHeroSide}>
-              <strong>Cart Summary</strong>
-              <p style={styles.infoText}>Items: {cartCount}</p>
-              <p style={styles.infoText}>Total: ${cartTotal.toFixed(2)}</p>
-            </div>
-          </div>
-
-          <div style={styles.shopLayout}>
-            <div>
-              <div style={styles.productGrid}>
+              <div style={styles.shopGrid}>
                 {shopItems.map((item) => {
                   const qty = cart[item.id] || 0;
                   return (
                     <div key={item.id} style={styles.productCard}>
-                      <div style={styles.productCategory}>{item.category}</div>
-                      <h3 style={styles.productTitle}>{item.name}</h3>
-                      <p style={styles.tileText}>{item.note}</p>
-                      <div style={styles.priceRow}>
-                        <strong style={styles.priceText}>
-                          ${item.price.toFixed(2)}
-                        </strong>
+                      <div style={styles.productCategory}>Product</div>
+                      <h4 style={styles.productTitle}>{item.name}</h4>
+                      <div style={styles.productPriceRow}>
+                        <strong>${item.price.toFixed(2)}</strong>
                         <div style={styles.qtyControls}>
-                          <button
-                            style={styles.smallButton}
-                            onClick={() => removeFromCart(item.id)}
-                          >
+                          <button style={styles.smallButton} onClick={() => removeFromCart(item.id)}>
                             −
                           </button>
-                          <span style={styles.qtyText}>{qty}</span>
-                          <button
-                            style={styles.smallButton}
-                            onClick={() => addToCart(item.id)}
-                          >
+                          <span>{qty}</span>
+                          <button style={styles.smallButton} onClick={() => addToCart(item.id)}>
                             +
                           </button>
                         </div>
@@ -714,481 +358,254 @@ export default function App() {
               </div>
             </div>
 
-            <div style={styles.cartPanel}>
-              <h3 style={styles.pageHeading}>Current Cart</h3>
-
-              {cartCount === 0 ? (
-                <p style={styles.infoText}>No items added yet.</p>
-              ) : (
-                <div style={styles.cartList}>
-                  {shopItems
-                    .filter((item) => cart[item.id])
-                    .map((item) => (
-                      <div key={item.id} style={styles.cartItem}>
-                        <div>
-                          <strong>{item.name}</strong>
-                          <p style={styles.cartMeta}>
-                            Qty: {cart[item.id]} × ${item.price.toFixed(2)}
-                          </p>
-                        </div>
-                        <strong>
-                          ${((cart[item.id] || 0) * item.price).toFixed(2)}
-                        </strong>
-                      </div>
-                    ))}
-                </div>
-              )}
-
-              <div style={styles.cartFooter}>
-                <div style={styles.cartTotalRow}>
-                  <span>Total</span>
-                  <strong>${cartTotal.toFixed(2)}</strong>
-                </div>
-
-                <button style={styles.button} onClick={openGrownBy}>
-                  Shop Live on GrownBy →
-                </button>
-
-                <button
-                  style={styles.secondaryButton}
-                  onClick={() => {
-                    setSelectedSection(null);
-                    setStatusMessage("Returned to farm experience.");
-                  }}
-                >
-                  Return to Farm Experience
-                </button>
-
-                <button
-                  style={styles.secondaryButton}
-                  onClick={() => setStatusMessage("Pickup Information opened.")}
-                >
-                  Pickup Information
-                </button>
-              </div>
+            <div style={styles.sideColumnPanel}>
+              <h3 style={styles.panelTitle}>Current Cart</h3>
+              <p style={styles.panelText}>Items: {cartCount}</p>
+              <p style={styles.panelText}>Total: ${cartTotal.toFixed(2)}</p>
+              <button style={styles.primaryButton} onClick={openGrownBy}>
+                Shop Live on GrownBy →
+              </button>
+              <button style={styles.secondaryButton} onClick={() => setSection(null)}>
+                Return to Farm Experience
+              </button>
+              <button
+                style={styles.secondaryButton}
+                onClick={() => setStatus("Pickup Information opened.")}
+              >
+                Pickup Information
+              </button>
             </div>
           </div>
         </div>
-        {renderRoleUI()}
-      </>
+
+        {renderRolePanel()}
+        {renderRoleModal()}
+      </div>
     );
   }
 
-  if (selectedSection === "story") {
+  if (section === "story") {
     return (
-      <>
-        <div style={styles.page}>
+      <div style={styles.page}>
+        <div style={styles.mainContent}>
           <div style={styles.header}>
             <div>
-              <button
-                style={styles.backLink}
-                onClick={() => {
-                  setSelectedSection(null);
-                  setStatusMessage("Returned to ecosystem.");
-                }}
-              >
-                {ui.backToEcosystem}
+              <button style={styles.backButton} onClick={() => setSection(null)}>
+                {ui.back}
               </button>
-              <h2 style={styles.sectionTitle}>📖 {content.story.title}</h2>
-              <p style={styles.headerText}>{content.story.desc}</p>
+              <h2 style={styles.pageTitle}>📖 Story & Ecosystem</h2>
+              <p style={styles.pageSubtitle}>{sectionData.story.desc}</p>
             </div>
-
-            <div style={styles.topControls}>
-              <select
-                value={lang}
-                onChange={(e) => setLang(e.target.value as Lang)}
-                style={styles.langSelect}
-              >
-                {Object.entries(languageLabels).map(([code, label]) => (
-                  <option key={code} value={code}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              <button style={styles.button} onClick={() => setShowRoles(true)}>
-                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
-              </button>
-            </div>
+            {renderTopControls()}
           </div>
 
-          <div style={styles.statusBar}>{statusMessage}</div>
+          <div style={styles.statusBar}>{status}</div>
 
-          <div style={styles.pageHero}>
-            <div style={styles.pageHeroMain}>
-              <div style={styles.sectionAccentLarge} />
-              <h3 style={styles.pageHeading}>Story Overview</h3>
-              <p style={styles.pageBody}>
+          <div style={styles.twoCol}>
+            <div style={styles.panel}>
+              <div style={styles.cardAccentLarge} />
+              <h3 style={styles.panelTitle}>Story Overview</h3>
+              <p style={styles.panelText}>
                 Bronson Family Farm is rooted in family legacy, community restoration,
                 and the belief that land can do more than produce crops. Here, food,
                 health, learning, workforce development, and community participation
                 come together in one living ecosystem—shaped by the unique Lansdowne
                 airport setting and built for future generations.
               </p>
-            </div>
 
-            <div style={styles.pageHeroSide}>
-              <strong>Current role context</strong>
-              <p style={styles.infoText}>
-                {activeRole
-                  ? `You are exploring as ${activeRole}. Story stays open while your role unlocks added actions.`
-                  : "You are exploring without an active role selected."}
-              </p>
-            </div>
-          </div>
-
-          <div style={styles.learnLayout}>
-            <div>
-              <div style={styles.learnGrid}>
+              <div style={styles.storyGrid}>
                 {storyModules.map((module) => (
                   <button
                     key={module.id}
-                    style={styles.learnCardButton}
+                    style={styles.storyCard}
                     onClick={() => {
                       setSelectedStoryModule(module.id);
-                      setStatusMessage(`${module.title} opened.`);
+                      setStatus(`${module.title} opened.`);
                     }}
                   >
-                    <div style={styles.learnCard}>
-                      <div style={styles.productCategory}>{module.audience}</div>
-                      <h3 style={styles.tileTitle}>{module.title}</h3>
-                      <p style={styles.tileText}>{module.description}</p>
-                      <div style={styles.openText}>Open story module →</div>
-                    </div>
+                    <div style={styles.productCategory}>{module.audience}</div>
+                    <h4 style={styles.storyCardTitle}>{module.title}</h4>
+                    <p style={styles.storyCardText}>{module.description}</p>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div style={styles.learnPanel}>
-              <h3 style={styles.pageHeading}>Story Focus</h3>
-
-              {!activeStoryModule ? (
-                <p style={styles.infoText}>
-                  Select a story module to preview how the history and ecosystem
-                  are explained.
-                </p>
+            <div style={styles.sideColumnPanel}>
+              <h3 style={styles.panelTitle}>Story Focus</h3>
+              {selectedStoryModule ? (
+                <>
+                  <p style={styles.panelText}>
+                    {
+                      storyModules.find((m) => m.id === selectedStoryModule)
+                        ?.description
+                    }
+                  </p>
+                  <button
+                    style={styles.primaryButton}
+                    onClick={() => setStatus("Story pathway opened.")}
+                  >
+                    View Story Pathway
+                  </button>
+                </>
               ) : (
-                <div>
-                  <div style={styles.pickupBox}>
-                    <strong>{activeStoryModule.title}</strong>
-                    <p style={styles.infoText}>
-                      {activeStoryModule.description}
-                    </p>
-                  </div>
-
-                  <div style={styles.pickupBox}>
-                    <strong>Why it matters</strong>
-                    <p style={styles.infoText}>
-                      This demo is not just showing farm activity. It shows how
-                      Bronson Family Farm can become a model for community-centered
-                      renewal through food access, education, youth opportunity,
-                      wellness, and shared economic participation.
-                    </p>
-                  </div>
-
-                  <div style={styles.pickupBox}>
-                    <strong>What this can become</strong>
-                    <p style={styles.infoText}>
-                      This can expand into timelines, family legacy visuals,
-                      airport context, site maps, and narrated ecosystem storytelling.
-                    </p>
-                  </div>
-                </div>
+                <p style={styles.panelText}>
+                  Select a story module to preview the history and ecosystem narrative.
+                </p>
               )}
-
-              <div style={styles.cartFooter}>
-                <button
-                  style={styles.button}
-                  onClick={() => setStatusMessage("Story pathway opened.")}
-                >
-                  View Story Pathway
-                </button>
-                <button
-                  style={styles.secondaryButton}
-                  onClick={() => {
-                    setSelectedStoryModule(null);
-                    setStatusMessage("Story selection cleared.");
-                  }}
-                >
-                  Clear Selection
-                </button>
-              </div>
             </div>
           </div>
         </div>
-        {renderRoleUI()}
-      </>
+
+        {renderRolePanel()}
+        {renderRoleModal()}
+      </div>
     );
   }
 
-  if (selectedSection === "workforce") {
+  if (section === "workforce") {
     return (
-      <>
-        <div style={styles.page}>
+      <div style={styles.page}>
+        <div style={styles.mainContent}>
           <div style={styles.header}>
             <div>
-              <button
-                style={styles.backLink}
-                onClick={() => {
-                  setSelectedSection(null);
-                  setStatusMessage("Returned to ecosystem.");
-                }}
-              >
-                {ui.backToEcosystem}
+              <button style={styles.backButton} onClick={() => setSection(null)}>
+                {ui.back}
               </button>
-              <h2 style={styles.sectionTitle}>👩🏽‍🌾 {content.workforce.title}</h2>
-              <p style={styles.headerText}>{content.workforce.desc}</p>
+              <h2 style={styles.pageTitle}>👩🏽‍🌾 Workforce</h2>
+              <p style={styles.pageSubtitle}>{sectionData.workforce.desc}</p>
             </div>
-
-            <div style={styles.topControls}>
-              <select
-                value={lang}
-                onChange={(e) => setLang(e.target.value as Lang)}
-                style={styles.langSelect}
-              >
-                {Object.entries(languageLabels).map(([code, label]) => (
-                  <option key={code} value={code}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              <button style={styles.button} onClick={() => setShowRoles(true)}>
-                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
-              </button>
-            </div>
+            {renderTopControls()}
           </div>
 
-          <div style={styles.statusBar}>{statusMessage}</div>
+          <div style={styles.statusBar}>{status}</div>
 
-          <div style={styles.pageHero}>
-            <div style={styles.pageHeroMain}>
-              <div style={styles.sectionAccentLarge} />
-              <h3 style={styles.pageHeading}>Workforce Overview</h3>
-              <p style={styles.pageBody}>{content.workforce.detail}</p>
-            </div>
+          <div style={styles.twoCol}>
+            <div style={styles.panel}>
+              <div style={styles.cardAccentLarge} />
+              <h3 style={styles.panelTitle}>Workforce Overview</h3>
+              <p style={styles.panelText}>{sectionData.workforce.detail}</p>
 
-            <div style={styles.pageHeroSide}>
-              <strong>Current role context</strong>
-              <p style={styles.infoText}>
-                {activeRole
-                  ? `You are exploring as ${activeRole}. Workforce stays open while your role unlocks added actions.`
-                  : "You are exploring without an active role selected."}
-              </p>
-            </div>
-          </div>
-
-          <div style={styles.learnLayout}>
-            <div>
-              <div style={styles.learnGrid}>
+              <div style={styles.storyGrid}>
                 {workforceTracks.map((track) => (
                   <button
                     key={track.id}
-                    style={styles.learnCardButton}
+                    style={styles.storyCard}
                     onClick={() => {
                       setSelectedWorkforceTrack(track.id);
-                      setStatusMessage(`${track.title} opened.`);
+                      setStatus(`${track.title} opened.`);
                     }}
                   >
-                    <div style={styles.learnCard}>
-                      <div style={styles.productCategory}>Workforce Track</div>
-                      <h3 style={styles.tileTitle}>{track.title}</h3>
-                      <p style={styles.tileText}>{track.description}</p>
-                      <div style={styles.openText}>Open track →</div>
-                    </div>
+                    <div style={styles.productCategory}>Workforce Track</div>
+                    <h4 style={styles.storyCardTitle}>{track.title}</h4>
+                    <p style={styles.storyCardText}>{track.description}</p>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div style={styles.learnPanel}>
-              <h3 style={styles.pageHeading}>Track Focus</h3>
-
-              {!activeWorkforceTrack ? (
-                <p style={styles.infoText}>
-                  Select a workforce track to preview how youth move through the experience.
-                </p>
+            <div style={styles.sideColumnPanel}>
+              <h3 style={styles.panelTitle}>Track Focus</h3>
+              {selectedWorkforceTrack ? (
+                <>
+                  <p style={styles.panelText}>
+                    {
+                      workforceTracks.find((t) => t.id === selectedWorkforceTrack)
+                        ?.description
+                    }
+                  </p>
+                  <button
+                    style={styles.primaryButton}
+                    onClick={() => setStatus("Workforce pathway opened.")}
+                  >
+                    Open Workforce Pathway
+                  </button>
+                </>
               ) : (
-                <div>
-                  <div style={styles.pickupBox}>
-                    <strong>{activeWorkforceTrack.title}</strong>
-                    <p style={styles.infoText}>
-                      {activeWorkforceTrack.description}
-                    </p>
-                  </div>
-
-                  <div style={styles.pickupBox}>
-                    <strong>Program Value</strong>
-                    <p style={styles.infoText}>
-                      This track reinforces work habits, responsibility, confidence, and a real sense of contribution.
-                    </p>
-                  </div>
-
-                  <div style={styles.pickupBox}>
-                    <strong>What this can become</strong>
-                    <p style={styles.infoText}>
-                      This can expand into attendance, progress tracking, supervisor observations, badges, and pathway documentation.
-                    </p>
-                  </div>
-                </div>
+                <p style={styles.panelText}>
+                  Select a workforce track to preview the pathway.
+                </p>
               )}
-
-              <div style={styles.cartFooter}>
-                <button
-                  style={styles.button}
-                  onClick={() => setStatusMessage("Workforce pathway opened.")}
-                >
-                  Open Workforce Pathway
-                </button>
-                <button
-                  style={styles.secondaryButton}
-                  onClick={() => {
-                    setSelectedWorkforceTrack(null);
-                    setStatusMessage("Workforce selection cleared.");
-                  }}
-                >
-                  Clear Selection
-                </button>
-              </div>
             </div>
           </div>
         </div>
-        {renderRoleUI()}
-      </>
+
+        {renderRolePanel()}
+        {renderRoleModal()}
+      </div>
     );
   }
 
-  if (selectedSection === "community") {
+  if (section === "community") {
     return (
-      <>
-        <div style={styles.page}>
+      <div style={styles.page}>
+        <div style={styles.mainContent}>
           <div style={styles.header}>
             <div>
-              <button
-                style={styles.backLink}
-                onClick={() => {
-                  setSelectedSection(null);
-                  setStatusMessage("Returned to ecosystem.");
-                }}
-              >
-                {ui.backToEcosystem}
+              <button style={styles.backButton} onClick={() => setSection(null)}>
+                {ui.back}
               </button>
-              <h2 style={styles.sectionTitle}>🤝 {content.community.title}</h2>
-              <p style={styles.headerText}>{content.community.desc}</p>
+              <h2 style={styles.pageTitle}>🤝 Community</h2>
+              <p style={styles.pageSubtitle}>{sectionData.community.desc}</p>
             </div>
-
-            <div style={styles.topControls}>
-              <select
-                value={lang}
-                onChange={(e) => setLang(e.target.value as Lang)}
-                style={styles.langSelect}
-              >
-                {Object.entries(languageLabels).map(([code, label]) => (
-                  <option key={code} value={code}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              <button style={styles.button} onClick={() => setShowRoles(true)}>
-                {activeRole ? `Role: ${activeRole}` : ui.activateRole}
-              </button>
-            </div>
+            {renderTopControls()}
           </div>
 
-          <div style={styles.statusBar}>{statusMessage}</div>
+          <div style={styles.statusBar}>{status}</div>
 
-          <div style={styles.pageHero}>
-            <div style={styles.pageHeroMain}>
-              <div style={styles.sectionAccentLarge} />
-              <h3 style={styles.pageHeading}>{ui.communityTitle}</h3>
-              <p style={styles.pageBody}>{ui.communityBody}</p>
+          <div style={styles.panel}>
+            <div style={styles.cardAccentLarge} />
+            <h3 style={styles.panelTitle}>{ui.communityTitle}</h3>
+            <p style={styles.panelText}>{ui.communityBody}</p>
+
+            <div style={styles.storyGrid}>
+              {communityPaths.map((path) => (
+                <div key={path.id} style={styles.storyCardStatic}>
+                  <div style={styles.productCategory}>Join</div>
+                  <h4 style={styles.storyCardTitle}>{path.title}</h4>
+                  <p style={styles.storyCardText}>{path.description}</p>
+                  <button
+                    style={{ ...styles.primaryButton, marginTop: 12 }}
+                    onClick={() => setStatus(`${path.action} opened.`)}
+                  >
+                    {path.action}
+                  </button>
+                </div>
+              ))}
             </div>
-
-            <div style={styles.pageHeroSide}>
-              <strong>Community Focus</strong>
-              <p style={styles.infoText}>
-                This section helps people see how they can step into the farm ecosystem in a practical and immediate way.
-              </p>
-            </div>
-          </div>
-
-          <div style={styles.learnGrid}>
-            {communityPaths.map((path) => (
-              <div key={path.id} style={styles.learnCard}>
-                <div style={styles.productCategory}>Join</div>
-                <h3 style={styles.tileTitle}>{path.title}</h3>
-                <p style={styles.tileText}>{path.description}</p>
-                <button
-                  style={{ ...styles.button, marginTop: "14px" }}
-                  onClick={() => setStatusMessage(`${path.action} opened.`)}
-                >
-                  {path.action}
-                </button>
-              </div>
-            ))}
           </div>
         </div>
-        {renderRoleUI()}
-      </>
+
+        {renderRolePanel()}
+        {renderRoleModal()}
+      </div>
     );
   }
 
-  const active = content[selectedSection];
+  const active = sectionData[section];
 
   return (
-    <>
-      <div style={styles.page}>
+    <div style={styles.page}>
+      <div style={styles.mainContent}>
         <div style={styles.header}>
           <div>
-            <button
-              style={styles.backLink}
-              onClick={() => {
-                setSelectedSection(null);
-                setStatusMessage("Returned to ecosystem.");
-              }}
-            >
-              {ui.backToEcosystem}
+            <button style={styles.backButton} onClick={() => setSection(null)}>
+              {ui.back}
             </button>
-            <h2 style={styles.sectionTitle}>
-              {SECTION_ORDER.find((s) => s.id === selectedSection)?.icon} {active.title}
+            <h2 style={styles.pageTitle}>
+              {active.icon} {active.title}
             </h2>
-            <p style={styles.headerText}>{active.desc}</p>
+            <p style={styles.pageSubtitle}>{active.desc}</p>
           </div>
-
-          <div style={styles.topControls}>
-            <select
-              value={lang}
-              onChange={(e) => setLang(e.target.value as Lang)}
-              style={styles.langSelect}
-            >
-              {Object.entries(languageLabels).map(([code, label]) => (
-                <option key={code} value={code}>
-                  {label}
-                </option>
-              ))}
-            </select>
-            <button style={styles.button} onClick={() => setShowRoles(true)}>
-              {activeRole ? `Role: ${activeRole}` : ui.activateRole}
-            </button>
-          </div>
+          {renderTopControls()}
         </div>
 
-        <div style={styles.statusBar}>{statusMessage}</div>
+        <div style={styles.statusBar}>{status}</div>
 
-        <div style={styles.pageHero}>
-          <div style={styles.pageHeroMain}>
-            <div style={styles.sectionAccentLarge} />
-            <h3 style={styles.pageHeading}>Section Overview</h3>
-            <p style={styles.pageBody}>{active.detail}</p>
-          </div>
-
-          <div style={styles.pageHeroSide}>
-            <strong>Current role context</strong>
-            <p style={styles.infoText}>
-              {activeRole
-                ? `You are exploring as ${activeRole}. This section stays open while your role unlocks added actions.`
-                : "You are exploring without an active role selected."}
-            </p>
-          </div>
+        <div style={styles.panel}>
+          <div style={styles.cardAccentLarge} />
+          <h3 style={styles.panelTitle}>Section Overview</h3>
+          <p style={styles.panelText}>{active.detail}</p>
         </div>
 
         <div style={styles.sectionGrid}>
@@ -1205,108 +622,72 @@ export default function App() {
 
           <div style={styles.sectionBox}>
             <strong>What this becomes next</strong>
-            <p style={styles.infoText}>
+            <p style={styles.infoBody}>
               This area can become a true destination with tools, workflows,
               dashboards, and role-based actions tailored to the visitor.
-            </p>
-          </div>
-
-          <div style={styles.sectionBox}>
-            <strong>Suggested next action</strong>
-            <p style={styles.infoText}>
-              Shop, Story, Workforce, and Community now carry the strongest parts of the demo.
             </p>
           </div>
         </div>
 
         <div style={styles.sectionActions}>
-          {!activeRole && (
-            <button style={styles.button} onClick={() => setShowRoles(true)}>
-              {ui.activateRole}
-            </button>
-          )}
           <button
             style={styles.secondaryButton}
             onClick={() => {
-              setSelectedSection(null);
-              setStatusMessage("Returned to ecosystem.");
+              setSection(null);
+              setStatus("Returned to ecosystem.");
             }}
           >
             {ui.returnToEcosystem}
           </button>
           <button
             style={styles.secondaryButton}
-            onClick={() => setStatusMessage(`${active.title} action opened.`)}
+            onClick={() => setStatus(`${active.title} action opened.`)}
           >
             {ui.openSectionAction}
           </button>
         </div>
       </div>
-      {renderRoleUI()}
-    </>
+
+      {renderRolePanel()}
+      {renderRoleModal()}
+    </div>
   );
 }
 
-const styles: any = {
-  center: {
+const styles: Record<string, React.CSSProperties> = {
+  page: {
     minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
     background: "#eaf5ee",
     fontFamily: "Arial, sans-serif",
     padding: "24px",
+    boxSizing: "border-box",
+    display: "flex",
+    gap: "24px",
+    alignItems: "flex-start",
   },
-  card: {
+  pageCenter: {
+    minHeight: "100vh",
+    background: "#eaf5ee",
+    fontFamily: "Arial, sans-serif",
+    padding: "24px",
+    boxSizing: "border-box",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  mainContent: {
+    flex: 1,
+    minWidth: 0,
+  },
+  entryCard: {
     background: "#fff",
     padding: "40px",
     borderRadius: "16px",
     border: "2px solid #2f6b3c",
-    textAlign: "center",
     boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
     maxWidth: "760px",
     width: "100%",
-  },
-  languageBar: {
-    position: "fixed",
-    top: "16px",
-    left: "16px",
-    right: "16px",
-    display: "flex",
-    gap: "8px",
-    flexWrap: "wrap",
-    justifyContent: "center",
-  },
-  langButton: {
-    padding: "8px 10px",
-    borderRadius: "999px",
-    border: "1px solid #cfe0d2",
-    background: "#fff",
-    cursor: "pointer",
-    fontSize: "12px",
-  },
-  langButtonActive: {
-    padding: "8px 10px",
-    borderRadius: "999px",
-    border: "1px solid #2f6b3c",
-    background: "#eef8f0",
-    color: "#2f6b3c",
-    cursor: "pointer",
-    fontSize: "12px",
-    fontWeight: 700,
-  },
-  langSelect: {
-    padding: "10px 12px",
-    borderRadius: "8px",
-    border: "1px solid #cfe0d2",
-    background: "#fff",
-    fontSize: "14px",
-  },
-  topControls: {
-    display: "flex",
-    gap: "10px",
-    alignItems: "center",
-    flexWrap: "wrap",
+    textAlign: "center",
   },
   eyebrow: {
     marginBottom: "12px",
@@ -1316,12 +697,38 @@ const styles: any = {
     letterSpacing: "0.08em",
     textTransform: "uppercase",
   },
-  title: {
-    margin: "0",
+  topControlsEntry: {
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "18px",
+  },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: "16px",
+    flexWrap: "wrap",
+    marginBottom: "24px",
+  },
+  topControls: {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+    flexWrap: "wrap",
+  },
+  select: {
+    padding: "10px 12px",
+    borderRadius: "8px",
+    border: "1px solid #cfe0d2",
+    background: "#fff",
+    fontSize: "14px",
+  },
+  entryTitle: {
+    margin: 0,
     color: "#1f3d2b",
     fontSize: "40px",
   },
-  subtitle: {
+  entrySubtitle: {
     margin: "16px 0 14px 0",
     fontSize: "18px",
     color: "#3f5f4a",
@@ -1331,7 +738,16 @@ const styles: any = {
     color: "#4e6657",
     lineHeight: 1.6,
   },
-  button: {
+  pageTitle: {
+    margin: 0,
+    color: "#1f3d2b",
+    fontSize: "32px",
+  },
+  pageSubtitle: {
+    margin: "8px 0 0 0",
+    color: "#486452",
+  },
+  primaryButton: {
     padding: "12px 20px",
     background: "#2f6b3c",
     color: "#fff",
@@ -1349,18 +765,7 @@ const styles: any = {
     cursor: "pointer",
     fontSize: "16px",
   },
-  smallButton: {
-    width: "32px",
-    height: "32px",
-    borderRadius: "8px",
-    border: "1px solid #cfe0d2",
-    background: "#fff",
-    color: "#1f3d2b",
-    cursor: "pointer",
-    fontSize: "18px",
-    lineHeight: 1,
-  },
-  backLink: {
+  backButton: {
     background: "transparent",
     border: "none",
     color: "#2f6b3c",
@@ -1369,30 +774,6 @@ const styles: any = {
     marginBottom: "12px",
     fontSize: "15px",
     fontWeight: 700,
-  },
-  page: {
-    padding: "40px",
-    background: "#eaf5ee",
-    minHeight: "100vh",
-    fontFamily: "Arial, sans-serif",
-    boxSizing: "border-box",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "16px",
-    flexWrap: "wrap",
-    marginBottom: "24px",
-  },
-  sectionTitle: {
-    fontSize: "32px",
-    margin: 0,
-    color: "#1f3d2b",
-  },
-  headerText: {
-    margin: "8px 0 0 0",
-    color: "#486452",
   },
   statusBar: {
     background: "#f8fcf9",
@@ -1424,22 +805,94 @@ const styles: any = {
     color: "#1f3d2b",
     fontSize: "28px",
   },
-  infoText: {
-    margin: "10px 0 0 0",
+  infoBody: {
+    margin: 0,
     color: "#486452",
     lineHeight: 1.5,
   },
-  grid: {
+  cardGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
     gap: "16px",
   },
-  tileButton: {
+  sectionCard: {
     background: "transparent",
     border: "none",
     padding: 0,
     textAlign: "left",
     cursor: "pointer",
+  },
+  cardAccent: {
+    height: "10px",
+    borderRadius: "999px",
+    background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
+    marginBottom: "14px",
+  },
+  cardAccentLarge: {
+    height: "14px",
+    borderRadius: "999px",
+    background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
+    marginBottom: "18px",
+  },
+  sectionCardInner: {},
+  sectionCardContent: {},
+  sectionCardWrap: {},
+  sectionCardBox: {},
+  tileIconWrap: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  },
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: "12px",
+  },
+  cardIconTitle: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  },
+  cardIcon: {
+    fontSize: "26px",
+    lineHeight: 1,
+  },
+  cardTitle: {
+    color: "#1f3d2b",
+    fontSize: "22px",
+    fontWeight: 700,
+  },
+  openBadge: {
+    display: "inline-block",
+    padding: "4px 10px",
+    borderRadius: "999px",
+    background: "#eef8f0",
+    color: "#2f6b3c",
+    fontSize: "12px",
+    fontWeight: 700,
+    whiteSpace: "nowrap",
+  },
+  cardDesc: {
+    marginTop: "10px",
+    color: "#4e6657",
+    lineHeight: 1.5,
+  },
+  cardFooter: {
+    marginTop: "18px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  enterLink: {
+    color: "#2f6b3c",
+    fontWeight: 700,
+    fontSize: "14px",
+  },
+  arrow: {
+    color: "#2f6b3c",
+    fontWeight: 700,
+    fontSize: "18px",
   },
   tile: {
     background: "#fff",
@@ -1451,197 +904,41 @@ const styles: any = {
     display: "flex",
     flexDirection: "column",
   },
-  sectionAccent: {
-    height: "10px",
-    borderRadius: "999px",
-    background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
-    marginBottom: "14px",
-  },
-  sectionAccentLarge: {
-    height: "14px",
-    borderRadius: "999px",
-    background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
-    marginBottom: "18px",
-  },
-  tileTopRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: "12px",
-  },
-  tileIconWrap: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  tileIcon: {
-    fontSize: "26px",
-    lineHeight: 1,
-  },
-  tileTitle: {
-    margin: "0 0 8px 0",
-    color: "#1f3d2b",
-    fontSize: "22px",
-  },
-  productTitle: {
-    margin: "0 0 8px 0",
-    color: "#1f3d2b",
-    fontSize: "20px",
-  },
-  tileBadge: {
-    display: "inline-block",
-    padding: "4px 10px",
-    borderRadius: "999px",
-    background: "#eef8f0",
-    color: "#2f6b3c",
-    fontSize: "12px",
-    fontWeight: 700,
-    whiteSpace: "nowrap",
-  },
-  tileText: {
-    margin: 0,
-    color: "#4e6657",
-    lineHeight: 1.5,
-  },
-  tileFooter: {
-    marginTop: "18px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  openText: {
-    color: "#2f6b3c",
-    fontWeight: 700,
-    fontSize: "14px",
-  },
-  arrow: {
-    color: "#2f6b3c",
-    fontWeight: 700,
-    fontSize: "18px",
-  },
-  overlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.35)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "20px",
-    boxSizing: "border-box",
-    zIndex: 20,
-  },
-  modal: {
-    background: "#fff",
-    borderRadius: "16px",
-    padding: "24px",
-    maxWidth: "860px",
-    width: "100%",
-    boxShadow: "0 18px 40px rgba(0,0,0,0.15)",
-  },
-  modalTitle: {
-    marginTop: 0,
-    color: "#1f3d2b",
-  },
-  modalText: {
-    color: "#4e6657",
-    marginBottom: "18px",
-    lineHeight: 1.5,
-  },
-  roleGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "12px",
-  },
-  roleButton: {
-    background: "#eef8f0",
-    border: "1px solid #cfe0d2",
-    borderRadius: "10px",
-    padding: "14px",
-    cursor: "pointer",
-    color: "#1f3d2b",
-    fontSize: "15px",
-    textAlign: "left",
-  },
-  roleButtonTitle: {
-    fontWeight: 700,
-    marginBottom: "6px",
-  },
-  roleButtonText: {
-    color: "#486452",
-    lineHeight: 1.4,
-    fontSize: "13px",
-  },
-  cancelButton: {
-    marginTop: "18px",
-    background: "transparent",
-    border: "none",
-    color: "#666",
-    cursor: "pointer",
-    fontSize: "15px",
-  },
-  pageHero: {
-    display: "grid",
-    gridTemplateColumns: "minmax(0, 2fr) minmax(280px, 1fr)",
-    gap: "16px",
-    marginBottom: "20px",
-  },
-  pageHeroMain: {
-    background: "#fff",
-    padding: "24px",
-    borderRadius: "12px",
-    border: "1px solid #cfe0d2",
-  },
-  pageHeroSide: {
-    background: "#fff",
-    padding: "24px",
-    borderRadius: "12px",
-    border: "1px solid #cfe0d2",
-  },
-  pageHeading: {
-    marginTop: "0",
-    marginBottom: "10px",
-    color: "#1f3d2b",
-  },
-  pageBody: {
-    margin: 0,
-    color: "#486452",
-    lineHeight: 1.6,
-  },
-  sectionGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-    gap: "16px",
-    marginBottom: "20px",
-  },
-  sectionBox: {
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "12px",
-    border: "1px solid #cfe0d2",
-  },
-  list: {
-    margin: "12px 0 0 18px",
-    padding: 0,
-    color: "#486452",
-  },
-  listItem: {
-    marginBottom: "8px",
-  },
-  sectionActions: {
-    display: "flex",
-    gap: "12px",
-    flexWrap: "wrap",
-  },
-  shopLayout: {
+  twoCol: {
     display: "grid",
     gridTemplateColumns: "minmax(0, 2fr) minmax(320px, 1fr)",
     gap: "20px",
     alignItems: "start",
   },
-  productGrid: {
+  panel: {
+    background: "#fff",
+    padding: "24px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+  },
+  sideColumnPanel: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+    position: "sticky",
+    top: "20px",
+  },
+  panelTitle: {
+    margin: 0,
+    color: "#1f3d2b",
+    fontSize: "24px",
+  },
+  panelText: {
+    color: "#486452",
+    lineHeight: 1.6,
+    marginTop: "12px",
+  },
+  shopGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: "16px",
+    marginTop: "20px",
   },
   productCard: {
     background: "#fff",
@@ -1660,27 +957,33 @@ const styles: any = {
     fontSize: "12px",
     fontWeight: 700,
   },
-  priceRow: {
+  productTitle: {
+    margin: "0 0 8px 0",
+    color: "#1f3d2b",
+    fontSize: "20px",
+  },
+  productPriceRow: {
     marginTop: "16px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     gap: "10px",
   },
-  priceText: {
-    color: "#1f3d2b",
-    fontSize: "18px",
-  },
   qtyControls: {
     display: "flex",
     alignItems: "center",
     gap: "8px",
   },
-  qtyText: {
-    minWidth: "18px",
-    textAlign: "center",
-    fontWeight: 700,
+  smallButton: {
+    width: "32px",
+    height: "32px",
+    borderRadius: "8px",
+    border: "1px solid #cfe0d2",
+    background: "#fff",
     color: "#1f3d2b",
+    cursor: "pointer",
+    fontSize: "18px",
+    lineHeight: 1,
   },
   cartPanel: {
     background: "#fff",
@@ -1721,30 +1024,6 @@ const styles: any = {
     color: "#1f3d2b",
     fontSize: "18px",
   },
-  pickupBox: {
-    background: "#f8fcf9",
-    border: "1px solid #dbe8dd",
-    borderRadius: "12px",
-    padding: "16px",
-  },
-  returnBanner: {
-    background: "#fff7e6",
-    border: "1px solid #f0d9a6",
-    borderRadius: "12px",
-    padding: "18px",
-    marginBottom: "20px",
-  },
-  returnBannerText: {
-    margin: "8px 0 0 0",
-    color: "#6a5830",
-    lineHeight: 1.5,
-  },
-  returnBannerActions: {
-    display: "flex",
-    gap: "12px",
-    flexWrap: "wrap",
-    marginTop: "14px",
-  },
   learnLayout: {
     display: "grid",
     gridTemplateColumns: "minmax(0, 2fr) minmax(320px, 1fr)",
@@ -1771,29 +1050,89 @@ const styles: any = {
     boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
     minHeight: "190px",
   },
-  learnPanel: {
+  storyCard: {
     background: "#fff",
     padding: "20px",
     borderRadius: "12px",
     border: "1px solid #cfe0d2",
-    position: "sticky",
-    top: "20px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
+    minHeight: "190px",
+    cursor: "pointer",
+    textAlign: "left",
   },
-  sidePanel: {
-    position: "fixed",
-    top: 0,
-    right: 0,
+  storyCardStatic: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
+    minHeight: "190px",
+    textAlign: "left",
+  },
+  storyCardTitle: {
+    margin: "0 0 8px 0",
+    color: "#1f3d2b",
+    fontSize: "20px",
+  },
+  storyCardText: {
+    margin: 0,
+    color: "#4e6657",
+    lineHeight: 1.5,
+  },
+  sectionGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: "16px",
+    marginBottom: "20px",
+  },
+  sectionBox: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+  },
+  list: {
+    margin: "12px 0 0 18px",
+    padding: 0,
+    color: "#486452",
+  },
+  listItem: {
+    marginBottom: "8px",
+  },
+  sectionActions: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+  },
+  returnBanner: {
+    background: "#fff7e6",
+    border: "1px solid #f0d9a6",
+    borderRadius: "12px",
+    padding: "18px",
+    marginBottom: "20px",
+  },
+  returnBannerText: {
+    margin: "8px 0 0 0",
+    color: "#6a5830",
+    lineHeight: 1.5,
+  },
+  returnBannerActions: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+    marginTop: "14px",
+  },
+  rolePanel: {
     width: "320px",
     maxWidth: "90vw",
-    height: "100vh",
     background: "#fff",
-    boxShadow: "-8px 0 24px rgba(0,0,0,0.12)",
+    boxShadow: "-8px 0 24px rgba(0,0,0,0.08)",
     padding: "24px",
     boxSizing: "border-box",
-    zIndex: 10,
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+    position: "sticky",
+    top: "24px",
   },
   sideEyebrow: {
     color: "#2f6b3c",
@@ -1802,36 +1141,63 @@ const styles: any = {
     textTransform: "uppercase",
     letterSpacing: "0.06em",
   },
-  sideTitle: {
-    marginTop: 0,
+  roleTitle: {
+    marginTop: "8px",
     color: "#1f3d2b",
   },
-  sideText: {
+  roleText: {
     color: "#4e6657",
     lineHeight: 1.5,
-    marginBottom: "8px",
+    marginBottom: "12px",
   },
   sideActionGroup: {
     display: "flex",
     flexDirection: "column",
     gap: "10px",
+    marginBottom: "12px",
   },
-  sidePrimary: {
-    width: "100%",
-    padding: "12px",
-    background: "#2f6b3c",
-    color: "#fff",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.35)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "20px",
+    boxSizing: "border-box",
+    zIndex: 20,
   },
-  sideSecondary: {
-    width: "100%",
-    padding: "12px",
+  modal: {
     background: "#fff",
+    borderRadius: "16px",
+    padding: "24px",
+    maxWidth: "860px",
+    width: "100%",
+    boxShadow: "0 18px 40px rgba(0,0,0,0.15)",
+  },
+  modalTitle: {
+    marginTop: 0,
     color: "#1f3d2b",
+  },
+  modalText: {
+    color: "#4e6657",
+    marginBottom: "18px",
+    lineHeight: 1.5,
+  },
+  roleGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "12px",
+    marginBottom: "18px",
+  },
+  roleCard: {
+    background: "#eef8f0",
     border: "1px solid #cfe0d2",
-    borderRadius: "8px",
+    borderRadius: "10px",
+    padding: "14px",
     cursor: "pointer",
+    color: "#1f3d2b",
+    fontSize: "15px",
+    textAlign: "left",
   },
 };
