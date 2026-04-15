@@ -7,6 +7,11 @@ const sections = [
     desc: "Crop planning, planting, and production.",
     detail:
       "Explore crop planning, field readiness, growing cycles, irrigation thinking, and the systems needed to support farm production.",
+    highlights: [
+      "Seasonal crop planning",
+      "Field readiness and infrastructure",
+      "Production systems and workflow",
+    ],
   },
   {
     id: "shop",
@@ -14,6 +19,11 @@ const sections = [
     desc: "Buy fresh produce and farm goods.",
     detail:
       "See how customers will preorder, shop farm goods, access pickup pathways, and connect to a community-centered marketplace.",
+    highlights: [
+      "Marketplace and preorder flow",
+      "Pickup and customer access",
+      "Farm goods and produce pathways",
+    ],
   },
   {
     id: "learn",
@@ -21,6 +31,11 @@ const sections = [
     desc: "Workshops, guides, and knowledge hub.",
     detail:
       "Discover education, wellness, food knowledge, practical growing guidance, and future learning tools for families and growers.",
+    highlights: [
+      "Workshops and guides",
+      "Food knowledge and wellness",
+      "Knowledge hub and practical learning",
+    ],
   },
   {
     id: "workforce",
@@ -28,6 +43,11 @@ const sections = [
     desc: "Youth training and job pathways.",
     detail:
       "Follow the youth workforce pathway from participation to training, responsibility, and future career readiness.",
+    highlights: [
+      "Youth training pathway",
+      "Responsibility and growth",
+      "Career readiness and transition",
+    ],
   },
   {
     id: "community",
@@ -35,6 +55,11 @@ const sections = [
     desc: "Volunteers, families, and partnerships.",
     detail:
       "See how volunteers, families, supporters, and partners enter the ecosystem and strengthen the work together.",
+    highlights: [
+      "Volunteer and family participation",
+      "Partnership and support pathways",
+      "Community-centered engagement",
+    ],
   },
   {
     id: "events",
@@ -42,6 +67,11 @@ const sections = [
     desc: "Markets, tours, and community days.",
     detail:
       "Experience how markets, tours, workshops, and community gathering points activate the full farm ecosystem.",
+    highlights: [
+      "Markets and tours",
+      "Community gathering points",
+      "Program and event activation",
+    ],
   },
 ];
 
@@ -73,6 +103,138 @@ export default function App() {
             Enter the Farm
           </button>
         </div>
+      </div>
+    );
+  }
+
+  if (selectedSection) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <div>
+            <button
+              style={styles.backLink}
+              onClick={() => setSelectedSection(null)}
+            >
+              ← Back to Ecosystem
+            </button>
+            <h2 style={styles.sectionTitle}>{selectedSection.title}</h2>
+            <p style={styles.headerText}>{selectedSection.desc}</p>
+          </div>
+
+          <button style={styles.button} onClick={() => setShowRoles(true)}>
+            {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+          </button>
+        </div>
+
+        <div style={styles.pageHero}>
+          <div style={styles.pageHeroMain}>
+            <h3 style={styles.pageHeading}>Section Overview</h3>
+            <p style={styles.pageBody}>{selectedSection.detail}</p>
+          </div>
+
+          <div style={styles.pageHeroSide}>
+            <strong>Current role context</strong>
+            <p style={styles.infoText}>
+              {activeRole
+                ? `You are exploring as ${activeRole}. This section stays open while your role unlocks added actions.`
+                : "You are exploring without an active role selected."}
+            </p>
+          </div>
+        </div>
+
+        <div style={styles.sectionGrid}>
+          <div style={styles.sectionBox}>
+            <strong>Highlights</strong>
+            <ul style={styles.list}>
+              {selectedSection.highlights.map((item) => (
+                <li key={item} style={styles.listItem}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div style={styles.sectionBox}>
+            <strong>What this becomes next</strong>
+            <p style={styles.infoText}>
+              This area can become a true destination with tools, workflows,
+              dashboards, and role-based actions tailored to the visitor.
+            </p>
+          </div>
+
+          <div style={styles.sectionBox}>
+            <strong>Suggested next action</strong>
+            <p style={styles.infoText}>
+              Use this page to demonstrate how one part of the ecosystem can be
+              explored deeply without leaving the larger system vision.
+            </p>
+          </div>
+        </div>
+
+        <div style={styles.sectionActions}>
+          {!activeRole && (
+            <button style={styles.button} onClick={() => setShowRoles(true)}>
+              Activate Role
+            </button>
+          )}
+          <button
+            style={styles.secondaryButton}
+            onClick={() => setSelectedSection(null)}
+          >
+            Return to Ecosystem
+          </button>
+        </div>
+
+        {showRoles && (
+          <div style={styles.overlay}>
+            <div style={styles.modal}>
+              <h3 style={styles.modalTitle}>Select Your Role</h3>
+              <p style={styles.modalText}>
+                Choose a role without losing access to the full ecosystem.
+              </p>
+
+              <div style={styles.roleGrid}>
+                {roles.map((role) => (
+                  <button
+                    key={role}
+                    style={styles.roleButton}
+                    onClick={() => {
+                      setActiveRole(role);
+                      setShowRoles(false);
+                    }}
+                  >
+                    {role}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                style={styles.cancelButton}
+                onClick={() => setShowRoles(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeRole && (
+          <div style={styles.sidePanel}>
+            <h3 style={styles.sideTitle}>{activeRole}</h3>
+            <p style={styles.sideText}>
+              Role activated. You can still explore the full ecosystem.
+            </p>
+
+            <button style={styles.sidePrimary}>Open Role Actions</button>
+            <button
+              style={styles.sideSecondary}
+              onClick={() => setActiveRole(null)}
+            >
+              Exit Role
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -149,66 +311,6 @@ export default function App() {
         </div>
       )}
 
-      {selectedSection && (
-        <div style={styles.overlay}>
-          <div style={styles.sectionModal}>
-            <div style={styles.sectionModalHeader}>
-              <div>
-                <h3 style={styles.modalTitle}>{selectedSection.title}</h3>
-                <p style={styles.modalText}>{selectedSection.detail}</p>
-              </div>
-              <button
-                style={styles.closeButton}
-                onClick={() => setSelectedSection(null)}
-              >
-                Close
-              </button>
-            </div>
-
-            <div style={styles.sectionBoxRow}>
-              <div style={styles.sectionBox}>
-                <strong>What this area will do</strong>
-                <p style={styles.infoText}>
-                  This section will become a working destination inside the
-                  ecosystem with tools, information, actions, and pathways
-                  tailored to the visitor’s role.
-                </p>
-              </div>
-
-              <div style={styles.sectionBox}>
-                <strong>Current role context</strong>
-                <p style={styles.infoText}>
-                  {activeRole
-                    ? `You are currently exploring as ${activeRole}.`
-                    : "You are exploring without an active role selected."}
-                </p>
-              </div>
-            </div>
-
-            <div style={styles.sectionActions}>
-              {!activeRole && (
-                <button
-                  style={styles.button}
-                  onClick={() => {
-                    setSelectedSection(null);
-                    setShowRoles(true);
-                  }}
-                >
-                  Activate Role
-                </button>
-              )}
-
-              <button
-                style={styles.secondaryButton}
-                onClick={() => setSelectedSection(null)}
-              >
-                Return to Ecosystem
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {activeRole && (
         <div style={styles.sidePanel}>
           <h3 style={styles.sideTitle}>{activeRole}</h3>
@@ -276,6 +378,16 @@ const styles: any = {
     borderRadius: "8px",
     cursor: "pointer",
     fontSize: "16px",
+  },
+  backLink: {
+    background: "transparent",
+    border: "none",
+    color: "#2f6b3c",
+    cursor: "pointer",
+    padding: 0,
+    marginBottom: "12px",
+    fontSize: "15px",
+    fontWeight: 700,
   },
   page: {
     padding: "40px",
@@ -367,21 +479,6 @@ const styles: any = {
     width: "100%",
     boxShadow: "0 18px 40px rgba(0,0,0,0.15)",
   },
-  sectionModal: {
-    background: "#fff",
-    borderRadius: "16px",
-    padding: "24px",
-    maxWidth: "860px",
-    width: "100%",
-    boxShadow: "0 18px 40px rgba(0,0,0,0.15)",
-  },
-  sectionModalHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "16px",
-    alignItems: "flex-start",
-    flexWrap: "wrap",
-  },
   modalTitle: {
     marginTop: 0,
     color: "#1f3d2b",
@@ -413,31 +510,58 @@ const styles: any = {
     cursor: "pointer",
     fontSize: "15px",
   },
-  closeButton: {
+  pageHero: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 2fr) minmax(280px, 1fr)",
+    gap: "16px",
+    marginBottom: "20px",
+  },
+  pageHeroMain: {
     background: "#fff",
+    padding: "24px",
+    borderRadius: "12px",
     border: "1px solid #cfe0d2",
-    borderRadius: "8px",
-    padding: "10px 14px",
-    cursor: "pointer",
+  },
+  pageHeroSide: {
+    background: "#fff",
+    padding: "24px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+  },
+  pageHeading: {
+    marginTop: 0,
+    marginBottom: "10px",
     color: "#1f3d2b",
   },
-  sectionBoxRow: {
+  pageBody: {
+    margin: 0,
+    color: "#486452",
+    lineHeight: 1.6,
+  },
+  sectionGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
     gap: "16px",
-    marginTop: "12px",
+    marginBottom: "20px",
   },
   sectionBox: {
-    background: "#f8fcf9",
-    border: "1px solid #dbe8dd",
+    background: "#fff",
+    padding: "20px",
     borderRadius: "12px",
-    padding: "16px",
+    border: "1px solid #cfe0d2",
+  },
+  list: {
+    margin: "12px 0 0 18px",
+    padding: 0,
+    color: "#486452",
+  },
+  listItem: {
+    marginBottom: "8px",
   },
   sectionActions: {
     display: "flex",
     gap: "12px",
     flexWrap: "wrap",
-    marginTop: "20px",
   },
   sidePanel: {
     position: "fixed",
