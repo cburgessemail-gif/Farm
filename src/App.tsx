@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import heroImg from "./GrowArea.jpg";
+import growImg from "./GrowArea2.jpg";
+import storyImg from "./SAM_0220.JPG";
+import communityImg from "./SAM_0221.JPG";
 
 type Lang = "en" | "es" | "tl";
 type SectionId = "grow" | "shop" | "story" | "workforce" | "community" | "events";
@@ -91,13 +95,13 @@ const sectionData = {
 };
 
 const imagePaths = {
-  hero: "/hero.jpg",
-  grow: "/grow.jpg",
-  shop: "/shop.jpg",
-  story: "/story.jpg",
-  workforce: "/workforce.jpg",
-  community: "/community.jpg",
-  events: "/events.jpg",
+  hero: heroImg,
+  grow: growImg,
+  shop: growImg,
+  story: storyImg,
+  workforce: communityImg,
+  community: communityImg,
+  events: storyImg,
 };
 
 const storyModules = [
@@ -183,6 +187,7 @@ export default function App() {
   const [selectedWorkforce, setSelectedWorkforce] = useState<string | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
   const [heroFailed, setHeroFailed] = useState(false);
+  const [sectionImageFailed, setSectionImageFailed] = useState<Record<string, boolean>>({});
 
   const ui = labels[lang];
 
@@ -242,16 +247,47 @@ export default function App() {
           The center shows where to go. This panel shows what you can do.
         </p>
 
-        <button style={styles.sidebarButton} onClick={() => setRole("Grower Tools")}>
+        <button
+          style={styles.sidebarButton}
+          onClick={() => {
+            setRole("Grower Tools");
+            setSection("grow");
+            setStatus("Grow opened from Grower Tools.");
+          }}
+        >
           Grower Tools
         </button>
-        <button style={styles.sidebarButton} onClick={() => setRole("Sales Tools")}>
+
+        <button
+          style={styles.sidebarButton}
+          onClick={() => {
+            setRole("Sales Tools");
+            setSection("shop");
+            setStatus("Shop opened from Sales Tools.");
+          }}
+        >
           Sales Tools
         </button>
-        <button style={styles.sidebarButton} onClick={() => setRole("Volunteer Tools")}>
+
+        <button
+          style={styles.sidebarButton}
+          onClick={() => {
+            setRole("Volunteer Tools");
+            setSection("community");
+            setStatus("Community opened from Volunteer Tools.");
+          }}
+        >
           Volunteer Tools
         </button>
-        <button style={styles.sidebarButton} onClick={() => setRole("Youth Tools")}>
+
+        <button
+          style={styles.sidebarButton}
+          onClick={() => {
+            setRole("Youth Tools");
+            setSection("workforce");
+            setStatus("Workforce opened from Youth Tools.");
+          }}
+        >
           Youth Tools
         </button>
 
@@ -263,6 +299,26 @@ export default function App() {
       </div>
     </aside>
   );
+
+  const renderSectionImage = (key: keyof typeof imagePaths) => {
+    if (sectionImageFailed[key]) {
+      return <div style={styles.sectionImageFallback} />;
+    }
+
+    return (
+      <img
+        src={imagePaths[key]}
+        alt={key}
+        style={styles.sectionImage}
+        onError={() =>
+          setSectionImageFailed((prev) => ({
+            ...prev,
+            [key]: true,
+          }))
+        }
+      />
+    );
+  };
 
   if (!entered) {
     return (
@@ -334,11 +390,8 @@ export default function App() {
                   style={styles.sectionCard}
                   onClick={() => {
                     if (id === "shop") {
-                      window.open(
-                        "https://grownby.com/farms/bronson-family-farm/shop",
-                        "_blank"
-                      );
-                      setStatus("Opened GrownBy in a new tab.");
+                      setSection("shop");
+                      setStatus("Shop opened.");
                     } else {
                       setSection(id);
                       setStatus(`${item.title} opened.`);
@@ -386,6 +439,13 @@ export default function App() {
         <div style={styles.status}>{status}</div>
 
         <section style={styles.content}>
+          {section === "grow" && renderSectionImage("grow")}
+          {section === "shop" && renderSectionImage("shop")}
+          {section === "story" && renderSectionImage("story")}
+          {section === "workforce" && renderSectionImage("workforce")}
+          {section === "community" && renderSectionImage("community")}
+          {section === "events" && renderSectionImage("events")}
+
           <div style={styles.contentAccent} />
           <h3 style={styles.contentTitle}>
             {sectionData[section].icon} {sectionData[section].title}
@@ -781,6 +841,24 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: "18px",
     border: "1px solid #d6e4d9",
     boxShadow: "0 6px 18px rgba(31,61,43,0.06)",
+  },
+  sectionImage: {
+    width: "100%",
+    height: "280px",
+    objectFit: "cover",
+    borderRadius: "16px",
+    display: "block",
+    marginBottom: "22px",
+    border: "1px solid #d6e4d9",
+  },
+  sectionImageFallback: {
+    width: "100%",
+    height: "280px",
+    borderRadius: "16px",
+    display: "block",
+    marginBottom: "22px",
+    border: "1px solid #d6e4d9",
+    background: "linear-gradient(135deg, #e8f1ea 0%, #dfeae2 100%)",
   },
   contentAccent: {
     height: "12px",
