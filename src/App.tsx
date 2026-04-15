@@ -49,7 +49,7 @@ const sections: Section[] = [
     title: "📖 Story & Ecosystem",
     desc: "History, place, purpose, and how the ecosystem works.",
     detail:
-      "This section explains the history of Bronson Family Farm, the family legacy behind it, the Lansdowne airport context, and how growing, health, commerce, learning, and opportunity connect into one ecosystem.",
+      "This section explains the history of Bronson Family Farm, the family legacy behind it, the Lansdowne airport context, and how food, health, learning, workforce, and commerce connect into one living ecosystem.",
     highlights: [
       "Bronson Family Farm history and family legacy",
       "Lansdowne airport and land context",
@@ -88,7 +88,7 @@ const sections: Section[] = [
     title: "📅 Events",
     desc: "Markets, tours, demonstrations, and community days.",
     detail:
-      "Experience how markets, workshops, tours, and seasonal gathering points activate the full farm ecosystem and bring people into the work.",
+      "Experience how markets, tours, workshops, and seasonal gathering points activate the full farm ecosystem and bring people into the work.",
     highlights: [
       "Markets and tours",
       "Community gathering points",
@@ -156,28 +156,28 @@ const shopItems = [
 const storyModules = [
   {
     id: "history",
-    title: "Our Story",
-    audience: "Bronson Family Farm history",
+    title: "The Bronson Family Farm Story",
+    audience: "History and legacy",
     description:
       "How family legacy, community purpose, and the move to Youngstown shaped Bronson Family Farm.",
   },
   {
     id: "ecosystem",
-    title: "The Ecosystem",
+    title: "Why the Ecosystem Matters",
     audience: "How it all connects",
     description:
       "How food, health, workforce, learning, commerce, and community support one another inside a single living system.",
   },
   {
     id: "airport",
-    title: "The Lansdowne Site",
-    audience: "Land and airport context",
+    title: "The Lansdowne Airport Context",
+    audience: "Land and airport setting",
     description:
       "Why the airport setting matters, what makes the site unique, and how the farm vision grows within that landscape.",
   },
   {
     id: "health",
-    title: "Health, Nutrition & Learning",
+    title: "Health, Food, and Learning",
     audience: "Wellness and education",
     description:
       "How nutrition, natural food, wellness, and practical education fit inside the larger farm mission.",
@@ -481,11 +481,13 @@ export default function App() {
           />
           <h1 style={styles.title}>Bronson Family Farm</h1>
           <p style={styles.subtitle}>
-            A Living Ecosystem for Growing, Learning, and Community
+            A living ecosystem rooted in food, family, land, learning, and opportunity.
           </p>
           <p style={styles.entryText}>
-            Explore first. Activate a role when ready. Move from inspiration to
-            commerce, story, workforce opportunity, and community engagement.
+            Bronson Family Farm is more than a farm. It is a community-centered
+            ecosystem growing from the Lansdowne area of Youngstown—connecting
+            fresh food, workforce development, health, education, and long-term
+            family and regional renewal.
           </p>
           <button
             style={styles.button}
@@ -494,7 +496,7 @@ export default function App() {
               setStatusMessage("Entered the farm ecosystem.");
             }}
           >
-            Enter the Farm
+            Enter the Ecosystem
           </button>
         </div>
       </div>
@@ -765,10 +767,11 @@ export default function App() {
               />
               <h3 style={styles.pageHeading}>Story Overview</h3>
               <p style={styles.pageBody}>
-                This section explains the history of Bronson Family Farm, the
-                family legacy behind it, the Lansdowne airport context, and how
-                food, health, learning, workforce, and commerce connect into one
-                living ecosystem.
+                Bronson Family Farm is rooted in family legacy, community restoration,
+                and the belief that land can do more than produce crops. Here, food,
+                health, learning, workforce development, and community participation
+                come together in one living ecosystem—shaped by the unique Lansdowne
+                airport setting and built for future generations.
               </p>
             </div>
 
@@ -825,9 +828,10 @@ export default function App() {
                   <div style={styles.pickupBox}>
                     <strong>Why it matters</strong>
                     <p style={styles.infoText}>
-                      This part of the demo explains not just what Bronson Family
-                      Farm does, but why it exists, where it lives, and why it
-                      matters to Youngstown and future generations.
+                      This demo is not just showing farm activity. It shows how
+                      Bronson Family Farm can become a model for community-centered
+                      renewal through food access, education, youth opportunity,
+                      wellness, and shared economic participation.
                     </p>
                   </div>
 
@@ -835,8 +839,7 @@ export default function App() {
                     <strong>What this can become</strong>
                     <p style={styles.infoText}>
                       This can expand into timelines, family legacy visuals,
-                      airport context, site maps, and narrated ecosystem
-                      storytelling.
+                      airport context, site maps, and narrated ecosystem storytelling.
                     </p>
                   </div>
                 </div>
@@ -1027,7 +1030,11 @@ export default function App() {
 
         <div style={styles.pageHero}>
           <div style={styles.pageHeroMain}>
-            <ImageBlock src={selectedSection.image} alt={selectedSection.title} height={220} />
+            <ImageBlock
+              src={selectedSection.image}
+              alt={selectedSection.title}
+              height={220}
+            />
             <h3 style={styles.pageHeading}>Section Overview</h3>
             <p style={styles.pageBody}>{selectedSection.detail}</p>
           </div>
