@@ -14,7 +14,6 @@ type Section = {
   desc: string;
   detail: string;
   highlights: string[];
-  image: string;
 };
 
 const sections: Section[] = [
@@ -29,7 +28,6 @@ const sections: Section[] = [
       "Field readiness and infrastructure",
       "Production systems and workflow",
     ],
-    image: "/images/grow.jpg",
   },
   {
     id: "shop",
@@ -42,7 +40,6 @@ const sections: Section[] = [
       "Pickup and customer access",
       "Farm goods and produce pathways",
     ],
-    image: "/images/shop.jpg",
   },
   {
     id: "story",
@@ -55,7 +52,6 @@ const sections: Section[] = [
       "Lansdowne airport and land context",
       "The full ecosystem: food, health, learning, workforce, and commerce",
     ],
-    image: "/images/learn.jpg",
   },
   {
     id: "workforce",
@@ -68,7 +64,6 @@ const sections: Section[] = [
       "Responsibility and growth",
       "Career readiness and transition",
     ],
-    image: "/images/workforce.jpg",
   },
   {
     id: "community",
@@ -78,10 +73,9 @@ const sections: Section[] = [
       "See how volunteers, families, supporters, funders, and partners enter the ecosystem and strengthen the work together.",
     highlights: [
       "Volunteer and family participation",
-      "Partnership and support pathways",
+      "Partner and supporter pathways",
       "Community-centered engagement",
     ],
-    image: "/images/community.jpg",
   },
   {
     id: "events",
@@ -94,7 +88,6 @@ const sections: Section[] = [
       "Community gathering points",
       "Program and event activation",
     ],
-    image: "/images/events.jpg",
   },
 ];
 
@@ -211,6 +204,37 @@ const workforceTracks = [
   },
 ];
 
+const communityPaths = [
+  {
+    id: "volunteer",
+    title: "Volunteer",
+    description:
+      "Support planting, events, setup, logistics, and hands-on community activity.",
+    action: "Volunteer Interest",
+  },
+  {
+    id: "partner",
+    title: "Partner",
+    description:
+      "Bring your organization into a growing ecosystem for food, workforce, health, and regional renewal.",
+    action: "Partner Interest",
+  },
+  {
+    id: "supporter",
+    title: "Support",
+    description:
+      "Help expand food access, workforce training, and community impact through financial or in-kind support.",
+    action: "Support Interest",
+  },
+  {
+    id: "family",
+    title: "Families",
+    description:
+      "Join the learning, events, nutrition, and community-building experience.",
+    action: "Family Interest",
+  },
+];
+
 function roleDescription(role: string) {
   switch (role) {
     case "Guest":
@@ -251,48 +275,6 @@ function roleActions(role: string): string[] {
     default:
       return ["Explore"];
   }
-}
-
-function ImageBlock({
-  src,
-  alt,
-  height = 180,
-}: {
-  src: string;
-  alt: string;
-  height?: number;
-}) {
-  const [failed, setFailed] = useState(false);
-
-  if (failed) {
-    return (
-      <div
-        style={{
-          height,
-          borderRadius: "12px",
-          background:
-            "linear-gradient(135deg, #dfeee2 0%, #eef8f0 50%, #d7eadc 100%)",
-          border: "1px solid #cfe0d2",
-        }}
-      />
-    );
-  }
-
-  return (
-    <img
-      src={src}
-      alt={alt}
-      style={{
-        width: "100%",
-        height,
-        objectFit: "cover",
-        borderRadius: "12px",
-        display: "block",
-        border: "1px solid #cfe0d2",
-      }}
-      onError={() => setFailed(true)}
-    />
-  );
 }
 
 function RoleModal({
@@ -474,11 +456,7 @@ export default function App() {
       <div style={styles.center}>
         <div style={styles.card}>
           <div style={styles.eyebrow}>Bronson Family Farm Ecosystem Demo</div>
-          <ImageBlock
-            src="/images/hero-farm.jpg"
-            alt="Bronson Family Farm hero"
-            height={240}
-          />
+          <div style={styles.heroBlock} />
           <h1 style={styles.title}>Bronson Family Farm</h1>
           <p style={styles.subtitle}>
             A living ecosystem rooted in food, family, land, learning, and opportunity.
@@ -541,7 +519,7 @@ export default function App() {
                 }}
               >
                 <div style={styles.tile}>
-                  <ImageBlock src={section.image} alt={section.title} height={150} />
+                  <div style={styles.sectionAccent} />
                   <h3 style={styles.tileTitle}>{section.title}</h3>
                   <p style={styles.tileText}>{section.desc}</p>
                   <div style={styles.openText}>Open section →</div>
@@ -611,7 +589,7 @@ export default function App() {
 
           <div style={styles.pageHero}>
             <div style={styles.pageHeroMain}>
-              <ImageBlock src="/images/shop.jpg" alt="Shop section" height={220} />
+              <div style={styles.sectionAccentLarge} />
               <h3 style={styles.pageHeading}>Marketplace Overview</h3>
               <p style={styles.pageBody}>
                 This is the first live section of the ecosystem. It shows how
@@ -760,11 +738,7 @@ export default function App() {
 
           <div style={styles.pageHero}>
             <div style={styles.pageHeroMain}>
-              <ImageBlock
-                src="/images/learn.jpg"
-                alt="Story and ecosystem section"
-                height={220}
-              />
+              <div style={styles.sectionAccentLarge} />
               <h3 style={styles.pageHeading}>Story Overview</h3>
               <p style={styles.pageBody}>
                 Bronson Family Farm is rooted in family legacy, community restoration,
@@ -900,11 +874,7 @@ export default function App() {
 
           <div style={styles.pageHero}>
             <div style={styles.pageHeroMain}>
-              <ImageBlock
-                src="/images/workforce.jpg"
-                alt="Workforce section"
-                height={220}
-              />
+              <div style={styles.sectionAccentLarge} />
               <h3 style={styles.pageHeading}>Workforce Overview</h3>
               <p style={styles.pageBody}>
                 This section demonstrates how Bronson Family Farm can serve as a
@@ -1003,6 +973,75 @@ export default function App() {
     );
   }
 
+  if (selectedSection.id === "community") {
+    return (
+      <>
+        <div style={styles.page}>
+          <div style={styles.header}>
+            <div>
+              <button
+                style={styles.backLink}
+                onClick={() => {
+                  setSelectedSection(null);
+                  setStatusMessage("Returned to ecosystem.");
+                }}
+              >
+                ← Back to Ecosystem
+              </button>
+              <h2 style={styles.sectionTitle}>🤝 Community</h2>
+              <p style={styles.headerText}>
+                Volunteers, families, supporters, and partners.
+              </p>
+            </div>
+
+            <button style={styles.button} onClick={() => setShowRoles(true)}>
+              {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+            </button>
+          </div>
+
+          <div style={styles.statusBar}>{statusMessage}</div>
+
+          <div style={styles.pageHero}>
+            <div style={styles.pageHeroMain}>
+              <div style={styles.sectionAccentLarge} />
+              <h3 style={styles.pageHeading}>Join the Ecosystem</h3>
+              <p style={styles.pageBody}>
+                Whether you are a grower, volunteer, partner, or supporter,
+                there is a place for you at Bronson Family Farm. This ecosystem
+                grows through participation, shared knowledge, and community action.
+              </p>
+            </div>
+
+            <div style={styles.pageHeroSide}>
+              <strong>Community Focus</strong>
+              <p style={styles.infoText}>
+                This section helps people see how they can step into the farm
+                ecosystem in a practical and immediate way.
+              </p>
+            </div>
+          </div>
+
+          <div style={styles.learnGrid}>
+            {communityPaths.map((path) => (
+              <div key={path.id} style={styles.learnCard}>
+                <div style={styles.productCategory}>Join</div>
+                <h3 style={styles.tileTitle}>{path.title}</h3>
+                <p style={styles.tileText}>{path.description}</p>
+                <button
+                  style={{ ...styles.button, marginTop: "14px" }}
+                  onClick={() => setStatusMessage(`${path.action} opened.`)}
+                >
+                  {path.action}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+        {renderRoleUI()}
+      </>
+    );
+  }
+
   return (
     <>
       <div style={styles.page}>
@@ -1030,11 +1069,7 @@ export default function App() {
 
         <div style={styles.pageHero}>
           <div style={styles.pageHeroMain}>
-            <ImageBlock
-              src={selectedSection.image}
-              alt={selectedSection.title}
-              height={220}
-            />
+            <div style={styles.sectionAccentLarge} />
             <h3 style={styles.pageHeading}>Section Overview</h3>
             <p style={styles.pageBody}>{selectedSection.detail}</p>
           </div>
@@ -1072,7 +1107,7 @@ export default function App() {
           <div style={styles.sectionBox}>
             <strong>Suggested next action</strong>
             <p style={styles.infoText}>
-              Shop, Story, and Workforce are now the strongest real sections in the demo.
+              Shop, Story, Workforce, and Community now carry the strongest parts of the demo.
             </p>
           </div>
         </div>
@@ -1133,8 +1168,16 @@ const styles: any = {
     letterSpacing: "0.08em",
     textTransform: "uppercase",
   },
+  heroBlock: {
+    height: "220px",
+    borderRadius: "12px",
+    background:
+      "linear-gradient(135deg, #dfeee2 0%, #eef8f0 50%, #d7eadc 100%)",
+    border: "1px solid #cfe0d2",
+    marginBottom: "18px",
+  },
   title: {
-    margin: "18px 0 0 0",
+    margin: "0",
     color: "#1f3d2b",
     fontSize: "40px",
   },
@@ -1250,10 +1293,22 @@ const styles: any = {
     borderRadius: "12px",
     border: "1px solid #cfe0d2",
     boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
-    minHeight: "150px",
+    minHeight: "180px",
+  },
+  sectionAccent: {
+    height: "10px",
+    borderRadius: "999px",
+    background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
+    marginBottom: "14px",
+  },
+  sectionAccentLarge: {
+    height: "14px",
+    borderRadius: "999px",
+    background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
+    marginBottom: "18px",
   },
   tileTitle: {
-    margin: "14px 0 8px 0",
+    margin: "0 0 8px 0",
     color: "#1f3d2b",
   },
   tileText: {
@@ -1346,7 +1401,7 @@ const styles: any = {
     border: "1px solid #cfe0d2",
   },
   pageHeading: {
-    marginTop: "16px",
+    marginTop: "0",
     marginBottom: "10px",
     color: "#1f3d2b",
   },
