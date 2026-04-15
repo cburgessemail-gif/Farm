@@ -15,8 +15,6 @@ const labels = {
     explore: "Explore first. Activate a role when ready.",
     activateRole: "Activate My Role",
     back: "← Back to Ecosystem",
-    open: "Open",
-    enterSection: "Enter section",
     communityTitle: "Join the Ecosystem",
   },
   es: {
@@ -30,8 +28,6 @@ const labels = {
     explore: "Explore primero. Active un rol cuando esté listo.",
     activateRole: "Activar rol",
     back: "← Regresar",
-    open: "Abrir",
-    enterSection: "Entrar",
     communityTitle: "Únase al Ecosistema",
   },
   tl: {
@@ -45,8 +41,6 @@ const labels = {
     explore: "Mag-explore muna. Pumili ng role kapag handa na.",
     activateRole: "Piliin ang Role",
     back: "← Bumalik",
-    open: "Buksan",
-    enterSection: "Buksan",
     communityTitle: "Sumali sa Ecosystem",
   },
 };
@@ -94,6 +88,16 @@ const sectionData = {
     detail:
       "This section highlights markets, tours, demonstrations, and community gathering points that activate the full ecosystem.",
   },
+};
+
+const imagePaths = {
+  hero: "/hero.jpg",
+  grow: "/grow.jpg",
+  shop: "/shop.jpg",
+  story: "/story.jpg",
+  workforce: "/workforce.jpg",
+  community: "/community.jpg",
+  events: "/events.jpg",
 };
 
 const storyModules = [
@@ -178,6 +182,7 @@ export default function App() {
   const [selectedStory, setSelectedStory] = useState<string | null>(null);
   const [selectedWorkforce, setSelectedWorkforce] = useState<string | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
+  const [heroFailed, setHeroFailed] = useState(false);
 
   const ui = labels[lang];
 
@@ -219,7 +224,9 @@ export default function App() {
 
       <button
         style={styles.primaryButton}
-        onClick={() => setStatus(role ? `Role active: ${role}` : "Use the Role Actions panel on the right.")}
+        onClick={() =>
+          setStatus(role ? `Role active: ${role}` : "Use the Role Actions panel on the right.")
+        }
       >
         {role ? `Role: ${role}` : ui.activateRole}
       </button>
@@ -274,6 +281,17 @@ export default function App() {
               <option value="tl">Tagalog</option>
             </select>
           </div>
+
+          {!heroFailed ? (
+            <img
+              src={imagePaths.hero}
+              alt="Bronson Family Farm"
+              style={styles.heroImage}
+              onError={() => setHeroFailed(true)}
+            />
+          ) : (
+            <div style={styles.heroImageFallback} />
+          )}
 
           <h1 style={styles.heroTitle}>{ui.title}</h1>
           <p style={styles.heroSubtitle}>{ui.subtitle}</p>
@@ -374,9 +392,7 @@ export default function App() {
           </h3>
 
           {section === "grow" && (
-            <p style={styles.contentText}>
-              {sectionData.grow.detail}
-            </p>
+            <p style={styles.contentText}>{sectionData.grow.detail}</p>
           )}
 
           {section === "story" && (
@@ -463,9 +479,7 @@ export default function App() {
           )}
 
           {section === "events" && (
-            <p style={styles.contentText}>
-              {sectionData.events.detail}
-            </p>
+            <p style={styles.contentText}>{sectionData.events.detail}</p>
           )}
 
           {section === "shop" && (
@@ -554,6 +568,26 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     justifyContent: "center",
     marginBottom: "20px",
+  },
+  heroImage: {
+    width: "100%",
+    maxWidth: "820px",
+    height: "320px",
+    objectFit: "cover",
+    borderRadius: "16px",
+    display: "block",
+    margin: "0 auto 24px auto",
+    border: "1px solid #d6e4d9",
+  },
+  heroImageFallback: {
+    width: "100%",
+    maxWidth: "820px",
+    height: "320px",
+    borderRadius: "16px",
+    display: "block",
+    margin: "0 auto 24px auto",
+    border: "1px solid #d6e4d9",
+    background: "linear-gradient(135deg, #e8f1ea 0%, #dfeae2 100%)",
   },
   heroTitle: {
     margin: "0 0 16px 0",
