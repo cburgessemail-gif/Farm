@@ -1,12 +1,48 @@
 import React, { useState } from "react";
 
 const sections = [
-  { title: "🌱 Grow", desc: "Crop planning, planting, and production." },
-  { title: "🛒 Shop", desc: "Buy fresh produce and farm goods." },
-  { title: "📚 Learn", desc: "Workshops, guides, and knowledge hub." },
-  { title: "👩🏽‍🌾 Workforce", desc: "Youth training and job pathways." },
-  { title: "🤝 Community", desc: "Volunteers, families, and partnerships." },
-  { title: "📅 Events", desc: "Markets, tours, and community days." },
+  {
+    id: "grow",
+    title: "🌱 Grow",
+    desc: "Crop planning, planting, and production.",
+    detail:
+      "Explore crop planning, field readiness, growing cycles, irrigation thinking, and the systems needed to support farm production.",
+  },
+  {
+    id: "shop",
+    title: "🛒 Shop",
+    desc: "Buy fresh produce and farm goods.",
+    detail:
+      "See how customers will preorder, shop farm goods, access pickup pathways, and connect to a community-centered marketplace.",
+  },
+  {
+    id: "learn",
+    title: "📚 Learn",
+    desc: "Workshops, guides, and knowledge hub.",
+    detail:
+      "Discover education, wellness, food knowledge, practical growing guidance, and future learning tools for families and growers.",
+  },
+  {
+    id: "workforce",
+    title: "👩🏽‍🌾 Workforce",
+    desc: "Youth training and job pathways.",
+    detail:
+      "Follow the youth workforce pathway from participation to training, responsibility, and future career readiness.",
+  },
+  {
+    id: "community",
+    title: "🤝 Community",
+    desc: "Volunteers, families, and partnerships.",
+    detail:
+      "See how volunteers, families, supporters, and partners enter the ecosystem and strengthen the work together.",
+  },
+  {
+    id: "events",
+    title: "📅 Events",
+    desc: "Markets, tours, and community days.",
+    detail:
+      "Experience how markets, tours, workshops, and community gathering points activate the full farm ecosystem.",
+  },
 ];
 
 const roles = [
@@ -23,6 +59,7 @@ export default function App() {
   const [entered, setEntered] = useState(false);
   const [showRoles, setShowRoles] = useState(false);
   const [activeRole, setActiveRole] = useState<string | null>(null);
+  const [selectedSection, setSelectedSection] = useState<null | (typeof sections)[0]>(null);
 
   if (!entered) {
     return (
@@ -65,10 +102,17 @@ export default function App() {
 
       <div style={styles.grid}>
         {sections.map((section) => (
-          <div key={section.title} style={styles.tile}>
-            <h3 style={styles.tileTitle}>{section.title}</h3>
-            <p style={styles.tileText}>{section.desc}</p>
-          </div>
+          <button
+            key={section.id}
+            style={styles.tileButton}
+            onClick={() => setSelectedSection(section)}
+          >
+            <div style={styles.tile}>
+              <h3 style={styles.tileTitle}>{section.title}</h3>
+              <p style={styles.tileText}>{section.desc}</p>
+              <div style={styles.openText}>Open section →</div>
+            </div>
+          </button>
         ))}
       </div>
 
@@ -101,6 +145,66 @@ export default function App() {
             >
               Cancel
             </button>
+          </div>
+        </div>
+      )}
+
+      {selectedSection && (
+        <div style={styles.overlay}>
+          <div style={styles.sectionModal}>
+            <div style={styles.sectionModalHeader}>
+              <div>
+                <h3 style={styles.modalTitle}>{selectedSection.title}</h3>
+                <p style={styles.modalText}>{selectedSection.detail}</p>
+              </div>
+              <button
+                style={styles.closeButton}
+                onClick={() => setSelectedSection(null)}
+              >
+                Close
+              </button>
+            </div>
+
+            <div style={styles.sectionBoxRow}>
+              <div style={styles.sectionBox}>
+                <strong>What this area will do</strong>
+                <p style={styles.infoText}>
+                  This section will become a working destination inside the
+                  ecosystem with tools, information, actions, and pathways
+                  tailored to the visitor’s role.
+                </p>
+              </div>
+
+              <div style={styles.sectionBox}>
+                <strong>Current role context</strong>
+                <p style={styles.infoText}>
+                  {activeRole
+                    ? `You are currently exploring as ${activeRole}.`
+                    : "You are exploring without an active role selected."}
+                </p>
+              </div>
+            </div>
+
+            <div style={styles.sectionActions}>
+              {!activeRole && (
+                <button
+                  style={styles.button}
+                  onClick={() => {
+                    setSelectedSection(null);
+                    setShowRoles(true);
+                  }}
+                >
+                  Activate Role
+                </button>
+              )}
+
+              <button
+                style={styles.secondaryButton}
+                onClick={() => setSelectedSection(null)}
+              >
+                Return to Ecosystem
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -164,6 +268,15 @@ const styles: any = {
     cursor: "pointer",
     fontSize: "16px",
   },
+  secondaryButton: {
+    padding: "12px 20px",
+    background: "#fff",
+    color: "#1f3d2b",
+    border: "1px solid #cfe0d2",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "16px",
+  },
   page: {
     padding: "40px",
     background: "#eaf5ee",
@@ -205,12 +318,20 @@ const styles: any = {
     gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
     gap: "16px",
   },
+  tileButton: {
+    background: "transparent",
+    border: "none",
+    padding: 0,
+    textAlign: "left",
+    cursor: "pointer",
+  },
   tile: {
     background: "#fff",
     padding: "20px",
     borderRadius: "12px",
     border: "1px solid #cfe0d2",
     boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
+    minHeight: "150px",
   },
   tileTitle: {
     margin: "0 0 8px 0",
@@ -221,6 +342,12 @@ const styles: any = {
     color: "#4e6657",
     lineHeight: 1.5,
   },
+  openText: {
+    marginTop: "16px",
+    color: "#2f6b3c",
+    fontWeight: 700,
+    fontSize: "14px",
+  },
   overlay: {
     position: "fixed",
     inset: 0,
@@ -230,6 +357,7 @@ const styles: any = {
     alignItems: "center",
     padding: "20px",
     boxSizing: "border-box",
+    zIndex: 20,
   },
   modal: {
     background: "#fff",
@@ -239,6 +367,21 @@ const styles: any = {
     width: "100%",
     boxShadow: "0 18px 40px rgba(0,0,0,0.15)",
   },
+  sectionModal: {
+    background: "#fff",
+    borderRadius: "16px",
+    padding: "24px",
+    maxWidth: "860px",
+    width: "100%",
+    boxShadow: "0 18px 40px rgba(0,0,0,0.15)",
+  },
+  sectionModalHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "16px",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+  },
   modalTitle: {
     marginTop: 0,
     color: "#1f3d2b",
@@ -246,6 +389,7 @@ const styles: any = {
   modalText: {
     color: "#4e6657",
     marginBottom: "18px",
+    lineHeight: 1.5,
   },
   roleGrid: {
     display: "grid",
@@ -269,6 +413,32 @@ const styles: any = {
     cursor: "pointer",
     fontSize: "15px",
   },
+  closeButton: {
+    background: "#fff",
+    border: "1px solid #cfe0d2",
+    borderRadius: "8px",
+    padding: "10px 14px",
+    cursor: "pointer",
+    color: "#1f3d2b",
+  },
+  sectionBoxRow: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+    gap: "16px",
+    marginTop: "12px",
+  },
+  sectionBox: {
+    background: "#f8fcf9",
+    border: "1px solid #dbe8dd",
+    borderRadius: "12px",
+    padding: "16px",
+  },
+  sectionActions: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+    marginTop: "20px",
+  },
   sidePanel: {
     position: "fixed",
     top: 0,
@@ -280,6 +450,7 @@ const styles: any = {
     boxShadow: "-8px 0 24px rgba(0,0,0,0.12)",
     padding: "24px",
     boxSizing: "border-box",
+    zIndex: 10,
   },
   sideTitle: {
     marginTop: 0,
