@@ -130,6 +130,37 @@ const shopItems = [
   },
 ];
 
+const learnModules = [
+  {
+    id: "nutrition",
+    title: "Nutrition & Natural Food",
+    audience: "Families and community members",
+    description:
+      "Learn the difference between natural food and processed food, and how nutrition choices affect everyday health and energy.",
+  },
+  {
+    id: "growing",
+    title: "Growing Basics",
+    audience: "New and aspiring growers",
+    description:
+      "Simple entry points for planting, seedling care, seasonal growing, and building confidence in local food production.",
+  },
+  {
+    id: "wellness",
+    title: "Health & Wellness",
+    audience: "Growers, workers, and families",
+    description:
+      "Explore how diet, movement, and practical wellness habits support healthier living for work, play, and daily life.",
+  },
+  {
+    id: "diabetes",
+    title: "Type II Diabetes Support",
+    audience: "Adults and caregivers",
+    description:
+      "Understand food choices, healthier habits, and practical strategies that support diabetes maintenance and daily decision-making.",
+  },
+];
+
 type Section = (typeof sections)[0];
 
 function RoleModal({
@@ -196,6 +227,9 @@ export default function App() {
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
   const [showReturnNotice, setShowReturnNotice] = useState(false);
+  const [selectedLearnModule, setSelectedLearnModule] = useState<string | null>(
+    null
+  );
 
   const cartCount = useMemo(
     () => Object.values(cart).reduce((sum, qty) => sum + qty, 0),
@@ -421,6 +455,129 @@ export default function App() {
     );
   }
 
+  if (selectedSection?.id === "learn") {
+    const activeModule =
+      learnModules.find((module) => module.id === selectedLearnModule) ?? null;
+
+    return (
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <div>
+            <button style={styles.backLink} onClick={() => setSelectedSection(null)}>
+              ← Back to Ecosystem
+            </button>
+            <h2 style={styles.sectionTitle}>📚 Learn</h2>
+            <p style={styles.headerText}>
+              Education, wellness, and practical community learning.
+            </p>
+          </div>
+
+          <button style={styles.button} onClick={() => setShowRoles(true)}>
+            {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+          </button>
+        </div>
+
+        <div style={styles.pageHero}>
+          <div style={styles.pageHeroMain}>
+            <h3 style={styles.pageHeading}>Learning Overview</h3>
+            <p style={styles.pageBody}>
+              This section shows how Bronson Family Farm can teach nutrition,
+              growing, wellness, and healthier living through simple, welcoming
+              learning pathways.
+            </p>
+          </div>
+
+          <div style={styles.pageHeroSide}>
+            <strong>Current role context</strong>
+            <p style={styles.infoText}>
+              {activeRole
+                ? `You are exploring as ${activeRole}. Learning stays open while your role unlocks added actions.`
+                : "You are exploring without an active role selected."}
+            </p>
+          </div>
+        </div>
+
+        <div style={styles.learnLayout}>
+          <div>
+            <div style={styles.learnGrid}>
+              {learnModules.map((module) => (
+                <button
+                  key={module.id}
+                  style={styles.learnCardButton}
+                  onClick={() => setSelectedLearnModule(module.id)}
+                >
+                  <div style={styles.learnCard}>
+                    <div style={styles.productCategory}>{module.audience}</div>
+                    <h3 style={styles.tileTitle}>{module.title}</h3>
+                    <p style={styles.tileText}>{module.description}</p>
+                    <div style={styles.openText}>Open learning module →</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={styles.learnPanel}>
+            <h3 style={styles.pageHeading}>Learning Focus</h3>
+
+            {!activeModule ? (
+              <p style={styles.infoText}>
+                Select a learning module to preview how the education experience works.
+              </p>
+            ) : (
+              <div>
+                <div style={styles.pickupBox}>
+                  <strong>{activeModule.title}</strong>
+                  <p style={styles.infoText}>{activeModule.description}</p>
+                </div>
+
+                <div style={styles.pickupBox}>
+                  <strong>Audience</strong>
+                  <p style={styles.infoText}>{activeModule.audience}</p>
+                </div>
+
+                <div style={styles.pickupBox}>
+                  <strong>What this module can become</strong>
+                  <p style={styles.infoText}>
+                    This can expand into guided lessons, videos, printable handouts,
+                    workshop registration, and community health education.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div style={styles.cartFooter}>
+              <button style={styles.button}>View Workshop Pathway</button>
+              <button
+                style={styles.secondaryButton}
+                onClick={() => setSelectedLearnModule(null)}
+              >
+                Clear Selection
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {showRoles && (
+          <RoleModal
+            onClose={() => setShowRoles(false)}
+            onSelect={(role) => {
+              setActiveRole(role);
+              setShowRoles(false);
+            }}
+          />
+        )}
+
+        {activeRole && (
+          <RolePanel
+            activeRole={activeRole}
+            onExit={() => setActiveRole(null)}
+          />
+        )}
+      </div>
+    );
+  }
+
   if (selectedSection) {
     return (
       <div style={styles.page}>
@@ -477,7 +634,7 @@ export default function App() {
           <div style={styles.sectionBox}>
             <strong>Suggested next action</strong>
             <p style={styles.infoText}>
-              Shop now completes a live external-commerce loop. The next section to make real should be Workforce or Learn.
+              Shop and Learn are now the strongest real sections in the demo.
             </p>
           </div>
         </div>
@@ -927,6 +1084,40 @@ const styles: any = {
     gap: "12px",
     flexWrap: "wrap",
     marginTop: "14px",
+  },
+  learnLayout: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 2fr) minmax(320px, 1fr)",
+    gap: "20px",
+    alignItems: "start",
+  },
+  learnGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: "16px",
+  },
+  learnCardButton: {
+    background: "transparent",
+    border: "none",
+    padding: 0,
+    textAlign: "left",
+    cursor: "pointer",
+  },
+  learnCard: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
+    minHeight: "190px",
+  },
+  learnPanel: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+    position: "sticky",
+    top: "20px",
   },
   sidePanel: {
     position: "fixed",
