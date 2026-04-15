@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 const sections = [
   {
@@ -85,11 +85,157 @@ const roles = [
   "Admin",
 ];
 
+const shopItems = [
+  {
+    id: "bubble-babies",
+    name: "Bubble Babies Starter Roll",
+    price: 5,
+    category: "Seedlings",
+    note: "Great for early growing and transplant readiness.",
+  },
+  {
+    id: "lettuce-bundle",
+    name: "Lettuce Seedling Bundle",
+    price: 5,
+    category: "Seedlings",
+    note: "Tender young seedlings ready for planting.",
+  },
+  {
+    id: "collard-bundle",
+    name: "Collard Green Bundle",
+    price: 10,
+    category: "Greens",
+    note: "A strong community favorite with good volume.",
+  },
+  {
+    id: "pepper-pack",
+    name: "Pepper Seedling Pack",
+    price: 5,
+    category: "Seedlings",
+    note: "Mixed pepper varieties for kitchen and garden.",
+  },
+  {
+    id: "spinach-pack",
+    name: "Spinach Seedling Pack",
+    price: 3,
+    category: "Greens",
+    note: "Easy entry point for home growers and families.",
+  },
+  {
+    id: "market-box",
+    name: "Bronson Market Box",
+    price: 20,
+    category: "Produce",
+    note: "A simple mixed farm box for pickup.",
+  },
+];
+
+type Section = (typeof sections)[0];
+
+function RoleModal({
+  onClose,
+  onSelect,
+}: {
+  onClose: () => void;
+  onSelect: (role: string) => void;
+}) {
+  return (
+    <div style={styles.overlay}>
+      <div style={styles.modal}>
+        <h3 style={styles.modalTitle}>Select Your Role</h3>
+        <p style={styles.modalText}>
+          Choose a role without losing access to the full ecosystem.
+        </p>
+
+        <div style={styles.roleGrid}>
+          {roles.map((role) => (
+            <button
+              key={role}
+              style={styles.roleButton}
+              onClick={() => onSelect(role)}
+            >
+              {role}
+            </button>
+          ))}
+        </div>
+
+        <button style={styles.cancelButton} onClick={onClose}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function RolePanel({
+  activeRole,
+  onExit,
+}: {
+  activeRole: string;
+  onExit: () => void;
+}) {
+  return (
+    <div style={styles.sidePanel}>
+      <h3 style={styles.sideTitle}>{activeRole}</h3>
+      <p style={styles.sideText}>
+        Role activated. You can still explore the full ecosystem.
+      </p>
+
+      <button style={styles.sidePrimary}>Open Role Actions</button>
+      <button style={styles.sideSecondary} onClick={onExit}>
+        Exit Role
+      </button>
+    </div>
+  );
+}
+
 export default function App() {
   const [entered, setEntered] = useState(false);
   const [showRoles, setShowRoles] = useState(false);
   const [activeRole, setActiveRole] = useState<string | null>(null);
-  const [selectedSection, setSelectedSection] = useState<null | (typeof sections)[0]>(null);
+  const [selectedSection, setSelectedSection] = useState<Section | null>(null);
+  const [cart, setCart] = useState<Record<string, number>>({});
+
+  const cartCount = useMemo(
+    () => Object.values(cart).reduce((sum, qty) => sum + qty, 0),
+    [cart]
+  );
+
+  const cartTotal = useMemo(
+    () =>
+      shopItems.reduce((sum, item) => sum + (cart[item.id] || 0) * item.price, 0),
+    [cart]
+  );
+
+  const addToCart = (id: string) => {
+    setCart((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1,
+    }));
+  };
+
+  const removeFromCart = (id: string) => {
+    setCart((prev) => {
+      const current = prev[id] || 0;
+      if (current <= 1) {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      }
+      return {
+        ...prev,
+        [id]: current - 1,
+      };
+    });
+  };
+
+  const openGrownBy = () => {
+    window.open(
+      "https://grownby.com/farms/bronson-family-farm/shop",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
 
   if (!entered) {
     return (
@@ -107,15 +253,151 @@ export default function App() {
     );
   }
 
+  if (selectedSection?.id === "shop") {
+    return (
+      <div style={styles.page}>
+        <div style={styles.header}>
+          <div>
+            <button style={styles.backLink} onClick={() => setSelectedSection(null)}>
+              ← Back to Ecosystem
+            </button>
+            <h2 style={styles.sectionTitle}>🛒 Shop</h2>
+            <p style={styles.headerText}>
+              A working marketplace demo for Bronson Family Farm.
+            </p>
+          </div>
+
+          <button style={styles.button} onClick={() => setShowRoles(true)}>
+            {activeRole ? `Role: ${activeRole}` : "Activate My Role"}
+          </button>
+        </div>
+
+        <div style={styles.pageHero}>
+          <div style={styles.pageHeroMain}>
+            <h3 style={styles.pageHeading}>Marketplace Overview</h3>
+            <p style={styles.pageBody}>
+              This is the first live section of the ecosystem. It shows how
+              customers can browse products, build a cart, and move toward
+              preorder and pickup.
+            </p>
+          </div>
+
+          <div style={styles.pageHeroSide}>
+            <strong>Cart Summary</strong>
+            <p style={styles.infoText}>Items: {cartCount}</p>
+            <p style={styles.infoText}>Total: ${cartTotal.toFixed(2)}</p>
+          </div>
+        </div>
+
+        <div style={styles.shopLayout}>
+          <div>
+            <div style={styles.productGrid}>
+              {shopItems.map((item) => {
+                const qty = cart[item.id] || 0;
+                return (
+                  <div key={item.id} style={styles.productCard}>
+                    <div style={styles.productCategory}>{item.category}</div>
+                    <h3 style={styles.tileTitle}>{item.name}</h3>
+                    <p style={styles.tileText}>{item.note}</p>
+                    <div style={styles.priceRow}>
+                      <strong style={styles.priceText}>
+                        ${item.price.toFixed(2)}
+                      </strong>
+                      <div style={styles.qtyControls}>
+                        <button
+                          style={styles.smallButton}
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          −
+                        </button>
+                        <span style={styles.qtyText}>{qty}</span>
+                        <button
+                          style={styles.smallButton}
+                          onClick={() => addToCart(item.id)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div style={styles.cartPanel}>
+            <h3 style={styles.pageHeading}>Current Cart</h3>
+
+            {cartCount === 0 ? (
+              <p style={styles.infoText}>No items added yet.</p>
+            ) : (
+              <div style={styles.cartList}>
+                {shopItems
+                  .filter((item) => cart[item.id])
+                  .map((item) => (
+                    <div key={item.id} style={styles.cartItem}>
+                      <div>
+                        <strong>{item.name}</strong>
+                        <p style={styles.cartMeta}>
+                          Qty: {cart[item.id]} × ${item.price.toFixed(2)}
+                        </p>
+                      </div>
+                      <strong>
+                        ${((cart[item.id] || 0) * item.price).toFixed(2)}
+                      </strong>
+                    </div>
+                  ))}
+              </div>
+            )}
+
+            <div style={styles.cartFooter}>
+              <div style={styles.cartTotalRow}>
+                <span>Total</span>
+                <strong>${cartTotal.toFixed(2)}</strong>
+              </div>
+
+              <button style={styles.button} onClick={openGrownBy}>
+                Shop Live on GrownBy →
+              </button>
+
+              <button style={styles.secondaryButton}>
+                Pickup Information
+              </button>
+
+              <p style={styles.infoText}>
+                When finished shopping, return to this tab to continue exploring
+                the farm ecosystem.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {showRoles && (
+          <RoleModal
+            onClose={() => setShowRoles(false)}
+            onSelect={(role) => {
+              setActiveRole(role);
+              setShowRoles(false);
+            }}
+          />
+        )}
+
+        {activeRole && (
+          <RolePanel
+            activeRole={activeRole}
+            onExit={() => setActiveRole(null)}
+          />
+        )}
+      </div>
+    );
+  }
+
   if (selectedSection) {
     return (
       <div style={styles.page}>
         <div style={styles.header}>
           <div>
-            <button
-              style={styles.backLink}
-              onClick={() => setSelectedSection(null)}
-            >
+            <button style={styles.backLink} onClick={() => setSelectedSection(null)}>
               ← Back to Ecosystem
             </button>
             <h2 style={styles.sectionTitle}>{selectedSection.title}</h2>
@@ -166,8 +448,8 @@ export default function App() {
           <div style={styles.sectionBox}>
             <strong>Suggested next action</strong>
             <p style={styles.infoText}>
-              Use this page to demonstrate how one part of the ecosystem can be
-              explored deeply without leaving the larger system vision.
+              Shop is now the first fully real section. The others can follow
+              this same pattern.
             </p>
           </div>
         </div>
@@ -187,53 +469,20 @@ export default function App() {
         </div>
 
         {showRoles && (
-          <div style={styles.overlay}>
-            <div style={styles.modal}>
-              <h3 style={styles.modalTitle}>Select Your Role</h3>
-              <p style={styles.modalText}>
-                Choose a role without losing access to the full ecosystem.
-              </p>
-
-              <div style={styles.roleGrid}>
-                {roles.map((role) => (
-                  <button
-                    key={role}
-                    style={styles.roleButton}
-                    onClick={() => {
-                      setActiveRole(role);
-                      setShowRoles(false);
-                    }}
-                  >
-                    {role}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                style={styles.cancelButton}
-                onClick={() => setShowRoles(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+          <RoleModal
+            onClose={() => setShowRoles(false)}
+            onSelect={(role) => {
+              setActiveRole(role);
+              setShowRoles(false);
+            }}
+          />
         )}
 
         {activeRole && (
-          <div style={styles.sidePanel}>
-            <h3 style={styles.sideTitle}>{activeRole}</h3>
-            <p style={styles.sideText}>
-              Role activated. You can still explore the full ecosystem.
-            </p>
-
-            <button style={styles.sidePrimary}>Open Role Actions</button>
-            <button
-              style={styles.sideSecondary}
-              onClick={() => setActiveRole(null)}
-            >
-              Exit Role
-            </button>
-          </div>
+          <RolePanel
+            activeRole={activeRole}
+            onExit={() => setActiveRole(null)}
+          />
         )}
       </div>
     );
@@ -279,53 +528,17 @@ export default function App() {
       </div>
 
       {showRoles && (
-        <div style={styles.overlay}>
-          <div style={styles.modal}>
-            <h3 style={styles.modalTitle}>Select Your Role</h3>
-            <p style={styles.modalText}>
-              Choose a role without losing access to the full ecosystem.
-            </p>
-
-            <div style={styles.roleGrid}>
-              {roles.map((role) => (
-                <button
-                  key={role}
-                  style={styles.roleButton}
-                  onClick={() => {
-                    setActiveRole(role);
-                    setShowRoles(false);
-                  }}
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
-
-            <button
-              style={styles.cancelButton}
-              onClick={() => setShowRoles(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <RoleModal
+          onClose={() => setShowRoles(false)}
+          onSelect={(role) => {
+            setActiveRole(role);
+            setShowRoles(false);
+          }}
+        />
       )}
 
       {activeRole && (
-        <div style={styles.sidePanel}>
-          <h3 style={styles.sideTitle}>{activeRole}</h3>
-          <p style={styles.sideText}>
-            Role activated. You can still explore the full ecosystem.
-          </p>
-
-          <button style={styles.sidePrimary}>Open Role Actions</button>
-          <button
-            style={styles.sideSecondary}
-            onClick={() => setActiveRole(null)}
-          >
-            Exit Role
-          </button>
-        </div>
+        <RolePanel activeRole={activeRole} onExit={() => setActiveRole(null)} />
       )}
     </div>
   );
@@ -378,6 +591,17 @@ const styles: any = {
     borderRadius: "8px",
     cursor: "pointer",
     fontSize: "16px",
+  },
+  smallButton: {
+    width: "32px",
+    height: "32px",
+    borderRadius: "8px",
+    border: "1px solid #cfe0d2",
+    background: "#fff",
+    color: "#1f3d2b",
+    cursor: "pointer",
+    fontSize: "18px",
+    lineHeight: 1,
   },
   backLink: {
     background: "transparent",
@@ -562,6 +786,95 @@ const styles: any = {
     display: "flex",
     gap: "12px",
     flexWrap: "wrap",
+  },
+  shopLayout: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 2fr) minmax(300px, 1fr)",
+    gap: "20px",
+    alignItems: "start",
+  },
+  productGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "16px",
+  },
+  productCard: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
+  },
+  productCategory: {
+    display: "inline-block",
+    marginBottom: "10px",
+    padding: "4px 10px",
+    borderRadius: "999px",
+    background: "#eef8f0",
+    color: "#2f6b3c",
+    fontSize: "12px",
+    fontWeight: 700,
+  },
+  priceRow: {
+    marginTop: "16px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "10px",
+  },
+  priceText: {
+    color: "#1f3d2b",
+    fontSize: "18px",
+  },
+  qtyControls: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+  qtyText: {
+    minWidth: "18px",
+    textAlign: "center",
+    fontWeight: 700,
+    color: "#1f3d2b",
+  },
+  cartPanel: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "12px",
+    border: "1px solid #cfe0d2",
+    position: "sticky",
+    top: "20px",
+  },
+  cartList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+    marginTop: "12px",
+  },
+  cartItem: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "10px",
+    paddingBottom: "12px",
+    borderBottom: "1px solid #e5efe7",
+  },
+  cartMeta: {
+    margin: "6px 0 0 0",
+    color: "#486452",
+    fontSize: "14px",
+  },
+  cartFooter: {
+    marginTop: "20px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  cartTotalRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    color: "#1f3d2b",
+    fontSize: "18px",
   },
   sidePanel: {
     position: "fixed",
