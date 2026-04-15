@@ -4,13 +4,13 @@ type Lang = "en" | "es";
 type Section = "home" | "grow" | "shop" | "story" | "workforce" | "community" | "events";
 
 const imagePaths: Record<string, string> = {
-  hero: "/GrowArea.jpg",
-  grow: "/GrowArea2.jpg",
-  shop: "/GrowArea2.jpg",
-  story: "/SAM_0220.JPG",
-  workforce: "/SAM_0221.JPG",
-  community: "/SAM_0221.JPG",
-  events: "/SAM_0220.JPG",
+  hero: "/images/GrowArea.jpg",
+  grow: "/images/GrowArea2.jpg",
+  shop: "/images/GrowArea2.jpg",
+  story: "/images/SAM_0220.JPG",
+  workforce: "/images/SAM_0221.JPG",
+  community: "/images/SAM_0221.JPG",
+  events: "/images/SAM_0220.JPG",
 };
 
 const labels = {
@@ -68,7 +68,7 @@ const labels = {
   },
 };
 
-const sectionDetails = {
+const sectionDetails: Record<Exclude<Section, "home">, string> = {
   grow:
     "Explore crop planning, planting flow, irrigation thinking, and the systems that support Bronson Family Farm’s growing capacity.",
   shop:
@@ -95,7 +95,11 @@ export default function App() {
         <div style={styles.heroShell}>
           <div style={styles.topBar}>
             <div style={styles.eyebrow}>Bronson Family Farm Demo</div>
-            <select value={lang} onChange={(e) => setLang(e.target.value as Lang)} style={styles.select}>
+            <select
+              value={lang}
+              onChange={(e) => setLang(e.target.value as Lang)}
+              style={styles.select}
+            >
               <option value="en">English</option>
               <option value="es">Español</option>
             </select>
@@ -114,9 +118,7 @@ export default function App() {
           <div style={styles.previewHeader}>{t.preview}</div>
 
           <div style={styles.grid}>
-            {(
-              Object.keys(t.sections) as Array<keyof typeof t.sections>
-            ).map((key) => (
+            {(Object.keys(t.sections) as Array<keyof typeof t.sections>).map((key) => (
               <button key={key} style={styles.tile} onClick={() => setSection(key as Section)}>
                 <img src={imagePaths[key]} alt={t.sections[key]} style={styles.tileImage} />
                 <div style={styles.tileTitle}>{t.sections[key]}</div>
@@ -136,21 +138,46 @@ export default function App() {
           <button style={styles.backButton} onClick={() => setSection("home")}>
             {t.back}
           </button>
-          <select value={lang} onChange={(e) => setLang(e.target.value as Lang)} style={styles.select}>
+          <select
+            value={lang}
+            onChange={(e) => setLang(e.target.value as Lang)}
+            style={styles.select}
+          >
             <option value="en">English</option>
             <option value="es">Español</option>
           </select>
         </div>
 
-        <img src={imagePaths[section]} alt={t.sections[section]} style={styles.sectionImage} />
+        <img
+          src={imagePaths[section]}
+          alt={t.sections[section]}
+          style={styles.sectionImage}
+        />
 
         <h2 style={styles.sectionTitle}>{t.sections[section]}</h2>
         <p style={styles.sectionText}>{sectionDetails[section]}</p>
 
+        {section === "shop" && (
+          <div style={styles.ctaRow}>
+            <button
+              style={styles.primaryButton}
+              onClick={() =>
+                window.open(
+                  "https://grownby.com/farms/bronson-family-farm/shop",
+                  "_blank"
+                )
+              }
+            >
+              Open GrownBy Shop
+            </button>
+            <button style={styles.secondaryButton} onClick={() => setSection("home")}>
+              Return to Ecosystem
+            </button>
+          </div>
+        )}
+
         <div style={styles.sectionGrid}>
-          {(
-            Object.keys(t.sections) as Array<keyof typeof t.sections>
-          )
+          {(Object.keys(t.sections) as Array<keyof typeof t.sections>)
             .filter((key) => key !== section)
             .map((key) => (
               <button key={key} style={styles.miniTile} onClick={() => setSection(key as Section)}>
@@ -259,6 +286,16 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "16px",
     fontWeight: 700,
   },
+  secondaryButton: {
+    padding: "14px 24px",
+    background: "#ffffff",
+    color: "#173b24",
+    border: "1px solid #cfd9d1",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: 700,
+  },
   previewHeader: {
     fontSize: "18px",
     fontWeight: 700,
@@ -327,6 +364,12 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.7,
     color: "#486452",
     maxWidth: "780px",
+  },
+  ctaRow: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+    marginBottom: "22px",
   },
   sectionGrid: {
     display: "grid",
