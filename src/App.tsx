@@ -24,10 +24,10 @@ const labels = {
     subtitle:
       "Un ecosistema vivo con raíces en la comida, la familia, la tierra y el aprendizaje.",
     intro:
-      "Bronson Family Farm es más que una granja. Es un ecosistema comunitario.",
+      "Bronson Family Farm es más que una granja. Es un ecosistema comunitario centrado en alimentos, trabajo, salud y educación.",
     enter: "Entrar al Ecosistema",
     ecosystem: "Ecosistema de la Granja",
-    explore: "Explore primero.",
+    explore: "Explore primero. Active un rol cuando esté listo.",
     activateRole: "Activar rol",
     back: "← Regresar",
     open: "Abrir",
@@ -36,11 +36,13 @@ const labels = {
   },
   tl: {
     title: "Bronson Family Farm",
-    subtitle: "Isang buhay na ecosystem.",
-    intro: "Higit pa sa isang bukid.",
+    subtitle:
+      "Isang buhay na ecosystem na nakaugat sa pagkain, pamilya, lupa, at pagkatuto.",
+    intro:
+      "Ang Bronson Family Farm ay higit pa sa isang bukid. Isa itong ecosystem para sa komunidad na nag-uugnay sa pagkain, trabaho, kalusugan, at edukasyon.",
     enter: "Pumasok",
-    ecosystem: "Ecosystem",
-    explore: "Mag-explore muna.",
+    ecosystem: "Farm Ecosystem",
+    explore: "Mag-explore muna. Pumili ng role kapag handa na.",
     activateRole: "Piliin ang Role",
     back: "← Bumalik",
     open: "Buksan",
@@ -50,12 +52,48 @@ const labels = {
 };
 
 const sectionData = {
-  grow: { icon: "🌱", title: "Grow", desc: "Crop planning and production." },
-  shop: { icon: "🛒", title: "Shop", desc: "Buy farm goods." },
-  story: { icon: "📖", title: "Story", desc: "Farm history and purpose." },
-  workforce: { icon: "👩🏽‍🌾", title: "Workforce", desc: "Youth programs." },
-  community: { icon: "🤝", title: "Community", desc: "Volunteers and partners." },
-  events: { icon: "📅", title: "Events", desc: "Markets and gatherings." },
+  grow: {
+    icon: "🌱",
+    title: "Grow",
+    desc: "Crop planning and production.",
+    detail:
+      "Explore crop planning, planting, production flow, irrigation thinking, and the systems that support Bronson Family Farm’s growing capacity.",
+  },
+  shop: {
+    icon: "🛒",
+    title: "Shop",
+    desc: "Buy farm goods.",
+    detail:
+      "Browse sample items here, then use the live GrownBy button to shop in a new tab.",
+  },
+  story: {
+    icon: "📖",
+    title: "Story",
+    desc: "Farm history and purpose.",
+    detail:
+      "Bronson Family Farm is rooted in family legacy, community restoration, and the belief that land can do more than produce crops.",
+  },
+  workforce: {
+    icon: "👩🏽‍🌾",
+    title: "Workforce",
+    desc: "Youth programs.",
+    detail:
+      "This section introduces youth workforce pathways, responsibility, training, hands-on participation, and long-term opportunity.",
+  },
+  community: {
+    icon: "🤝",
+    title: "Community",
+    desc: "Volunteers and partners.",
+    detail:
+      "This section shows how volunteers, families, supporters, and partners can step into the farm ecosystem in practical ways.",
+  },
+  events: {
+    icon: "📅",
+    title: "Events",
+    desc: "Markets and gatherings.",
+    detail:
+      "This section highlights markets, tours, demonstrations, and community gathering points that activate the full ecosystem.",
+  },
 };
 
 const storyModules = [
@@ -178,9 +216,10 @@ export default function App() {
         <option value="es">Español</option>
         <option value="tl">Tagalog</option>
       </select>
+
       <button
         style={styles.primaryButton}
-        onClick={() => setStatus(role ? `Role: ${role}` : "Activate a role from the toolbox.")}
+        onClick={() => setStatus(role ? `Role active: ${role}` : "Use the Role Actions panel on the right.")}
       >
         {role ? `Role: ${role}` : ui.activateRole}
       </button>
@@ -188,52 +227,57 @@ export default function App() {
   );
 
   const renderRolePanel = () => (
-    <div style={styles.sidebar}>
-      <h4>Role Actions</h4>
-      <p style={{ fontSize: 14, color: "#486452", lineHeight: 1.4 }}>
-        The center shows where to go. This panel shows what you can do.
-      </p>
+    <aside style={styles.sidebar}>
+      <div style={styles.sidebarInner}>
+        <div style={styles.sidebarEyebrow}>Toolbox</div>
+        <h3 style={styles.sidebarTitle}>Role Actions</h3>
+        <p style={styles.sidebarText}>
+          The center shows where to go. This panel shows what you can do.
+        </p>
 
-      <button style={styles.sidebarButton} onClick={() => setRole("Grower Tools")}>
-        Grower Tools
-      </button>
-      <button style={styles.sidebarButton} onClick={() => setRole("Sales Tools")}>
-        Sales Tools
-      </button>
-      <button style={styles.sidebarButton} onClick={() => setRole("Volunteer Tools")}>
-        Volunteer Tools
-      </button>
-      <button style={styles.sidebarButton} onClick={() => setRole("Youth Tools")}>
-        Youth Tools
-      </button>
+        <button style={styles.sidebarButton} onClick={() => setRole("Grower Tools")}>
+          Grower Tools
+        </button>
+        <button style={styles.sidebarButton} onClick={() => setRole("Sales Tools")}>
+          Sales Tools
+        </button>
+        <button style={styles.sidebarButton} onClick={() => setRole("Volunteer Tools")}>
+          Volunteer Tools
+        </button>
+        <button style={styles.sidebarButton} onClick={() => setRole("Youth Tools")}>
+          Youth Tools
+        </button>
 
-      {role && (
-        <div style={{ marginTop: 20, fontSize: 14, color: "#1f3d2b" }}>
-          <strong>Active toolbox:</strong> {role}
-        </div>
-      )}
-    </div>
+        {role && (
+          <div style={styles.activeToolbox}>
+            <strong>Active toolbox:</strong> {role}
+          </div>
+        )}
+      </div>
+    </aside>
   );
 
   if (!entered) {
     return (
       <div style={styles.center}>
-        <div style={styles.card}>
-          <h4>BRONSON FAMILY FARM DEMO</h4>
+        <div style={styles.heroCard}>
+          <div style={styles.heroEyebrow}>Bronson Family Farm Demo</div>
 
-          <select
-            value={lang}
-            onChange={(e) => setLang(e.target.value as Lang)}
-            style={styles.select}
-          >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="tl">Tagalog</option>
-          </select>
+          <div style={styles.heroControls}>
+            <select
+              value={lang}
+              onChange={(e) => setLang(e.target.value as Lang)}
+              style={styles.select}
+            >
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="tl">Tagalog</option>
+            </select>
+          </div>
 
-          <h1>{ui.title}</h1>
-          <p>{ui.subtitle}</p>
-          <p>{ui.intro}</p>
+          <h1 style={styles.heroTitle}>{ui.title}</h1>
+          <p style={styles.heroSubtitle}>{ui.subtitle}</p>
+          <p style={styles.heroText}>{ui.intro}</p>
 
           <button
             style={styles.primaryButton}
@@ -252,21 +296,24 @@ export default function App() {
   if (section === null) {
     return (
       <div style={styles.layout}>
-        <div style={styles.main}>
-          <h2>{ui.ecosystem}</h2>
-          <p>{ui.explore}</p>
-
-          {renderTopControls()}
+        <main style={styles.main}>
+          <div style={styles.headerBlock}>
+            <div>
+              <h2 style={styles.pageTitle}>{ui.ecosystem}</h2>
+              <p style={styles.pageSubtitle}>{ui.explore}</p>
+            </div>
+            {renderTopControls()}
+          </div>
 
           <div style={styles.status}>{status}</div>
 
-          <div style={styles.grid}>
+          <div style={styles.sectionGrid}>
             {(Object.keys(sectionData) as SectionId[]).map((id) => {
               const item = sectionData[id];
               return (
-                <div
+                <button
                   key={id}
-                  style={styles.cardItem}
+                  style={styles.sectionCard}
                   onClick={() => {
                     if (id === "shop") {
                       window.open(
@@ -280,14 +327,15 @@ export default function App() {
                     }
                   }}
                 >
-                  <div style={styles.icon}>{item.icon}</div>
-                  <h4>{item.title}</h4>
-                  <p>{item.desc}</p>
-                </div>
+                  <div style={styles.sectionCardAccent} />
+                  <div style={styles.sectionIcon}>{item.icon}</div>
+                  <h4 style={styles.sectionCardTitle}>{item.title}</h4>
+                  <p style={styles.sectionCardText}>{item.desc}</p>
+                </button>
               );
             })}
           </div>
-        </div>
+        </main>
 
         {renderRolePanel()}
       </div>
@@ -296,9 +344,9 @@ export default function App() {
 
   return (
     <div style={styles.layout}>
-      <div style={styles.main}>
+      <main style={styles.main}>
         <button
-          style={styles.back}
+          style={styles.backButton}
           onClick={() => {
             setSection(null);
             setStatus("Returned to ecosystem.");
@@ -307,357 +355,477 @@ export default function App() {
           {ui.back}
         </button>
 
-        <h2>
-          {sectionData[section].icon} {sectionData[section].title}
-        </h2>
-
-        {renderTopControls()}
+        <div style={styles.headerBlock}>
+          <div>
+            <h2 style={styles.pageTitle}>
+              {sectionData[section].icon} {sectionData[section].title}
+            </h2>
+            <p style={styles.pageSubtitle}>{sectionData[section].desc}</p>
+          </div>
+          {renderTopControls()}
+        </div>
 
         <div style={styles.status}>{status}</div>
 
-        {section && (
-          <div style={styles.content}>
-            <div style={styles.contentAccent} />
-            <h3 style={styles.contentTitle}>
-              {sectionData[section].icon} {sectionData[section].title}
-            </h3>
+        <section style={styles.content}>
+          <div style={styles.contentAccent} />
+          <h3 style={styles.contentTitle}>
+            {sectionData[section].icon} {sectionData[section].title}
+          </h3>
 
-            {section === "grow" && (
-              <p style={styles.contentText}>
-                Explore crop planning, planting, production flow, irrigation thinking,
-                and the systems that support Bronson Family Farm’s growing capacity.
-              </p>
-            )}
+          {section === "grow" && (
+            <p style={styles.contentText}>
+              {sectionData.grow.detail}
+            </p>
+          )}
 
-            {section === "story" && (
-              <>
-                <p style={styles.contentText}>
-                  Bronson Family Farm is rooted in family legacy, community restoration,
-                  and the belief that land can do more than produce crops. This section
-                  explains the story, the ecosystem, and the Lansdowne context.
-                </p>
+          {section === "story" && (
+            <>
+              <p style={styles.contentText}>{sectionData.story.detail}</p>
 
-                <div style={styles.innerGrid}>
-                  {storyModules.map((module) => (
-                    <button
-                      key={module.id}
-                      style={styles.innerCard}
-                      onClick={() => {
-                        setSelectedStory(module.id);
-                        setStatus(`${module.title} opened.`);
-                      }}
-                    >
-                      <h4 style={styles.innerCardTitle}>{module.title}</h4>
-                      <p style={styles.innerCardText}>{module.description}</p>
-                    </button>
-                  ))}
-                </div>
-
-                {selectedStory && (
-                  <div style={styles.focusBox}>
-                    <strong>Story Focus</strong>
-                    <p style={styles.contentText}>
-                      {storyModules.find((m) => m.id === selectedStory)?.description}
-                    </p>
-                  </div>
-                )}
-              </>
-            )}
-
-            {section === "workforce" && (
-              <>
-                <p style={styles.contentText}>
-                  This section introduces youth workforce pathways, responsibility,
-                  training, hands-on participation, and long-term opportunity.
-                </p>
-
-                <div style={styles.innerGrid}>
-                  {workforceTracks.map((track) => (
-                    <button
-                      key={track.id}
-                      style={styles.innerCard}
-                      onClick={() => {
-                        setSelectedWorkforce(track.id);
-                        setStatus(`${track.title} opened.`);
-                      }}
-                    >
-                      <h4 style={styles.innerCardTitle}>{track.title}</h4>
-                      <p style={styles.innerCardText}>{track.description}</p>
-                    </button>
-                  ))}
-                </div>
-
-                {selectedWorkforce && (
-                  <div style={styles.focusBox}>
-                    <strong>Track Focus</strong>
-                    <p style={styles.contentText}>
-                      {
-                        workforceTracks.find((t) => t.id === selectedWorkforce)
-                          ?.description
-                      }
-                    </p>
-                  </div>
-                )}
-              </>
-            )}
-
-            {section === "community" && (
-              <>
-                <p style={styles.contentText}>
-                  This section shows how volunteers, families, supporters, and partners
-                  can step into the farm ecosystem in practical ways.
-                </p>
-
-                <div style={styles.innerGrid}>
-                  {communityPaths.map((path) => (
-                    <div key={path.id} style={styles.innerCardStatic}>
-                      <h4 style={styles.innerCardTitle}>{path.title}</h4>
-                      <p style={styles.innerCardText}>{path.description}</p>
-                      <button
-                        style={styles.primaryButton}
-                        onClick={() => setStatus(`${path.action} opened.`)}
-                      >
-                        {path.action}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {section === "events" && (
-              <p style={styles.contentText}>
-                This section highlights markets, tours, demonstrations, and community
-                gathering points that activate the full ecosystem.
-              </p>
-            )}
-
-            {section === "shop" && (
-              <>
-                <p style={styles.contentText}>
-                  Browse sample items here, then use the live GrownBy button to shop in a new tab.
-                </p>
-
-                <div style={styles.innerGrid}>
-                  {shopItems.map((item) => {
-                    const qty = cart[item.id] || 0;
-                    return (
-                      <div key={item.id} style={styles.innerCardStatic}>
-                        <h4 style={styles.innerCardTitle}>{item.name}</h4>
-                        <p style={styles.innerCardText}>${item.price.toFixed(2)}</p>
-                        <div style={styles.qtyRow}>
-                          <button style={styles.smallButton} onClick={() => removeFromCart(item.id)}>
-                            −
-                          </button>
-                          <span>{qty}</span>
-                          <button style={styles.smallButton} onClick={() => addToCart(item.id)}>
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div style={styles.focusBox}>
-                  <strong>Current Cart</strong>
-                  <p style={styles.contentText}>Items: {cartCount}</p>
-                  <p style={styles.contentText}>Total: ${cartTotal.toFixed(2)}</p>
+              <div style={styles.innerGrid}>
+                {storyModules.map((module) => (
                   <button
-                    style={styles.primaryButton}
+                    key={module.id}
+                    style={styles.innerCard}
                     onClick={() => {
-                      window.open(
-                        "https://grownby.com/farms/bronson-family-farm/shop",
-                        "_blank"
-                      );
-                      setStatus("Opened GrownBy in a new tab.");
+                      setSelectedStory(module.id);
+                      setStatus(`${module.title} opened.`);
                     }}
                   >
-                    Shop Live on GrownBy →
+                    <h4 style={styles.innerCardTitle}>{module.title}</h4>
+                    <p style={styles.innerCardText}>{module.description}</p>
                   </button>
+                ))}
+              </div>
+
+              {selectedStory && (
+                <div style={styles.focusBox}>
+                  <strong>Story Focus</strong>
+                  <p style={styles.contentText}>
+                    {storyModules.find((m) => m.id === selectedStory)?.description}
+                  </p>
                 </div>
-              </>
-            )}
-          </div>
-        )}
-      </div>
+              )}
+            </>
+          )}
+
+          {section === "workforce" && (
+            <>
+              <p style={styles.contentText}>{sectionData.workforce.detail}</p>
+
+              <div style={styles.innerGrid}>
+                {workforceTracks.map((track) => (
+                  <button
+                    key={track.id}
+                    style={styles.innerCard}
+                    onClick={() => {
+                      setSelectedWorkforce(track.id);
+                      setStatus(`${track.title} opened.`);
+                    }}
+                  >
+                    <h4 style={styles.innerCardTitle}>{track.title}</h4>
+                    <p style={styles.innerCardText}>{track.description}</p>
+                  </button>
+                ))}
+              </div>
+
+              {selectedWorkforce && (
+                <div style={styles.focusBox}>
+                  <strong>Track Focus</strong>
+                  <p style={styles.contentText}>
+                    {workforceTracks.find((t) => t.id === selectedWorkforce)?.description}
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+
+          {section === "community" && (
+            <>
+              <p style={styles.contentText}>{sectionData.community.detail}</p>
+
+              <div style={styles.innerGrid}>
+                {communityPaths.map((path) => (
+                  <div key={path.id} style={styles.innerCardStatic}>
+                    <h4 style={styles.innerCardTitle}>{path.title}</h4>
+                    <p style={styles.innerCardText}>{path.description}</p>
+                    <button
+                      style={styles.primaryButton}
+                      onClick={() => setStatus(`${path.action} opened.`)}
+                    >
+                      {path.action}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {section === "events" && (
+            <p style={styles.contentText}>
+              {sectionData.events.detail}
+            </p>
+          )}
+
+          {section === "shop" && (
+            <>
+              <p style={styles.contentText}>{sectionData.shop.detail}</p>
+
+              <div style={styles.innerGrid}>
+                {shopItems.map((item) => {
+                  const qty = cart[item.id] || 0;
+                  return (
+                    <div key={item.id} style={styles.innerCardStatic}>
+                      <h4 style={styles.innerCardTitle}>{item.name}</h4>
+                      <p style={styles.innerCardText}>${item.price.toFixed(2)}</p>
+                      <div style={styles.qtyRow}>
+                        <button style={styles.smallButton} onClick={() => removeFromCart(item.id)}>
+                          −
+                        </button>
+                        <span style={styles.qtyValue}>{qty}</span>
+                        <button style={styles.smallButton} onClick={() => addToCart(item.id)}>
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div style={styles.focusBox}>
+                <strong>Current Cart</strong>
+                <p style={styles.contentText}>Items: {cartCount}</p>
+                <p style={styles.contentText}>Total: ${cartTotal.toFixed(2)}</p>
+                <button
+                  style={styles.primaryButton}
+                  onClick={() => {
+                    window.open(
+                      "https://grownby.com/farms/bronson-family-farm/shop",
+                      "_blank"
+                    );
+                    setStatus("Opened GrownBy in a new tab.");
+                  }}
+                >
+                  Shop Live on GrownBy →
+                </button>
+              </div>
+            </>
+          )}
+        </section>
+      </main>
 
       {renderRolePanel()}
     </div>
   );
 }
 
-const styles: any = {
+const styles: Record<string, React.CSSProperties> = {
   center: {
+    minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
-    background: "#eaf5ee",
-  },
-  card: {
-    background: "white",
-    padding: 40,
-    borderRadius: 12,
-    textAlign: "center",
-    maxWidth: 900,
-    width: "100%",
+    background: "#dfeae2",
+    padding: "32px",
     boxSizing: "border-box",
+    fontFamily: "Arial, sans-serif",
   },
-  primaryButton: {
-    marginTop: 20,
-    padding: "10px 20px",
-    background: "#2f6b3c",
-    color: "white",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-  },
-  sidebarButton: {
-    marginTop: 10,
-    padding: "10px 14px",
-    background: "white",
-    color: "#1f3d2b",
-    border: "1px solid #cfe0d2",
-    borderRadius: 6,
-    cursor: "pointer",
+  heroCard: {
     width: "100%",
-    textAlign: "left",
+    maxWidth: "980px",
+    background: "#ffffff",
+    borderRadius: "20px",
+    padding: "48px 40px",
+    boxSizing: "border-box",
+    boxShadow: "0 10px 30px rgba(31,61,43,0.08)",
+    border: "1px solid #d6e4d9",
+    textAlign: "center",
+  },
+  heroEyebrow: {
+    fontSize: "14px",
+    fontWeight: 700,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    color: "#2f6b3c",
+    marginBottom: "18px",
+  },
+  heroControls: {
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "20px",
+  },
+  heroTitle: {
+    margin: "0 0 16px 0",
+    fontSize: "56px",
+    lineHeight: 1.05,
+    color: "#1f3d2b",
+  },
+  heroSubtitle: {
+    margin: "0 auto 18px auto",
+    maxWidth: "760px",
+    fontSize: "28px",
+    lineHeight: 1.2,
+    color: "#355743",
+  },
+  heroText: {
+    margin: "0 auto 28px auto",
+    maxWidth: "860px",
+    fontSize: "20px",
+    lineHeight: 1.6,
+    color: "#486452",
   },
   layout: {
-    display: "flex",
     minHeight: "100vh",
-    background: "#eaf5ee",
+    display: "flex",
+    background: "#dfeae2",
+    fontFamily: "Arial, sans-serif",
   },
   main: {
-    flex: 3,
-    padding: 30,
+    flex: 1,
+    padding: "32px",
+    boxSizing: "border-box",
   },
   sidebar: {
-    flex: 1,
-    background: "#eef4ef",
-    padding: 20,
-    borderLeft: "1px solid #ccc",
-    minWidth: 260,
+    width: "320px",
+    minWidth: "320px",
+    background: "#edf4ee",
+    borderLeft: "1px solid #d6e4d9",
+    padding: "24px",
+    boxSizing: "border-box",
   },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: 20,
-    marginTop: 20,
+  sidebarInner: {
+    position: "sticky",
+    top: "24px",
   },
-  cardItem: {
-    background: "white",
-    padding: 20,
-    borderRadius: 10,
-    cursor: "pointer",
-    border: "1px solid #ddd",
+  sidebarEyebrow: {
+    fontSize: "12px",
+    fontWeight: 700,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    color: "#2f6b3c",
+    marginBottom: "10px",
   },
-  icon: {
-    fontSize: 24,
-    marginBottom: 10,
+  sidebarTitle: {
+    margin: "0 0 10px 0",
+    fontSize: "28px",
+    color: "#1f3d2b",
   },
-  content: {
-    marginTop: 20,
-    background: "white",
-    padding: 24,
-    borderRadius: 12,
+  sidebarText: {
+    margin: "0 0 18px 0",
+    fontSize: "15px",
+    lineHeight: 1.5,
+    color: "#486452",
+  },
+  sidebarButton: {
+    width: "100%",
+    display: "block",
+    marginBottom: "10px",
+    padding: "12px 14px",
+    background: "#ffffff",
+    color: "#1f3d2b",
     border: "1px solid #cfe0d2",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.04)",
+    borderRadius: "10px",
+    cursor: "pointer",
+    textAlign: "left",
+    fontSize: "15px",
+    fontWeight: 600,
   },
-  contentAccent: {
+  activeToolbox: {
+    marginTop: "18px",
+    padding: "14px",
+    background: "#ffffff",
+    border: "1px solid #d6e4d9",
+    borderRadius: "10px",
+    fontSize: "15px",
+    color: "#1f3d2b",
+  },
+  headerBlock: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: "16px",
+    flexWrap: "wrap",
+    marginBottom: "16px",
+  },
+  topControls: {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+    flexWrap: "wrap",
+  },
+  select: {
+    padding: "10px 12px",
+    borderRadius: "10px",
+    border: "1px solid #cfe0d2",
+    background: "#ffffff",
+    fontSize: "15px",
+    color: "#1f3d2b",
+  },
+  primaryButton: {
+    padding: "12px 18px",
+    background: "#2f6b3c",
+    color: "#ffffff",
+    border: "none",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontSize: "15px",
+    fontWeight: 600,
+  },
+  backButton: {
+    marginBottom: "14px",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    border: "1px solid #cfe0d2",
+    background: "#ffffff",
+    color: "#1f3d2b",
+    cursor: "pointer",
+    fontSize: "15px",
+    fontWeight: 600,
+  },
+  pageTitle: {
+    margin: 0,
+    fontSize: "48px",
+    color: "#1f3d2b",
+    lineHeight: 1.1,
+  },
+  pageSubtitle: {
+    margin: "8px 0 0 0",
+    fontSize: "20px",
+    color: "#486452",
+    lineHeight: 1.4,
+  },
+  status: {
+    margin: "18px 0 24px 0",
+    padding: "14px 16px",
+    background: "#f8fcf9",
+    color: "#2f6b3c",
+    border: "1px solid #dbe8dd",
+    borderRadius: "12px",
+    fontWeight: 700,
+    fontSize: "15px",
+  },
+  sectionGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "18px",
+  },
+  sectionCard: {
+    background: "#ffffff",
+    border: "1px solid #d6e4d9",
+    borderRadius: "16px",
+    padding: "20px",
+    textAlign: "left",
+    cursor: "pointer",
+    boxShadow: "0 4px 12px rgba(31,61,43,0.05)",
+  },
+  sectionCardAccent: {
     height: "10px",
     borderRadius: "999px",
     background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
     marginBottom: "16px",
   },
-  contentTitle: {
-    margin: "0 0 12px 0",
+  sectionIcon: {
+    fontSize: "30px",
+    marginBottom: "10px",
+  },
+  sectionCardTitle: {
+    margin: "0 0 8px 0",
+    fontSize: "24px",
     color: "#1f3d2b",
-    fontSize: "28px",
+  },
+  sectionCardText: {
+    margin: 0,
+    fontSize: "16px",
+    lineHeight: 1.5,
+    color: "#486452",
+  },
+  content: {
+    marginTop: "12px",
+    background: "#ffffff",
+    padding: "28px",
+    borderRadius: "18px",
+    border: "1px solid #d6e4d9",
+    boxShadow: "0 6px 18px rgba(31,61,43,0.06)",
+  },
+  contentAccent: {
+    height: "12px",
+    borderRadius: "999px",
+    background: "linear-gradient(90deg, #2f6b3c 0%, #7fb685 100%)",
+    marginBottom: "18px",
+  },
+  contentTitle: {
+    margin: "0 0 14px 0",
+    color: "#1f3d2b",
+    fontSize: "34px",
   },
   contentText: {
     margin: "0 0 16px 0",
     color: "#486452",
     lineHeight: 1.7,
-    fontSize: "16px",
+    fontSize: "17px",
   },
   innerGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: 16,
-    marginTop: 20,
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: "16px",
+    marginTop: "20px",
   },
   innerCard: {
-    background: "#fff",
-    border: "1px solid #cfe0d2",
-    borderRadius: 10,
-    padding: 16,
+    background: "#ffffff",
+    border: "1px solid #d6e4d9",
+    borderRadius: "14px",
+    padding: "18px",
     cursor: "pointer",
     textAlign: "left",
+    boxShadow: "0 4px 10px rgba(31,61,43,0.04)",
   },
   innerCardStatic: {
-    background: "#fff",
-    border: "1px solid #cfe0d2",
-    borderRadius: 10,
-    padding: 16,
+    background: "#ffffff",
+    border: "1px solid #d6e4d9",
+    borderRadius: "14px",
+    padding: "18px",
     textAlign: "left",
+    boxShadow: "0 4px 10px rgba(31,61,43,0.04)",
   },
   innerCardTitle: {
     margin: "0 0 8px 0",
     color: "#1f3d2b",
-    fontSize: "18px",
+    fontSize: "20px",
   },
   innerCardText: {
-    margin: 0,
+    margin: "0 0 12px 0",
     color: "#486452",
     lineHeight: 1.5,
-    fontSize: "14px",
+    fontSize: "15px",
   },
   focusBox: {
-    marginTop: 20,
+    marginTop: "22px",
+    padding: "18px",
     background: "#f8fcf9",
     border: "1px solid #dbe8dd",
-    borderRadius: 10,
-    padding: 16,
+    borderRadius: "14px",
   },
   qtyRow: {
     display: "flex",
     alignItems: "center",
-    gap: 10,
-    marginTop: 12,
+    gap: "10px",
+    marginTop: "12px",
   },
   smallButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 6,
+    width: "34px",
+    height: "34px",
+    borderRadius: "8px",
     border: "1px solid #cfe0d2",
-    background: "#fff",
+    background: "#ffffff",
     cursor: "pointer",
-    fontSize: 18,
+    fontSize: "18px",
+    color: "#1f3d2b",
   },
-  back: {
-    marginBottom: 10,
-    background: "transparent",
-    border: "none",
-    color: "#2f6b3c",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
-  status: {
-    marginTop: 10,
-    color: "#2f6b3c",
-    fontWeight: "bold",
-  },
-  select: {
-    marginBottom: 10,
-    padding: "8px 10px",
-  },
-  topControls: {
-    display: "flex",
-    gap: 10,
-    alignItems: "center",
-    margin: "12px 0 16px 0",
-    flexWrap: "wrap",
+  qtyValue: {
+    minWidth: "24px",
+    textAlign: "center",
+    fontWeight: 700,
+    color: "#1f3d2b",
   },
 };
