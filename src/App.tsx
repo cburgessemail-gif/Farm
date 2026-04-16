@@ -8,6 +8,8 @@ const translations: Record<string, any> = {
     welcomeHeading: "A real working ecosystem — not a presentation",
     welcomeText:
       "Bronson Family Farm, Farm & Family Alliance, Parker Farms, and the historic Lansdowne Airport working as one system.",
+    whyText:
+      "Agriculture, workforce, family wellness, and community infrastructure working together in one living ecosystem.",
     enterDemo: "Enter Live Demo →",
     back: "Back to Welcome",
     marketplace: "Marketplace",
@@ -46,14 +48,31 @@ const translations: Record<string, any> = {
     youthSub: "Build skills, confidence, and pathways.",
     admin: "Operations",
     adminSub: "Coordinate events, staffing, and flow.",
+    bronsonTitle: "Bronson Family Farm",
+    bronsonBody:
+      "A regenerative, off-grid agritourism and food system hub growing food, learning, and opportunity on the historic Lansdowne Airport grounds.",
+    allianceTitle: "Farm & Family Alliance",
+    allianceBody:
+      "The nonprofit partner advancing workforce development, youth engagement, education, volunteer coordination, and community impact.",
+    parkerTitle: "Parker Farms",
+    parkerBody:
+      "A regional grower and marketplace partner supporting collaboration, distribution, and stronger local food pathways.",
+    airportTitle: "Lansdowne Airport",
+    airportBody:
+      "A historic site being reimagined as living community infrastructure — where land, food, learning, and belonging reconnect.",
+    marketTitle: "Growers Supply Market",
+    marketBody:
+      "Tools, growers, produce, wellness, workshops, workforce pathways, and community check-in.",
   },
   Spanish: {
     title: "Bronson Family Farm",
     subtitleWelcome: "Demostración del Ecosistema de Cultivo",
     subtitleDemo: "Panel en Vivo",
-    welcomeHeading: "Un ecosistema real en funcionamiento, no una presentación",
+    welcomeHeading: "Un ecosistema real en funcionamiento — no una presentación",
     welcomeText:
       "Bronson Family Farm, Farm & Family Alliance, Parker Farms y el histórico aeropuerto Lansdowne trabajando como un solo sistema.",
+    whyText:
+      "Agricultura, fuerza laboral, bienestar familiar e infraestructura comunitaria trabajando juntos en un ecosistema vivo.",
     enterDemo: "Entrar a la Demostración →",
     back: "Volver",
     marketplace: "Mercado",
@@ -92,6 +111,21 @@ const translations: Record<string, any> = {
     youthSub: "Desarrolle habilidades, confianza y trayectorias.",
     admin: "Operaciones",
     adminSub: "Coordine eventos, personal y flujo.",
+    bronsonTitle: "Bronson Family Farm",
+    bronsonBody:
+      "Un centro regenerativo, fuera de la red, de agroturismo y sistema alimentario que cultiva comida, aprendizaje y oportunidades en el histórico aeropuerto Lansdowne.",
+    allianceTitle: "Farm & Family Alliance",
+    allianceBody:
+      "La organización sin fines de lucro que impulsa desarrollo laboral, participación juvenil, educación, coordinación de voluntarios e impacto comunitario.",
+    parkerTitle: "Parker Farms",
+    parkerBody:
+      "Un socio regional de cultivo y mercado que apoya la colaboración, la distribución y rutas alimentarias locales más fuertes.",
+    airportTitle: "Aeropuerto Lansdowne",
+    airportBody:
+      "Un sitio histórico reinventado como infraestructura comunitaria viva, donde tierra, comida, aprendizaje y pertenencia vuelven a conectarse.",
+    marketTitle: "Growers Supply Market",
+    marketBody:
+      "Herramientas, productores, productos frescos, bienestar, talleres, trayectorias laborales y registro comunitario.",
   },
   Tagalog: {
     title: "Bronson Family Farm",
@@ -100,6 +134,8 @@ const translations: Record<string, any> = {
     welcomeHeading: "Isang totoong gumaganang ecosystem — hindi presentasyon",
     welcomeText:
       "Ang Bronson Family Farm, Farm & Family Alliance, Parker Farms, at makasaysayang Lansdowne Airport ay gumagana bilang isang sistema.",
+    whyText:
+      "Pagsasaka, kabuhayan, kalusugan ng pamilya, at imprastraktura ng komunidad na magkakaugnay sa iisang buhay na ecosystem.",
     enterDemo: "Pumasok sa Demo →",
     back: "Bumalik",
     marketplace: "Pamilihan",
@@ -138,6 +174,21 @@ const translations: Record<string, any> = {
     youthSub: "Bumuo ng kasanayan, kumpiyansa, at landas.",
     admin: "Operations",
     adminSub: "Isaayos ang event, staffing, at flow.",
+    bronsonTitle: "Bronson Family Farm",
+    bronsonBody:
+      "Isang regenerative, off-grid agritourism at food system hub na nagpapalago ng pagkain, pagkatuto, at oportunidad sa makasaysayang Lansdowne Airport grounds.",
+    allianceTitle: "Farm & Family Alliance",
+    allianceBody:
+      "Ang nonprofit partner na nagtataguyod ng workforce development, youth engagement, education, volunteer coordination, at community impact.",
+    parkerTitle: "Parker Farms",
+    parkerBody:
+      "Isang regional grower at marketplace partner na sumusuporta sa collaboration, distribution, at mas matibay na local food pathways.",
+    airportTitle: "Lansdowne Airport",
+    airportBody:
+      "Isang makasaysayang lugar na muling binibigyang-buhay bilang living community infrastructure kung saan muling nagtatagpo ang lupa, pagkain, pagkatuto, at pakikibahagi.",
+    marketTitle: "Growers Supply Market",
+    marketBody:
+      "Mga kagamitan, growers, produce, wellness, workshops, workforce pathways, at community check-in.",
   },
   Patwa: {
     title: "Bronson Family Farm",
@@ -146,6 +197,8 @@ const translations: Record<string, any> = {
     welcomeHeading: "A real workin ecosystem — not a presentation",
     welcomeText:
       "Bronson Family Farm, Farm & Family Alliance, Parker Farms, an di historic Lansdowne Airport a work as one system.",
+    whyText:
+      "Farmin, work pathway, family wellness, an community infrastructure all tied up inna one livin ecosystem.",
     enterDemo: "Go Ina Di Demo →",
     back: "Back",
     marketplace: "Market",
@@ -184,6 +237,21 @@ const translations: Record<string, any> = {
     youthSub: "Build skills, confidence, an pathway.",
     admin: "Operations",
     adminSub: "Coordinate events, staffing, an flow.",
+    bronsonTitle: "Bronson Family Farm",
+    bronsonBody:
+      "A regenerative, off-grid agritourism an food system hub weh a grow food, learning, an opportunity pon di historic Lansdowne Airport grounds.",
+    allianceTitle: "Farm & Family Alliance",
+    allianceBody:
+      "Di nonprofit partner weh a push workforce development, youth engagement, education, volunteer coordination, an community impact.",
+    parkerTitle: "Parker Farms",
+    parkerBody:
+      "A regional growa an marketplace partner supportin collaboration, distribution, an stronger local food pathway.",
+    airportTitle: "Lansdowne Airport",
+    airportBody:
+      "A historic site a get reimagined as living community infrastructure weh land, food, learning, an belonging connect back again.",
+    marketTitle: "Growers Supply Market",
+    marketBody:
+      "Tools, growas, produce, wellness, workshop, workforce pathway, an community check-in.",
   },
   Italian: {
     title: "Bronson Family Farm",
@@ -192,6 +260,8 @@ const translations: Record<string, any> = {
     welcomeHeading: "Un ecosistema reale e funzionante — non una presentazione",
     welcomeText:
       "Bronson Family Farm, Farm & Family Alliance, Parker Farms e lo storico aeroporto Lansdowne lavorano come un unico sistema.",
+    whyText:
+      "Agricoltura, lavoro, benessere familiare e infrastruttura comunitaria che operano insieme in un ecosistema vivo.",
     enterDemo: "Entra nella Demo →",
     back: "Indietro",
     marketplace: "Mercato",
@@ -230,6 +300,21 @@ const translations: Record<string, any> = {
     youthSub: "Sviluppa competenze, fiducia e percorsi.",
     admin: "Operazioni",
     adminSub: "Coordina eventi, personale e flusso.",
+    bronsonTitle: "Bronson Family Farm",
+    bronsonBody:
+      "Un centro rigenerativo, fuori rete, di agriturismo e sistema alimentare che coltiva cibo, apprendimento e opportunità nei terreni storici dell'aeroporto Lansdowne.",
+    allianceTitle: "Farm & Family Alliance",
+    allianceBody:
+      "Il partner nonprofit che promuove sviluppo del lavoro, coinvolgimento dei giovani, educazione, coordinamento dei volontari e impatto comunitario.",
+    parkerTitle: "Parker Farms",
+    parkerBody:
+      "Un partner regionale di coltivazione e mercato che sostiene collaborazione, distribuzione e filiere alimentari locali più forti.",
+    airportTitle: "Lansdowne Airport",
+    airportBody:
+      "Un sito storico reinterpretato come infrastruttura comunitaria viva dove terra, cibo, apprendimento e appartenenza si riconnettono.",
+    marketTitle: "Growers Supply Market",
+    marketBody:
+      "Strumenti, coltivatori, prodotti freschi, benessere, workshop, percorsi di lavoro e check-in comunitario.",
   },
   Hebrew: {
     title: "Bronson Family Farm",
@@ -238,6 +323,8 @@ const translations: Record<string, any> = {
     welcomeHeading: "מערכת אקולוגית פעילה אמיתית — לא מצגת",
     welcomeText:
       "Bronson Family Farm, Farm & Family Alliance, Parker Farms ושדה התעופה ההיסטורי Lansdowne פועלים כמערכת אחת.",
+    whyText:
+      "חקלאות, תעסוקה, רווחת המשפחה ותשתית קהילתית פועלים יחד בתוך מערכת אקולוגית חיה אחת.",
     enterDemo: "כניסה להדגמה ←",
     back: "חזרה",
     marketplace: "שוק",
@@ -276,6 +363,21 @@ const translations: Record<string, any> = {
     youthSub: "בנו מיומנויות, ביטחון ומסלולים.",
     admin: "תפעול",
     adminSub: "תאמו אירועים, כוח אדם וזרימה.",
+    bronsonTitle: "Bronson Family Farm",
+    bronsonBody:
+      "מרכז אגריטוריזם ומערכת מזון מתחדשת, שאינו תלוי ברשת, המגדל מזון, למידה והזדמנות בשטחי שדה התעופה ההיסטורי Lansdowne.",
+    allianceTitle: "Farm & Family Alliance",
+    allianceBody:
+      "השותף ללא מטרות רווח המקדם פיתוח תעסוקה, מעורבות צעירים, חינוך, תיאום מתנדבים והשפעה קהילתית.",
+    parkerTitle: "Parker Farms",
+    parkerBody:
+      "שותף אזורי לגידול ולשוק התומך בשיתוף פעולה, הפצה ונתיבי מזון מקומיים חזקים יותר.",
+    airportTitle: "Lansdowne Airport",
+    airportBody:
+      "אתר היסטורי המדומיין מחדש כתשתית קהילתית חיה שבה אדמה, מזון, למידה ושייכות מתחברים מחדש.",
+    marketTitle: "Growers Supply Market",
+    marketBody:
+      "כלים, מגדלים, תוצרת, בריאות, סדנאות, מסלולי תעסוקה וצ'ק-אין קהילתי.",
   },
 };
 
@@ -294,6 +396,16 @@ function panel(extra: React.CSSProperties = {}): React.CSSProperties {
     borderRadius: "20px",
     padding: "20px",
     border: "1px solid rgba(255,255,255,0.15)",
+    ...extra,
+  };
+}
+
+function infoCard(extra: React.CSSProperties = {}): React.CSSProperties {
+  return {
+    background: "rgba(255,255,255,0.08)",
+    borderRadius: "18px",
+    padding: "16px",
+    border: "1px solid rgba(255,255,255,0.12)",
     ...extra,
   };
 }
@@ -337,6 +449,7 @@ export default function App() {
         background:
           "linear-gradient(rgba(10,30,20,0.9), rgba(20,60,40,0.9)), url(/GrowArea.jpg)",
         backgroundSize: "cover",
+        backgroundPosition: "center",
         color: "white",
         padding: "20px",
         fontFamily: "Arial",
@@ -350,6 +463,7 @@ export default function App() {
             display: "flex",
             justifyContent: "space-between",
             flexWrap: "wrap",
+            gap: "16px",
           }}
         >
           <div>
@@ -366,11 +480,13 @@ export default function App() {
                 onClick={() => setLang(l)}
                 style={{
                   margin: "4px",
-                  padding: "6px 12px",
-                  borderRadius: "20px",
+                  padding: "8px 14px",
+                  borderRadius: "999px",
                   border: "1px solid white",
                   background: l === lang ? "#d7ff73" : "transparent",
                   color: l === lang ? "#173116" : "white",
+                  fontWeight: 700,
+                  cursor: "pointer",
                 }}
               >
                 {l}
@@ -380,24 +496,110 @@ export default function App() {
         </div>
 
         {screen === "welcome" ? (
-          <div style={panel()}>
-            <h1 style={{ fontSize: "48px" }}>{t.welcomeHeading}</h1>
+          <div style={{ display: "grid", gridTemplateColumns: "1.3fr 0.7fr", gap: "20px" }}>
+            <div style={panel()}>
+              <div
+                style={{
+                  display: "inline-block",
+                  padding: "8px 14px",
+                  borderRadius: "999px",
+                  background: "rgba(215,255,115,0.18)",
+                  color: "#e7ffc5",
+                  fontWeight: 700,
+                  marginBottom: "18px",
+                }}
+              >
+                Live Now
+              </div>
 
-            <p style={{ fontSize: "20px" }}>{t.welcomeText}</p>
+              <h1 style={{ fontSize: "56px", lineHeight: 1.05, margin: "0 0 18px 0" }}>
+                {t.welcomeHeading}
+              </h1>
 
-            <button
-              onClick={() => setScreen("demo")}
-              style={{
-                marginTop: "20px",
-                padding: "12px 20px",
-                background: "#d7ff73",
-                color: "#173116",
-                borderRadius: "25px",
-                fontWeight: 700,
-              }}
-            >
-              {t.enterDemo}
-            </button>
+              <p style={{ fontSize: "24px", lineHeight: 1.5, maxWidth: "980px" }}>
+                {t.welcomeText}
+              </p>
+
+              <p style={{ fontSize: "18px", lineHeight: 1.6, maxWidth: "980px", opacity: 0.95 }}>
+                {t.whyText}
+              </p>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "12px",
+                  marginTop: "22px",
+                }}
+              >
+                <div style={infoCard()}>
+                  <div style={{ fontSize: "20px", fontWeight: 800, marginBottom: "8px" }}>
+                    {t.bronsonTitle}
+                  </div>
+                  <div style={{ lineHeight: 1.55 }}>{t.bronsonBody}</div>
+                </div>
+
+                <div style={infoCard()}>
+                  <div style={{ fontSize: "20px", fontWeight: 800, marginBottom: "8px" }}>
+                    {t.allianceTitle}
+                  </div>
+                  <div style={{ lineHeight: 1.55 }}>{t.allianceBody}</div>
+                </div>
+
+                <div style={infoCard()}>
+                  <div style={{ fontSize: "20px", fontWeight: 800, marginBottom: "8px" }}>
+                    {t.parkerTitle}
+                  </div>
+                  <div style={{ lineHeight: 1.55 }}>{t.parkerBody}</div>
+                </div>
+
+                <div style={infoCard()}>
+                  <div style={{ fontSize: "20px", fontWeight: 800, marginBottom: "8px" }}>
+                    {t.airportTitle}
+                  </div>
+                  <div style={{ lineHeight: 1.55 }}>{t.airportBody}</div>
+                </div>
+              </div>
+
+              <div style={{ marginTop: "24px" }}>
+                <button
+                  onClick={() => setScreen("demo")}
+                  style={{
+                    padding: "12px 20px",
+                    background: "#d7ff73",
+                    color: "#173116",
+                    borderRadius: "25px",
+                    fontWeight: 700,
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                >
+                  {t.enterDemo}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gap: "20px" }}>
+              <div style={panel()}>
+                <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px" }}>
+                  {t.marketTitle}
+                </div>
+                <div style={{ lineHeight: 1.6 }}>{t.marketBody}</div>
+              </div>
+
+              <div style={panel()}>
+                <div style={{ fontSize: "24px", fontWeight: 800, marginBottom: "12px" }}>
+                  {t.marketplace}
+                </div>
+                <div style={infoCard()}>{t.marketItems}</div>
+
+                <div style={{ fontSize: "24px", fontWeight: 800, margin: "18px 0 12px" }}>
+                  {t.weather}
+                </div>
+                <div style={infoCard()}>{t.weatherItems}</div>
+              </div>
+            </div>
           </div>
         ) : (
           <>
@@ -421,6 +623,7 @@ export default function App() {
                       borderRadius: "20px",
                       backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url(${meta.image})`,
                       backgroundSize: "cover",
+                      backgroundPosition: "center",
                       border:
                         role === r.id
                           ? `3px solid ${meta.color}`
@@ -482,6 +685,7 @@ export default function App() {
                     border: "1px solid white",
                     background: "transparent",
                     color: "white",
+                    cursor: "pointer",
                   }}
                 >
                   {t.back}
