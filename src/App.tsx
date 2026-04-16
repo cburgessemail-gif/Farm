@@ -4,23 +4,23 @@ type View = "home" | "role";
 type Role = "guest" | "customer" | "grower" | "youth" | "volunteer" | "supervisor";
 
 const IMAGES = {
-  hero: "/FarmArrival.jpg",
-  history: "/FarmRoots.jpg",
-  quote: "/FarmMorning.jpg",
-  growing: "/FarmRows.jpg",
-  market: "/FarmFood.jpg",
-  youth: "/FarmYouth.jpg",
-  events: "/FarmEvent.jpg",
-  community: "/FarmCommunity.jpg",
-  future: "/FarmFuture.jpg",
-  guest: "/FarmWelcome.jpg",
-  customer: "/FarmHarvest.jpg",
-  grower: "/FarmWork.jpg",
-  volunteer: "/FarmHands.jpg",
-  supervisor: "/FarmOverview.jpg",
+  hero: "/GrowArea.jpg",
+  history: "/GrowArea2.jpg",
+  quote: "/GrowArea.jpg",
+  growing: "/GrowArea2.jpg",
+  market: "/GrowArea.jpg",
+  youth: "/GrowArea2.jpg",
+  events: "/GrowArea.jpg",
+  community: "/GrowArea2.jpg",
+  future: "/GrowArea.jpg",
+  guest: "/GrowArea2.jpg",
+  customer: "/GrowArea.jpg",
+  grower: "/GrowArea2.jpg",
+  volunteer: "/GrowArea.jpg",
+  supervisor: "/GrowArea2.jpg",
 };
 
-const roles: { id: Role; label: string; subtitle: string }[] = [
+const ROLES: { id: Role; label: string; subtitle: string }[] = [
   { id: "guest", label: "Guest", subtitle: "Explore the farm" },
   { id: "customer", label: "Customer", subtitle: "Find food and shop" },
   { id: "grower", label: "Grower", subtitle: "See crops and workflow" },
@@ -39,7 +39,7 @@ export default function App() {
         return {
           title: "Guest Experience",
           image: IMAGES.guest,
-          position: "center 45%",
+          position: "center 30%",
           intro:
             "A welcoming path into the farm, its purpose, its visible activity, and the ways people can participate.",
           bullets: [
@@ -53,7 +53,7 @@ export default function App() {
         return {
           title: "Customer Experience",
           image: IMAGES.customer,
-          position: "center 55%",
+          position: "center 72%",
           intro:
             "A direct path to fresh food, access, ordering, pickup, and the visible connection between food and place.",
           bullets: [
@@ -67,7 +67,7 @@ export default function App() {
         return {
           title: "Grower Experience",
           image: IMAGES.grower,
-          position: "center 42%",
+          position: "left center",
           intro:
             "A view into crops, production rhythm, practical workflow, and the systems that support successful growing.",
           bullets: [
@@ -81,7 +81,7 @@ export default function App() {
         return {
           title: "Youth Experience",
           image: IMAGES.youth,
-          position: "center 48%",
+          position: "right center",
           intro:
             "A structured pathway for work, learning, responsibility, growth, and belonging through real farm activity.",
           bullets: [
@@ -95,7 +95,7 @@ export default function App() {
         return {
           title: "Volunteer Experience",
           image: IMAGES.volunteer,
-          position: "center 50%",
+          position: "center 16%",
           intro:
             "A clear path into contribution, visible needs, meaningful service, and community-powered support.",
           bullets: [
@@ -109,7 +109,7 @@ export default function App() {
         return {
           title: "Supervisor Experience",
           image: IMAGES.supervisor,
-          position: "center 46%",
+          position: "center 84%",
           intro:
             "A view into coordination, oversight, support, and the practical flow behind daily movement on the farm.",
           bullets: [
@@ -130,8 +130,8 @@ export default function App() {
         <TopNav
           onHome={() => setView("home")}
           rightContent={
-            <div style={styles.roleTopPills}>
-              {roles.map((role) => (
+            <div style={styles.rolePillRow}>
+              {ROLES.map((role) => (
                 <button
                   key={role.id}
                   onClick={() => setSelectedRole(role.id)}
@@ -150,51 +150,30 @@ export default function App() {
         <section
           style={{
             ...styles.roleHero,
-            backgroundImage: `linear-gradient(rgba(10,20,13,0.20), rgba(10,20,13,0.56)), url(${roleData.image})`,
+            backgroundImage: `linear-gradient(rgba(9,16,11,0.14), rgba(9,16,11,0.52)), url(${roleData.image})`,
             backgroundPosition: roleData.position,
           }}
         >
-          <div style={styles.roleHeroContent}>
+          <div style={styles.roleHeroInner}>
             <button style={styles.backButton} onClick={() => setView("home")}>
               ← Back to farm
             </button>
 
-            <div style={styles.kicker}>Role-based live view</div>
+            <div style={styles.eyebrowLight}>Role-based live view</div>
             <h1 style={styles.roleTitle}>{roleData.title}</h1>
             <p style={styles.roleIntro}>{roleData.intro}</p>
-
-            <div style={styles.roleGlassPanel}>
-              <div style={styles.roleGlassHeader}>What this path shows</div>
-              <ul style={styles.bulletList}>
-                {roleData.bullets.map((bullet) => (
-                  <li key={bullet} style={styles.bulletItem}>
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </section>
 
-        <section style={styles.roleLowerSection}>
-          <div style={styles.roleLowerGrid}>
-            <div style={styles.deepPanel}>
-              <div style={styles.panelKicker}>Live feel</div>
-              <h3 style={styles.panelTitle}>Built to feel like a place, not a dashboard</h3>
-              <p style={styles.panelText}>
-                This role view stays grounded in the land, the work, and the real
-                movement of the farm. It should feel connected to the same ecosystem
-                rather than detached from it.
-              </p>
-            </div>
-
-            <div style={styles.deepPanel}>
-              <div style={styles.panelKicker}>What is visible</div>
-              <h3 style={styles.panelTitle}>Only what belongs here</h3>
-              <p style={styles.panelText}>
-                Each role reveals the parts of the ecosystem that matter most to that
-                person while staying visually connected to the larger farm experience.
-              </p>
+        <section style={styles.roleBulletsSection}>
+          <div style={styles.roleBulletsWrap}>
+            <div style={styles.roleBulletsLabel}>What this path shows</div>
+            <div style={styles.roleBulletsGrid}>
+              {roleData.bullets.map((bullet) => (
+                <div key={bullet} style={styles.roleBulletCard}>
+                  {bullet}
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -207,219 +186,151 @@ export default function App() {
       <TopNav
         onHome={() => setView("home")}
         rightContent={
-          <button style={styles.navCta} onClick={() => setView("role")}>
+          <button style={styles.navButton} onClick={() => setView("role")}>
             Enter by role
           </button>
         }
       />
 
-      <Hero
+      <HeroSection
         image={IMAGES.hero}
-        imagePosition="center 52%"
+        imagePosition="center 58%"
         title="Bronson Family Farm"
         subtitle="A living ecosystem."
         description="Land, food, work, learning, and community moving together."
-        primaryLabel="Enter the farm"
-        onPrimary={() => {
+        onEnter={() => {
           const target = document.getElementById("history");
           target?.scrollIntoView({ behavior: "smooth" });
         }}
-        secondaryLabel="Enter by role"
-        onSecondary={() => setView("role")}
+        onRole={() => setView("role")}
       />
 
-      <section
+      <SplitStorySection
         id="history"
-        style={{
-          ...styles.historySection,
-          backgroundImage: `linear-gradient(rgba(12,20,14,0.26), rgba(12,20,14,0.58)), url(${IMAGES.history})`,
-          backgroundPosition: "center 34%",
-        }}
-      >
-        <div style={styles.historyContent}>
-          <div style={styles.kicker}>Our Roots</div>
-          <h2 style={styles.historyTitle}>
-            A farm built from legacy, land, and lived experience
-          </h2>
-          <p style={styles.historyText}>
-            Bronson Family Farm grows from family history, resilience, and a belief
-            that land can restore connection, dignity, and opportunity.
-          </p>
-          <p style={styles.historyText}>
-            What grows here is more than food — it is access, work, learning,
-            community renewal, and a future rooted in shared possibility.
-          </p>
-        </div>
-      </section>
+        image={IMAGES.history}
+        imagePosition="center 24%"
+        imageSide="left"
+        kicker="Our Roots"
+        title="A farm built from legacy, land, and lived experience"
+        paragraphs={[
+          "Bronson Family Farm grows from family history, resilience, and a belief that land can restore connection, dignity, and opportunity.",
+          "What grows here is more than food — it is access, work, learning, community renewal, and a future rooted in shared possibility.",
+        ]}
+        dark={true}
+      />
 
-      <section
-        style={{
-          ...styles.quoteBand,
-          backgroundImage: `linear-gradient(rgba(15,26,18,0.56), rgba(15,26,18,0.56)), url(${IMAGES.quote})`,
-          backgroundPosition: "center 44%",
-        }}
-      >
-        <div style={styles.quoteBandInner}>
-          <p style={styles.quoteText}>“What grows here is more than food.”</p>
-          <p style={styles.quoteSubtext}>
-            It is a place where people enter the land and find connection, work,
-            learning, healing, and opportunity.
-          </p>
-        </div>
-      </section>
+      <FullQuoteSection
+        image={IMAGES.quote}
+        imagePosition="center 74%"
+        quote="What grows here is more than food."
+        subquote="It is a place where people enter the land and find connection, work, learning, healing, and opportunity."
+      />
 
-      <section id="live-now" style={styles.introBand}>
-        <div style={styles.introBandInner}>
-          <div style={styles.kickerDark}>What is live</div>
-          <h2 style={styles.bandTitle}>Visible parts of the farm, shown inside the farm</h2>
-          <p style={styles.bandText}>
-            No calendar block. No fake modules. Just the real system pieces expressed
-            through the land, the work, and the people they serve.
-          </p>
+      <PlainIntroBand
+        kicker="What is live"
+        title="Visible parts of the farm, shown inside the farm"
+        text="No calendar block. No fake modules. Just the real system pieces expressed through the land, the work, and the people they serve."
+      />
 
-          <div style={styles.liveChips}>
-            {["Growing", "Food Access", "Youth Workforce", "Volunteers", "Events", "Operations"].map(
-              (item) => (
-                <span key={item} style={styles.liveChip}>
-                  {item}
-                </span>
-              )
-            )}
-          </div>
-        </div>
-      </section>
-
-      <ImmersiveSection
+      <ImageBandSection
         image={IMAGES.growing}
-        imagePosition="center 40%"
+        imagePosition="left center"
         align="left"
         kicker="Growing"
         title="What’s growing is part of the story"
         text="Crop production, land use, momentum, and the visible proof that the farm is active."
-        primaryLabel="See grower path"
-        onPrimary={() => {
+        buttonLabel="See grower path"
+        onButton={() => {
           setSelectedRole("grower");
           setView("role");
         }}
       />
 
-      <ImmersiveSection
+      <ImageBandSection
         image={IMAGES.market}
-        imagePosition="center 58%"
+        imagePosition="center 78%"
         align="right"
         kicker="Food access"
         title="Fresh food should feel close, simple, and real"
         text="Shopping, pickup, SNAP-friendly access, and the customer experience belong inside the farm story, not outside it."
-        primaryLabel="See customer path"
-        onPrimary={() => {
+        buttonLabel="See customer path"
+        onButton={() => {
           setSelectedRole("customer");
           setView("role");
         }}
       />
 
-      <ImmersiveSection
+      <ImageBandSection
         image={IMAGES.youth}
-        imagePosition="center 48%"
+        imagePosition="right center"
         align="left"
         kicker="Youth workforce"
         title="Learning happens through real work"
         text="Responsibility, structure, and growth are made visible through participation on the land."
-        primaryLabel="See youth path"
-        onPrimary={() => {
+        buttonLabel="See youth path"
+        onButton={() => {
           setSelectedRole("youth");
           setView("role");
         }}
       />
 
-      <ImmersiveSection
+      <ImageBandSection
         image={IMAGES.events}
-        imagePosition="center 52%"
+        imagePosition="center 18%"
         align="right"
         kicker="Community"
         title="Events and participation make the ecosystem visible"
         text="Volunteers, visitors, partners, and community activity should feel like part of one living place."
-        primaryLabel="See volunteer path"
-        onPrimary={() => {
+        buttonLabel="See volunteer path"
+        onButton={() => {
           setSelectedRole("volunteer");
           setView("role");
         }}
       />
 
-      <section
-        style={{
-          ...styles.communitySection,
-          backgroundImage: `linear-gradient(rgba(11,20,14,0.20), rgba(11,20,14,0.56)), url(${IMAGES.community})`,
-          backgroundPosition: "center 46%",
-        }}
-      >
-        <div style={styles.communityInner}>
-          <div style={styles.kicker}>Why it matters</div>
-          <h2 style={styles.communityTitle}>
-            The farm connects food, family, workforce, and community renewal
-          </h2>
-          <p style={styles.communityText}>
-            This ecosystem is meant to serve more than one purpose. It creates
-            visibility for growing, strengthens access to fresh food, makes room
-            for learning and work, and gives partners and community members a place
-            to belong.
-          </p>
+      <SplitStorySection
+        image={IMAGES.community}
+        imagePosition="center 62%"
+        imageSide="right"
+        kicker="Why it matters"
+        title="The farm connects food, family, workforce, and community renewal"
+        paragraphs={[
+          "This ecosystem is meant to serve more than one purpose. It creates visibility for growing, strengthens access to fresh food, makes room for learning and work, and gives partners and community members a place to belong.",
+        ]}
+        dark={false}
+      />
 
-          <div style={styles.communityGrid}>
-            <SoftPanel
-              title="Food"
-              text="Fresh produce, visible growing, and access that feels connected to place."
-            />
-            <SoftPanel
-              title="Work"
-              text="Youth and adults gain real experience through structure, participation, and responsibility."
-            />
-            <SoftPanel
-              title="Community"
-              text="Events, volunteers, partners, and visitors become part of one connected environment."
-            />
-          </div>
-        </div>
-      </section>
+      <SplitStorySection
+        image={IMAGES.future}
+        imagePosition="center 82%"
+        imageSide="left"
+        kicker="What comes next"
+        title="Enter the living system through the path that belongs to you"
+        paragraphs={[
+          "After the farm, the roots, the live movement, and the community are made visible, each person can step into the part of the ecosystem that fits their role.",
+        ]}
+        dark={true}
+        buttonLabel="Enter by role"
+        onButton={() => setView("role")}
+      />
 
-      <section
-        style={{
-          ...styles.futureSection,
-          backgroundImage: `linear-gradient(rgba(12,20,14,0.20), rgba(12,20,14,0.52)), url(${IMAGES.future})`,
-          backgroundPosition: "center 62%",
-        }}
-      >
-        <div style={styles.futureContent}>
-          <div style={styles.kicker}>What comes next</div>
-          <h2 style={styles.futureTitle}>
-            Enter the living system through the path that belongs to you
-          </h2>
-          <p style={styles.futureText}>
-            After the farm, the roots, the live movement, and the community are made
-            visible, each person can step into the part of the ecosystem that fits
-            their role.
-          </p>
-          <button style={styles.primaryBtn} onClick={() => setView("role")}>
-            Enter by role
-          </button>
-        </div>
-      </section>
+      <section style={styles.roleEntrySection}>
+        <div style={styles.roleEntryInner}>
+          <div style={styles.eyebrowDark}>Enter the system</div>
+          <h2 style={styles.roleEntryTitle}>Choose how you are entering the farm today</h2>
 
-      <section style={styles.rolesEntrySection}>
-        <div style={styles.rolesEntryInner}>
-          <div style={styles.kickerDark}>Enter the system</div>
-          <h2 style={styles.rolesHeading}>Choose how you are entering the farm today</h2>
-          <div style={styles.roleChooserGrid}>
-            {roles.map((role) => (
+          <div style={styles.roleGrid}>
+            {ROLES.map((role) => (
               <button
                 key={role.id}
                 onClick={() => {
                   setSelectedRole(role.id);
                   setView("role");
                 }}
-                style={styles.roleChooserCard}
+                style={styles.roleCard}
               >
-                <div style={styles.roleChooserTitle}>{role.label}</div>
-                <div style={styles.roleChooserSubtitle}>{role.subtitle}</div>
+                <div style={styles.roleCardTitle}>{role.label}</div>
+                <div style={styles.roleCardSubtitle}>{role.subtitle}</div>
               </button>
             ))}
           </div>
@@ -438,11 +349,11 @@ function TopNav({
 }) {
   return (
     <header style={styles.nav}>
-      <button onClick={onHome} style={styles.logoButton}>
-        <div style={styles.logoDot} />
+      <button onClick={onHome} style={styles.brandButton}>
+        <div style={styles.brandDot} />
         <div>
-          <div style={styles.logoTitle}>Bronson Family Farm</div>
-          <div style={styles.logoSub}>Immersive live demo</div>
+          <div style={styles.brandTitle}>Bronson Family Farm</div>
+          <div style={styles.brandSub}>Immersive live demo</div>
         </div>
       </button>
       <div>{rightContent}</div>
@@ -450,47 +361,43 @@ function TopNav({
   );
 }
 
-function Hero({
+function HeroSection({
   image,
   imagePosition,
   title,
   subtitle,
   description,
-  primaryLabel,
-  onPrimary,
-  secondaryLabel,
-  onSecondary,
+  onEnter,
+  onRole,
 }: {
   image: string;
   imagePosition?: string;
   title: string;
   subtitle: string;
   description: string;
-  primaryLabel: string;
-  onPrimary: () => void;
-  secondaryLabel: string;
-  onSecondary: () => void;
+  onEnter: () => void;
+  onRole: () => void;
 }) {
   return (
     <section
       style={{
         ...styles.hero,
-        backgroundImage: `linear-gradient(rgba(8,16,11,0.18), rgba(8,16,11,0.52)), url(${image})`,
+        backgroundImage: `linear-gradient(rgba(7,13,9,0.16), rgba(7,13,9,0.48)), url(${image})`,
         backgroundPosition: imagePosition || "center center",
       }}
     >
-      <div style={styles.heroContent}>
-        <div style={styles.kicker}>Living ecosystem</div>
+      <div style={styles.heroInner}>
+        <div style={styles.eyebrowLight}>Living ecosystem</div>
         <h1 style={styles.heroTitle}>{title}</h1>
         <div style={styles.heroSubtitle}>{subtitle}</div>
-        <p style={styles.heroText}>{description}</p>
+        <p style={styles.heroDescription}>{description}</p>
 
-        <div style={styles.heroButtons}>
-          <button style={styles.primaryBtn} onClick={onPrimary}>
-            {primaryLabel}
+        <div style={styles.heroButtonRow}>
+          <button style={styles.primaryButton} onClick={onEnter}>
+            Enter the farm
           </button>
-          <button style={styles.secondaryBtn} onClick={onSecondary}>
-            {secondaryLabel}
+          <button style={styles.secondaryButton} onClick={onRole}>
+            Enter by role
           </button>
         </div>
       </div>
@@ -498,15 +405,131 @@ function Hero({
   );
 }
 
-function ImmersiveSection({
+function SplitStorySection({
+  id,
+  image,
+  imagePosition,
+  imageSide,
+  kicker,
+  title,
+  paragraphs,
+  dark,
+  buttonLabel,
+  onButton,
+}: {
+  id?: string;
+  image: string;
+  imagePosition?: string;
+  imageSide: "left" | "right";
+  kicker: string;
+  title: string;
+  paragraphs: string[];
+  dark: boolean;
+  buttonLabel?: string;
+  onButton?: () => void;
+}) {
+  const imageFirst = imageSide === "left";
+
+  return (
+    <section id={id} style={dark ? styles.splitSectionDark : styles.splitSectionLight}>
+      <div style={styles.splitWrap}>
+        {imageFirst && (
+          <div
+            style={{
+              ...styles.splitImage,
+              backgroundImage: `url(${image})`,
+              backgroundPosition: imagePosition || "center center",
+            }}
+          />
+        )}
+
+        <div style={styles.splitTextWrap}>
+          <div style={dark ? styles.eyebrowLight : styles.eyebrowDark}>{kicker}</div>
+          <h2 style={dark ? styles.splitTitleLight : styles.splitTitleDark}>{title}</h2>
+
+          {paragraphs.map((paragraph) => (
+            <p key={paragraph} style={dark ? styles.splitTextLight : styles.splitTextDark}>
+              {paragraph}
+            </p>
+          ))}
+
+          {buttonLabel && onButton && (
+            <button style={dark ? styles.primaryButton : styles.darkButton} onClick={onButton}>
+              {buttonLabel}
+            </button>
+          )}
+        </div>
+
+        {!imageFirst && (
+          <div
+            style={{
+              ...styles.splitImage,
+              backgroundImage: `url(${image})`,
+              backgroundPosition: imagePosition || "center center",
+            }}
+          />
+        )}
+      </div>
+    </section>
+  );
+}
+
+function FullQuoteSection({
+  image,
+  imagePosition,
+  quote,
+  subquote,
+}: {
+  image: string;
+  imagePosition?: string;
+  quote: string;
+  subquote: string;
+}) {
+  return (
+    <section
+      style={{
+        ...styles.quoteSection,
+        backgroundImage: `linear-gradient(rgba(14,23,17,0.58), rgba(14,23,17,0.58)), url(${image})`,
+        backgroundPosition: imagePosition || "center center",
+      }}
+    >
+      <div style={styles.quoteInner}>
+        <p style={styles.quoteText}>{quote}</p>
+        <p style={styles.quoteSubtext}>{subquote}</p>
+      </div>
+    </section>
+  );
+}
+
+function PlainIntroBand({
+  kicker,
+  title,
+  text,
+}: {
+  kicker: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <section style={styles.introBand}>
+      <div style={styles.introBandInner}>
+        <div style={styles.eyebrowDark}>{kicker}</div>
+        <h2 style={styles.introTitle}>{title}</h2>
+        <p style={styles.introText}>{text}</p>
+      </div>
+    </section>
+  );
+}
+
+function ImageBandSection({
   image,
   imagePosition,
   align,
   kicker,
   title,
   text,
-  primaryLabel,
-  onPrimary,
+  buttonLabel,
+  onButton,
 }: {
   image: string;
   imagePosition?: string;
@@ -514,29 +537,26 @@ function ImmersiveSection({
   kicker: string;
   title: string;
   text: string;
-  primaryLabel: string;
-  onPrimary: () => void;
+  buttonLabel: string;
+  onButton: () => void;
 }) {
-  const contentPosition =
-    align === "left"
-      ? { justifyContent: "flex-start", paddingLeft: 24, paddingRight: 24 }
-      : { justifyContent: "flex-end", paddingLeft: 24, paddingRight: 24 };
+  const justifyContent = align === "left" ? "flex-start" : "flex-end";
 
   return (
     <section
       style={{
-        ...styles.immersiveSection,
-        backgroundImage: `linear-gradient(rgba(9,18,12,0.15), rgba(9,18,12,0.50)), url(${image})`,
+        ...styles.imageBand,
+        backgroundImage: `linear-gradient(rgba(9,17,12,0.12), rgba(9,17,12,0.46)), url(${image})`,
         backgroundPosition: imagePosition || "center center",
       }}
     >
-      <div style={{ ...styles.immersiveContentWrap, ...contentPosition }}>
-        <div style={styles.storyPanel}>
-          <div style={styles.kicker}>{kicker}</div>
-          <h2 style={styles.storyTitle}>{title}</h2>
-          <p style={styles.storyText}>{text}</p>
-          <button style={styles.primaryBtn} onClick={onPrimary}>
-            {primaryLabel}
+      <div style={{ ...styles.imageBandInner, justifyContent }}>
+        <div style={styles.imageBandText}>
+          <div style={styles.eyebrowLight}>{kicker}</div>
+          <h2 style={styles.imageBandTitle}>{title}</h2>
+          <p style={styles.imageBandCopy}>{text}</p>
+          <button style={styles.primaryButton} onClick={onButton}>
+            {buttonLabel}
           </button>
         </div>
       </div>
@@ -544,19 +564,10 @@ function ImmersiveSection({
   );
 }
 
-function SoftPanel({ title, text }: { title: string; text: string }) {
-  return (
-    <div style={styles.softPanel}>
-      <div style={styles.softPanelTitle}>{title}</div>
-      <div style={styles.softPanelText}>{text}</div>
-    </div>
-  );
-}
-
 const styles: Record<string, React.CSSProperties> = {
   app: {
     minHeight: "100vh",
-    background: "#f5f8f2",
+    background: "#f6f8f3",
     color: "#17311f",
     fontFamily:
       "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -573,12 +584,12 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: 18,
     padding: "14px 18px",
-    background: "rgba(10,18,12,0.18)",
+    background: "rgba(10,18,12,0.16)",
     backdropFilter: "blur(14px)",
     borderBottom: "1px solid rgba(255,255,255,0.08)",
   },
 
-  logoButton: {
+  brandButton: {
     display: "flex",
     alignItems: "center",
     gap: 12,
@@ -590,7 +601,7 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: "left",
   },
 
-  logoDot: {
+  brandDot: {
     width: 14,
     height: 14,
     borderRadius: 999,
@@ -599,26 +610,25 @@ const styles: Record<string, React.CSSProperties> = {
     flexShrink: 0,
   },
 
-  logoTitle: {
+  brandTitle: {
     fontSize: 15,
-    fontWeight: 600,
-    letterSpacing: "0.01em",
+    fontWeight: 500,
   },
 
-  logoSub: {
+  brandSub: {
     fontSize: 12,
-    color: "rgba(255,255,255,0.78)",
+    color: "rgba(255,255,255,0.76)",
     marginTop: 2,
   },
 
-  navCta: {
+  navButton: {
     border: "1px solid rgba(255,255,255,0.18)",
-    background: "rgba(255,255,255,0.10)",
+    background: "rgba(255,255,255,0.07)",
     color: "#ffffff",
     padding: "12px 16px",
     borderRadius: 999,
     fontSize: 14,
-    fontWeight: 600,
+    fontWeight: 500,
     cursor: "pointer",
   },
 
@@ -628,34 +638,33 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "flex-end",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    padding: "110px 24px 44px",
+    padding: "110px 24px 42px",
   },
 
-  heroContent: {
-    maxWidth: 720,
-    background: "rgba(250,255,248,0.10)",
+  heroInner: {
+    maxWidth: 760,
+    background: "rgba(250,255,248,0.06)",
+    border: "1px solid rgba(255,255,255,0.08)",
     backdropFilter: "blur(8px)",
-    border: "1px solid rgba(255,255,255,0.10)",
-    borderRadius: 28,
-    padding: "28px 24px",
-    boxShadow: "0 24px 60px rgba(7,15,10,0.18)",
+    borderRadius: 26,
+    padding: "26px 22px",
   },
 
-  kicker: {
+  eyebrowLight: {
     display: "inline-block",
-    color: "#dcebd4",
+    color: "#e0edd9",
     fontSize: 12,
-    fontWeight: 600,
+    fontWeight: 500,
     letterSpacing: "0.12em",
     textTransform: "uppercase",
     marginBottom: 14,
   },
 
-  kickerDark: {
+  eyebrowDark: {
     display: "inline-block",
-    color: "#4f6a57",
+    color: "#546b5a",
     fontSize: 12,
-    fontWeight: 600,
+    fontWeight: 500,
     letterSpacing: "0.12em",
     textTransform: "uppercase",
     marginBottom: 14,
@@ -663,50 +672,50 @@ const styles: Record<string, React.CSSProperties> = {
 
   heroTitle: {
     margin: 0,
-    fontSize: "clamp(2.8rem, 7vw, 5.4rem)",
-    lineHeight: 0.95,
-    fontWeight: 600,
+    fontSize: "clamp(2.9rem, 7vw, 5.4rem)",
+    lineHeight: 0.96,
+    fontWeight: 500,
     color: "#ffffff",
     textWrap: "balance",
   },
 
   heroSubtitle: {
     marginTop: 12,
-    fontSize: "clamp(1.1rem, 2.4vw, 1.55rem)",
+    fontSize: "clamp(1.1rem, 2.3vw, 1.55rem)",
     fontWeight: 400,
     color: "#eef8e7",
   },
 
-  heroText: {
+  heroDescription: {
     marginTop: 16,
     marginBottom: 0,
-    maxWidth: 640,
+    maxWidth: 650,
     fontSize: 18,
-    lineHeight: 1.7,
-    color: "rgba(255,255,255,0.90)",
+    lineHeight: 1.72,
+    color: "rgba(255,255,255,0.91)",
   },
 
-  heroButtons: {
+  heroButtonRow: {
     display: "flex",
     flexWrap: "wrap",
     gap: 12,
     marginTop: 22,
   },
 
-  primaryBtn: {
+  primaryButton: {
     border: "none",
-    background: "#e7f2dc",
-    color: "#16301d",
+    background: "#e9f1df",
+    color: "#17311f",
     padding: "14px 18px",
     borderRadius: 999,
     fontSize: 15,
-    fontWeight: 600,
+    fontWeight: 500,
     cursor: "pointer",
   },
 
-  secondaryBtn: {
+  secondaryButton: {
     border: "1px solid rgba(255,255,255,0.18)",
-    background: "rgba(255,255,255,0.07)",
+    background: "rgba(255,255,255,0.06)",
     color: "#ffffff",
     padding: "14px 18px",
     borderRadius: 999,
@@ -715,77 +724,119 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
   },
 
-  historySection: {
-    minHeight: "72vh",
-    display: "flex",
-    alignItems: "center",
+  darkButton: {
+    border: "none",
+    background: "#183220",
+    color: "#ffffff",
+    padding: "14px 18px",
+    borderRadius: 999,
+    fontSize: 15,
+    fontWeight: 500,
+    cursor: "pointer",
+    marginTop: 8,
+  },
+
+  splitSectionDark: {
+    background: "#17261c",
+    padding: "0",
+  },
+
+  splitSectionLight: {
+    background: "#f7faf5",
+    padding: "0",
+  },
+
+  splitWrap: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    minHeight: "78vh",
+  },
+
+  splitImage: {
+    minHeight: 420,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    padding: "60px 24px",
   },
 
-  historyContent: {
-    maxWidth: 760,
-    background: "rgba(250,255,248,0.07)",
-    backdropFilter: "blur(6px)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 24,
-    padding: "30px 26px",
+  splitTextWrap: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "48px 34px",
   },
 
-  historyTitle: {
+  splitTitleLight: {
     margin: 0,
-    fontSize: "clamp(2rem, 4vw, 3rem)",
-    fontWeight: 600,
-    lineHeight: 1.1,
+    fontSize: "clamp(2rem, 4vw, 3.2rem)",
+    lineHeight: 1.08,
+    fontWeight: 500,
     color: "#ffffff",
     textWrap: "balance",
   },
 
-  historyText: {
+  splitTitleDark: {
+    margin: 0,
+    fontSize: "clamp(2rem, 4vw, 3.2rem)",
+    lineHeight: 1.08,
+    fontWeight: 500,
+    color: "#183220",
+    textWrap: "balance",
+  },
+
+  splitTextLight: {
     marginTop: 16,
     marginBottom: 0,
-    fontSize: 17,
-    lineHeight: 1.72,
     color: "rgba(255,255,255,0.88)",
+    fontSize: 18,
+    lineHeight: 1.75,
+    maxWidth: 620,
   },
 
-  quoteBand: {
-    minHeight: "44vh",
+  splitTextDark: {
+    marginTop: 16,
+    marginBottom: 0,
+    color: "#556c5b",
+    fontSize: 18,
+    lineHeight: 1.75,
+    maxWidth: 620,
+  },
+
+  quoteSection: {
+    minHeight: "46vh",
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    padding: "46px 24px",
+    padding: "44px 24px",
   },
 
-  quoteBandInner: {
+  quoteInner: {
     maxWidth: 940,
-    margin: "0 auto",
     width: "100%",
   },
 
   quoteText: {
     margin: 0,
-    color: "#f2f7ee",
-    fontSize: "clamp(1.8rem, 4vw, 3rem)",
-    lineHeight: 1.15,
-    fontWeight: 500,
+    color: "#f3f7ef",
+    fontSize: "clamp(1.9rem, 4vw, 3rem)",
+    lineHeight: 1.18,
+    fontWeight: 400,
     textWrap: "balance",
   },
 
   quoteSubtext: {
     marginTop: 12,
     marginBottom: 0,
-    color: "rgba(242,247,238,0.84)",
+    color: "rgba(243,247,239,0.82)",
     fontSize: 17,
     lineHeight: 1.7,
     maxWidth: 760,
   },
 
   introBand: {
-    background: "linear-gradient(180deg, #eef4e8 0%, #f7faf4 100%)",
-    padding: "70px 24px",
+    background: "linear-gradient(180deg, #eef4e8 0%, #f8fbf6 100%)",
+    padding: "64px 24px",
   },
 
   introBandInner: {
@@ -793,209 +844,91 @@ const styles: Record<string, React.CSSProperties> = {
     margin: "0 auto",
   },
 
-  bandTitle: {
+  introTitle: {
     margin: 0,
-    fontSize: "clamp(2rem, 4vw, 3.1rem)",
+    fontSize: "clamp(2rem, 4vw, 3rem)",
     lineHeight: 1.08,
     color: "#17311f",
-    fontWeight: 600,
+    fontWeight: 500,
     textWrap: "balance",
   },
 
-  bandText: {
+  introText: {
     marginTop: 16,
     marginBottom: 0,
     maxWidth: 760,
-    color: "#516a57",
+    color: "#526959",
     fontSize: 18,
     lineHeight: 1.75,
   },
 
-  liveChips: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 12,
-    marginTop: 24,
-  },
-
-  liveChip: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 999,
-    background: "#ffffff",
-    border: "1px solid rgba(23,49,31,0.08)",
-    padding: "10px 14px",
-    fontSize: 14,
-    fontWeight: 500,
-    color: "#284432",
-    boxShadow: "0 10px 22px rgba(19,45,28,0.05)",
-  },
-
-  immersiveSection: {
-    minHeight: "88vh",
+  imageBand: {
+    minHeight: "84vh",
     display: "flex",
     alignItems: "center",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
   },
 
-  immersiveContentWrap: {
+  imageBandInner: {
     width: "100%",
     display: "flex",
+    padding: "0 24px",
   },
 
-  storyPanel: {
-    width: "min(560px, 100%)",
-    background: "rgba(250,255,248,0.07)",
+  imageBandText: {
+    width: "min(540px, 100%)",
+    background: "rgba(250,255,248,0.05)",
+    border: "1px solid rgba(255,255,255,0.08)",
     backdropFilter: "blur(8px)",
-    border: "1px solid rgba(255,255,255,0.09)",
-    borderRadius: 28,
-    padding: "28px 24px",
-    boxShadow: "0 22px 54px rgba(7,15,10,0.18)",
+    borderRadius: 26,
+    padding: "26px 22px",
   },
 
-  storyTitle: {
+  imageBandTitle: {
     margin: 0,
-    fontSize: "clamp(2rem, 5vw, 3.2rem)",
+    fontSize: "clamp(2rem, 5vw, 3.1rem)",
     lineHeight: 1.06,
-    fontWeight: 600,
+    fontWeight: 500,
     color: "#ffffff",
     textWrap: "balance",
   },
 
-  storyText: {
+  imageBandCopy: {
     marginTop: 16,
     marginBottom: 22,
+    color: "rgba(255,255,255,0.91)",
     fontSize: 18,
     lineHeight: 1.72,
-    color: "rgba(255,255,255,0.92)",
   },
 
-  communitySection: {
-    minHeight: "92vh",
-    display: "flex",
-    alignItems: "center",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    padding: "60px 24px",
-  },
-
-  communityInner: {
-    maxWidth: 1080,
-    margin: "0 auto",
-    width: "100%",
-  },
-
-  communityTitle: {
-    margin: 0,
-    color: "#ffffff",
-    fontSize: "clamp(2rem, 4vw, 3.1rem)",
-    lineHeight: 1.08,
-    fontWeight: 600,
-    maxWidth: 760,
-    textWrap: "balance",
-  },
-
-  communityText: {
-    marginTop: 16,
-    maxWidth: 820,
-    color: "rgba(255,255,255,0.90)",
-    fontSize: 18,
-    lineHeight: 1.74,
-  },
-
-  communityGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-    gap: 16,
-    marginTop: 28,
-  },
-
-  softPanel: {
-    background: "rgba(250,255,248,0.08)",
-    backdropFilter: "blur(6px)",
-    border: "1px solid rgba(255,255,255,0.10)",
-    borderRadius: 22,
-    padding: "20px 18px",
-  },
-
-  softPanelTitle: {
-    fontSize: 22,
-    fontWeight: 600,
-    color: "#ffffff",
-  },
-
-  softPanelText: {
-    marginTop: 10,
-    fontSize: 15,
-    lineHeight: 1.68,
-    color: "rgba(255,255,255,0.88)",
-  },
-
-  futureSection: {
-    minHeight: "78vh",
-    display: "flex",
-    alignItems: "center",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    padding: "60px 24px",
-  },
-
-  futureContent: {
-    maxWidth: 760,
-    background: "rgba(250,255,248,0.07)",
-    backdropFilter: "blur(8px)",
-    border: "1px solid rgba(255,255,255,0.10)",
-    borderRadius: 28,
-    padding: "28px 24px",
-  },
-
-  futureTitle: {
-    margin: 0,
-    color: "#ffffff",
-    fontSize: "clamp(2rem, 4vw, 3rem)",
-    lineHeight: 1.1,
-    fontWeight: 600,
-    textWrap: "balance",
-  },
-
-  futureText: {
-    marginTop: 16,
-    marginBottom: 22,
-    color: "rgba(255,255,255,0.90)",
-    fontSize: 18,
-    lineHeight: 1.72,
-    maxWidth: 700,
-  },
-
-  rolesEntrySection: {
+  roleEntrySection: {
     background: "linear-gradient(180deg, #f8fbf6 0%, #edf4e8 100%)",
     padding: "72px 24px 84px",
   },
 
-  rolesEntryInner: {
+  roleEntryInner: {
     maxWidth: 1120,
     margin: "0 auto",
   },
 
-  rolesHeading: {
+  roleEntryTitle: {
     margin: 0,
-    fontSize: "clamp(2rem, 4vw, 3.1rem)",
+    fontSize: "clamp(2rem, 4vw, 3rem)",
     lineHeight: 1.08,
     color: "#17311f",
-    fontWeight: 600,
+    fontWeight: 500,
     textWrap: "balance",
   },
 
-  roleChooserGrid: {
+  roleGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: 16,
     marginTop: 28,
   },
 
-  roleChooserCard: {
+  roleCard: {
     background: "#ffffff",
     border: "1px solid rgba(23,49,31,0.08)",
     borderRadius: 22,
@@ -1005,20 +938,20 @@ const styles: Record<string, React.CSSProperties> = {
     boxShadow: "0 14px 32px rgba(19,45,28,0.08)",
   },
 
-  roleChooserTitle: {
+  roleCardTitle: {
     fontSize: 22,
-    fontWeight: 600,
+    fontWeight: 500,
     color: "#183220",
   },
 
-  roleChooserSubtitle: {
+  roleCardSubtitle: {
     marginTop: 8,
     fontSize: 15,
     lineHeight: 1.55,
-    color: "#56725c",
+    color: "#59705f",
   },
 
-  roleTopPills: {
+  rolePillRow: {
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "flex-end",
@@ -1037,7 +970,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   rolePillActive: {
-    background: "#e7f2dc",
+    background: "#e8f1de",
     color: "#17311f",
     border: "1px solid transparent",
   },
@@ -1048,22 +981,21 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "flex-end",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    padding: "110px 24px 36px",
+    padding: "110px 24px 38px",
   },
 
-  roleHeroContent: {
+  roleHeroInner: {
     maxWidth: 760,
-    background: "rgba(250,255,248,0.08)",
+    background: "rgba(250,255,248,0.06)",
+    border: "1px solid rgba(255,255,255,0.08)",
     backdropFilter: "blur(8px)",
-    border: "1px solid rgba(255,255,255,0.10)",
-    borderRadius: 28,
-    padding: "28px 24px",
-    boxShadow: "0 24px 60px rgba(7,15,10,0.18)",
+    borderRadius: 26,
+    padding: "26px 22px",
   },
 
   backButton: {
     border: "1px solid rgba(255,255,255,0.18)",
-    background: "rgba(255,255,255,0.07)",
+    background: "rgba(255,255,255,0.06)",
     color: "#ffffff",
     padding: "11px 15px",
     borderRadius: 999,
@@ -1075,9 +1007,9 @@ const styles: Record<string, React.CSSProperties> = {
 
   roleTitle: {
     margin: 0,
-    fontSize: "clamp(2.4rem, 6vw, 4.5rem)",
+    fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
     lineHeight: 1,
-    fontWeight: 600,
+    fontWeight: 500,
     color: "#ffffff",
     textWrap: "balance",
   },
@@ -1091,78 +1023,39 @@ const styles: Record<string, React.CSSProperties> = {
     color: "rgba(255,255,255,0.92)",
   },
 
-  roleGlassPanel: {
-    marginTop: 22,
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.10)",
-    borderRadius: 22,
-    padding: 18,
+  roleBulletsSection: {
+    background: "#f7faf5",
+    padding: "40px 24px 60px",
   },
 
-  roleGlassHeader: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: "#ebf6e4",
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
-  },
-
-  bulletList: {
-    margin: "14px 0 0 18px",
-    padding: 0,
-  },
-
-  bulletItem: {
-    marginBottom: 10,
-    color: "rgba(255,255,255,0.92)",
-    fontSize: 16,
-    lineHeight: 1.65,
-  },
-
-  roleLowerSection: {
-    background: "linear-gradient(180deg, #f8fbf6 0%, #edf4e8 100%)",
-    padding: "48px 24px 72px",
-  },
-
-  roleLowerGrid: {
+  roleBulletsWrap: {
     maxWidth: 1120,
     margin: "0 auto",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gap: 18,
   },
 
-  deepPanel: {
-    background: "#ffffff",
-    border: "1px solid rgba(23,49,31,0.08)",
-    borderRadius: 24,
-    padding: 24,
-    boxShadow: "0 14px 34px rgba(19,45,28,0.08)",
-  },
-
-  panelKicker: {
-    color: "#59725e",
+  roleBulletsLabel: {
     fontSize: 12,
-    fontWeight: 600,
-    letterSpacing: "0.1em",
-    textTransform: "uppercase",
-    marginBottom: 12,
-  },
-
-  panelTitle: {
-    margin: 0,
-    fontSize: 28,
-    lineHeight: 1.12,
     fontWeight: 500,
-    color: "#183220",
-    textWrap: "balance",
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    color: "#57705d",
+    marginBottom: 16,
   },
 
-  panelText: {
-    marginTop: 14,
-    marginBottom: 0,
-    fontSize: 16,
-    lineHeight: 1.72,
-    color: "#4f6755",
+  roleBulletsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 14,
+  },
+
+  roleBulletCard: {
+    background: "#ffffff",
+    borderRadius: 20,
+    border: "1px solid rgba(23,49,31,0.08)",
+    padding: "18px 16px",
+    color: "#2b4736",
+    fontSize: 15,
+    lineHeight: 1.65,
+    boxShadow: "0 12px 26px rgba(19,45,28,0.06)",
   },
 };
