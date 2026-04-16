@@ -432,6 +432,24 @@ export default function App() {
                     </h1>
                     <p className="mt-4 max-w-2xl text-base text-emerald-50/85 md:text-lg leading-7">
                       {t.ecosystem}
+
+                    <div className="mt-6 space-y-4 text-sm md:text-base text-emerald-50/90 leading-7">
+                      <div className="rounded-2xl bg-white/6 p-4">
+                        <span className="font-semibold">Bronson Family Farm</span> operates as a regenerative, off-grid agritourism and food system hub on the historic Lansdowne Airport grounds in Youngstown, Ohio. The farm blends food production, education, workforce development, and community wellness.
+                      </div>
+                      <div className="rounded-2xl bg-white/6 p-4">
+                        <span className="font-semibold">Farm & Family Alliance</span> serves as the nonprofit partner, focused on workforce training, youth development, volunteer coordination, education, and community impact.
+                      </div>
+                      <div className="rounded-2xl bg-white/6 p-4">
+                        <span className="font-semibold">Parker Farms</span> represents a regional growing partner and marketplace model, supporting distribution, SNAP access, and grower collaboration across the Mahoning Valley.
+                      </div>
+                      <div className="rounded-2xl bg-white/6 p-4">
+                        <span className="font-semibold">Lansdowne Airport (Historic Site)</span> provides the land foundation for this work. Once an active aviation site, it is now being reimagined as a place where land, food, learning, and community reconnect — transforming legacy infrastructure into a living ecosystem.
+                      </div>
+                      <div className="rounded-2xl bg-white/6 p-4">
+                        Together, these partners form a <span className="font-semibold">Grower Ecosystem</span> — where individuals can enter as guests, become customers, learn as growers, develop through workforce pathways, and contribute to a sustainable local economy.
+                      </div>
+                    </div>
                     </p>
                     <p className="mt-4 max-w-2xl text-sm text-emerald-100/80 md:text-base leading-7">
                       {t.whyItMatters}
