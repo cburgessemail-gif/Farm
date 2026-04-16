@@ -15,7 +15,7 @@ const BRAND = {
   gold: "#d6b85c",
 };
 
-const imageMap = {
+const imageMap: Record<Section, string> = {
   dashboard: "/GrowArea.jpg",
   grow: "/GrowArea2.jpg",
   calendar: "/Calendar.jpg",
@@ -24,29 +24,7 @@ const imageMap = {
   community: "/Community.jpg",
 };
 
-const translations: Record<
-  Lang,
-  {
-    farmName: string;
-    dashboard: string;
-    grow: string;
-    calendar: string;
-    shop: string;
-    story: string;
-    community: string;
-    liveEcosystem: string;
-    liveSub: string;
-    systemNow: string;
-    connectedFlow: string;
-    openStore: string;
-    volunteers: string;
-    partners: string;
-    legacyPlace: string;
-    guestView: string;
-    updated: string;
-    phases: string;
-  }
-> = {
+const translations = {
   EN: {
     farmName: "Bronson Farm",
     dashboard: "Dashboard",
@@ -56,7 +34,8 @@ const translations: Record<
     story: "Story",
     community: "Community",
     liveEcosystem: "Live Ecosystem",
-    liveSub: "This is a working system connecting growing, scheduling, market readiness, and community support.",
+    liveSub:
+      "This is a working system connecting growing, scheduling, market readiness, and community support.",
     systemNow: "System Now",
     connectedFlow: "Connected Flow",
     openStore: "Open Live Store",
@@ -66,6 +45,37 @@ const translations: Record<
     guestView: "Guest View",
     updated: "Updated",
     phases: "Season Phases",
+    growerSystem: "Grower System",
+    growerSub:
+      "Production, irrigation, crop flow, and next actions presented as a live operating view.",
+    productionStatus: "Production Status",
+    nextActions: "Next Actions",
+    farmCalendar: "Farm Calendar",
+    calendarSub:
+      "Timing drives readiness. This view shows the daily rhythm behind field work, packing, and market movement.",
+    dailySchedule: "Daily Schedule",
+    marketplace: "Marketplace",
+    marketSub:
+      "Production connects to market access. This view shows readiness, inventory posture, and a direct path to the live store.",
+    marketReadiness: "Market Readiness",
+    storeAccess: "Store Access",
+    ourStory: "Our Story",
+    storySub:
+      "Bronson Family Farm is more than a farm. It is legacy, land, renewal, and the future growing from one place.",
+    communityTitle: "Community",
+    communitySub:
+      "Volunteers, families, growers, and partners help turn the farm into a regional ecosystem for growing and belonging.",
+    languages: "Languages",
+    demoNavigation: "Demo Navigation",
+    liveDemo: "Live Demo",
+    liveDemoCopy:
+      "Stable build with visible languages, section identity, live status feel, and store access.",
+    whyMatters: "Why this matters",
+    whyMattersCopy:
+      "Funders can see that this is not only a story. It already points to a live market pathway tied to real farm activity.",
+    scheduleTime: "Time",
+    scheduleTask: "Task",
+    scheduleOwner: "Owner",
   },
   ES: {
     farmName: "Granja Bronson",
@@ -76,7 +86,8 @@ const translations: Record<
     story: "Historia",
     community: "Comunidad",
     liveEcosystem: "Ecosistema en Vivo",
-    liveSub: "Este es un sistema activo que conecta cultivo, programación, preparación de mercado y apoyo comunitario.",
+    liveSub:
+      "Este es un sistema activo que conecta cultivo, programación, preparación de mercado y apoyo comunitario.",
     systemNow: "Sistema Ahora",
     connectedFlow: "Flujo Conectado",
     openStore: "Abrir Tienda",
@@ -86,6 +97,37 @@ const translations: Record<
     guestView: "Vista Pública",
     updated: "Actualizado",
     phases: "Fases de Temporada",
+    growerSystem: "Sistema de Cultivo",
+    growerSub:
+      "Producción, riego, flujo de cultivo y próximas acciones presentadas como una vista operativa en vivo.",
+    productionStatus: "Estado de Producción",
+    nextActions: "Próximas Acciones",
+    farmCalendar: "Calendario de la Granja",
+    calendarSub:
+      "El tiempo impulsa la preparación. Esta vista muestra el ritmo diario detrás del trabajo de campo, empaque y mercado.",
+    dailySchedule: "Horario Diario",
+    marketplace: "Mercado",
+    marketSub:
+      "La producción se conecta con el acceso al mercado. Esta vista muestra preparación, postura de inventario y un camino directo a la tienda en vivo.",
+    marketReadiness: "Preparación del Mercado",
+    storeAccess: "Acceso a la Tienda",
+    ourStory: "Nuestra Historia",
+    storySub:
+      "Bronson Family Farm es más que una granja. Es legado, tierra, renovación y el futuro creciendo desde un lugar.",
+    communityTitle: "Comunidad",
+    communitySub:
+      "Voluntarios, familias, cultivadores y socios ayudan a convertir la granja en un ecosistema regional para crecer y pertenecer.",
+    languages: "Idiomas",
+    demoNavigation: "Navegación",
+    liveDemo: "Demo en Vivo",
+    liveDemoCopy:
+      "Versión estable con idiomas visibles, identidad por sección, sensación en vivo y acceso a la tienda.",
+    whyMatters: "Por qué importa",
+    whyMattersCopy:
+      "Los financiadores pueden ver que esto no es solo una historia. Ya apunta a una vía real de mercado ligada a la actividad de la granja.",
+    scheduleTime: "Hora",
+    scheduleTask: "Tarea",
+    scheduleOwner: "Responsable",
   },
   TL: {
     farmName: "Bronson Farm",
@@ -96,7 +138,8 @@ const translations: Record<
     story: "Kuwento",
     community: "Komunidad",
     liveEcosystem: "Buhay na Ecosystem",
-    liveSub: "Ito ay gumaganang sistema na nagdurugtong ng pagtatanim, iskedyul, kahandaan sa pamilihan, at suporta ng komunidad.",
+    liveSub:
+      "Ito ay gumaganang sistema na nagdurugtong ng pagtatanim, iskedyul, kahandaan sa pamilihan, at suporta ng komunidad.",
     systemNow: "Sistema Ngayon",
     connectedFlow: "Magkaugnay na Daloy",
     openStore: "Buksan ang Tindahan",
@@ -106,6 +149,37 @@ const translations: Record<
     guestView: "Pampublikong Tanaw",
     updated: "Na-update",
     phases: "Yugto ng Panahon",
+    growerSystem: "Sistema ng Grower",
+    growerSub:
+      "Produksiyon, irigasyon, daloy ng pananim, at susunod na gawain na ipinapakita bilang live na operating view.",
+    productionStatus: "Katayuan ng Produksiyon",
+    nextActions: "Susunod na Gawain",
+    farmCalendar: "Kalendaryo ng Bukid",
+    calendarSub:
+      "Ang tamang oras ang nagtutulak ng kahandaan. Ipinapakita nito ang araw-araw na daloy ng gawain sa bukid, pag-iimpake, at pamilihan.",
+    dailySchedule: "Araw-araw na Iskedyul",
+    marketplace: "Pamilihan",
+    marketSub:
+      "Ang produksyon ay konektado sa market access. Ipinapakita rito ang kahandaan, inventory posture, at direktang daan sa live store.",
+    marketReadiness: "Kahandaan sa Pamilihan",
+    storeAccess: "Access sa Tindahan",
+    ourStory: "Ating Kuwento",
+    storySub:
+      "Ang Bronson Family Farm ay higit pa sa bukid. Ito ay pamana, lupa, pagbabago, at kinabukasang tumutubo mula sa isang lugar.",
+    communityTitle: "Komunidad",
+    communitySub:
+      "Ang mga volunteer, pamilya, grower, at partner ay tumutulong gawing rehiyonal na ecosystem ang bukid para sa paglago at paglahok.",
+    languages: "Mga Wika",
+    demoNavigation: "Nabigasyon",
+    liveDemo: "Live Demo",
+    liveDemoCopy:
+      "Matatag na build na may nakikitang mga wika, pagkakakilanlan ng bawat seksyon, live na pakiramdam, at access sa tindahan.",
+    whyMatters: "Bakit Mahalaga",
+    whyMattersCopy:
+      "Makikita ng mga funder na hindi lang ito kuwento. Nakaugnay na ito sa totoong market pathway mula sa aktibidad ng bukid.",
+    scheduleTime: "Oras",
+    scheduleTask: "Gawain",
+    scheduleOwner: "May Gawa",
   },
   IT: {
     farmName: "Fattoria Bronson",
@@ -116,7 +190,8 @@ const translations: Record<
     story: "Storia",
     community: "Comunità",
     liveEcosystem: "Ecosistema Vivo",
-    liveSub: "Questo è un sistema attivo che collega coltivazione, calendario, prontezza al mercato e supporto della comunità.",
+    liveSub:
+      "Questo è un sistema attivo che collega coltivazione, calendario, prontezza al mercato e supporto della comunità.",
     systemNow: "Sistema Ora",
     connectedFlow: "Flusso Connesso",
     openStore: "Apri Negozio",
@@ -126,6 +201,37 @@ const translations: Record<
     guestView: "Vista Ospite",
     updated: "Aggiornato",
     phases: "Fasi della Stagione",
+    growerSystem: "Sistema di Coltivazione",
+    growerSub:
+      "Produzione, irrigazione, flusso delle colture e prossime azioni presentati come una vista operativa dal vivo.",
+    productionStatus: "Stato della Produzione",
+    nextActions: "Prossime Azioni",
+    farmCalendar: "Calendario della Fattoria",
+    calendarSub:
+      "Il tempo guida la preparazione. Questa vista mostra il ritmo quotidiano dietro il lavoro nei campi, l'imballaggio e il mercato.",
+    dailySchedule: "Programma Giornaliero",
+    marketplace: "Mercato",
+    marketSub:
+      "La produzione si collega all'accesso al mercato. Questa vista mostra prontezza, stato dell'inventario e un percorso diretto verso il negozio live.",
+    marketReadiness: "Prontezza del Mercato",
+    storeAccess: "Accesso al Negozio",
+    ourStory: "La Nostra Storia",
+    storySub:
+      "Bronson Family Farm è più di una fattoria. È eredità, terra, rinnovamento e futuro che cresce da un unico luogo.",
+    communityTitle: "Comunità",
+    communitySub:
+      "Volontari, famiglie, coltivatori e partner aiutano a trasformare la fattoria in un ecosistema regionale di crescita e appartenenza.",
+    languages: "Lingue",
+    demoNavigation: "Navigazione Demo",
+    liveDemo: "Demo Live",
+    liveDemoCopy:
+      "Build stabile con lingue visibili, identità di sezione, sensazione di sistema vivo e accesso al negozio.",
+    whyMatters: "Perché conta",
+    whyMattersCopy:
+      "I finanziatori possono vedere che questa non è solo una storia. Indica già un vero percorso di mercato collegato all'attività agricola.",
+    scheduleTime: "Ora",
+    scheduleTask: "Attività",
+    scheduleOwner: "Responsabile",
   },
   HE: {
     farmName: "חוות ברונסון",
@@ -136,7 +242,8 @@ const translations: Record<
     story: "סיפור",
     community: "קהילה",
     liveEcosystem: "מערכת חיה",
-    liveSub: "זוהי מערכת פעילה המחברת בין גידול, תזמון, מוכנות לשוק ותמיכת קהילה.",
+    liveSub:
+      "זוהי מערכת פעילה המחברת בין גידול, תזמון, מוכנות לשוק ותמיכת קהילה.",
     systemNow: "המערכת כעת",
     connectedFlow: "זרימה מחוברת",
     openStore: "פתח חנות",
@@ -146,6 +253,37 @@ const translations: Record<
     guestView: "תצוגת אורח",
     updated: "עודכן",
     phases: "שלבי העונה",
+    growerSystem: "מערכת הגידול",
+    growerSub:
+      "ייצור, השקיה, זרימת גידולים והצעדים הבאים מוצגים כתצוגת תפעול חיה.",
+    productionStatus: "סטטוס ייצור",
+    nextActions: "הפעולות הבאות",
+    farmCalendar: "לוח שנה לחווה",
+    calendarSub:
+      "התזמון מניע מוכנות. תצוגה זו מראה את הקצב היומי מאחורי עבודת השדה, האריזה והתנועה לשוק.",
+    dailySchedule: "לוח זמנים יומי",
+    marketplace: "שוק",
+    marketSub:
+      "הייצור מתחבר לגישה לשוק. תצוגה זו מראה מוכנות, מצב מלאי ודרך ישירה לחנות החיה.",
+    marketReadiness: "מוכנות לשוק",
+    storeAccess: "גישה לחנות",
+    ourStory: "הסיפור שלנו",
+    storySub:
+      "Bronson Family Farm היא יותר מחווה. היא מורשת, אדמה, התחדשות ועתיד הצומח ממקום אחד.",
+    communityTitle: "קהילה",
+    communitySub:
+      "מתנדבים, משפחות, מגדלים ושותפים מסייעים להפוך את החווה למערכת אזורית של צמיחה ושייכות.",
+    languages: "שפות",
+    demoNavigation: "ניווט הדגמה",
+    liveDemo: "הדגמה חיה",
+    liveDemoCopy:
+      "גרסה יציבה עם שפות גלויות, זהות לכל אזור, תחושת מערכת חיה וגישה לחנות.",
+    whyMatters: "למה זה חשוב",
+    whyMattersCopy:
+      "מממנים יכולים לראות שזו לא רק סיפור. כבר קיים מסלול שוק חי המחובר לפעילות החווה.",
+    scheduleTime: "שעה",
+    scheduleTask: "משימה",
+    scheduleOwner: "אחראי",
   },
   PATWA: {
     farmName: "Bronson Farm",
@@ -156,7 +294,8 @@ const translations: Record<
     story: "Story",
     community: "Community",
     liveEcosystem: "Live Ecosystem",
-    liveSub: "Dis a real working system weh join growing, timing, market readiness, an community support.",
+    liveSub:
+      "Dis a real working system weh join growing, timing, market readiness, an community support.",
     systemNow: "System Now",
     connectedFlow: "Connected Flow",
     openStore: "Open Live Store",
@@ -166,8 +305,39 @@ const translations: Record<
     guestView: "Guest View",
     updated: "Updated",
     phases: "Season Phases",
+    growerSystem: "Grower System",
+    growerSub:
+      "Production, irrigation, crop flow, an next actions show up like a live operating view.",
+    productionStatus: "Production Status",
+    nextActions: "Next Actions",
+    farmCalendar: "Farm Calendar",
+    calendarSub:
+      "Timing drive readiness. Dis view show di daily rhythm behind field work, packing, an market movement.",
+    dailySchedule: "Daily Schedule",
+    marketplace: "Marketplace",
+    marketSub:
+      "Production connect to market access. Dis view show readiness, inventory stance, an straight path to di live store.",
+    marketReadiness: "Market Readiness",
+    storeAccess: "Store Access",
+    ourStory: "Wi Story",
+    storySub:
+      "Bronson Family Farm more than a farm. It a legacy, land, renewal, an future growing from one place.",
+    communityTitle: "Community",
+    communitySub:
+      "Volunteers, families, growers, an partners help turn di farm into a regional ecosystem fi grow an belong.",
+    languages: "Languages",
+    demoNavigation: "Demo Navigation",
+    liveDemo: "Live Demo",
+    liveDemoCopy:
+      "Stable build wid visible languages, section identity, live system feel, an store access.",
+    whyMatters: "Why dis matter",
+    whyMattersCopy:
+      "Funders can see seh dis no just story. It already point to a real market pathway tied to farm activity.",
+    scheduleTime: "Time",
+    scheduleTask: "Task",
+    scheduleOwner: "Owner",
   },
-};
+} as const;
 
 const cropData = [
   { name: "Collards", percent: 88, status: "Ready", color: BRAND.accent },
@@ -200,10 +370,12 @@ const seasonPhases = [
 
 function useClock() {
   const [now, setNow] = useState(new Date());
+
   useEffect(() => {
     const id = window.setInterval(() => setNow(new Date()), 1000);
     return () => window.clearInterval(id);
   }, []);
+
   return now;
 }
 
@@ -251,7 +423,7 @@ function LangButton({
     <button
       onClick={onClick}
       style={{
-        padding: "8px 10px",
+        padding: "10px 12px",
         borderRadius: 999,
         border: `1px solid ${active ? BRAND.accent : BRAND.line}`,
         background: active ? BRAND.accent : BRAND.card,
@@ -259,6 +431,7 @@ function LangButton({
         fontWeight: 800,
         fontSize: 12,
         cursor: "pointer",
+        whiteSpace: "nowrap",
       }}
     >
       {label}
@@ -382,7 +555,6 @@ function Hero({
         border: `1px solid ${BRAND.line}`,
         background:
           `linear-gradient(135deg, rgba(13,48,28,0.18), rgba(13,48,28,0.28)),` +
-          `linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02)),` +
           `url("${image}") center/cover no-repeat,` +
           `linear-gradient(135deg, #a7c5a5 0%, #6d9d74 100%)`,
         boxShadow: "0 16px 40px rgba(23,58,40,0.08)",
@@ -515,8 +687,6 @@ export default function App() {
     { key: "community", label: t.community },
   ];
 
-  const imageFor = (section: Section) => imageMap[section];
-
   const shellStyle: React.CSSProperties = {
     minHeight: "100vh",
     background: BRAND.bg,
@@ -535,9 +705,6 @@ export default function App() {
     padding: "28px 18px",
     borderRight: `1px solid ${BRAND.line}`,
     background: "rgba(255,255,255,0.18)",
-    position: "sticky",
-    top: 0,
-    height: "100vh",
     boxSizing: "border-box",
   };
 
@@ -565,12 +732,44 @@ export default function App() {
     gap: 18,
   };
 
+  const TopLanguageBar = () => (
+    <div
+      style={{
+        background: BRAND.card,
+        border: `1px solid ${BRAND.line}`,
+        borderRadius: 22,
+        padding: 16,
+        marginBottom: 18,
+        boxShadow: "0 10px 30px rgba(23,58,40,0.05)",
+      }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          fontWeight: 800,
+          color: BRAND.muted,
+          marginBottom: 10,
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+        }}
+      >
+        {t.languages}
+      </div>
+
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        {(["EN", "ES", "TL", "IT", "HE", "PATWA"] as Lang[]).map((code) => (
+          <LangButton key={code} label={code} active={lang === code} onClick={() => setLang(code)} />
+        ))}
+      </div>
+    </div>
+  );
+
   const renderDashboard = () => (
     <>
       <Hero
         title={t.liveEcosystem}
         subtitle={t.liveSub}
-        image={imageFor("dashboard")}
+        image={imageMap.dashboard}
         liveTime={liveTime}
       />
 
@@ -667,22 +866,22 @@ export default function App() {
   const renderGrow = () => (
     <>
       <Hero
-        title="Grower System"
-        subtitle="Production, irrigation, crop flow, and next actions presented as a live operating view."
-        image={imageFor("grow")}
+        title={t.growerSystem}
+        subtitle={t.growerSub}
+        image={imageMap.grow}
         liveTime={liveTime}
       />
       <div style={{ height: 18 }} />
       <div style={grid2}>
         <Card minHeight={320}>
-          <div style={sectionTitleStyle}>Production Status</div>
+          <div style={sectionTitleStyle}>{t.productionStatus}</div>
           <div style={{ height: 16 }} />
           {cropData.map((crop) => (
             <ProgressRow key={crop.name} {...crop} />
           ))}
         </Card>
         <Card minHeight={320}>
-          <div style={sectionTitleStyle}>Next Actions</div>
+          <div style={sectionTitleStyle}>{t.nextActions}</div>
           <div style={{ height: 16 }} />
           <div style={{ display: "grid", gap: 14 }}>
             {[
@@ -731,14 +930,14 @@ export default function App() {
   const renderCalendar = () => (
     <>
       <Hero
-        title="Farm Calendar"
-        subtitle="Timing drives readiness. This view shows the daily rhythm behind field work, packing, and market movement."
-        image={imageFor("calendar")}
+        title={t.farmCalendar}
+        subtitle={t.calendarSub}
+        image={imageMap.calendar}
         liveTime={liveTime}
       />
       <div style={{ height: 18 }} />
       <Card>
-        <div style={sectionTitleStyle}>Daily Schedule</div>
+        <div style={sectionTitleStyle}>{t.dailySchedule}</div>
         <div style={{ height: 14 }} />
         <div
           style={{
@@ -757,9 +956,9 @@ export default function App() {
               color: BRAND.ink,
             }}
           >
-            <div style={{ padding: 14, borderRight: `1px solid ${BRAND.line}` }}>Time</div>
-            <div style={{ padding: 14, borderRight: `1px solid ${BRAND.line}` }}>Task</div>
-            <div style={{ padding: 14 }}>Owner</div>
+            <div style={{ padding: 14, borderRight: `1px solid ${BRAND.line}` }}>{t.scheduleTime}</div>
+            <div style={{ padding: 14, borderRight: `1px solid ${BRAND.line}` }}>{t.scheduleTask}</div>
+            <div style={{ padding: 14 }}>{t.scheduleOwner}</div>
           </div>
 
           {timeline.map((row) => (
@@ -786,15 +985,15 @@ export default function App() {
   const renderShop = () => (
     <>
       <Hero
-        title="Marketplace"
-        subtitle="Production connects to market access. This view shows readiness, inventory posture, and a direct path to the live store."
-        image={imageFor("shop")}
+        title={t.marketplace}
+        subtitle={t.marketSub}
+        image={imageMap.shop}
         liveTime={liveTime}
       />
       <div style={{ height: 18 }} />
       <div style={grid2}>
         <Card minHeight={320}>
-          <div style={sectionTitleStyle}>Market Readiness</div>
+          <div style={sectionTitleStyle}>{t.marketReadiness}</div>
           <div style={{ height: 16 }} />
           {readiness.map((item) => (
             <div key={item.label} style={{ marginBottom: 18 }}>
@@ -834,7 +1033,7 @@ export default function App() {
         </Card>
 
         <Card minHeight={320}>
-          <div style={sectionTitleStyle}>Store Access</div>
+          <div style={sectionTitleStyle}>{t.storeAccess}</div>
           <div style={{ height: 16 }} />
           <div style={{ color: BRAND.muted, lineHeight: 1.65, marginBottom: 18 }}>
             Open the live Bronson Family Farm GrownBy store. This keeps the demo connected to a real commerce destination.
@@ -869,10 +1068,8 @@ export default function App() {
               color: BRAND.ink,
             }}
           >
-            <div style={{ fontWeight: 900, marginBottom: 8 }}>Why this matters</div>
-            <div style={{ color: BRAND.muted, lineHeight: 1.6 }}>
-              Funders can see that this is not only a story. It already points to a live market pathway tied to real farm activity.
-            </div>
+            <div style={{ fontWeight: 900, marginBottom: 8 }}>{t.whyMatters}</div>
+            <div style={{ color: BRAND.muted, lineHeight: 1.6 }}>{t.whyMattersCopy}</div>
           </div>
         </Card>
       </div>
@@ -882,9 +1079,9 @@ export default function App() {
   const renderStory = () => (
     <>
       <Hero
-        title="Our Story"
-        subtitle="Bronson Family Farm is more than a farm. It is legacy, land, renewal, and the future growing from one place."
-        image={imageFor("story")}
+        title={t.ourStory}
+        subtitle={t.storySub}
+        image={imageMap.story}
         liveTime={liveTime}
       />
       <div style={{ height: 18 }} />
@@ -898,7 +1095,7 @@ export default function App() {
           </div>
         </Card>
         <Card minHeight={230}>
-          <div style={sectionTitleStyle}>Why it resonates</div>
+          <div style={sectionTitleStyle}>{t.whyMatters}</div>
           <div style={{ height: 12 }} />
           <div style={{ color: BRAND.muted, lineHeight: 1.75, fontSize: 16 }}>
             The farm creates a visible bridge between land use, workforce development, wellness,
@@ -912,9 +1109,9 @@ export default function App() {
   const renderCommunity = () => (
     <>
       <Hero
-        title="Community"
-        subtitle="Volunteers, families, growers, and partners help turn the farm into a regional ecosystem for growing and belonging."
-        image={imageFor("community")}
+        title={t.communityTitle}
+        subtitle={t.communitySub}
+        image={imageMap.community}
         liveTime={liveTime}
       />
       <div style={{ height: 18 }} />
@@ -976,7 +1173,7 @@ export default function App() {
               textTransform: "uppercase",
             }}
           >
-            Demo Navigation
+            {t.demoNavigation}
           </div>
 
           <div style={{ display: "grid", gap: 12 }}>
@@ -995,27 +1192,6 @@ export default function App() {
 
           <div
             style={{
-              fontSize: 12,
-              fontWeight: 800,
-              color: BRAND.muted,
-              marginBottom: 10,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-            }}
-          >
-            Languages
-          </div>
-
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {(["EN", "ES", "TL", "IT", "HE", "PATWA"] as Lang[]).map((code) => (
-              <LangButton key={code} label={code} active={lang === code} onClick={() => setLang(code)} />
-            ))}
-          </div>
-
-          <div style={{ height: 22 }} />
-
-          <div
-            style={{
               padding: 16,
               borderRadius: 20,
               background: BRAND.card,
@@ -1023,14 +1199,17 @@ export default function App() {
               color: BRAND.ink,
             }}
           >
-            <div style={{ fontWeight: 900, marginBottom: 6 }}>Live Demo</div>
+            <div style={{ fontWeight: 900, marginBottom: 6 }}>{t.liveDemo}</div>
             <div style={{ color: BRAND.muted, lineHeight: 1.55, fontSize: 14 }}>
-              Stable single-file build with section identity, live status feel, and working store access.
+              {t.liveDemoCopy}
             </div>
           </div>
         </aside>
 
-        <main style={mainStyle}>{renderSection()}</main>
+        <main style={mainStyle}>
+          <TopLanguageBar />
+          {renderSection()}
+        </main>
       </div>
     </div>
   );
