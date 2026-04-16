@@ -29,6 +29,30 @@ const labels = {
     askButton: "View the Opportunity",
     openShop: "Open GrownBy Shop",
     returnHome: "Return to Ecosystem",
+    supportButton: "Support the Ecosystem",
+    modulesTitle: "Core Ecosystem Modules",
+    modules: {
+      why: {
+        title: "Why This Matters",
+        text:
+          "Food access, land stewardship, youth opportunity, and community renewal are being developed together instead of separately.",
+      },
+      build: {
+        title: "What We Are Building",
+        text:
+          "A living ecosystem in Youngstown that connects production, education, family engagement, workforce pathways, commerce, and public activation.",
+      },
+      partner: {
+        title: "Opportunity to Partner",
+        text:
+          "Aligned support can expand infrastructure, irrigation, equipment, programming, and the physical capacity needed to activate this ecosystem at scale.",
+      },
+      pathways: {
+        title: "Live Pathways",
+        text:
+          "Grow, Shop, Story, Workforce, Community, and Events all connect to one unified experience instead of functioning as separate pieces.",
+      },
+    },
     sections: {
       grow: "Grow",
       shop: "Shop",
@@ -59,7 +83,19 @@ const labels = {
       events:
         "This area highlights markets, tours, public demonstrations, educational gatherings, and the visible activation of the full ecosystem.",
     },
+    supportTitle: "Partner with Bronson Family Farm",
+    supportText:
+      "Support can help expand infrastructure, irrigation, equipment, programming, and the long-term operating capacity needed to activate this ecosystem at scale.",
+    moduleButtons: {
+      grow: "Open Grow",
+      shop: "Open Shop",
+      story: "Open Story",
+      workforce: "Open Workforce",
+      community: "Open Community",
+      events: "Open Events",
+    },
   },
+
   es: {
     title: "Bronson Family Farm",
     subtitle:
@@ -75,6 +111,30 @@ const labels = {
     askButton: "Ver la Oportunidad",
     openShop: "Abrir tienda GrownBy",
     returnHome: "Volver al Ecosistema",
+    supportButton: "Apoyar el Ecosistema",
+    modulesTitle: "Módulos Principales del Ecosistema",
+    modules: {
+      why: {
+        title: "Por Qué Importa",
+        text:
+          "El acceso a alimentos, el cuidado de la tierra, la oportunidad juvenil y la renovación comunitaria se desarrollan juntos, no por separado.",
+      },
+      build: {
+        title: "Lo Que Estamos Construyendo",
+        text:
+          "Un ecosistema vivo en Youngstown que conecta producción, educación, participación familiar, rutas laborales, comercio y activación pública.",
+      },
+      partner: {
+        title: "Oportunidad de Colaborar",
+        text:
+          "El apoyo alineado puede ampliar infraestructura, riego, equipos, programación y la capacidad física necesaria para activar este ecosistema a gran escala.",
+      },
+      pathways: {
+        title: "Rutas Vivas",
+        text:
+          "Cultivar, Comprar, Historia, Trabajo, Comunidad y Eventos se conectan en una sola experiencia unificada.",
+      },
+    },
     sections: {
       grow: "Cultivar",
       shop: "Comprar",
@@ -105,7 +165,19 @@ const labels = {
       events:
         "Esta área destaca mercados, recorridos, demostraciones públicas, encuentros educativos y la activación visible del ecosistema completo.",
     },
+    supportTitle: "Asóciese con Bronson Family Farm",
+    supportText:
+      "El apoyo puede ayudar a ampliar infraestructura, riego, equipos, programación y la capacidad operativa a largo plazo necesaria para activar este ecosistema a escala.",
+    moduleButtons: {
+      grow: "Abrir Cultivar",
+      shop: "Abrir Comprar",
+      story: "Abrir Historia",
+      workforce: "Abrir Trabajo",
+      community: "Abrir Comunidad",
+      events: "Abrir Eventos",
+    },
   },
+
   tl: {
     title: "Bronson Family Farm",
     subtitle:
@@ -121,6 +193,30 @@ const labels = {
     askButton: "Tingnan ang Oportunidad",
     openShop: "Buksan ang GrownBy Shop",
     returnHome: "Bumalik sa Ecosystem",
+    supportButton: "Suportahan ang Ecosystem",
+    modulesTitle: "Pangunahing Mga Module ng Ecosystem",
+    modules: {
+      why: {
+        title: "Bakit Mahalaga Ito",
+        text:
+          "Ang access sa pagkain, pangangalaga sa lupa, oportunidad para sa kabataan, at pagbangon ng komunidad ay pinauunlad nang magkakasama.",
+      },
+      build: {
+        title: "Ano ang Binubuo Namin",
+        text:
+          "Isang buhay na ecosystem sa Youngstown na nag-uugnay sa produksyon, edukasyon, pamilya, hanapbuhay, kalakalan, at pampublikong aktibasyon.",
+      },
+      partner: {
+        title: "Oportunidad na Makipagpartner",
+        text:
+          "Ang suportang naaayon sa layunin ay makakatulong sa imprastraktura, irigasyon, kagamitan, programming, at kapasidad na kailangan upang mapalago ang ecosystem na ito.",
+      },
+      pathways: {
+        title: "Buhay na mga Daan",
+        text:
+          "Ang Pagtatanim, Pamimili, Kuwento, Hanapbuhay, Komunidad, at Mga Kaganapan ay bahagi ng iisang nagkakaisang karanasan.",
+      },
+    },
     sections: {
       grow: "Pagtatanim",
       shop: "Pamimili",
@@ -151,7 +247,19 @@ const labels = {
       events:
         "Itinatampok ng bahaging ito ang mga pamilihan, pagbisita, pampublikong demonstrasyon, pang-edukasyong pagtitipon, at ang nakikitang pag-activate ng buong ecosystem.",
     },
+    supportTitle: "Makipagpartner sa Bronson Family Farm",
+    supportText:
+      "Makakatulong ang suporta sa pagpapalawak ng imprastraktura, irigasyon, kagamitan, programming, at pangmatagalang kapasidad na kailangan upang mapatakbo ang ecosystem na ito sa mas malaking saklaw.",
+    moduleButtons: {
+      grow: "Buksan ang Pagtatanim",
+      shop: "Buksan ang Pamimili",
+      story: "Buksan ang Kuwento",
+      workforce: "Buksan ang Hanapbuhay",
+      community: "Buksan ang Komunidad",
+      events: "Buksan ang Mga Kaganapan",
+    },
   },
+
   it: {
     title: "Bronson Family Farm",
     subtitle:
@@ -167,6 +275,30 @@ const labels = {
     askButton: "Vedi l’Opportunità",
     openShop: "Apri il negozio GrownBy",
     returnHome: "Torna all’Ecosistema",
+    supportButton: "Sostieni l’Ecosistema",
+    modulesTitle: "Moduli Principali dell’Ecosistema",
+    modules: {
+      why: {
+        title: "Perché è Importante",
+        text:
+          "Accesso al cibo, cura della terra, opportunità giovanili e rinnovamento della comunità si sviluppano insieme.",
+      },
+      build: {
+        title: "Cosa Stiamo Costruendo",
+        text:
+          "Un ecosistema vivo a Youngstown che connette produzione, educazione, famiglie, percorsi di lavoro, commercio e attivazione pubblica.",
+      },
+      partner: {
+        title: "Opportunità di Collaborazione",
+        text:
+          "Un sostegno allineato può espandere infrastrutture, irrigazione, attrezzature, programmazione e la capacità necessaria per attivare questo ecosistema su larga scala.",
+      },
+      pathways: {
+        title: "Percorsi Vivi",
+        text:
+          "Coltivare, Acquistare, Storia, Lavoro, Comunità ed Eventi sono parte di un’unica esperienza connessa.",
+      },
+    },
     sections: {
       grow: "Coltivare",
       shop: "Acquistare",
@@ -197,7 +329,19 @@ const labels = {
       events:
         "Questa area evidenzia mercati, visite, dimostrazioni pubbliche, incontri educativi e l’attivazione visibile dell’intero ecosistema.",
     },
+    supportTitle: "Collabora con Bronson Family Farm",
+    supportText:
+      "Il sostegno può aiutare ad ampliare infrastrutture, irrigazione, attrezzature, programmazione e la capacità operativa a lungo termine necessaria per attivare questo ecosistema su larga scala.",
+    moduleButtons: {
+      grow: "Apri Coltivare",
+      shop: "Apri Acquistare",
+      story: "Apri Storia",
+      workforce: "Apri Lavoro",
+      community: "Apri Comunità",
+      events: "Apri Eventi",
+    },
   },
+
   patwa: {
     title: "Bronson Family Farm",
     subtitle:
@@ -213,6 +357,30 @@ const labels = {
     askButton: "See di Opportunity",
     openShop: "Open di GrownBy Shop",
     returnHome: "Go Back to di Ecosystem",
+    supportButton: "Support di Ecosystem",
+    modulesTitle: "Core Ecosystem Module Dem",
+    modules: {
+      why: {
+        title: "Why Dis Matter",
+        text:
+          "Food access, land care, youth opportunity, an community renewal a build up together, not separate.",
+      },
+      build: {
+        title: "Wha Wi A Build",
+        text:
+          "A livin ecosystem inna Youngstown weh connect production, education, family engagement, workforce pathway, commerce, an public activation.",
+      },
+      partner: {
+        title: "Opportunity Fi Partner",
+        text:
+          "Aligned support can help wid infrastructure, irrigation, equipment, programming, an di physical capacity needed fi activate dis ecosystem pon scale.",
+      },
+      pathways: {
+        title: "Live Pathway Dem",
+        text:
+          "Grow, Shop, Story, Workforce, Community, an Events all connect inna one unified experience.",
+      },
+    },
     sections: {
       grow: "Grow",
       shop: "Shop",
@@ -243,7 +411,19 @@ const labels = {
       events:
         "Dis area highlight market, tour, public demonstration, educational gathering, an di visible activation a di whole ecosystem.",
     },
+    supportTitle: "Partner wid Bronson Family Farm",
+    supportText:
+      "Support can help expand infrastructure, irrigation, equipment, programming, an di long-term operating capacity needed fi activate dis ecosystem pon a bigger scale.",
+    moduleButtons: {
+      grow: "Open Grow",
+      shop: "Open Shop",
+      story: "Open Story",
+      workforce: "Open Workforce",
+      community: "Open Community",
+      events: "Open Events",
+    },
   },
+
   he: {
     title: "Bronson Family Farm",
     subtitle:
@@ -259,6 +439,30 @@ const labels = {
     askButton: "צפו בהזדמנות",
     openShop: "פתחו את חנות GrownBy",
     returnHome: "חזרה למערכת האקולוגית",
+    supportButton: "תמכו במערכת האקולוגית",
+    modulesTitle: "מודולים מרכזיים של המערכת האקולוגית",
+    modules: {
+      why: {
+        title: "למה זה חשוב",
+        text:
+          "גישה למזון, שמירה על אדמה, הזדמנות לנוער והתחדשות קהילתית נבנים יחד ולא בנפרד.",
+      },
+      build: {
+        title: "מה אנחנו בונים",
+        text:
+          "מערכת אקולוגית חיה ביונגסטאון שמחברת בין ייצור, חינוך, משפחות, מסלולי עבודה, מסחר והפעלה ציבורית.",
+      },
+      partner: {
+        title: "הזדמנות לשותפות",
+        text:
+          "תמיכה מותאמת יכולה להרחיב תשתיות, השקיה, ציוד, תכנות והיכולת הפיזית הדרושה להפעלת המערכת האקולוגית הזו בקנה מידה רחב.",
+      },
+      pathways: {
+        title: "מסלולים חיים",
+        text:
+          "גידול, קנייה, סיפור, כוח עבודה, קהילה ואירועים מתחברים לחוויה אחת מאוחדת.",
+      },
+    },
     sections: {
       grow: "גידול",
       shop: "קנייה",
@@ -289,6 +493,17 @@ const labels = {
       events:
         "אזור זה מדגיש שווקים, סיורים, הדגמות ציבוריות, מפגשים חינוכיים והפעלה נראית לעין של כל המערכת האקולוגית.",
     },
+    supportTitle: "שתפו פעולה עם Bronson Family Farm",
+    supportText:
+      "תמיכה יכולה לסייע בהרחבת תשתיות, השקיה, ציוד, תוכניות והיכולת התפעולית ארוכת הטווח הדרושה להפעלת המערכת האקולוגית הזו בקנה מידה רחב.",
+    moduleButtons: {
+      grow: "פתחו גידול",
+      shop: "פתחו קנייה",
+      story: "פתחו סיפור",
+      workforce: "פתחו כוח עבודה",
+      community: "פתחו קהילה",
+      events: "פתחו אירועים",
+    },
   },
 };
 
@@ -308,6 +523,13 @@ export default function App() {
     ...styles.sectionShell,
     direction: isRTL ? ("rtl" as const) : ("ltr" as const),
   };
+
+  const moduleCards = [
+    { key: "why", open: "story" as Section },
+    { key: "build", open: "grow" as Section },
+    { key: "partner", open: "community" as Section },
+    { key: "pathways", open: "events" as Section },
+  ] as const;
 
   if (section === "home") {
     return (
@@ -349,6 +571,21 @@ export default function App() {
             <p style={styles.askText}>{t.askText}</p>
           </div>
 
+          <div style={styles.previewHeader}>{t.modulesTitle}</div>
+
+          <div style={styles.moduleGrid}>
+            {moduleCards.map((module) => (
+              <button
+                key={module.key}
+                style={styles.moduleCard}
+                onClick={() => setSection(module.open)}
+              >
+                <h3 style={styles.moduleTitle}>{t.modules[module.key].title}</h3>
+                <p style={styles.moduleText}>{t.modules[module.key].text}</p>
+              </button>
+            ))}
+          </div>
+
           <div style={styles.previewHeader}>{t.preview}</div>
 
           <div style={styles.grid}>
@@ -357,6 +594,7 @@ export default function App() {
                 <img src={imagePaths[key]} alt={t.sections[key]} style={styles.tileImage} />
                 <div style={styles.tileTitle}>{t.sections[key]}</div>
                 <div style={styles.tileText}>{t.sectionText[key]}</div>
+                <div style={styles.tileAction}>{t.moduleButtons[key]}</div>
               </button>
             ))}
           </div>
@@ -395,8 +633,18 @@ export default function App() {
         <h2 style={styles.sectionTitle}>{t.sections[section]}</h2>
         <p style={styles.sectionText}>{t.details[section]}</p>
 
-        {section === "shop" && (
-          <div style={styles.ctaRow}>
+        <div style={styles.supportPanel}>
+          <h3 style={styles.askTitle}>{t.supportTitle}</h3>
+          <p style={styles.askText}>{t.supportText}</p>
+        </div>
+
+        <div style={styles.ctaRow}>
+          {section !== "shop" && (
+            <button style={styles.primaryButton} onClick={() => setSection("shop")}>
+              {t.openShop}
+            </button>
+          )}
+          {section === "shop" && (
             <button
               style={styles.primaryButton}
               onClick={() =>
@@ -408,11 +656,14 @@ export default function App() {
             >
               {t.openShop}
             </button>
-            <button style={styles.secondaryButton} onClick={() => setSection("home")}>
-              {t.returnHome}
-            </button>
-          </div>
-        )}
+          )}
+          <button style={styles.secondaryButton} onClick={() => setSection("home")}>
+            {t.returnHome}
+          </button>
+          <button style={styles.secondaryButton} onClick={() => setSection("community")}>
+            {t.supportButton}
+          </button>
+        </div>
 
         <div style={styles.sectionGrid}>
           {(Object.keys(t.sections) as Array<keyof typeof t.sections>)
@@ -546,6 +797,13 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "18px",
     marginBottom: "24px",
   },
+  supportPanel: {
+    background: "#ffffff",
+    border: "1px solid #d2ddd4",
+    borderRadius: "18px",
+    padding: "18px",
+    marginBottom: "22px",
+  },
   askTitle: {
     margin: "0 0 8px 0",
     fontSize: "22px",
@@ -562,6 +820,33 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 700,
     color: "#1f3d2b",
     marginBottom: "16px",
+  },
+  moduleGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: "16px",
+    marginBottom: "24px",
+  },
+  moduleCard: {
+    background: "#ffffff",
+    border: "1px solid #d2ddd4",
+    borderRadius: "18px",
+    padding: "18px",
+    textAlign: "left",
+    cursor: "pointer",
+    boxShadow: "0 6px 16px rgba(25, 55, 35, 0.05)",
+  },
+  moduleTitle: {
+    fontSize: "22px",
+    fontWeight: 700,
+    color: "#173b24",
+    margin: "0 0 8px 0",
+  },
+  moduleText: {
+    fontSize: "16px",
+    lineHeight: 1.6,
+    color: "#486452",
+    margin: 0,
   },
   grid: {
     display: "grid",
@@ -595,6 +880,12 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "16px",
     lineHeight: 1.5,
     color: "#486452",
+  },
+  tileAction: {
+    marginTop: "10px",
+    fontSize: "14px",
+    fontWeight: 700,
+    color: "#2f6b3c",
   },
   backButton: {
     padding: "10px 14px",
