@@ -10,6 +10,8 @@ const IMAGES = {
   market: "/GrowArea.jpg",
   youth: "/GrowArea2.jpg",
   events: "/GrowArea.jpg",
+  community: "/GrowArea2.jpg",
+  future: "/GrowArea.jpg",
   guest: "/GrowArea2.jpg",
   customer: "/GrowArea.jpg",
   grower: "/GrowArea2.jpg",
@@ -17,11 +19,7 @@ const IMAGES = {
   supervisor: "/GrowArea2.jpg",
 };
 
-const roles: {
-  id: Role;
-  label: string;
-  subtitle: string;
-}[] = [
+const roles: { id: Role; label: string; subtitle: string }[] = [
   { id: "guest", label: "Guest", subtitle: "Explore the farm" },
   { id: "customer", label: "Customer", subtitle: "Find food and shop" },
   { id: "grower", label: "Grower", subtitle: "See crops and workflow" },
@@ -244,9 +242,23 @@ export default function App() {
           </h2>
           <p style={styles.historyText}>
             Bronson Family Farm grows from family history, resilience, and a belief
-            that land can restore connection, dignity, and opportunity. What grows
-            here is more than food — it is access, work, learning, and a future rooted
-            in community.
+            that land can restore connection, dignity, and opportunity.
+          </p>
+          <p style={styles.historyText}>
+            What grows here is more than food — it is access, work, learning,
+            community renewal, and a future rooted in shared possibility.
+          </p>
+        </div>
+      </section>
+
+      <section style={styles.quoteBand}>
+        <div style={styles.quoteBandInner}>
+          <p style={styles.quoteText}>
+            “What grows here is more than food.”
+          </p>
+          <p style={styles.quoteSubtext}>
+            It is a place where people enter the land and find connection, work,
+            learning, healing, and opportunity.
           </p>
         </div>
       </section>
@@ -259,6 +271,16 @@ export default function App() {
             No calendar block. No fake modules. Just the real system pieces expressed
             through the land, the work, and the people they serve.
           </p>
+
+          <div style={styles.liveChips}>
+            {["Growing", "Food Access", "Youth Workforce", "Volunteers", "Events", "Operations"].map(
+              (item) => (
+                <span key={item} style={styles.liveChip}>
+                  {item}
+                </span>
+              )
+            )}
+          </div>
         </div>
       </section>
 
@@ -317,6 +339,65 @@ export default function App() {
           setView("role");
         }}
       />
+
+      <section
+        style={{
+          ...styles.communitySection,
+          backgroundImage: `linear-gradient(rgba(11,20,14,0.22), rgba(11,20,14,0.58)), url(${IMAGES.community})`,
+          backgroundPosition: "center 44%",
+        }}
+      >
+        <div style={styles.communityInner}>
+          <div style={styles.kicker}>Why it matters</div>
+          <h2 style={styles.communityTitle}>
+            The farm connects food, family, workforce, and community renewal
+          </h2>
+          <p style={styles.communityText}>
+            This ecosystem is meant to serve more than one purpose. It creates
+            visibility for growing, strengthens access to fresh food, makes room
+            for learning and work, and gives partners and community members a place
+            to belong.
+          </p>
+
+          <div style={styles.communityGrid}>
+            <SoftPanel
+              title="Food"
+              text="Fresh produce, visible growing, and access that feels connected to place."
+            />
+            <SoftPanel
+              title="Work"
+              text="Youth and adults gain real experience through structure, participation, and responsibility."
+            />
+            <SoftPanel
+              title="Community"
+              text="Events, volunteers, partners, and visitors become part of one connected environment."
+            />
+          </div>
+        </div>
+      </section>
+
+      <section
+        style={{
+          ...styles.futureSection,
+          backgroundImage: `linear-gradient(rgba(12,20,14,0.24), rgba(12,20,14,0.54)), url(${IMAGES.future})`,
+          backgroundPosition: "center 66%",
+        }}
+      >
+        <div style={styles.futureContent}>
+          <div style={styles.kicker}>What comes next</div>
+          <h2 style={styles.futureTitle}>
+            Enter the living system through the path that belongs to you
+          </h2>
+          <p style={styles.futureText}>
+            After the farm, the roots, the live movement, and the community are made
+            visible, each person can step into the part of the ecosystem that fits
+            their role.
+          </p>
+          <button style={styles.primaryBtn} onClick={() => setView("role")}>
+            Enter by role
+          </button>
+        </div>
+      </section>
 
       <section style={styles.rolesEntrySection}>
         <div style={styles.rolesEntryInner}>
@@ -455,6 +536,15 @@ function ImmersiveSection({
         </div>
       </div>
     </section>
+  );
+}
+
+function SoftPanel({ title, text }: { title: string; text: string }) {
+  return (
+    <div style={styles.softPanel}>
+      <div style={styles.softPanelTitle}>{title}</div>
+      <div style={styles.softPanelText}>{text}</div>
+    </div>
   );
 }
 
@@ -621,7 +711,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   historySection: {
-    minHeight: "65vh",
+    minHeight: "70vh",
     display: "flex",
     alignItems: "center",
     backgroundSize: "cover",
@@ -630,12 +720,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   historyContent: {
-    maxWidth: 720,
+    maxWidth: 760,
     background: "rgba(250,255,248,0.08)",
     backdropFilter: "blur(6px)",
     border: "1px solid rgba(255,255,255,0.08)",
     borderRadius: 24,
-    padding: "28px 24px",
+    padding: "30px 26px",
   },
 
   historyTitle: {
@@ -651,8 +741,36 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: 16,
     marginBottom: 0,
     fontSize: 17,
-    lineHeight: 1.7,
+    lineHeight: 1.72,
     color: "rgba(255,255,255,0.88)",
+  },
+
+  quoteBand: {
+    background: "linear-gradient(180deg, #16281d 0%, #203426 100%)",
+    padding: "48px 24px",
+  },
+
+  quoteBandInner: {
+    maxWidth: 940,
+    margin: "0 auto",
+  },
+
+  quoteText: {
+    margin: 0,
+    color: "#f2f7ee",
+    fontSize: "clamp(1.8rem, 4vw, 3rem)",
+    lineHeight: 1.12,
+    fontWeight: 600,
+    textWrap: "balance",
+  },
+
+  quoteSubtext: {
+    marginTop: 12,
+    marginBottom: 0,
+    color: "rgba(242,247,238,0.82)",
+    fontSize: 17,
+    lineHeight: 1.7,
+    maxWidth: 760,
   },
 
   introBand: {
@@ -681,6 +799,27 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#516a57",
     fontSize: 18,
     lineHeight: 1.75,
+  },
+
+  liveChips: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 24,
+  },
+
+  liveChip: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 999,
+    background: "#ffffff",
+    border: "1px solid rgba(23,49,31,0.08)",
+    padding: "10px 14px",
+    fontSize: 14,
+    fontWeight: 600,
+    color: "#284432",
+    boxShadow: "0 10px 22px rgba(19,45,28,0.05)",
   },
 
   immersiveSection: {
@@ -721,6 +860,103 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 18,
     lineHeight: 1.72,
     color: "rgba(255,255,255,0.92)",
+  },
+
+  communitySection: {
+    minHeight: "92vh",
+    display: "flex",
+    alignItems: "center",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    padding: "60px 24px",
+  },
+
+  communityInner: {
+    maxWidth: 1080,
+    margin: "0 auto",
+    width: "100%",
+  },
+
+  communityTitle: {
+    margin: 0,
+    color: "#ffffff",
+    fontSize: "clamp(2rem, 4vw, 3.1rem)",
+    lineHeight: 1.06,
+    fontWeight: 700,
+    maxWidth: 760,
+    textWrap: "balance",
+  },
+
+  communityText: {
+    marginTop: 16,
+    maxWidth: 820,
+    color: "rgba(255,255,255,0.90)",
+    fontSize: 18,
+    lineHeight: 1.74,
+  },
+
+  communityGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+    gap: 16,
+    marginTop: 28,
+  },
+
+  softPanel: {
+    background: "rgba(250,255,248,0.10)",
+    backdropFilter: "blur(6px)",
+    border: "1px solid rgba(255,255,255,0.10)",
+    borderRadius: 22,
+    padding: "20px 18px",
+  },
+
+  softPanelTitle: {
+    fontSize: 22,
+    fontWeight: 700,
+    color: "#ffffff",
+  },
+
+  softPanelText: {
+    marginTop: 10,
+    fontSize: 15,
+    lineHeight: 1.68,
+    color: "rgba(255,255,255,0.88)",
+  },
+
+  futureSection: {
+    minHeight: "78vh",
+    display: "flex",
+    alignItems: "center",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    padding: "60px 24px",
+  },
+
+  futureContent: {
+    maxWidth: 760,
+    background: "rgba(250,255,248,0.08)",
+    backdropFilter: "blur(8px)",
+    border: "1px solid rgba(255,255,255,0.10)",
+    borderRadius: 28,
+    padding: "28px 24px",
+  },
+
+  futureTitle: {
+    margin: 0,
+    color: "#ffffff",
+    fontSize: "clamp(2rem, 4vw, 3rem)",
+    lineHeight: 1.08,
+    fontWeight: 700,
+    textWrap: "balance",
+  },
+
+  futureText: {
+    marginTop: 16,
+    marginBottom: 22,
+    color: "rgba(255,255,255,0.90)",
+    fontSize: 18,
+    lineHeight: 1.72,
+    maxWidth: 700,
   },
 
   rolesEntrySection: {
