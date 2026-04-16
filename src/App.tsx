@@ -1,120 +1,394 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-const images = {
-  hero: "/hero.jpg",
-  grow: "/grow.jpg",
-  market: "/market.jpg",
-  calendar: "/calendar.jpg",
-  community: "/community.jpg",
-  education: "/education.jpg",
-};
+type Panel = "dashboard" | "grow" | "calendar" | "shop" | "story" | "community";
 
-const languages = ["EN", "ES", "TL", "IT", "PATWA", "HE"];
+const HERO_IMAGE = "/GrowArea.jpg";
+const STORY_IMAGE = "/GrowArea2.jpg";
 
 export default function App() {
-  const [role, setRole] = useState<null | string>(null);
-  const [lang, setLang] = useState("EN");
-
-  if (!role) {
-    return (
-      <div className="h-screen flex flex-col items-center justify-center bg-green-900 text-white">
-        <h1 className="text-4xl mb-6">Bronson Family Farm</h1>
-        <p className="mb-6">Enter the Ecosystem</p>
-
-        <div className="flex gap-4 mb-8">
-          <button onClick={() => setRole("guest")} className="btn">Guest</button>
-          <button onClick={() => setRole("grower")} className="btn">Grower</button>
-          <button onClick={() => setRole("customer")} className="btn">Customer</button>
-        </div>
-
-        <div className="flex gap-2">
-          {languages.map(l => (
-            <button key={l} onClick={() => setLang(l)} className="px-2">
-              {l}
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  const [panel, setPanel] = useState<Panel>("dashboard");
 
   return (
-    <div className="font-sans text-gray-900">
+    <div style={styles.app}>
+      <aside style={styles.sidebar}>
+        <h2 style={styles.logo}>Bronson Farm</h2>
 
-      {/* NAV */}
-      <nav className="fixed top-0 w-full bg-white shadow p-4 flex justify-between z-50">
-        <div className="font-bold">BFF</div>
-        <div className="flex gap-4">
-          <a href="#grow">Grow</a>
-          <a href="#market">Market</a>
-          <a href="#calendar">Calendar</a>
-          <a href="#community">Community</a>
-        </div>
-      </nav>
+        {["dashboard", "grow", "calendar", "shop", "story", "community"].map((item) => (
+          <button
+            key={item}
+            style={{
+              ...styles.navBtn,
+              ...(panel === item ? styles.active : {}),
+            }}
+            onClick={() => setPanel(item as Panel)}
+          >
+            {item.toUpperCase()}
+          </button>
+        ))}
+      </aside>
 
-      {/* HERO */}
-      <section
-        style={{ backgroundImage: `url(${images.hero})` }}
-        className="h-screen bg-cover bg-center flex items-center justify-center text-white"
-      >
-        <div className="bg-black/40 p-10 rounded-xl text-center">
-          <h1 className="text-5xl mb-4">Farm & Family Ecosystem</h1>
-          <p>Role: {role.toUpperCase()} | Language: {lang}</p>
-        </div>
-      </section>
-
-      {/* GROW */}
-      <section
-        id="grow"
-        style={{ backgroundImage: `url(${images.grow})` }}
-        className="h-screen bg-cover bg-center flex items-center p-10 text-white"
-      >
-        <div className="bg-black/40 p-6 rounded-xl max-w-xl">
-          <h2 className="text-3xl mb-4">Grower Hub</h2>
-          <p>Track crops, seedlings, and planting cycles.</p>
-        </div>
-      </section>
-
-      {/* MARKET */}
-      <section
-        id="market"
-        style={{ backgroundImage: `url(${images.market})` }}
-        className="h-screen bg-cover bg-center flex items-center p-10 text-white"
-      >
-        <div className="bg-black/40 p-6 rounded-xl max-w-xl">
-          <h2 className="text-3xl mb-4">Marketplace</h2>
-          <p>Buy seedlings, produce, and supplies.</p>
-        </div>
-      </section>
-
-      {/* CALENDAR */}
-      <section
-        id="calendar"
-        style={{ backgroundImage: `url(${images.calendar})` }}
-        className="h-screen bg-cover bg-center flex items-center p-10 text-white"
-      >
-        <div className="bg-black/40 p-6 rounded-xl max-w-xl">
-          <h2 className="text-3xl mb-4">Grower Calendar</h2>
-          <ul>
-            <li>🌱 Seed Start – April</li>
-            <li>🌿 Transplant – May</li>
-            <li>🌽 Harvest – Summer</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* COMMUNITY */}
-      <section
-        id="community"
-        style={{ backgroundImage: `url(${images.community})` }}
-        className="h-screen bg-cover bg-center flex items-center p-10 text-white"
-      >
-        <div className="bg-black/40 p-6 rounded-xl max-w-xl">
-          <h2 className="text-3xl mb-4">Community</h2>
-          <p>Workforce training, youth programs, volunteers.</p>
-        </div>
-      </section>
-
+      <main style={styles.main}>
+        {panel === "dashboard" && <Dashboard setPanel={setPanel} />}
+        {panel === "grow" && <Grow />}
+        {panel === "calendar" && <Calendar />}
+        {panel === "shop" && <Shop />}
+        {panel === "story" && <Story />}
+        {panel === "community" && <Community />}
+      </main>
     </div>
   );
 }
+
+function Dashboard({ setPanel }: { setPanel: (panel: Panel) => void }) {
+  return (
+    <>
+      <div style={styles.heroWrap}>
+        <img src={HERO_IMAGE} alt="Bronson Family Farm" style={styles.hero} />
+      </div>
+
+      <h1 style={styles.title}>LIVE ECOSYSTEM</h1>
+      <p style={styles.text}>This is not a presentation. This is a working system.</p>
+
+      <div style={styles.grid}>
+        <Card
+          title="GROW"
+          text="Crop flow, irrigation, and production status."
+          onClick={() => setPanel("grow")}
+        />
+        <Card
+          title="SHOP"
+          text="Live store access and market readiness."
+          onClick={() => setPanel("shop")}
+        />
+        <Card
+          title="CALENDAR"
+          text="Tasks, timing, and daily farm rhythm."
+          onClick={() => setPanel("calendar")}
+        />
+        <Card
+          title="STORY"
+          text="Legacy, land, place, and future."
+          onClick={() => setPanel("story")}
+        />
+        <Card
+          title="COMMUNITY"
+          text="Volunteers, families, and partners."
+          onClick={() => setPanel("community")}
+        />
+      </div>
+    </>
+  );
+}
+
+function Grow() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Grower System</h2>
+      <div style={styles.grid2}>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Production Status</h3>
+          <p style={styles.bodyText}>Collards: Ready</p>
+          <p style={styles.bodyText}>Peppers: Growing</p>
+          <p style={styles.bodyText}>Tomatoes: Transplanting</p>
+        </div>
+
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Next Actions</h3>
+          <p style={styles.bodyText}>• Watering cycle</p>
+          <p style={styles.bodyText}>• Harvest prep</p>
+          <p style={styles.bodyText}>• Market packaging</p>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Calendar() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Farm Calendar</h2>
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Time</th>
+            <th style={styles.th}>Task</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={styles.td}>7:00 AM</td>
+            <td style={styles.td}>Water Plants</td>
+          </tr>
+          <tr>
+            <td style={styles.td}>9:00 AM</td>
+            <td style={styles.td}>Harvest Greens</td>
+          </tr>
+          <tr>
+            <td style={styles.td}>12:00 PM</td>
+            <td style={styles.td}>Prep Market</td>
+          </tr>
+          <tr>
+            <td style={styles.td}>4:00 PM</td>
+            <td style={styles.td}>Farmers Market</td>
+          </tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function Shop() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Marketplace</h2>
+      <div style={styles.grid2}>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Market Readiness</h3>
+          <p style={styles.bodyText}>Bubble Babies: Available</p>
+          <p style={styles.bodyText}>Seedlings: In season</p>
+          <p style={styles.bodyText}>Fresh produce: Market-based</p>
+        </div>
+
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Store Access</h3>
+          <p style={styles.bodyText}>Open the live Bronson Family Farm GrownBy store.</p>
+          <button
+            style={styles.button}
+            onClick={() =>
+              window.open(
+                "https://grownby.com/farms/bronson-family-farm/shop",
+                "_blank"
+              )
+            }
+          >
+            OPEN LIVE STORE
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Story() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Our Story</h2>
+      <img src={STORY_IMAGE} alt="Story" style={styles.sectionImg} />
+      <div style={styles.cardStatic}>
+        <h3 style={styles.cardHeading}>Legacy + Place</h3>
+        <p style={styles.bodyText}>
+          Bronson Family Farm is more than a farm. It is legacy, land, renewal,
+          and the future growing from one place.
+        </p>
+      </div>
+    </>
+  );
+}
+
+function Community() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Community</h2>
+      <div style={styles.grid2}>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Volunteers</h3>
+          <p style={styles.bodyText}>Support planting, setup, logistics, and farm activity.</p>
+        </div>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Partners</h3>
+          <p style={styles.bodyText}>
+            Join infrastructure, workforce, wellness, and food access efforts.
+          </p>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Card({
+  title,
+  onClick,
+  text,
+}: {
+  title: string;
+  onClick: () => void;
+  text: string;
+}) {
+  return (
+    <button style={styles.card} onClick={onClick}>
+      <div style={styles.cardAccent} />
+      <h3 style={styles.cardHeading}>{title}</h3>
+      <p style={styles.cardText}>{text}</p>
+    </button>
+  );
+}
+
+const styles: Record<string, React.CSSProperties> = {
+  app: {
+    display: "grid",
+    gridTemplateColumns: "250px 1fr",
+    minHeight: "100vh",
+    fontFamily: "Arial, sans-serif",
+    background: "#dfe8e0",
+  },
+  sidebar: {
+    background: "#e9f2ea",
+    padding: "20px",
+    borderRight: "1px solid #cfd9d1",
+  },
+  logo: {
+    marginBottom: 20,
+    fontSize: 24,
+    fontWeight: 700,
+    color: "#173b24",
+  },
+  navBtn: {
+    display: "block",
+    width: "100%",
+    padding: "14px 12px",
+    marginBottom: "10px",
+    cursor: "pointer",
+    border: "1px solid #b8c7b9",
+    borderRadius: "12px",
+    background: "#f8fbf8",
+    color: "#173b24",
+    fontSize: 14,
+    fontWeight: 700,
+    boxShadow: "0 2px 4px rgba(0,0,0,0.03)",
+  },
+  active: {
+    background: "#2f6b3c",
+    color: "#fff",
+    border: "1px solid #2f6b3c",
+  },
+  main: {
+    padding: "20px",
+    overflow: "auto",
+  },
+  heroWrap: {
+    background: "#f7faf7",
+    border: "1px solid #c8d5c9",
+    borderRadius: "20px",
+    padding: "16px",
+    marginBottom: "22px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.04)",
+  },
+  hero: {
+    width: "100%",
+    height: 250,
+    objectFit: "cover",
+    borderRadius: "14px",
+    display: "block",
+  },
+  title: {
+    fontSize: 42,
+    marginBottom: 12,
+    color: "#173b24",
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: "#35543f",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 20,
+  },
+  grid2: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+    marginTop: "20px",
+  },
+  card: {
+    background: "#f9fbf9",
+    padding: 20,
+    cursor: "pointer",
+    border: "1px solid #cad8cb",
+    borderRadius: "18px",
+    minHeight: 180,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    textAlign: "left",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+  },
+  cardStatic: {
+    background: "#f9fbf9",
+    padding: 20,
+    border: "1px solid #cad8cb",
+    borderRadius: "18px",
+    minHeight: 160,
+    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+  },
+  cardAccent: {
+    height: 10,
+    borderRadius: 999,
+    background: "#6aa56f",
+    marginBottom: 18,
+  },
+  cardHeading: {
+    margin: "0 0 10px 0",
+    color: "#173b24",
+    fontSize: 20,
+  },
+  cardText: {
+    margin: 0,
+    lineHeight: 1.6,
+    color: "#35543f",
+    fontSize: 16,
+  },
+  bodyText: {
+    margin: "0 0 8px 0",
+    lineHeight: 1.6,
+    color: "#35543f",
+    fontSize: 16,
+  },
+  sectionTitle: {
+    fontSize: 34,
+    marginBottom: 8,
+    color: "#173b24",
+  },
+  sectionImg: {
+    width: "100%",
+    height: 240,
+    objectFit: "cover",
+    marginBottom: 20,
+    border: "1px solid #c8d5c9",
+    borderRadius: "16px",
+    display: "block",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.04)",
+  },
+  button: {
+    padding: 15,
+    background: "#2f6b3c",
+    color: "#fff",
+    border: "none",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: 700,
+    marginTop: 12,
+  },
+  table: {
+    width: "100%",
+    marginTop: 20,
+    borderCollapse: "collapse",
+    background: "#f9fbf9",
+    borderRadius: "18px",
+    overflow: "hidden",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+  },
+  th: {
+    textAlign: "left",
+    padding: 14,
+    border: "1px solid #d5e0d6",
+    background: "#eef5ee",
+    color: "#173b24",
+  },
+  td: {
+    padding: 14,
+    border: "1px solid #d5e0d6",
+    color: "#35543f",
+  },
+};
