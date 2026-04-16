@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
 const languages = ["English", "Spanish", "Tagalog", "Patwa", "Italian", "Hebrew"];
 
-const roleCards = [
+const roles = [
   {
     id: "guest",
     title: "Guest",
@@ -35,46 +35,7 @@ const roleCards = [
   },
 ];
 
-const weatherCards = [
-  { day: "Thu", temp: "62°", note: "Transplant prep" },
-  { day: "Fri", temp: "66°", note: "Watering window" },
-  { day: "Sat", temp: "69°", note: "Event-friendly" },
-  { day: "Sun", temp: "64°", note: "Mulch and check beds" },
-];
-
-const calendarItems = [
-  { time: "8:00 AM", task: "Youth orientation and safety check", zone: "Welcome Tent" },
-  { time: "9:30 AM", task: "Seedling care and irrigation review", zone: "Grow Area" },
-  { time: "11:00 AM", task: "Nutrition and diabetes-friendly food talk", zone: "Learning Station" },
-  { time: "1:00 PM", task: "Inventory sorting and pickup prep", zone: "Produce Command" },
-];
-
-const produceCards = [
-  { name: "Tomato Seedlings", count: 24, note: "Ready for reservation" },
-  { name: "Collard Greens", count: 40, note: "High-demand crop" },
-  { name: "Cabbage", count: 100, note: "Strong inventory" },
-  { name: "Peppers", count: 24, note: "Transplanting cycle" },
-  { name: "Bubble Babies", count: 18, note: "Education + starter sales" },
-  { name: "Lettuce", count: 30, note: "Fast pickup turnover" },
-];
-
-const youthTasks = [
-  "Clock-in and PPE check",
-  "Watering team rotation",
-  "Transplant assistance",
-  "Produce washing and sorting",
-  "Customer greeting practice",
-  "Reflection and skill journal",
-];
-
-const supervisorNotes = [
-  { name: "Team Readiness", value: "High" },
-  { name: "Attendance", value: "94%" },
-  { name: "Safety Completion", value: "100%" },
-  { name: "Leadership Growth", value: "Strong" },
-];
-
-function buttonStyle(active = false): React.CSSProperties {
+function btnStyle(active = false): React.CSSProperties {
   return {
     marginRight: "8px",
     marginBottom: "8px",
@@ -85,6 +46,7 @@ function buttonStyle(active = false): React.CSSProperties {
     color: active ? "#173116" : "white",
     cursor: "pointer",
     fontWeight: 700,
+    fontSize: "14px",
   };
 }
 
@@ -99,7 +61,7 @@ function panelStyle(extra: React.CSSProperties = {}): React.CSSProperties {
   };
 }
 
-function smallCardStyle(extra: React.CSSProperties = {}): React.CSSProperties {
+function cardStyle(extra: React.CSSProperties = {}): React.CSSProperties {
   return {
     background: "rgba(255,255,255,0.08)",
     border: "1px solid rgba(255,255,255,0.12)",
@@ -111,22 +73,10 @@ function smallCardStyle(extra: React.CSSProperties = {}): React.CSSProperties {
 
 export default function App() {
   const [lang, setLang] = useState("English");
-  const [started, setStarted] = useState(false);
+  const [screen, setScreen] = useState<"welcome" | "demo">("welcome");
   const [role, setRole] = useState("guest");
 
-  const currentRole = useMemo(
-    () => roleCards.find((r) => r.id === role) ?? roleCards[0],
-    [role]
-  );
-
-  const roleFocus: Record<string, string> = {
-    guest: "Explore the farm, event flow, ecosystem story, and community mission.",
-    customer: "Reserve seedlings, pickup times, and healthy food guidance.",
-    grower: "Track beds, tasks, weather, and crop readiness.",
-    supervisor: "Monitor youth teams, safety, attendance, and progress.",
-    youth: "Learn, work, grow confidence, and build your pathway.",
-    admin: "Coordinate inventory, events, check-in, and staffing.",
-  };
+  const selectedRole = roles.find((r) => r.id === role) || roles[0];
 
   return (
     <div
@@ -162,14 +112,14 @@ export default function App() {
 
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             {languages.map((l) => (
-              <button key={l} onClick={() => setLang(l)} style={buttonStyle(lang === l)}>
+              <button key={l} onClick={() => setLang(l)} style={btnStyle(lang === l)}>
                 {l}
               </button>
             ))}
           </div>
         </div>
 
-        {!started ? (
+        {screen === "welcome" ? (
           <div
             style={{
               display: "grid",
@@ -192,51 +142,53 @@ export default function App() {
                 Live Now
               </div>
 
-              <h1 style={{ fontSize: "60px", lineHeight: 1.05, margin: "0 0 18px 0" }}>
+              <h1 style={{ fontSize: "56px", lineHeight: 1.05, margin: "0 0 18px 0" }}>
                 A welcoming, visual, role-based farm platform built for community use.
               </h1>
 
               <p style={{ fontSize: "24px", lineHeight: 1.5, maxWidth: "980px" }}>
-                This demo shows how Bronson Family Farm, Farm & Family Alliance, Parker Farms,
-                and the historic Lansdowne Airport site work together as one connected ecosystem.
+                This demo shows how Bronson Family Farm, Farm &amp; Family Alliance,
+                Parker Farms, and the historic Lansdowne Airport site work together
+                as one connected ecosystem.
               </p>
 
               <p style={{ fontSize: "18px", lineHeight: 1.6, maxWidth: "980px", opacity: 0.95 }}>
-                Agriculture, workforce, family wellness, and community infrastructure in one
-                living ecosystem.
+                Agriculture, workforce, family wellness, and community infrastructure
+                in one living ecosystem.
               </p>
 
               <div style={{ display: "grid", gap: "12px", marginTop: "22px" }}>
-                <div style={smallCardStyle()}>
+                <div style={cardStyle()}>
                   <strong>Bronson Family Farm</strong> operates as a regenerative, off-grid
-                  agritourism and food system hub on the historic Lansdowne Airport grounds in
-                  Youngstown, Ohio.
+                  agritourism and food system hub on the historic Lansdowne Airport grounds
+                  in Youngstown, Ohio.
                 </div>
 
-                <div style={smallCardStyle()}>
+                <div style={cardStyle()}>
                   <strong>Farm &amp; Family Alliance</strong> serves as the nonprofit partner,
                   focused on workforce training, youth development, volunteer coordination,
                   education, and community impact.
                 </div>
 
-                <div style={smallCardStyle()}>
+                <div style={cardStyle()}>
                   <strong>Parker Farms</strong> represents a regional growing partner and
-                  marketplace model, supporting distribution, SNAP access, and grower collaboration
-                  across the Mahoning Valley.
+                  marketplace model, supporting distribution, SNAP access, and grower
+                  collaboration across the Mahoning Valley.
                 </div>
 
-                <div style={smallCardStyle()}>
-                  <strong>Lansdowne Airport (Historic Site)</strong> provides the land foundation
-                  for this work. Once an active aviation site, it is now being reimagined as a
-                  place where land, food, learning, and community reconnect.
+                <div style={cardStyle()}>
+                  <strong>Lansdowne Airport (Historic Site)</strong> provides the land
+                  foundation for this work. Once an active aviation site, it is now being
+                  reimagined as a place where land, food, learning, and community reconnect.
                 </div>
               </div>
 
               <div style={{ marginTop: "24px" }}>
                 <button
-                  onClick={() => setStarted(true)}
+                  type="button"
+                  onClick={() => setScreen("demo")}
                   style={{
-                    ...buttonStyle(true),
+                    ...btnStyle(true),
                     padding: "14px 20px",
                     fontSize: "18px",
                   }}
@@ -256,11 +208,11 @@ export default function App() {
                   Growers Supply Market
                 </div>
                 <div style={{ display: "grid", gap: "10px" }}>
-                  <div style={smallCardStyle()}>Saturday, May 16 · 9:00 AM–2:00 PM</div>
-                  <div style={smallCardStyle()}>Bronson Family Farm · Youngstown, Ohio</div>
-                  <div style={smallCardStyle()}>
-                    Tools, growers, produce, wellness, workshops, workforce pathways, and
-                    community check-in.
+                  <div style={cardStyle()}>Saturday, May 16 · 9:00 AM–2:00 PM</div>
+                  <div style={cardStyle()}>Bronson Family Farm · Youngstown, Ohio</div>
+                  <div style={cardStyle()}>
+                    Tools, growers, produce, wellness, workshops, workforce pathways,
+                    and community check-in.
                   </div>
                 </div>
               </div>
@@ -277,7 +229,7 @@ export default function App() {
                   }}
                 >
                   {languages.map((name) => (
-                    <div key={name} style={smallCardStyle()}>
+                    <div key={name} style={cardStyle()}>
                       {name}
                     </div>
                   ))}
@@ -309,12 +261,12 @@ export default function App() {
                 >
                   Choose an Experience
                 </div>
-                <div style={{ fontSize: "34px", fontWeight: 800 }}>{currentRole.title}</div>
-                <div style={{ fontSize: "18px", opacity: 0.92 }}>{currentRole.subtitle}</div>
+                <div style={{ fontSize: "34px", fontWeight: 800 }}>{selectedRole.title}</div>
+                <div style={{ fontSize: "18px", opacity: 0.92 }}>{selectedRole.subtitle}</div>
               </div>
 
               <div>
-                <button onClick={() => setStarted(false)} style={buttonStyle(false)}>
+                <button type="button" onClick={() => setScreen("welcome")} style={btnStyle(false)}>
                   Back to Welcome
                 </button>
               </div>
@@ -323,22 +275,22 @@ export default function App() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(6, minmax(180px, 1fr))",
+                gridTemplateColumns: "repeat(3, minmax(240px, 1fr))",
                 gap: "14px",
               }}
             >
-              {roleCards.map((card, index) => (
+              {roles.map((item, index) => (
                 <div
-                  key={card.id}
-                  onClick={() => setRole(card.id)}
+                  key={item.id}
+                  onClick={() => setRole(item.id)}
                   style={{
                     cursor: "pointer",
-                    minHeight: "220px",
+                    minHeight: "180px",
                     borderRadius: "24px",
                     overflow: "hidden",
                     padding: "16px",
                     border:
-                      role === card.id
+                      role === item.id
                         ? "2px solid rgba(215,255,115,0.9)"
                         : "1px solid rgba(255,255,255,0.14)",
                     backgroundImage: `linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.58)), url(${
@@ -346,14 +298,12 @@ export default function App() {
                     })`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
-                    boxShadow:
-                      role === card.id ? "0 0 0 3px rgba(215,255,115,0.16)" : undefined,
                   }}
                 >
-                  <div style={{ fontSize: "26px", fontWeight: 800, marginBottom: "12px" }}>
-                    {card.title}
+                  <div style={{ fontSize: "24px", fontWeight: 800, marginBottom: "10px" }}>
+                    {item.title}
                   </div>
-                  <div style={{ lineHeight: 1.5, fontSize: "15px" }}>{card.subtitle}</div>
+                  <div style={{ lineHeight: 1.5, fontSize: "15px" }}>{item.subtitle}</div>
                 </div>
               ))}
             </div>
@@ -361,7 +311,7 @@ export default function App() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(0, 1.1fr) minmax(360px, 0.9fr)",
+                gridTemplateColumns: "1.1fr 0.9fr",
                 gap: "20px",
               }}
             >
@@ -370,39 +320,12 @@ export default function App() {
                   <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
                     Role Overview
                   </div>
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "16px",
-                    }}
-                  >
-                    <div style={smallCardStyle()}>
-                      <div style={{ opacity: 0.72, marginBottom: "8px" }}>Today's Focus</div>
-                      <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "10px" }}>
-                        {roleFocus[role]}
-                      </div>
-                      <div style={{ lineHeight: 1.6, opacity: 0.92 }}>
-                        This experience is designed to feel useful, welcoming, and active.
-                      </div>
+                  <div style={cardStyle()}>
+                    <div style={{ opacity: 0.72, marginBottom: "8px" }}>Active Role</div>
+                    <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "10px" }}>
+                      {selectedRole.title}
                     </div>
-
-                    <div style={smallCardStyle()}>
-                      <div style={{ opacity: 0.72, marginBottom: "8px" }}>Next Steps</div>
-                      <div style={{ display: "grid", gap: "10px" }}>
-                        {[
-                          "Role-specific dashboards",
-                          "Calendar-aware scheduling",
-                          "QR check-in and engagement",
-                          "Education, wellness, and produce operations",
-                        ].map((item) => (
-                          <div key={item} style={{ display: "flex", gap: "8px" }}>
-                            <span style={{ color: "#d7ff73", fontWeight: 900 }}>•</span>
-                            <span>{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    <div style={{ lineHeight: 1.6, opacity: 0.92 }}>{selectedRole.subtitle}</div>
                   </div>
                 </div>
 
@@ -417,67 +340,18 @@ export default function App() {
                       gap: "12px",
                     }}
                   >
-                    {weatherCards.map((item) => (
-                      <div key={item.day} style={smallCardStyle()}>
+                    {[
+                      { day: "Thu", temp: "62°", note: "Transplant prep" },
+                      { day: "Fri", temp: "66°", note: "Watering window" },
+                      { day: "Sat", temp: "69°", note: "Event-friendly" },
+                      { day: "Sun", temp: "64°", note: "Mulch and check beds" },
+                    ].map((item) => (
+                      <div key={item.day} style={cardStyle()}>
                         <div style={{ opacity: 0.72 }}>{item.day}</div>
-                        <div style={{ fontSize: "38px", fontWeight: 900 }}>{item.temp}</div>
+                        <div style={{ fontSize: "36px", fontWeight: 900 }}>{item.temp}</div>
                         <div style={{ opacity: 0.9 }}>{item.note}</div>
                       </div>
                     ))}
-                  </div>
-                </div>
-
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                  <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
-                    <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
-                      Grower Calendar
-                    </div>
-                    <div style={{ display: "grid", gap: "12px" }}>
-                      {calendarItems.map((item) => (
-                        <div key={item.time + item.task} style={smallCardStyle()}>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              gap: "10px",
-                            }}
-                          >
-                            <div>
-                              <div style={{ opacity: 0.72 }}>{item.time}</div>
-                              <div style={{ fontWeight: 700, marginTop: "4px" }}>{item.task}</div>
-                            </div>
-                            <div
-                              style={{
-                                background: "rgba(255,255,255,0.10)",
-                                borderRadius: "999px",
-                                padding: "6px 10px",
-                                height: "fit-content",
-                              }}
-                            >
-                              {item.zone}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
-                    <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
-                      Alerts
-                    </div>
-                    <div style={{ display: "grid", gap: "12px" }}>
-                      {[
-                        "Rain buffer available for outdoor learning rotation.",
-                        "Inventory reservation active for seedlings and Bubble Babies.",
-                        "Check-in flow ready for role-based arrival and volunteer routing.",
-                        "Wellness programming can be paired with nutrition education and movement activities.",
-                      ].map((item) => (
-                        <div key={item} style={smallCardStyle()}>
-                          {item}
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -487,47 +361,19 @@ export default function App() {
                   <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
                     Marketplace
                   </div>
-                  <div style={{ display: "grid", gap: "12px" }}>
-                    {produceCards.map((item) => (
-                      <div key={item.name} style={smallCardStyle()}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            gap: "10px",
-                          }}
-                        >
-                          <div>
-                            <div style={{ fontWeight: 700 }}>{item.name}</div>
-                            <div style={{ opacity: 0.75, marginTop: "4px" }}>{item.note}</div>
-                          </div>
-                          <div
-                            style={{
-                              background: "rgba(215,255,115,0.18)",
-                              color: "#e7ffc5",
-                              borderRadius: "999px",
-                              padding: "6px 10px",
-                              height: "fit-content",
-                              fontWeight: 800,
-                            }}
-                          >
-                            {item.count}
-                          </div>
-                        </div>
+                  <div style={{ display: "grid", gap: "10px" }}>
+                    {[
+                      "Tomato Seedlings · 24",
+                      "Collard Greens · 40",
+                      "Cabbage · 100",
+                      "Peppers · 24",
+                      "Bubble Babies · 18",
+                      "Lettuce · 30",
+                    ].map((item) => (
+                      <div key={item} style={cardStyle()}>
+                        {item}
                       </div>
                     ))}
-                  </div>
-                  <div style={{ marginTop: "14px" }}>
-                    <button
-                      style={{
-                        ...buttonStyle(true),
-                        width: "100%",
-                        justifyContent: "center",
-                        padding: "12px 16px",
-                      }}
-                    >
-                      Reserve Pickup
-                    </button>
                   </div>
                 </div>
 
@@ -536,9 +382,16 @@ export default function App() {
                     Workforce Pathways
                   </div>
                   <div style={{ display: "grid", gap: "10px" }}>
-                    {youthTasks.map((task) => (
-                      <div key={task} style={smallCardStyle()}>
-                        {task}
+                    {[
+                      "Clock-in and PPE check",
+                      "Watering team rotation",
+                      "Transplant assistance",
+                      "Produce washing and sorting",
+                      "Customer greeting practice",
+                      "Reflection and skill journal",
+                    ].map((item) => (
+                      <div key={item} style={cardStyle()}>
+                        {item}
                       </div>
                     ))}
                   </div>
@@ -550,7 +403,12 @@ export default function App() {
                   </div>
                   <div style={{ display: "grid", gap: "10px" }}>
                     {(role === "supervisor"
-                      ? supervisorNotes
+                      ? [
+                          { name: "Team Readiness", value: "High" },
+                          { name: "Attendance", value: "94%" },
+                          { name: "Safety Completion", value: "100%" },
+                          { name: "Leadership Growth", value: "Strong" },
+                        ]
                       : [
                           { name: "Wash/Sort Queue", value: "Open" },
                           { name: "Reserved Orders", value: "14" },
@@ -558,7 +416,7 @@ export default function App() {
                           { name: "Pickup Windows", value: "Active" },
                         ]
                     ).map((item) => (
-                      <div key={item.name} style={smallCardStyle()}>
+                      <div key={item.name} style={cardStyle()}>
                         <div
                           style={{
                             display: "flex",
