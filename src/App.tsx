@@ -1,708 +1,617 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const translations: Record<string, any> = {
-  English: {
-    title: "Bronson Family Farm",
-    subtitleWelcome: "Grower Ecosystem Demo",
-    subtitleDemo: "Live Dashboard",
-    welcomeHeading: "A real working ecosystem — not a presentation",
-    welcomeText:
-      "Bronson Family Farm, Farm & Family Alliance, Parker Farms, and the historic Lansdowne Airport working as one system.",
-    whyText:
-      "Agriculture, workforce, family wellness, and community infrastructure working together in one living ecosystem.",
-    enterDemo: "Enter Live Demo →",
-    back: "Back to Welcome",
-    marketplace: "Marketplace",
-    weather: "Weather",
-    guestDash: "Guest Dashboard",
-    customerDash: "Customer Dashboard",
-    growerDash: "Grower Dashboard",
-    supervisorDash: "Supervisor Dashboard",
-    youthDash: "Youth Workforce Dashboard",
-    adminDash: "Operations Dashboard",
-    guestBody: "Explore the story, land history, and community vision.",
-    customerBody: "Reserve produce, plan pickup, and learn nutrition.",
-    grower1: "Watering schedule",
-    grower2: "Transplant tracking",
-    grower3: "Crop readiness",
-    sup1: "Attendance: 94%",
-    sup2: "Safety: 100%",
-    sup3: "Team readiness: High",
-    youth1: "Clock in",
-    youth2: "Learn skills",
-    youth3: "Work with team",
-    admin1: "Event coordination",
-    admin2: "Inventory tracking",
-    admin3: "Volunteer scheduling",
-    marketItems: "Tomatoes · Collards · Cabbage · Peppers",
-    weatherItems: "68° · Overcast · Wind 8 mph",
-    guest: "Guest",
-    guestSub: "See the vision, land story, and ecosystem.",
-    customer: "Customer",
-    customerSub: "Reserve food, understand pickup, and nutrition.",
-    grower: "Grower",
-    growerSub: "Track crops, irrigation, and production.",
-    supervisor: "Supervisor",
-    supervisorSub: "Monitor youth, safety, and attendance.",
-    youth: "Youth Workforce",
-    youthSub: "Build skills, confidence, and pathways.",
-    admin: "Operations",
-    adminSub: "Coordinate events, staffing, and flow.",
-    bronsonTitle: "Bronson Family Farm",
-    bronsonBody:
-      "A regenerative, off-grid agritourism and food system hub growing food, learning, and opportunity on the historic Lansdowne Airport grounds.",
-    allianceTitle: "Farm & Family Alliance",
-    allianceBody:
-      "The nonprofit partner advancing workforce development, youth engagement, education, volunteer coordination, and community impact.",
-    parkerTitle: "Parker Farms",
-    parkerBody:
-      "A regional grower and marketplace partner supporting collaboration, distribution, and stronger local food pathways.",
-    airportTitle: "Lansdowne Airport",
-    airportBody:
-      "A historic site being reimagined as living community infrastructure — where land, food, learning, and belonging reconnect.",
-    marketTitle: "Growers Supply Market",
-    marketBody:
-      "Tools, growers, produce, wellness, workshops, workforce pathways, and community check-in.",
-  },
-  Spanish: {
-    title: "Bronson Family Farm",
-    subtitleWelcome: "Demostración del Ecosistema de Cultivo",
-    subtitleDemo: "Panel en Vivo",
-    welcomeHeading: "Un ecosistema real en funcionamiento — no una presentación",
-    welcomeText:
-      "Bronson Family Farm, Farm & Family Alliance, Parker Farms y el histórico aeropuerto Lansdowne trabajando como un solo sistema.",
-    whyText:
-      "Agricultura, fuerza laboral, bienestar familiar e infraestructura comunitaria trabajando juntos en un ecosistema vivo.",
-    enterDemo: "Entrar a la Demostración →",
-    back: "Volver",
-    marketplace: "Mercado",
-    weather: "Clima",
-    guestDash: "Panel de Invitado",
-    customerDash: "Panel de Cliente",
-    growerDash: "Panel de Productor",
-    supervisorDash: "Panel de Supervisor",
-    youthDash: "Panel de Jóvenes",
-    adminDash: "Panel de Operaciones",
-    guestBody: "Explore la historia, la tierra y la visión comunitaria.",
-    customerBody: "Reserve productos, planifique recogida y aprenda nutrición.",
-    grower1: "Horario de riego",
-    grower2: "Seguimiento de trasplantes",
-    grower3: "Estado del cultivo",
-    sup1: "Asistencia: 94%",
-    sup2: "Seguridad: 100%",
-    sup3: "Preparación del equipo: Alta",
-    youth1: "Registrar entrada",
-    youth2: "Aprender habilidades",
-    youth3: "Trabajar en equipo",
-    admin1: "Coordinación de eventos",
-    admin2: "Seguimiento de inventario",
-    admin3: "Programación de voluntarios",
-    marketItems: "Tomates · Berza · Repollo · Pimientos",
-    weatherItems: "68° · Nublado · Viento 8 mph",
-    guest: "Invitado",
-    guestSub: "Vea la visión, la historia de la tierra y el ecosistema.",
-    customer: "Cliente",
-    customerSub: "Reserve comida, entienda la recogida y la nutrición.",
-    grower: "Productor",
-    growerSub: "Supervise cultivos, riego y producción.",
-    supervisor: "Supervisor",
-    supervisorSub: "Supervise jóvenes, seguridad y asistencia.",
-    youth: "Jóvenes",
-    youthSub: "Desarrolle habilidades, confianza y trayectorias.",
-    admin: "Operaciones",
-    adminSub: "Coordine eventos, personal y flujo.",
-    bronsonTitle: "Bronson Family Farm",
-    bronsonBody:
-      "Un centro regenerativo, fuera de la red, de agroturismo y sistema alimentario que cultiva comida, aprendizaje y oportunidades en el histórico aeropuerto Lansdowne.",
-    allianceTitle: "Farm & Family Alliance",
-    allianceBody:
-      "La organización sin fines de lucro que impulsa desarrollo laboral, participación juvenil, educación, coordinación de voluntarios e impacto comunitario.",
-    parkerTitle: "Parker Farms",
-    parkerBody:
-      "Un socio regional de cultivo y mercado que apoya la colaboración, la distribución y rutas alimentarias locales más fuertes.",
-    airportTitle: "Aeropuerto Lansdowne",
-    airportBody:
-      "Un sitio histórico reinventado como infraestructura comunitaria viva, donde tierra, comida, aprendizaje y pertenencia vuelven a conectarse.",
-    marketTitle: "Growers Supply Market",
-    marketBody:
-      "Herramientas, productores, productos frescos, bienestar, talleres, trayectorias laborales y registro comunitario.",
-  },
-  Tagalog: {
-    title: "Bronson Family Farm",
-    subtitleWelcome: "Demo ng Grower Ecosystem",
-    subtitleDemo: "Live Dashboard",
-    welcomeHeading: "Isang totoong gumaganang ecosystem — hindi presentasyon",
-    welcomeText:
-      "Ang Bronson Family Farm, Farm & Family Alliance, Parker Farms, at makasaysayang Lansdowne Airport ay gumagana bilang isang sistema.",
-    whyText:
-      "Pagsasaka, kabuhayan, kalusugan ng pamilya, at imprastraktura ng komunidad na magkakaugnay sa iisang buhay na ecosystem.",
-    enterDemo: "Pumasok sa Demo →",
-    back: "Bumalik",
-    marketplace: "Pamilihan",
-    weather: "Panahon",
-    guestDash: "Guest Dashboard",
-    customerDash: "Customer Dashboard",
-    growerDash: "Grower Dashboard",
-    supervisorDash: "Supervisor Dashboard",
-    youthDash: "Youth Workforce Dashboard",
-    adminDash: "Operations Dashboard",
-    guestBody: "Tuklasin ang kuwento, kasaysayan ng lupa, at bisyon ng komunidad.",
-    customerBody: "Magpareserba ng ani, planuhin ang pickup, at alamin ang nutrisyon.",
-    grower1: "Iskedyul ng pagdidilig",
-    grower2: "Pagsubaybay sa transplant",
-    grower3: "Kahandaan ng ani",
-    sup1: "Attendance: 94%",
-    sup2: "Kaligtasan: 100%",
-    sup3: "Kahandaan ng koponan: Mataas",
-    youth1: "Mag-clock in",
-    youth2: "Matuto ng kasanayan",
-    youth3: "Makipagtulungan sa grupo",
-    admin1: "Koordinasyon ng event",
-    admin2: "Pagsubaybay ng imbentaryo",
-    admin3: "Pag-iskedyul ng boluntaryo",
-    marketItems: "Kamatis · Collards · Repolyo · Sili",
-    weatherItems: "68° · Maulap · Hangin 8 mph",
-    guest: "Bisita",
-    guestSub: "Tingnan ang bisyon, kasaysayan ng lupa, at ecosystem.",
-    customer: "Mamimili",
-    customerSub: "Magpareserba ng pagkain, unawain ang pickup, at nutrisyon.",
-    grower: "Grower",
-    growerSub: "Subaybayan ang pananim, irigasyon, at produksyon.",
-    supervisor: "Supervisor",
-    supervisorSub: "Subaybayan ang kabataan, kaligtasan, at attendance.",
-    youth: "Youth Workforce",
-    youthSub: "Bumuo ng kasanayan, kumpiyansa, at landas.",
-    admin: "Operations",
-    adminSub: "Isaayos ang event, staffing, at flow.",
-    bronsonTitle: "Bronson Family Farm",
-    bronsonBody:
-      "Isang regenerative, off-grid agritourism at food system hub na nagpapalago ng pagkain, pagkatuto, at oportunidad sa makasaysayang Lansdowne Airport grounds.",
-    allianceTitle: "Farm & Family Alliance",
-    allianceBody:
-      "Ang nonprofit partner na nagtataguyod ng workforce development, youth engagement, education, volunteer coordination, at community impact.",
-    parkerTitle: "Parker Farms",
-    parkerBody:
-      "Isang regional grower at marketplace partner na sumusuporta sa collaboration, distribution, at mas matibay na local food pathways.",
-    airportTitle: "Lansdowne Airport",
-    airportBody:
-      "Isang makasaysayang lugar na muling binibigyang-buhay bilang living community infrastructure kung saan muling nagtatagpo ang lupa, pagkain, pagkatuto, at pakikibahagi.",
-    marketTitle: "Growers Supply Market",
-    marketBody:
-      "Mga kagamitan, growers, produce, wellness, workshops, workforce pathways, at community check-in.",
-  },
-  Patwa: {
-    title: "Bronson Family Farm",
-    subtitleWelcome: "Growa Ecosystem Demo",
-    subtitleDemo: "Live Dashboard",
-    welcomeHeading: "A real workin ecosystem — not a presentation",
-    welcomeText:
-      "Bronson Family Farm, Farm & Family Alliance, Parker Farms, an di historic Lansdowne Airport a work as one system.",
-    whyText:
-      "Farmin, work pathway, family wellness, an community infrastructure all tied up inna one livin ecosystem.",
-    enterDemo: "Go Ina Di Demo →",
-    back: "Back",
-    marketplace: "Market",
-    weather: "Weather",
-    guestDash: "Guest Dashboard",
-    customerDash: "Customer Dashboard",
-    growerDash: "Growa Dashboard",
-    supervisorDash: "Supervisor Dashboard",
-    youthDash: "Youth Workforce Dashboard",
-    adminDash: "Operations Dashboard",
-    guestBody: "Explore di story, di land history, an di community vision.",
-    customerBody: "Reserve produce, plan pickup, an learn nutrition.",
-    grower1: "Watering schedule",
-    grower2: "Transplant tracking",
-    grower3: "Crop readiness",
-    sup1: "Attendance: 94%",
-    sup2: "Safety: 100%",
-    sup3: "Team readiness: High",
-    youth1: "Clock in",
-    youth2: "Learn skills",
-    youth3: "Work wid team",
-    admin1: "Event coordination",
-    admin2: "Inventory tracking",
-    admin3: "Volunteer scheduling",
-    marketItems: "Tomato · Collards · Cabbage · Peppers",
-    weatherItems: "68° · Overcast · Wind 8 mph",
-    guest: "Guest",
-    guestSub: "See di vision, land story, an ecosystem.",
-    customer: "Customer",
-    customerSub: "Reserve food, understand pickup, an nutrition.",
-    grower: "Growa",
-    growerSub: "Track crop, irrigation, an production.",
-    supervisor: "Supervisor",
-    supervisorSub: "Monitor youth, safety, an attendance.",
-    youth: "Youth Workforce",
-    youthSub: "Build skills, confidence, an pathway.",
-    admin: "Operations",
-    adminSub: "Coordinate events, staffing, an flow.",
-    bronsonTitle: "Bronson Family Farm",
-    bronsonBody:
-      "A regenerative, off-grid agritourism an food system hub weh a grow food, learning, an opportunity pon di historic Lansdowne Airport grounds.",
-    allianceTitle: "Farm & Family Alliance",
-    allianceBody:
-      "Di nonprofit partner weh a push workforce development, youth engagement, education, volunteer coordination, an community impact.",
-    parkerTitle: "Parker Farms",
-    parkerBody:
-      "A regional growa an marketplace partner supportin collaboration, distribution, an stronger local food pathway.",
-    airportTitle: "Lansdowne Airport",
-    airportBody:
-      "A historic site a get reimagined as living community infrastructure weh land, food, learning, an belonging connect back again.",
-    marketTitle: "Growers Supply Market",
-    marketBody:
-      "Tools, growas, produce, wellness, workshop, workforce pathway, an community check-in.",
-  },
-  Italian: {
-    title: "Bronson Family Farm",
-    subtitleWelcome: "Demo dell'Ecosistema dei Coltivatori",
-    subtitleDemo: "Cruscotto Live",
-    welcomeHeading: "Un ecosistema reale e funzionante — non una presentazione",
-    welcomeText:
-      "Bronson Family Farm, Farm & Family Alliance, Parker Farms e lo storico aeroporto Lansdowne lavorano come un unico sistema.",
-    whyText:
-      "Agricoltura, lavoro, benessere familiare e infrastruttura comunitaria che operano insieme in un ecosistema vivo.",
-    enterDemo: "Entra nella Demo →",
-    back: "Indietro",
-    marketplace: "Mercato",
-    weather: "Meteo",
-    guestDash: "Dashboard Ospite",
-    customerDash: "Dashboard Cliente",
-    growerDash: "Dashboard Coltivatore",
-    supervisorDash: "Dashboard Supervisore",
-    youthDash: "Dashboard Giovani",
-    adminDash: "Dashboard Operazioni",
-    guestBody: "Esplora la storia, il terreno e la visione della comunità.",
-    customerBody: "Prenota prodotti, pianifica il ritiro e scopri la nutrizione.",
-    grower1: "Programma di irrigazione",
-    grower2: "Monitoraggio trapianti",
-    grower3: "Prontezza del raccolto",
-    sup1: "Presenza: 94%",
-    sup2: "Sicurezza: 100%",
-    sup3: "Prontezza del team: Alta",
-    youth1: "Registrati",
-    youth2: "Impara competenze",
-    youth3: "Lavora con il team",
-    admin1: "Coordinamento eventi",
-    admin2: "Monitoraggio inventario",
-    admin3: "Programmazione volontari",
-    marketItems: "Pomodori · Cavolo verde · Cavolo · Peperoni",
-    weatherItems: "68° · Nuvoloso · Vento 8 mph",
-    guest: "Ospite",
-    guestSub: "Scopri la visione, la storia del terreno e l'ecosistema.",
-    customer: "Cliente",
-    customerSub: "Prenota cibo, comprendi il ritiro e la nutrizione.",
-    grower: "Coltivatore",
-    growerSub: "Controlla colture, irrigazione e produzione.",
-    supervisor: "Supervisore",
-    supervisorSub: "Monitora giovani, sicurezza e presenza.",
-    youth: "Giovani",
-    youthSub: "Sviluppa competenze, fiducia e percorsi.",
-    admin: "Operazioni",
-    adminSub: "Coordina eventi, personale e flusso.",
-    bronsonTitle: "Bronson Family Farm",
-    bronsonBody:
-      "Un centro rigenerativo, fuori rete, di agriturismo e sistema alimentare che coltiva cibo, apprendimento e opportunità nei terreni storici dell'aeroporto Lansdowne.",
-    allianceTitle: "Farm & Family Alliance",
-    allianceBody:
-      "Il partner nonprofit che promuove sviluppo del lavoro, coinvolgimento dei giovani, educazione, coordinamento dei volontari e impatto comunitario.",
-    parkerTitle: "Parker Farms",
-    parkerBody:
-      "Un partner regionale di coltivazione e mercato che sostiene collaborazione, distribuzione e filiere alimentari locali più forti.",
-    airportTitle: "Lansdowne Airport",
-    airportBody:
-      "Un sito storico reinterpretato come infrastruttura comunitaria viva dove terra, cibo, apprendimento e appartenenza si riconnettono.",
-    marketTitle: "Growers Supply Market",
-    marketBody:
-      "Strumenti, coltivatori, prodotti freschi, benessere, workshop, percorsi di lavoro e check-in comunitario.",
-  },
-  Hebrew: {
-    title: "Bronson Family Farm",
-    subtitleWelcome: "הדגמת מערכת המגדלים",
-    subtitleDemo: "לוח מחוונים חי",
-    welcomeHeading: "מערכת אקולוגית פעילה אמיתית — לא מצגת",
-    welcomeText:
-      "Bronson Family Farm, Farm & Family Alliance, Parker Farms ושדה התעופה ההיסטורי Lansdowne פועלים כמערכת אחת.",
-    whyText:
-      "חקלאות, תעסוקה, רווחת המשפחה ותשתית קהילתית פועלים יחד בתוך מערכת אקולוגית חיה אחת.",
-    enterDemo: "כניסה להדגמה ←",
-    back: "חזרה",
-    marketplace: "שוק",
-    weather: "מזג אוויר",
-    guestDash: "לוח אורח",
-    customerDash: "לוח לקוח",
-    growerDash: "לוח מגדל",
-    supervisorDash: "לוח מפקח",
-    youthDash: "לוח כוח עבודה צעיר",
-    adminDash: "לוח תפעול",
-    guestBody: "גלו את הסיפור, היסטוריית הקרקע וחזון הקהילה.",
-    customerBody: "שמרו תוצרת, תכננו איסוף ולמדו על תזונה.",
-    grower1: "לוח השקיה",
-    grower2: "מעקב השתלות",
-    grower3: "מוכנות יבול",
-    sup1: "נוכחות: 94%",
-    sup2: "בטיחות: 100%",
-    sup3: "מוכנות צוות: גבוהה",
-    youth1: "כניסה לעבודה",
-    youth2: "ללמוד מיומנויות",
-    youth3: "לעבוד עם הצוות",
-    admin1: "תיאום אירועים",
-    admin2: "מעקב מלאי",
-    admin3: "תזמון מתנדבים",
-    marketItems: "עגבניות · קולארד · כרוב · פלפלים",
-    weatherItems: "68° · מעונן · רוח 8 mph",
-    guest: "אורח",
-    guestSub: "ראו את החזון, סיפור הקרקע והמערכת.",
-    customer: "לקוח",
-    customerSub: "שמרו מזון, הבינו איסוף ותזונה.",
-    grower: "מגדל",
-    growerSub: "עקבו אחר גידולים, השקיה וייצור.",
-    supervisor: "מפקח",
-    supervisorSub: "פקחו על נוער, בטיחות ונוכחות.",
-    youth: "כוח עבודה צעיר",
-    youthSub: "בנו מיומנויות, ביטחון ומסלולים.",
-    admin: "תפעול",
-    adminSub: "תאמו אירועים, כוח אדם וזרימה.",
-    bronsonTitle: "Bronson Family Farm",
-    bronsonBody:
-      "מרכז אגריטוריזם ומערכת מזון מתחדשת, שאינו תלוי ברשת, המגדל מזון, למידה והזדמנות בשטחי שדה התעופה ההיסטורי Lansdowne.",
-    allianceTitle: "Farm & Family Alliance",
-    allianceBody:
-      "השותף ללא מטרות רווח המקדם פיתוח תעסוקה, מעורבות צעירים, חינוך, תיאום מתנדבים והשפעה קהילתית.",
-    parkerTitle: "Parker Farms",
-    parkerBody:
-      "שותף אזורי לגידול ולשוק התומך בשיתוף פעולה, הפצה ונתיבי מזון מקומיים חזקים יותר.",
-    airportTitle: "Lansdowne Airport",
-    airportBody:
-      "אתר היסטורי המדומיין מחדש כתשתית קהילתית חיה שבה אדמה, מזון, למידה ושייכות מתחברים מחדש.",
-    marketTitle: "Growers Supply Market",
-    marketBody:
-      "כלים, מגדלים, תוצרת, בריאות, סדנאות, מסלולי תעסוקה וצ'ק-אין קהילתי.",
-  },
+type Panel = "dashboard" | "grow" | "calendar" | "shop" | "story" | "community";
+
+const HERO_IMAGE = "/GrowArea.jpg";
+
+type WeatherState = {
+  temperature: string;
+  label: string;
+  wind: string;
 };
 
-const roleMeta = [
-  { id: "guest", image: "/GrowArea.jpg", color: "#9BE564" },
-  { id: "customer", image: "/GrowArea2.jpg", color: "#6EC5FF" },
-  { id: "grower", image: "/GrowArea.jpg", color: "#F7B267" },
-  { id: "supervisor", image: "/GrowArea2.jpg", color: "#FF6B6B" },
-  { id: "youth", image: "/GrowArea.jpg", color: "#C77DFF" },
-  { id: "admin", image: "/GrowArea2.jpg", color: "#FFD93D" },
-];
-
-function panel(extra: React.CSSProperties = {}): React.CSSProperties {
-  return {
-    background: "rgba(0,0,0,0.35)",
-    borderRadius: "20px",
-    padding: "20px",
-    border: "1px solid rgba(255,255,255,0.15)",
-    ...extra,
-  };
-}
-
-function infoCard(extra: React.CSSProperties = {}): React.CSSProperties {
-  return {
-    background: "rgba(255,255,255,0.08)",
-    borderRadius: "18px",
-    padding: "16px",
-    border: "1px solid rgba(255,255,255,0.12)",
-    ...extra,
-  };
-}
+const weatherCodeMap: Record<number, string> = {
+  0: "Clear",
+  1: "Mostly clear",
+  2: "Partly cloudy",
+  3: "Overcast",
+  45: "Fog",
+  48: "Fog",
+  51: "Light drizzle",
+  53: "Drizzle",
+  55: "Heavy drizzle",
+  61: "Light rain",
+  63: "Rain",
+  65: "Heavy rain",
+  71: "Light snow",
+  73: "Snow",
+  75: "Heavy snow",
+  80: "Rain showers",
+  81: "Heavy showers",
+  82: "Strong showers",
+  95: "Thunderstorm",
+};
 
 export default function App() {
-  const [screen, setScreen] = useState<"welcome" | "demo">("welcome");
-  const [role, setRole] = useState("guest");
-  const [lang, setLang] = useState("English");
+  const [panel, setPanel] = useState<Panel>("grow");
+  const [timeText, setTimeText] = useState("");
+  const [weather, setWeather] = useState<WeatherState>({
+    temperature: "--°F",
+    label: "Loading weather",
+    wind: "-- mph",
+  });
 
-  const t = translations[lang];
-  const currentMeta = roleMeta.find((r) => r.id === role)!;
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      setTimeText(
+        now.toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      );
+    };
 
-  const roleCards = [
-    { id: "guest", title: t.guest, subtitle: t.guestSub },
-    { id: "customer", title: t.customer, subtitle: t.customerSub },
-    { id: "grower", title: t.grower, subtitle: t.growerSub },
-    { id: "supervisor", title: t.supervisor, subtitle: t.supervisorSub },
-    { id: "youth", title: t.youth, subtitle: t.youthSub },
-    { id: "admin", title: t.admin, subtitle: t.adminSub },
-  ];
+    updateClock();
+    const timer = window.setInterval(updateClock, 1000 * 30);
+    return () => window.clearInterval(timer);
+  }, []);
 
-  const selectedRole = roleCards.find((r) => r.id === role)!;
+  useEffect(() => {
+    let cancelled = false;
 
-  const dashboardTitle =
-    role === "guest"
-      ? t.guestDash
-      : role === "customer"
-      ? t.customerDash
-      : role === "grower"
-      ? t.growerDash
-      : role === "supervisor"
-      ? t.supervisorDash
-      : role === "youth"
-      ? t.youthDash
-      : t.adminDash;
+    async function loadWeather(lat: number, lon: number) {
+      try {
+        const url =
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+          `&current=temperature_2m,weather_code,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        const current = data?.current;
+
+        if (!current || cancelled) return;
+
+        setWeather({
+          temperature: `${Math.round(current.temperature_2m)}°F`,
+          label: weatherCodeMap[current.weather_code] ?? "Current conditions",
+          wind: `${Math.round(current.wind_speed_10m)} mph`,
+        });
+      } catch {
+        if (!cancelled) {
+          setWeather({
+            temperature: "--°F",
+            label: "Weather unavailable",
+            wind: "-- mph",
+          });
+        }
+      }
+    }
+
+    if (!navigator.geolocation) {
+      loadWeather(41.0998, -80.6495);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        loadWeather(position.coords.latitude, position.coords.longitude);
+      },
+      () => {
+        loadWeather(41.0998, -80.6495);
+      },
+      { timeout: 6000, maximumAge: 600000 }
+    );
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background:
-          "linear-gradient(rgba(10,30,20,0.9), rgba(20,60,40,0.9)), url(/GrowArea.jpg)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        color: "white",
-        padding: "20px",
-        fontFamily: "Arial",
-      }}
-    >
-      <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
-        <div
-          style={{
-            ...panel(),
-            marginBottom: "20px",
-            display: "flex",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "16px",
-          }}
-        >
-          <div>
-            <div style={{ fontSize: "36px", fontWeight: 800 }}>{t.title}</div>
-            <div style={{ opacity: 0.8 }}>
-              {screen === "welcome" ? t.subtitleWelcome : t.subtitleDemo}
-            </div>
+    <div style={styles.app}>
+      <aside style={styles.sidebar}>
+        <h2 style={styles.logo}>Bronson Farm</h2>
+
+        {["dashboard", "grow", "calendar", "shop", "story", "community"].map((item) => (
+          <button
+            key={item}
+            style={{
+              ...styles.navBtn,
+              ...(panel === item ? styles.active : {}),
+            }}
+            onClick={() => setPanel(item as Panel)}
+          >
+            {item.toUpperCase()}
+          </button>
+        ))}
+      </aside>
+
+      <main style={styles.main}>
+        <div style={styles.utilityBar}>
+          <div style={styles.utilityCard}>
+            <div style={styles.utilityLabel}>System Time</div>
+            <div style={styles.utilityValue}>{timeText || "--:--"}</div>
           </div>
 
-          <div>
-            {Object.keys(translations).map((l) => (
-              <button
-                key={l}
-                onClick={() => setLang(l)}
-                style={{
-                  margin: "4px",
-                  padding: "8px 14px",
-                  borderRadius: "999px",
-                  border: "1px solid white",
-                  background: l === lang ? "#d7ff73" : "transparent",
-                  color: l === lang ? "#173116" : "white",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                {l}
-              </button>
-            ))}
+          <div style={styles.utilityCard}>
+            <div style={styles.utilityLabel}>Weather</div>
+            <div style={styles.utilityValue}>{weather.temperature}</div>
+            <div style={styles.utilitySub}>
+              {weather.label} • Wind {weather.wind}
+            </div>
           </div>
         </div>
 
-        {screen === "welcome" ? (
-          <div style={{ display: "grid", gridTemplateColumns: "1.3fr 0.7fr", gap: "20px" }}>
-            <div style={panel()}>
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "8px 14px",
-                  borderRadius: "999px",
-                  background: "rgba(215,255,115,0.18)",
-                  color: "#e7ffc5",
-                  fontWeight: 700,
-                  marginBottom: "18px",
-                }}
-              >
-                Live Now
-              </div>
+        {panel === "dashboard" && <Dashboard setPanel={setPanel} />}
+        {panel === "grow" && <Grow />}
+        {panel === "calendar" && <Calendar />}
+        {panel === "shop" && <Shop />}
+        {panel === "story" && <Story />}
+        {panel === "community" && <Community />}
+      </main>
+    </div>
+  );
+}
 
-              <h1 style={{ fontSize: "56px", lineHeight: 1.05, margin: "0 0 18px 0" }}>
-                {t.welcomeHeading}
-              </h1>
+function Dashboard({ setPanel }: { setPanel: (panel: Panel) => void }) {
+  return (
+    <>
+      <div style={styles.heroWrap}>
+        <img src={HERO_IMAGE} alt="Bronson Family Farm" style={styles.hero} />
+      </div>
 
-              <p style={{ fontSize: "24px", lineHeight: 1.5, maxWidth: "980px" }}>
-                {t.welcomeText}
-              </p>
+      <h1 style={styles.title}>Live Ecosystem</h1>
+      <p style={styles.text}>This is not a presentation. This is a working system.</p>
 
-              <p style={{ fontSize: "18px", lineHeight: 1.6, maxWidth: "980px", opacity: 0.95 }}>
-                {t.whyText}
-              </p>
+      <div style={styles.grid}>
+        <Card title="Grow" text="Crop flow, irrigation, and production status." onClick={() => setPanel("grow")} />
+        <Card title="Shop" text="Live store access and market readiness." onClick={() => setPanel("shop")} />
+        <Card title="Calendar" text="Tasks, timing, and daily farm rhythm." onClick={() => setPanel("calendar")} />
+        <Card title="Story" text="Legacy, land, place, and future." onClick={() => setPanel("story")} />
+        <Card title="Community" text="Volunteers, families, and partners." onClick={() => setPanel("community")} />
+      </div>
+    </>
+  );
+}
 
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "12px",
-                  marginTop: "22px",
-                }}
-              >
-                <div style={infoCard()}>
-                  <div style={{ fontSize: "20px", fontWeight: 800, marginBottom: "8px" }}>
-                    {t.bronsonTitle}
-                  </div>
-                  <div style={{ lineHeight: 1.55 }}>{t.bronsonBody}</div>
-                </div>
+function Grow() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Grower System</h2>
+      <div style={styles.grid2}>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Production Status</h3>
+          <ProgressRow label="Collards" value={88} color="#2f7d3d" status="Ready" />
+          <ProgressRow label="Peppers" value={64} color="#6fb56d" status="Growing" />
+          <ProgressRow label="Tomatoes" value={72} color="#d2b347" status="Transplanting" />
+        </div>
 
-                <div style={infoCard()}>
-                  <div style={{ fontSize: "20px", fontWeight: 800, marginBottom: "8px" }}>
-                    {t.allianceTitle}
-                  </div>
-                  <div style={{ lineHeight: 1.55 }}>{t.allianceBody}</div>
-                </div>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Next Actions</h3>
+          <ActionItem number={1} text="Watering cycle" />
+          <ActionItem number={2} text="Harvest prep" />
+          <ActionItem number={3} text="Market packaging" />
+        </div>
+      </div>
+    </>
+  );
+}
 
-                <div style={infoCard()}>
-                  <div style={{ fontSize: "20px", fontWeight: 800, marginBottom: "8px" }}>
-                    {t.parkerTitle}
-                  </div>
-                  <div style={{ lineHeight: 1.55 }}>{t.parkerBody}</div>
-                </div>
+function Calendar() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Farm Calendar</h2>
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Time</th>
+            <th style={styles.th}>Task</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={styles.td}>7:00 AM</td>
+            <td style={styles.td}>Water plants</td>
+          </tr>
+          <tr>
+            <td style={styles.td}>9:00 AM</td>
+            <td style={styles.td}>Harvest greens</td>
+          </tr>
+          <tr>
+            <td style={styles.td}>12:00 PM</td>
+            <td style={styles.td}>Prep market</td>
+          </tr>
+          <tr>
+            <td style={styles.td}>4:00 PM</td>
+            <td style={styles.td}>Farmers market</td>
+          </tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
 
-                <div style={infoCard()}>
-                  <div style={{ fontSize: "20px", fontWeight: 800, marginBottom: "8px" }}>
-                    {t.airportTitle}
-                  </div>
-                  <div style={{ lineHeight: 1.55 }}>{t.airportBody}</div>
-                </div>
-              </div>
+function Shop() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Marketplace</h2>
+      <div style={styles.grid2}>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Market Readiness</h3>
+          <p style={styles.bodyText}>Bubble Babies: Available</p>
+          <p style={styles.bodyText}>Seedlings: In season</p>
+          <p style={styles.bodyText}>Fresh produce: Market-based</p>
+        </div>
 
-              <div style={{ marginTop: "24px" }}>
-                <button
-                  onClick={() => setScreen("demo")}
-                  style={{
-                    padding: "12px 20px",
-                    background: "#d7ff73",
-                    color: "#173116",
-                    borderRadius: "25px",
-                    fontWeight: 700,
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                  }}
-                >
-                  {t.enterDemo}
-                </button>
-              </div>
-            </div>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Store Access</h3>
+          <p style={styles.bodyText}>Open the live Bronson Family Farm GrownBy store.</p>
+          <button
+            style={styles.button}
+            onClick={() =>
+              window.open(
+                "https://grownby.com/farms/bronson-family-farm/shop",
+                "_blank"
+              )
+            }
+          >
+            OPEN LIVE STORE
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
 
-            <div style={{ display: "grid", gap: "20px" }}>
-              <div style={panel()}>
-                <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px" }}>
-                  {t.marketTitle}
-                </div>
-                <div style={{ lineHeight: 1.6 }}>{t.marketBody}</div>
-              </div>
+function Story() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Our Story</h2>
+      <div style={styles.cardStatic}>
+        <div style={styles.cardAccent} />
+        <h3 style={styles.cardHeading}>Legacy + Place</h3>
+        <p style={styles.bodyText}>
+          Bronson Family Farm is more than a farm. It is legacy, land, renewal,
+          and the future growing from one place.
+        </p>
+        <p style={styles.bodyText}>
+          The ecosystem brings together food access, learning, workforce
+          development, family participation, and long-term community renewal.
+        </p>
+      </div>
+    </>
+  );
+}
 
-              <div style={panel()}>
-                <div style={{ fontSize: "24px", fontWeight: 800, marginBottom: "12px" }}>
-                  {t.marketplace}
-                </div>
-                <div style={infoCard()}>{t.marketItems}</div>
+function Community() {
+  return (
+    <>
+      <h2 style={styles.sectionTitle}>Community</h2>
+      <div style={styles.grid2}>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Volunteers</h3>
+          <p style={styles.bodyText}>Support planting, setup, logistics, and farm activity.</p>
+        </div>
+        <div style={styles.cardStatic}>
+          <h3 style={styles.cardHeading}>Partners</h3>
+          <p style={styles.bodyText}>Join infrastructure, workforce, wellness, and food access efforts.</p>
+        </div>
+      </div>
+    </>
+  );
+}
 
-                <div style={{ fontSize: "24px", fontWeight: 800, margin: "18px 0 12px" }}>
-                  {t.weather}
-                </div>
-                <div style={infoCard()}>{t.weatherItems}</div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "15px",
-                marginBottom: "20px",
-              }}
-            >
-              {roleCards.map((r) => {
-                const meta = roleMeta.find((m) => m.id === r.id)!;
-                return (
-                  <div
-                    key={r.id}
-                    onClick={() => setRole(r.id)}
-                    style={{
-                      cursor: "pointer",
-                      padding: "15px",
-                      borderRadius: "20px",
-                      backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url(${meta.image})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      border:
-                        role === r.id
-                          ? `3px solid ${meta.color}`
-                          : "1px solid rgba(255,255,255,0.2)",
-                    }}
-                  >
-                    <h2>{r.title}</h2>
-                    <p>{r.subtitle}</p>
-                  </div>
-                );
-              })}
-            </div>
+function Card({
+  title,
+  onClick,
+  text,
+}: {
+  title: string;
+  onClick: () => void;
+  text: string;
+}) {
+  return (
+    <button style={styles.card} onClick={onClick}>
+      <div style={styles.cardAccent} />
+      <h3 style={styles.cardHeading}>{title}</h3>
+      <p style={styles.cardText}>{text}</p>
+    </button>
+  );
+}
 
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "20px" }}>
-              <div style={panel()}>
-                <h2 style={{ color: currentMeta.color }}>{dashboardTitle}</h2>
+function ActionItem({ number, text }: { number: number; text: string }) {
+  return (
+    <div style={styles.actionItem}>
+      <div style={styles.actionNumber}>{number}</div>
+      <div style={styles.actionText}>{text}</div>
+    </div>
+  );
+}
 
-                {role === "guest" && <p>{t.guestBody}</p>}
-                {role === "customer" && <p>{t.customerBody}</p>}
-
-                {role === "grower" && (
-                  <ul>
-                    <li>{t.grower1}</li>
-                    <li>{t.grower2}</li>
-                    <li>{t.grower3}</li>
-                  </ul>
-                )}
-
-                {role === "supervisor" && (
-                  <ul>
-                    <li>{t.sup1}</li>
-                    <li>{t.sup2}</li>
-                    <li>{t.sup3}</li>
-                  </ul>
-                )}
-
-                {role === "youth" && (
-                  <ul>
-                    <li>{t.youth1}</li>
-                    <li>{t.youth2}</li>
-                    <li>{t.youth3}</li>
-                  </ul>
-                )}
-
-                {role === "admin" && (
-                  <ul>
-                    <li>{t.admin1}</li>
-                    <li>{t.admin2}</li>
-                    <li>{t.admin3}</li>
-                  </ul>
-                )}
-
-                <button
-                  onClick={() => setScreen("welcome")}
-                  style={{
-                    marginTop: "20px",
-                    padding: "10px 16px",
-                    borderRadius: "20px",
-                    border: "1px solid white",
-                    background: "transparent",
-                    color: "white",
-                    cursor: "pointer",
-                  }}
-                >
-                  {t.back}
-                </button>
-              </div>
-
-              <div style={panel()}>
-                <h3>{t.marketplace}</h3>
-                <p>{t.marketItems}</p>
-
-                <h3 style={{ marginTop: "15px" }}>{t.weather}</h3>
-                <p>{t.weatherItems}</p>
-              </div>
-            </div>
-          </>
-        )}
+function ProgressRow({
+  label,
+  value,
+  color,
+  status,
+}: {
+  label: string;
+  value: number;
+  color: string;
+  status: string;
+}) {
+  return (
+    <div style={styles.progressBlock}>
+      <div style={styles.progressHeader}>
+        <span style={styles.progressLabel}>{label}</span>
+        <span style={styles.progressStatus}>
+          {status} • {value}%
+        </span>
+      </div>
+      <div style={styles.progressTrack}>
+        <div style={{ ...styles.progressFill, width: `${value}%`, background: color }} />
       </div>
     </div>
   );
 }
+
+const styles: Record<string, React.CSSProperties> = {
+  app: {
+    display: "grid",
+    gridTemplateColumns: "250px 1fr",
+    minHeight: "100vh",
+    fontFamily: "Arial, sans-serif",
+    background: "#dfe8e0",
+  },
+  sidebar: {
+    background: "#e9f2ea",
+    padding: "20px",
+    borderRight: "1px solid #cfd9d1",
+  },
+  logo: {
+    marginBottom: 20,
+    fontSize: 24,
+    fontWeight: 700,
+    color: "#173b24",
+  },
+  navBtn: {
+    display: "block",
+    width: "100%",
+    padding: "14px 12px",
+    marginBottom: "10px",
+    cursor: "pointer",
+    border: "1px solid #b8c7b9",
+    borderRadius: "12px",
+    background: "#f8fbf8",
+    color: "#173b24",
+    fontSize: 14,
+    fontWeight: 500,
+    boxShadow: "0 2px 4px rgba(0,0,0,0.03)",
+  },
+  active: {
+    background: "#3f7d4f",
+    color: "#fff",
+    border: "1px solid #3f7d4f",
+    fontWeight: 600,
+  },
+  main: {
+    padding: "20px",
+    overflow: "auto",
+  },
+  utilityBar: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 16,
+    marginBottom: 20,
+  },
+  utilityCard: {
+    background: "#f7faf7",
+    border: "1px solid #c8d5c9",
+    borderRadius: "18px",
+    padding: 16,
+    boxShadow: "0 6px 18px rgba(0,0,0,0.04)",
+  },
+  utilityLabel: {
+    fontSize: 12,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    color: "#587260",
+    fontWeight: 700,
+    marginBottom: 8,
+  },
+  utilityValue: {
+    fontSize: 28,
+    color: "#1f3d2b",
+    fontWeight: 600,
+    letterSpacing: "-0.4px",
+  },
+  utilitySub: {
+    marginTop: 6,
+    fontSize: 14,
+    color: "#587260",
+    fontWeight: 400,
+  },
+  heroWrap: {
+    background: "#f7faf7",
+    border: "1px solid #c8d5c9",
+    borderRadius: "20px",
+    padding: "16px",
+    marginBottom: "22px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.04)",
+  },
+  hero: {
+    width: "100%",
+    height: 250,
+    objectFit: "cover",
+    borderRadius: "14px",
+    display: "block",
+  },
+  title: {
+    fontSize: 42,
+    marginBottom: 12,
+    color: "#1f3d2b",
+    fontWeight: 600,
+    letterSpacing: "-0.5px",
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: "#35543f",
+    fontWeight: 400,
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 20,
+  },
+  grid2: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+    marginTop: "20px",
+  },
+  card: {
+    background: "#f9fbf9",
+    padding: 20,
+    cursor: "pointer",
+    border: "1px solid #cad8cb",
+    borderRadius: "18px",
+    minHeight: 180,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    textAlign: "left",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+  },
+  cardStatic: {
+    background: "#f9fbf9",
+    padding: 20,
+    border: "1px solid #cad8cb",
+    borderRadius: "18px",
+    minHeight: 160,
+    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+  },
+  cardAccent: {
+    height: 10,
+    borderRadius: 999,
+    background: "#6aa56f",
+    marginBottom: 18,
+  },
+  cardHeading: {
+    margin: "0 0 10px 0",
+    color: "#244a34",
+    fontSize: 18,
+    fontWeight: 600,
+  },
+  cardText: {
+    margin: 0,
+    lineHeight: 1.6,
+    color: "#4a6b57",
+    fontSize: 15,
+    fontWeight: 400,
+  },
+  bodyText: {
+    margin: "0 0 8px 0",
+    lineHeight: 1.6,
+    color: "#4a6b57",
+    fontSize: 15,
+    fontWeight: 400,
+  },
+  sectionTitle: {
+    fontSize: 32,
+    marginBottom: 10,
+    color: "#1f3d2b",
+    fontWeight: 600,
+    letterSpacing: "-0.3px",
+  },
+  button: {
+    padding: 15,
+    background: "#2f6b3c",
+    color: "#fff",
+    border: "none",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: 700,
+    marginTop: 12,
+  },
+  table: {
+    width: "100%",
+    marginTop: 20,
+    borderCollapse: "collapse",
+    background: "#f9fbf9",
+    borderRadius: "18px",
+    overflow: "hidden",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+  },
+  th: {
+    textAlign: "left",
+    padding: 14,
+    border: "1px solid #d5e0d6",
+    background: "#eef5ee",
+    color: "#173b24",
+  },
+  td: {
+    padding: 14,
+    border: "1px solid #d5e0d6",
+    color: "#35543f",
+  },
+  actionItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: 14,
+    background: "#edf3ed",
+    border: "1px solid #d6e0d7",
+    borderRadius: "18px",
+    padding: "12px 14px",
+    marginBottom: 14,
+  },
+  actionNumber: {
+    width: 34,
+    height: 34,
+    borderRadius: "50%",
+    background: "#2f7d3d",
+    color: "#ffffff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 700,
+    fontSize: 15,
+    flexShrink: 0,
+  },
+  actionText: {
+    color: "#244a34",
+    fontSize: 15,
+    fontWeight: 600,
+  },
+  progressBlock: {
+    marginBottom: 18,
+  },
+  progressHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    marginBottom: 8,
+  },
+  progressLabel: {
+    color: "#244a34",
+    fontSize: 16,
+    fontWeight: 600,
+  },
+  progressStatus: {
+    color: "#587260",
+    fontSize: 14,
+    fontWeight: 600,
+  },
+  progressTrack: {
+    width: "100%",
+    height: 12,
+    background: "#e3e9e3",
+    borderRadius: 999,
+    overflow: "hidden",
+    border: "1px solid #d3ddd3",
+  },
+  progressFill: {
+    height: "100%",
+    borderRadius: 999,
+  },
+};
