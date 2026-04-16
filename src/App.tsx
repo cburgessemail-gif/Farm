@@ -7,31 +7,37 @@ const roles = [
     id: "guest",
     title: "Guest",
     subtitle: "See the vision, land story, event flow, and community purpose.",
+    image: "/GrowArea.jpg",
   },
   {
     id: "customer",
     title: "Customer",
     subtitle: "Reserve produce, understand pickup, and explore healthy food choices.",
+    image: "/GrowArea2.jpg",
   },
   {
     id: "grower",
     title: "Grower",
     subtitle: "Track crops, tasks, growing conditions, and daily priorities.",
+    image: "/GrowArea3.jpg",
   },
   {
     id: "supervisor",
     title: "Supervisor",
     subtitle: "Monitor youth assignments, safety, attendance, and progress.",
+    image: "/GrowArea4.jpg",
   },
   {
     id: "youth",
     title: "Youth Workforce",
     subtitle: "Build confidence, work skills, responsibility, and pathway readiness.",
+    image: "/GrowArea5.jpg",
   },
   {
     id: "admin",
     title: "Operations",
     subtitle: "Coordinate events, produce flow, staffing, and check-in systems.",
+    image: "/GrowArea6.jpg",
   },
 ];
 
@@ -274,7 +280,7 @@ export default function App() {
                 gap: "14px",
               }}
             >
-              {roles.map((item, index) => (
+              {roles.map((item) => (
                 <div
                   key={item.id}
                   onClick={() => setRole(item.id)}
@@ -288,9 +294,7 @@ export default function App() {
                       role === item.id
                         ? "2px solid rgba(215,255,115,0.9)"
                         : "1px solid rgba(255,255,255,0.14)",
-                    backgroundImage: `linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.58)), url(${
-                      index % 2 === 0 ? "/GrowArea.jpg" : "/GrowArea2.jpg"
-                    })`,
+                    backgroundImage: `linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.58)), url(${item.image})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
