@@ -30,6 +30,29 @@ const labels = {
     openShop: "Open GrownBy Shop",
     returnHome: "Return to Ecosystem",
     supportButton: "Support the Ecosystem",
+    modulesTitle: "Core Ecosystem Modules",
+    modules: {
+      why: {
+        title: "Why This Matters",
+        text:
+          "Food access, land stewardship, youth opportunity, and community renewal are being developed together instead of separately.",
+      },
+      build: {
+        title: "What We Are Building",
+        text:
+          "A living ecosystem in Youngstown that connects production, education, family engagement, workforce pathways, commerce, and public activation.",
+      },
+      partner: {
+        title: "Opportunity to Partner",
+        text:
+          "Aligned support can expand infrastructure, irrigation, equipment, programming, and the physical capacity needed to activate this ecosystem at scale.",
+      },
+      pathways: {
+        title: "Live Pathways",
+        text:
+          "Grow, Shop, Story, Workforce, Community, and Events all connect to one unified experience instead of functioning as separate pieces.",
+      },
+    },
     sections: {
       grow: "Grow",
       shop: "Shop",
@@ -63,6 +86,14 @@ const labels = {
     supportTitle: "Partner with Bronson Family Farm",
     supportText:
       "Support can help expand infrastructure, irrigation, equipment, programming, and the long-term operating capacity needed to activate this ecosystem at scale.",
+    moduleButtons: {
+      grow: "Open Grow",
+      shop: "Open Shop",
+      story: "Open Story",
+      workforce: "Open Workforce",
+      community: "Open Community",
+      events: "Open Events",
+    },
   },
 
   es: {
@@ -81,6 +112,29 @@ const labels = {
     openShop: "Abrir tienda GrownBy",
     returnHome: "Volver al Ecosistema",
     supportButton: "Apoyar el Ecosistema",
+    modulesTitle: "Módulos Principales del Ecosistema",
+    modules: {
+      why: {
+        title: "Por Qué Importa",
+        text:
+          "El acceso a alimentos, el cuidado de la tierra, la oportunidad juvenil y la renovación comunitaria se desarrollan juntos, no por separado.",
+      },
+      build: {
+        title: "Lo Que Estamos Construyendo",
+        text:
+          "Un ecosistema vivo en Youngstown que conecta producción, educación, participación familiar, rutas laborales, comercio y activación pública.",
+      },
+      partner: {
+        title: "Oportunidad de Colaborar",
+        text:
+          "El apoyo alineado puede ampliar infraestructura, riego, equipos, programación y la capacidad física necesaria para activar este ecosistema a gran escala.",
+      },
+      pathways: {
+        title: "Rutas Vivas",
+        text:
+          "Cultivar, Comprar, Historia, Trabajo, Comunidad y Eventos se conectan en una sola experiencia unificada.",
+      },
+    },
     sections: {
       grow: "Cultivar",
       shop: "Comprar",
@@ -114,6 +168,14 @@ const labels = {
     supportTitle: "Asóciese con Bronson Family Farm",
     supportText:
       "El apoyo puede ayudar a ampliar infraestructura, riego, equipos, programación y la capacidad operativa a largo plazo necesaria para activar este ecosistema a escala.",
+    moduleButtons: {
+      grow: "Abrir Cultivar",
+      shop: "Abrir Comprar",
+      story: "Abrir Historia",
+      workforce: "Abrir Trabajo",
+      community: "Abrir Comunidad",
+      events: "Abrir Eventos",
+    },
   },
 
   tl: {
@@ -132,6 +194,29 @@ const labels = {
     openShop: "Buksan ang GrownBy Shop",
     returnHome: "Bumalik sa Ecosystem",
     supportButton: "Suportahan ang Ecosystem",
+    modulesTitle: "Pangunahing Mga Module ng Ecosystem",
+    modules: {
+      why: {
+        title: "Bakit Mahalaga Ito",
+        text:
+          "Ang access sa pagkain, pangangalaga sa lupa, oportunidad para sa kabataan, at pagbangon ng komunidad ay pinauunlad nang magkakasama.",
+      },
+      build: {
+        title: "Ano ang Binubuo Namin",
+        text:
+          "Isang buhay na ecosystem sa Youngstown na nag-uugnay sa produksyon, edukasyon, pamilya, hanapbuhay, kalakalan, at pampublikong aktibasyon.",
+      },
+      partner: {
+        title: "Oportunidad na Makipagpartner",
+        text:
+          "Ang suportang naaayon sa layunin ay makakatulong sa imprastraktura, irigasyon, kagamitan, programming, at kapasidad na kailangan upang mapalago ang ecosystem na ito.",
+      },
+      pathways: {
+        title: "Buhay na mga Daan",
+        text:
+          "Ang Pagtatanim, Pamimili, Kuwento, Hanapbuhay, Komunidad, at Mga Kaganapan ay bahagi ng iisang nagkakaisang karanasan.",
+      },
+    },
     sections: {
       grow: "Pagtatanim",
       shop: "Pamimili",
@@ -165,6 +250,14 @@ const labels = {
     supportTitle: "Makipagpartner sa Bronson Family Farm",
     supportText:
       "Makakatulong ang suporta sa pagpapalawak ng imprastraktura, irigasyon, kagamitan, programming, at pangmatagalang kapasidad na kailangan upang mapatakbo ang ecosystem na ito sa mas malaking saklaw.",
+    moduleButtons: {
+      grow: "Buksan ang Pagtatanim",
+      shop: "Buksan ang Pamimili",
+      story: "Buksan ang Kuwento",
+      workforce: "Buksan ang Hanapbuhay",
+      community: "Buksan ang Komunidad",
+      events: "Buksan ang Mga Kaganapan",
+    },
   },
 
   it: {
@@ -183,6 +276,29 @@ const labels = {
     openShop: "Apri il negozio GrownBy",
     returnHome: "Torna all’Ecosistema",
     supportButton: "Sostieni l’Ecosistema",
+    modulesTitle: "Moduli Principali dell’Ecosistema",
+    modules: {
+      why: {
+        title: "Perché è Importante",
+        text:
+          "Accesso al cibo, cura della terra, opportunità giovanili e rinnovamento della comunità si sviluppano insieme.",
+      },
+      build: {
+        title: "Cosa Stiamo Costruendo",
+        text:
+          "Un ecosistema vivo a Youngstown che connette produzione, educazione, famiglie, percorsi di lavoro, commercio e attivazione pubblica.",
+      },
+      partner: {
+        title: "Opportunità di Collaborazione",
+        text:
+          "Un sostegno allineato può espandere infrastrutture, irrigazione, attrezzature, programmazione e la capacità necessaria per attivare questo ecosistema su larga scala.",
+      },
+      pathways: {
+        title: "Percorsi Vivi",
+        text:
+          "Coltivare, Acquistare, Storia, Lavoro, Comunità ed Eventi sono parte di un’unica esperienza connessa.",
+      },
+    },
     sections: {
       grow: "Coltivare",
       shop: "Acquistare",
@@ -216,6 +332,14 @@ const labels = {
     supportTitle: "Collabora con Bronson Family Farm",
     supportText:
       "Il sostegno può aiutare ad ampliare infrastrutture, irrigazione, attrezzature, programmazione e la capacità operativa a lungo termine necessaria per attivare questo ecosistema su larga scala.",
+    moduleButtons: {
+      grow: "Apri Coltivare",
+      shop: "Apri Acquistare",
+      story: "Apri Storia",
+      workforce: "Apri Lavoro",
+      community: "Apri Comunità",
+      events: "Apri Eventi",
+    },
   },
 
   patwa: {
@@ -267,6 +391,14 @@ const labels = {
     supportTitle: "Partner wid Bronson Family Farm",
     supportText:
       "Support can help expand infrastructure, irrigation, equipment, programming, an di long-term operating capacity needed fi activate dis ecosystem pon a bigger scale.",
+    moduleButtons: {
+      grow: "Open Grow",
+      shop: "Open Shop",
+      story: "Open Story",
+      workforce: "Open Workforce",
+      community: "Open Community",
+      events: "Open Events",
+    },
   },
 
   he: {
@@ -318,6 +450,14 @@ const labels = {
     supportTitle: "שתפו פעולה עם Bronson Family Farm",
     supportText:
       "תמיכה יכולה לסייע בהרחבת תשתיות, השקיה, ציוד, תוכניות והיכולת התפעולית ארוכת הטווח הדרושה להפעלת המערכת האקולוגית הזו בקנה מידה רחב.",
+    moduleButtons: {
+      grow: "פתחו גידול",
+      shop: "פתחו קנייה",
+      story: "פתחו סיפור",
+      workforce: "פתחו כוח עבודה",
+      community: "פתחו קהילה",
+      events: "פתחו אירועים",
+    },
   },
 };
 
@@ -367,7 +507,7 @@ export default function App() {
 
           <img src={imagePaths.hero} alt="Bronson Family Farm" style={styles.heroImage} />
 
-          <h1 style={styles.title}>{t.title}</h1>
+          <h1 style={styles.title}>BRONSON FAMILY FARM LIVE TEST</h1>
           <p style={styles.subtitle}>{t.subtitle}</p>
           <p style={styles.intro}>{t.intro}</p>
 
