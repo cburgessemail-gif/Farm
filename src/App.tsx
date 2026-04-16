@@ -26,6 +26,8 @@ export default function App() {
       case "guest":
         return {
           title: "Guest Experience",
+          image: IMAGES.hero,
+          position: "center 78%",
           intro:
             "A welcoming path into the farm, its purpose, its visible activity, and the ways people can participate.",
           bullets: [
@@ -48,6 +50,8 @@ export default function App() {
       case "customer":
         return {
           title: "Customer Experience",
+          image: IMAGES.hero,
+          position: "center 88%",
           intro:
             "A direct path to fresh food, access, ordering, pickup, and the visible connection between food and place.",
           bullets: [
@@ -70,6 +74,8 @@ export default function App() {
       case "grower":
         return {
           title: "Grower Experience",
+          image: IMAGES.history,
+          position: "left 72%",
           intro:
             "A view into crops, production rhythm, practical workflow, and the systems that support successful growing.",
           bullets: [
@@ -92,6 +98,8 @@ export default function App() {
       case "youth":
         return {
           title: "Youth Experience",
+          image: IMAGES.history,
+          position: "right 74%",
           intro:
             "A structured pathway for work, learning, responsibility, growth, and belonging through real farm activity.",
           bullets: [
@@ -114,6 +122,8 @@ export default function App() {
       case "volunteer":
         return {
           title: "Volunteer Experience",
+          image: IMAGES.hero,
+          position: "center 84%",
           intro:
             "A clear path into contribution, visible needs, meaningful service, and community-powered support.",
           bullets: [
@@ -136,6 +146,8 @@ export default function App() {
       case "supervisor":
         return {
           title: "Supervisor Experience",
+          image: IMAGES.hero,
+          position: "center 86%",
           intro:
             "A view into coordination, oversight, support, and the practical flow behind daily movement on the farm.",
           bullets: [
@@ -183,23 +195,29 @@ export default function App() {
           }
         />
 
-        <section style={styles.roleHero}>
-          <div style={styles.roleHeroInner}>
+        <section
+          style={{
+            ...styles.roleHero,
+            backgroundImage: `linear-gradient(rgba(9,16,11,0.14), rgba(9,16,11,0.52)), url(${roleData.image})`,
+            backgroundPosition: roleData.position,
+          }}
+        >
+          <div style={styles.roleHeroTextBlock}>
             <button style={styles.backButton} onClick={() => setView("home")}>
               ← Back to farm
             </button>
-            <div style={styles.eyebrowDark}>Role-based live view</div>
+            <div style={styles.eyebrowLight}>Role-based live view</div>
             <h1 style={styles.roleTitle}>{roleData.title}</h1>
             <p style={styles.roleIntro}>{roleData.intro}</p>
           </div>
         </section>
 
-        <section style={styles.roleBulletSection}>
-          <div style={styles.container}>
+        <section style={styles.roleInfoBand}>
+          <div style={styles.roleInfoInner}>
             <div style={styles.eyebrowDark}>What this path shows</div>
-            <div style={styles.bulletGrid}>
+            <div style={styles.roleBulletGrid}>
               {roleData.bullets.map((bullet) => (
-                <div key={bullet} style={styles.bulletCard}>
+                <div key={bullet} style={styles.roleBulletItem}>
                   {bullet}
                 </div>
               ))}
@@ -951,66 +969,76 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   roleHero: {
-    background: "#f8fbf6",
-    padding: "120px 24px 36px",
-    borderBottom: "1px solid rgba(23,49,31,0.06)",
+    minHeight: "52vh",
+    display: "flex",
+    alignItems: "flex-end",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    padding: "96px 24px 24px",
   },
 
-  roleHeroInner: {
-    maxWidth: 980,
-    margin: "0 auto",
+  roleHeroTextBlock: {
+    maxWidth: 760,
+    padding: "0",
   },
 
   backButton: {
-    border: "1px solid rgba(23,49,31,0.10)",
-    background: "#ffffff",
-    color: "#17311f",
-    padding: "11px 15px",
+    border: "1px solid rgba(255,255,255,0.18)",
+    background: "rgba(255,255,255,0.10)",
+    color: "#ffffff",
+    padding: "10px 14px",
     borderRadius: 999,
     fontSize: 14,
     fontWeight: 500,
     cursor: "pointer",
-    marginBottom: 18,
+    marginBottom: 16,
   },
 
   roleTitle: {
     margin: 0,
-    fontSize: "clamp(2.5rem, 6vw, 4.2rem)",
-    lineHeight: 1,
+    fontSize: "clamp(2.2rem, 4.8vw, 3.6rem)",
+    lineHeight: 1.02,
     fontWeight: 500,
-    color: "#183220",
+    color: "#ffffff",
     textWrap: "balance",
+    textShadow: "0 2px 12px rgba(0,0,0,0.14)",
   },
 
   roleIntro: {
-    marginTop: 16,
+    marginTop: 14,
     marginBottom: 0,
-    maxWidth: 760,
-    fontSize: 18,
-    lineHeight: 1.76,
-    color: "#556c5b",
+    maxWidth: 700,
+    fontSize: 17,
+    lineHeight: 1.68,
+    color: "rgba(255,255,255,0.92)",
+    textShadow: "0 2px 8px rgba(0,0,0,0.12)",
   },
 
-  roleBulletSection: {
-    background: "#eef4e8",
-    padding: "40px 0 54px",
+  roleInfoBand: {
+    background: "#f7faf5",
+    padding: "28px 24px 56px",
   },
 
-  bulletGrid: {
+  roleInfoInner: {
+    maxWidth: 1120,
+    margin: "0 auto",
+  },
+
+  roleBulletGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: 14,
   },
 
-  bulletCard: {
+  roleBulletItem: {
     background: "#ffffff",
-    borderRadius: 20,
+    borderRadius: 18,
     border: "1px solid rgba(23,49,31,0.08)",
     padding: "18px 16px",
     color: "#2c4736",
     fontSize: 15,
-    lineHeight: 1.65,
-    boxShadow: "0 12px 26px rgba(19,45,28,0.06)",
+    lineHeight: 1.62,
+    boxShadow: "0 10px 22px rgba(19,45,28,0.05)",
   },
 
   detailSection: {
