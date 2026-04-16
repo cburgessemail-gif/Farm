@@ -1,748 +1,733 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Calendar,
+  CloudSun,
+  Users,
+  ShoppingBasket,
+  Sprout,
+  ShieldCheck,
+  Globe2,
+  MapPin,
+  ArrowRight,
+  CheckCircle2,
+  Tractor,
+  HeartPulse,
+  BookOpen,
+  ClipboardList,
+  QrCode,
+  Trees,
+  Bell,
+  ScanLine,
+  GraduationCap,
+  Briefcase,
+  Leaf,
+  ChevronRight,
+  Sun,
+  MoonStar,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
-type Panel = "dashboard" | "grow" | "calendar" | "shop" | "story" | "community";
-
-const HERO_IMAGE = "/GrowArea.jpg";
-
-type WeatherState = {
-  loading: boolean;
-  temperature: string;
-  wind: string;
-  label: string;
-  city: string;
+const languages = {
+  English: {
+    appTitle: "Bronson Family Farm",
+    appSub: "Grower Ecosystem Demo",
+    enterDemo: "Enter Live Demo",
+    returnHome: "Back to Welcome",
+    chooseExperience: "Choose an Experience",
+    whyItMatters: "Agriculture, workforce, family wellness, and community infrastructure in one living ecosystem.",
+    guest: "Guest",
+    customer: "Customer",
+    grower: "Grower",
+    supervisor: "Supervisor",
+    youth: "Youth Workforce",
+    admin: "Operations",
+    weather: "Weather",
+    calendar: "Grower Calendar",
+    events: "Events",
+    marketplace: "Marketplace",
+    learning: "Learning",
+    story: "Story",
+    alerts: "Alerts",
+    checkIn: "Check-In",
+    liveNow: "Live Now",
+    nextSteps: "Next Steps",
+    welcomeLine: "A welcoming, visual, role-based farm platform built for community use.",
+    ecosystem: "This demo shows how Bronson Family Farm and Farm & Family Alliance can guide visitors, growers, youth, volunteers, and operations teams through a real working system.",
+    startJourney: "Start Demo",
+    farmWeather: "Youngstown Farm Weather",
+    roleOverview: "Role Overview",
+    todaysFocus: "Today's Focus",
+    upcoming: "Upcoming",
+    reservePickup: "Reserve Pickup",
+    scanIn: "Scan to Check In",
+    learnMore: "Learn More",
+    workforce: "Workforce Pathways",
+    wellness: "Wellness & Nutrition",
+    hospitality: "Agritourism & Hospitality",
+    produceOps: "Produce & Inventory",
+    multilingual: "Multilingual Access",
+    eventName: "Growers Supply Market",
+    eventDate: "Saturday, May 16 · 9:00 AM–2:00 PM",
+    eventPlace: "Bronson Family Farm · Youngstown, Ohio",
+    aiGuide: "Farm & Family Guide",
+    askPlaceholder: "Ask about planting, volunteers, pickup, safety, recipes, or events…",
+    calmMode: "Calm Mode",
+    standardMode: "Standard Mode",
+  },
+  Spanish: {
+    appTitle: "Bronson Family Farm",
+    appSub: "Demostración del Ecosistema de Cultivo",
+    enterDemo: "Entrar a la Demostración",
+    returnHome: "Volver al Inicio",
+    chooseExperience: "Elija una Experiencia",
+    whyItMatters: "Agricultura, fuerza laboral, bienestar familiar e infraestructura comunitaria en un ecosistema vivo.",
+    guest: "Invitado",
+    customer: "Cliente",
+    grower: "Productor",
+    supervisor: "Supervisor",
+    youth: "Jóvenes",
+    admin: "Operaciones",
+    weather: "Clima",
+    calendar: "Calendario",
+    events: "Eventos",
+    marketplace: "Mercado",
+    learning: "Aprendizaje",
+    story: "Historia",
+    alerts: "Alertas",
+    checkIn: "Registro",
+    liveNow: "En Vivo",
+    nextSteps: "Próximos Pasos",
+    welcomeLine: "Una plataforma agrícola acogedora, visual y basada en roles para uso comunitario.",
+    ecosystem: "Esta demostración muestra cómo Bronson Family Farm y Farm & Family Alliance pueden guiar a visitantes, productores, jóvenes, voluntarios y equipos operativos mediante un sistema real.",
+    startJourney: "Comenzar",
+    farmWeather: "Clima de la Granja",
+    roleOverview: "Resumen del Rol",
+    todaysFocus: "Enfoque de Hoy",
+    upcoming: "Próximamente",
+    reservePickup: "Reservar Recogida",
+    scanIn: "Escanear para Ingresar",
+    learnMore: "Más Información",
+    workforce: "Trayectorias Laborales",
+    wellness: "Bienestar y Nutrición",
+    hospitality: "Agroturismo y Hospitalidad",
+    produceOps: "Producción e Inventario",
+    multilingual: "Acceso Multilingüe",
+    eventName: "Mercado de Suministros para Productores",
+    eventDate: "Sábado, 16 de mayo · 9:00 AM–2:00 PM",
+    eventPlace: "Bronson Family Farm · Youngstown, Ohio",
+    aiGuide: "Guía de Farm & Family",
+    askPlaceholder: "Pregunte sobre siembra, voluntarios, recogida, seguridad, recetas o eventos…",
+    calmMode: "Modo Calma",
+    standardMode: "Modo Estándar",
+  },
+  Tagalog: {
+    appTitle: "Bronson Family Farm",
+    appSub: "Demo ng Grower Ecosystem",
+    enterDemo: "Buksan ang Demo",
+    returnHome: "Bumalik",
+    chooseExperience: "Pumili ng Karanasan",
+    whyItMatters: "Pagsasaka, kabuhayan, kalusugan ng pamilya, at imprastraktura ng komunidad sa iisang buhay na ecosystem.",
+    guest: "Bisita",
+    customer: "Mamimili",
+    grower: "Magsasaka",
+    supervisor: "Supervisor",
+    youth: "Kabataang Manggagawa",
+    admin: "Operasyon",
+    weather: "Panahon",
+    calendar: "Kalendaryo",
+    events: "Mga Kaganapan",
+    marketplace: "Pamilihan",
+    learning: "Pagkatuto",
+    story: "Kuwento",
+    alerts: "Mga Alerto",
+    checkIn: "Check-In",
+    liveNow: "Live Now",
+    nextSteps: "Mga Susunod na Hakbang",
+    welcomeLine: "Isang magiliw, biswal, at role-based na farm platform para sa komunidad.",
+    ecosystem: "Ipinapakita ng demo na ito kung paano gagabayan ng Bronson Family Farm at Farm & Family Alliance ang mga bisita, grower, kabataan, boluntaryo, at operations teams sa isang totoong gumaganang sistema.",
+    startJourney: "Simulan ang Demo",
+    farmWeather: "Panahon sa Bukid",
+    roleOverview: "Buod ng Role",
+    todaysFocus: "Pokús Ngayon",
+    upcoming: "Paparating",
+    reservePickup: "Magpareserba ng Pickup",
+    scanIn: "I-scan para Mag-check In",
+    learnMore: "Alamin Pa",
+    workforce: "Landas sa Trabaho",
+    wellness: "Kalusugan at Nutrisyon",
+    hospitality: "Agritourism at Hospitality",
+    produceOps: "Ani at Imbentaryo",
+    multilingual: "Maraming Wika",
+    eventName: "Growers Supply Market",
+    eventDate: "Sabado, Mayo 16 · 9:00 AM–2:00 PM",
+    eventPlace: "Bronson Family Farm · Youngstown, Ohio",
+    aiGuide: "Farm & Family Guide",
+    askPlaceholder: "Magtanong tungkol sa pagtatanim, volunteers, pickup, safety, recipes, o events…",
+    calmMode: "Calm Mode",
+    standardMode: "Standard Mode",
+  },
+  Patwa: {
+    appTitle: "Bronson Family Farm",
+    appSub: "Growa Ecosystem Demo",
+    enterDemo: "Go Ina Di Demo",
+    returnHome: "Back A Start",
+    chooseExperience: "Pick Yuh Experience",
+    whyItMatters: "Farmin, work pathway, family wellness, an community build-up all inna one live ecosystem.",
+    guest: "Guest",
+    customer: "Customer",
+    grower: "Growa",
+    supervisor: "Supervisor",
+    youth: "Youth Work",
+    admin: "Operations",
+    weather: "Weather",
+    calendar: "Calendar",
+    events: "Events",
+    marketplace: "Market",
+    learning: "Learning",
+    story: "Story",
+    alerts: "Alerts",
+    checkIn: "Check-In",
+    liveNow: "Live Now",
+    nextSteps: "Wha Next",
+    welcomeLine: "A warm, visual, role-based farm platform fi di community.",
+    ecosystem: "Dis demo show how Bronson Family Farm an Farm & Family Alliance can guide visitors, growas, youth, volunteers, an operations team through a real workin system.",
+    startJourney: "Start Demo",
+    farmWeather: "Youngstown Farm Weather",
+    roleOverview: "Role Overview",
+    todaysFocus: "Today Focus",
+    upcoming: "Soon Come",
+    reservePickup: "Reserve Pickup",
+    scanIn: "Scan Fi Check In",
+    learnMore: "Learn More",
+    workforce: "Work Pathway",
+    wellness: "Wellness & Food",
+    hospitality: "Agritourism",
+    produceOps: "Produce Ops",
+    multilingual: "Plenty Language",
+    eventName: "Growers Supply Market",
+    eventDate: "Saturday, May 16 · 9:00 AM–2:00 PM",
+    eventPlace: "Bronson Family Farm · Youngstown, Ohio",
+    aiGuide: "Farm & Family Guide",
+    askPlaceholder: "Ask bout planting, volunteer, pickup, safety, recipe, or event…",
+    calmMode: "Calm Mode",
+    standardMode: "Standard Mode",
+  },
 };
 
-const weatherCodeMap: Record<number, string> = {
-  0: "Clear",
-  1: "Mostly clear",
-  2: "Partly cloudy",
-  3: "Overcast",
-  45: "Fog",
-  48: "Rime fog",
-  51: "Light drizzle",
-  53: "Drizzle",
-  55: "Heavy drizzle",
-  56: "Freezing drizzle",
-  57: "Heavy freezing drizzle",
-  61: "Light rain",
-  63: "Rain",
-  65: "Heavy rain",
-  66: "Freezing rain",
-  67: "Heavy freezing rain",
-  71: "Light snow",
-  73: "Snow",
-  75: "Heavy snow",
-  77: "Snow grains",
-  80: "Rain showers",
-  81: "Heavy showers",
-  82: "Violent showers",
-  85: "Snow showers",
-  86: "Heavy snow showers",
-  95: "Thunderstorm",
-  96: "Thunderstorm with hail",
-  99: "Severe thunderstorm with hail",
-};
+const roleCards = [
+  {
+    id: "guest",
+    icon: Globe2,
+    image: "/GrowArea.jpg",
+    title: "Guest Experience",
+    subtitle: "See the land, the mission, the market, and the learning pathways.",
+    color: "from-emerald-700/80 to-lime-600/60",
+  },
+  {
+    id: "customer",
+    icon: ShoppingBasket,
+    image: "/GrowArea2.jpg",
+    title: "Customer Experience",
+    subtitle: "Reserve produce, browse wellness education, and prepare for pickup.",
+    color: "from-green-700/80 to-amber-500/60",
+  },
+  {
+    id: "grower",
+    icon: Sprout,
+    image: "/GrowArea3.jpg",
+    title: "Grower Experience",
+    subtitle: "Plan crops, watch tasks, check weather, and coordinate harvest.",
+    color: "from-teal-700/80 to-green-500/60",
+  },
+  {
+    id: "supervisor",
+    icon: ShieldCheck,
+    image: "/GrowArea4.jpg",
+    title: "Supervisor Experience",
+    subtitle: "Track youth progress, assignments, safety, and life-skill growth.",
+    color: "from-cyan-800/80 to-emerald-500/60",
+  },
+  {
+    id: "youth",
+    icon: GraduationCap,
+    image: "/GrowArea5.jpg",
+    title: "Youth Workforce",
+    subtitle: "Build confidence, responsibility, employability, and real-world skills.",
+    color: "from-lime-700/80 to-emerald-400/60",
+  },
+  {
+    id: "admin",
+    icon: ClipboardList,
+    image: "/GrowArea6.jpg",
+    title: "Operations Experience",
+    subtitle: "Coordinate events, check-in, produce flow, staffing, and community engagement.",
+    color: "from-green-900/80 to-teal-600/60",
+  },
+];
+
+const weatherCards = [
+  { day: "Thu", temp: "62°", note: "Transplant prep" },
+  { day: "Fri", temp: "66°", note: "Watering window" },
+  { day: "Sat", temp: "69°", note: "Event-friendly" },
+  { day: "Sun", temp: "64°", note: "Mulch and check beds" },
+];
+
+const calendarItems = [
+  { time: "8:00 AM", task: "Youth orientation and safety check", zone: "Welcome Tent" },
+  { time: "9:30 AM", task: "Seedling care and irrigation review", zone: "Grow Area" },
+  { time: "11:00 AM", task: "Nutrition and diabetes-friendly food talk", zone: "Learning Station" },
+  { time: "1:00 PM", task: "Inventory sorting and pickup prep", zone: "Produce Command" },
+];
+
+const eventCards = [
+  {
+    title: "Growers Supply Market",
+    time: "May 16 · 9:00 AM–2:00 PM",
+    place: "Bronson Family Farm",
+    detail: "Regional growers, tools, workshops, produce, wellness, and community learning.",
+  },
+  {
+    title: "Youth Workforce Orientation",
+    time: "Summer Cohort",
+    place: "Farm Learning Zone",
+    detail: "Real farm work, leadership, safety, and pathway-building.",
+  },
+  {
+    title: "Wellness at the Farm",
+    time: "Community Series",
+    place: "Health & Learning Tent",
+    detail: "Nutrition, movement, screenings, and practical strategies for healthier living.",
+  },
+];
+
+const produceCards = [
+  { name: "Tomato Seedlings", count: 24, note: "Ready for reservation" },
+  { name: "Collard Greens", count: 40, note: "High-demand crop" },
+  { name: "Cabbage", count: 100, note: "Strong inventory" },
+  { name: "Peppers", count: 24, note: "Transplanting cycle" },
+  { name: "Bubble Babies", count: 18, note: "Education + starter sales" },
+  { name: "Lettuce", count: 30, note: "Fast pickup turnover" },
+];
+
+const youthTasks = [
+  "Clock-in and PPE check",
+  "Watering team rotation",
+  "Transplant assistance",
+  "Produce washing and sorting",
+  "Customer greeting practice",
+  "Reflection and skill journal",
+];
+
+const supervisorNotes = [
+  { name: "Team Readiness", value: "High" },
+  { name: "Attendance", value: "94%" },
+  { name: "Safety Completion", value: "100%" },
+  { name: "Leadership Growth", value: "Strong" },
+];
+
+function SectionTitle({ icon: Icon, title, right }: { icon: any; title: string; right?: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-2">
+        <div className="rounded-2xl bg-white/10 p-2 ring-1 ring-white/10">
+          <Icon className="h-5 w-5 text-white" />
+        </div>
+        <h3 className="text-lg font-semibold text-white md:text-xl">{title}</h3>
+      </div>
+      {right}
+    </div>
+  );
+}
+
+function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`rounded-3xl border border-white/12 bg-white/8 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl ${className}`}>
+      {children}
+    </div>
+  );
+}
 
 export default function App() {
-  const [panel, setPanel] = useState<Panel>("dashboard");
-  const [timeText, setTimeText] = useState("");
-  const [weather, setWeather] = useState<WeatherState>({
-    loading: true,
-    temperature: "--°F",
-    wind: "-- mph",
-    label: "Loading weather",
-    city: "Local",
-  });
+  const [lang, setLang] = useState<keyof typeof languages>("English");
+  const [started, setStarted] = useState(false);
+  const [role, setRole] = useState("guest");
+  const [search, setSearch] = useState("");
+  const [calmMode, setCalmMode] = useState(false);
 
-  useEffect(() => {
-    const updateClock = () => {
-      const now = new Date();
-      setTimeText(
-        now.toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "2-digit",
-          second: "2-digit",
-        })
-      );
-    };
+  const t = languages[lang];
+  const currentRole = useMemo(() => roleCards.find((r) => r.id === role) ?? roleCards[0], [role]);
 
-    updateClock();
-    const timer = window.setInterval(updateClock, 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const setFallback = () => {
-      if (cancelled) return;
-      setWeather({
-        loading: false,
-        temperature: "--°F",
-        wind: "-- mph",
-        label: "Weather unavailable",
-        city: "Youngstown area",
-      });
-    };
-
-    const fetchWeather = async (lat: number, lon: number) => {
-      try {
-        const weatherUrl =
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-          `&current=temperature_2m,weather_code,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph`;
-
-        const response = await fetch(weatherUrl);
-        if (!response.ok) throw new Error("Weather request failed");
-
-        const data = await response.json();
-        const current = data?.current;
-        if (!current) throw new Error("Missing weather data");
-
-        const code = Number(current.weather_code ?? -1);
-        const label = weatherCodeMap[code] ?? "Current conditions";
-
-        if (!cancelled) {
-          setWeather({
-            loading: false,
-            temperature: `${Math.round(Number(current.temperature_2m))}°F`,
-            wind: `${Math.round(Number(current.wind_speed_10m))} mph`,
-            label,
-            city: "Local weather",
-          });
-        }
-      } catch {
-        setFallback();
-      }
-    };
-
-    if (!navigator.geolocation) {
-      fetchWeather(41.0998, -80.6495);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        fetchWeather(position.coords.latitude, position.coords.longitude);
-      },
-      () => {
-        fetchWeather(41.0998, -80.6495);
-      },
-      { enableHighAccuracy: false, timeout: 7000, maximumAge: 600000 }
-    );
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const dashboardCards = useMemo(
-    () => [
-      {
-        title: "GROW",
-        text: "Crop flow, irrigation, and production status.",
-        onClick: () => setPanel("grow"),
-      },
-      {
-        title: "SHOP",
-        text: "Live store access and market readiness.",
-        onClick: () => setPanel("shop"),
-      },
-      {
-        title: "CALENDAR",
-        text: "Tasks, timing, and daily farm rhythm.",
-        onClick: () => setPanel("calendar"),
-      },
-      {
-        title: "STORY",
-        text: "Legacy, land, place, and future.",
-        onClick: () => setPanel("story"),
-      },
-      {
-        title: "COMMUNITY",
-        text: "Volunteers, families, and partners.",
-        onClick: () => setPanel("community"),
-      },
-    ],
-    []
-  );
+  const bgImage = currentRole.image;
+  const overlayStrength = calmMode ? "bg-[rgba(8,24,12,0.72)]" : "bg-[rgba(8,24,12,0.54)]";
 
   return (
-    <div style={styles.app}>
-      <aside style={styles.sidebar}>
-        <h2 style={styles.logo}>Bronson Farm</h2>
+    <div className="min-h-screen bg-[#07150d] text-white overflow-hidden">
+      <div
+        className="fixed inset-0 bg-cover bg-center transition-all duration-700"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      />
+      <div className={`fixed inset-0 ${overlayStrength} transition-all duration-700`} />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(112,255,154,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(255,220,120,0.10),transparent_26%)]" />
 
-        <div style={styles.sidebarLabel}>Demo Navigation</div>
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-4 md:px-6 lg:px-8">
+        <motion.header
+          initial={{ opacity: 0, y: -18 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-black/20 px-4 py-4 backdrop-blur-xl md:flex-row md:items-center md:justify-between"
+        >
+          <div className="flex items-center gap-3">
+            <div className="rounded-3xl bg-white/10 p-3 ring-1 ring-white/10">
+              <Trees className="h-7 w-7 text-lime-200" />
+            </div>
+            <div>
+              <div className="text-2xl font-semibold tracking-tight md:text-3xl">{t.appTitle}</div>
+              <div className="text-sm text-emerald-100/80 md:text-base">{t.appSub}</div>
+            </div>
+          </div>
 
-        {["dashboard", "grow", "calendar", "shop", "story", "community"].map((item) => (
-          <button
-            key={item}
-            style={{
-              ...styles.navBtn,
-              ...(panel === item ? styles.active : {}),
-            }}
-            onClick={() => setPanel(item as Panel)}
-          >
-            {item.toUpperCase()}
-          </button>
-        ))}
+          <div className="flex flex-wrap items-center gap-2">
+            {Object.keys(languages).map((label) => (
+              <Button
+                key={label}
+                variant="outline"
+                onClick={() => setLang(label as keyof typeof languages)}
+                className={`rounded-full border-white/15 bg-white/5 text-white hover:bg-white/12 ${lang === label ? "ring-2 ring-lime-300/60" : ""}`}
+              >
+                <Globe2 className="mr-2 h-4 w-4" />
+                {label}
+              </Button>
+            ))}
+            <Button
+              onClick={() => setCalmMode((v) => !v)}
+              className="rounded-full bg-white/10 text-white hover:bg-white/20"
+            >
+              {calmMode ? <Sun className="mr-2 h-4 w-4" /> : <MoonStar className="mr-2 h-4 w-4" />}
+              {calmMode ? t.standardMode : t.calmMode}
+            </Button>
+          </div>
+        </motion.header>
 
-        <div style={styles.sideInfoCard}>
-          <h3 style={styles.sideInfoTitle}>Live Demo</h3>
-          <p style={styles.sideInfoText}>
-            Stable build with visible language, system identity, live status feel,
-            and store access.
-          </p>
-        </div>
-      </aside>
+        <AnimatePresence mode="wait">
+          {!started ? (
+            <motion.div
+              key="welcome"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
+            >
+              <GlassCard className="overflow-hidden">
+                <div className="relative min-h-[500px] p-6 md:p-8 lg:p-10">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-amber-300/10" />
+                  <div className="relative max-w-3xl">
+                    <Badge className="mb-4 rounded-full border-0 bg-lime-300/20 px-4 py-2 text-lime-100">
+                      {t.liveNow}
+                    </Badge>
+                    <h1 className="text-4xl font-semibold tracking-tight md:text-6xl leading-tight">
+                      {t.welcomeLine}
+                    </h1>
+                    <p className="mt-4 max-w-2xl text-base text-emerald-50/85 md:text-lg leading-7">
+                      {t.ecosystem}
+                    </p>
+                    <p className="mt-4 max-w-2xl text-sm text-emerald-100/80 md:text-base leading-7">
+                      {t.whyItMatters}
+                    </p>
 
-      <main style={styles.main}>
-        {panel === "dashboard" && (
-          <>
-            <div style={styles.topUtilityBar}>
-              <div style={styles.utilityCard}>
-                <div style={styles.utilityLabel}>System Time</div>
-                <div style={styles.utilityValue}>{timeText || "--:--:--"}</div>
+                    <div className="mt-8 flex flex-wrap gap-3">
+                      <Button
+                        onClick={() => setStarted(true)}
+                        className="rounded-full bg-lime-300 px-6 py-6 text-base font-semibold text-[#153115] hover:bg-lime-200"
+                      >
+                        {t.enterDemo}
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </Button>
+                      <Button className="rounded-full bg-white/10 px-6 py-6 text-white hover:bg-white/20">
+                        <MapPin className="mr-2 h-5 w-5" />
+                        {t.eventPlace}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </GlassCard>
+
+              <div className="grid gap-6">
+                <GlassCard className="p-5">
+                  <SectionTitle icon={Calendar} title={t.eventName} />
+                  <div className="mt-4 space-y-3 text-sm text-emerald-50/85">
+                    <div className="rounded-2xl bg-white/6 p-4">{t.eventDate}</div>
+                    <div className="rounded-2xl bg-white/6 p-4">{t.eventPlace}</div>
+                    <div className="rounded-2xl bg-white/6 p-4">Tools, growers, produce, wellness, workshops, workforce pathways, and community check-in.</div>
+                  </div>
+                </GlassCard>
+
+                <GlassCard className="p-5">
+                  <SectionTitle icon={Globe2} title={t.multilingual} />
+                  <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                    {Object.keys(languages).map((name) => (
+                      <div key={name} className="rounded-2xl bg-white/6 p-3 text-emerald-50/90">
+                        {name}
+                      </div>
+                    ))}
+                  </div>
+                </GlassCard>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="dashboard"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-6"
+            >
+              <GlassCard className="p-4 md:p-5">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <div className="text-sm uppercase tracking-[0.18em] text-emerald-200/70">{t.chooseExperience}</div>
+                    <div className="mt-1 text-2xl font-semibold md:text-3xl">{currentRole.title}</div>
+                    <div className="mt-1 max-w-2xl text-sm text-emerald-50/80 md:text-base">{currentRole.subtitle}</div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button onClick={() => setStarted(false)} className="rounded-full bg-white/10 text-white hover:bg-white/20">
+                      {t.returnHome}
+                    </Button>
+                    <Button className="rounded-full bg-lime-300 text-[#153115] hover:bg-lime-200">
+                      {t.scanIn}
+                      <ScanLine className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </GlassCard>
+
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+                {roleCards.map((card) => {
+                  const Icon = card.icon;
+                  const active = card.id === role;
+                  return (
+                    <motion.button
+                      whileHover={{ y: -4 }}
+                      key={card.id}
+                      onClick={() => setRole(card.id)}
+                      className={`group relative overflow-hidden rounded-[1.8rem] border text-left transition-all ${
+                        active ? "border-lime-300/70 ring-2 ring-lime-300/50" : "border-white/10"
+                      }`}
+                    >
+                      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${card.image})` }} />
+                      <div className={`absolute inset-0 bg-gradient-to-br ${card.color}`} />
+                      <div className="relative min-h-[180px] p-4">
+                        <div className="mb-10 inline-flex rounded-2xl bg-black/20 p-2 backdrop-blur-md">
+                          <Icon className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="text-lg font-semibold">{card.title}</div>
+                        <div className="mt-2 text-sm text-white/85">{card.subtitle}</div>
+                      </div>
+                    </motion.button>
+                  );
+                })}
               </div>
 
-              <div style={styles.utilityCard}>
-                <div style={styles.utilityLabel}>Weather</div>
-                <div style={styles.utilityValue}>{weather.temperature}</div>
-                <div style={styles.utilitySub}>
-                  {weather.label} • Wind {weather.wind}
+              <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+                <div className="space-y-6">
+                  <GlassCard className="p-5 md:p-6">
+                    <SectionTitle
+                      icon={currentRole.icon}
+                      title={t.roleOverview}
+                      right={<Badge className="rounded-full bg-lime-300/20 text-lime-100 border-0">{t.liveNow}</Badge>}
+                    />
+                    <div className="mt-4 grid gap-4 md:grid-cols-2">
+                      <div className="rounded-3xl bg-white/6 p-5">
+                        <div className="text-sm text-emerald-100/70">{t.todaysFocus}</div>
+                        <div className="mt-2 text-xl font-semibold">
+                          {role === "guest" && "Explore the farm, event flow, and community mission"}
+                          {role === "customer" && "Reserve seedlings, pickup times, and healthy food guidance"}
+                          {role === "grower" && "Track beds, tasks, weather, and crop readiness"}
+                          {role === "supervisor" && "Monitor youth teams, safety, and progress"}
+                          {role === "youth" && "Learn, work, grow confidence, and build your pathway"}
+                          {role === "admin" && "Coordinate inventory, events, check-in, and staffing"}
+                        </div>
+                        <div className="mt-3 text-sm leading-7 text-emerald-50/80">
+                          This experience is designed to feel useful, friendly, and active — not like a slide deck.
+                        </div>
+                      </div>
+                      <div className="rounded-3xl bg-white/6 p-5">
+                        <div className="text-sm text-emerald-100/70">{t.nextSteps}</div>
+                        <div className="mt-3 space-y-3 text-sm text-emerald-50/85">
+                          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-lime-300" /> Role-specific dashboards</div>
+                          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-lime-300" /> Calendar-aware scheduling</div>
+                          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-lime-300" /> QR check-in and engagement</div>
+                          <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-lime-300" /> Education, wellness, and produce operations</div>
+                        </div>
+                      </div>
+                    </div>
+                  </GlassCard>
+
+                  <GlassCard className="p-5 md:p-6">
+                    <SectionTitle icon={CloudSun} title={t.farmWeather} />
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      {weatherCards.map((item) => (
+                        <div key={item.day} className="rounded-3xl bg-white/6 p-4">
+                          <div className="text-sm text-emerald-100/70">{item.day}</div>
+                          <div className="mt-2 text-3xl font-semibold">{item.temp}</div>
+                          <div className="mt-1 text-sm text-emerald-50/80">{item.note}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </GlassCard>
+
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <GlassCard className="p-5 md:p-6">
+                      <SectionTitle icon={Calendar} title={t.calendar} />
+                      <div className="mt-4 space-y-3">
+                        {calendarItems.map((item) => (
+                          <div key={item.time + item.task} className="rounded-3xl bg-white/6 p-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <div className="text-sm text-emerald-100/70">{item.time}</div>
+                                <div className="mt-1 font-medium">{item.task}</div>
+                              </div>
+                              <Badge className="rounded-full bg-white/10 text-white border-0">{item.zone}</Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </GlassCard>
+
+                    <GlassCard className="p-5 md:p-6">
+                      <SectionTitle icon={Bell} title={t.alerts} />
+                      <div className="mt-4 space-y-3 text-sm text-emerald-50/85">
+                        <div className="rounded-3xl bg-white/6 p-4">Rain buffer available for outdoor learning rotation.</div>
+                        <div className="rounded-3xl bg-white/6 p-4">Inventory reservation active for seedlings and Bubble Babies.</div>
+                        <div className="rounded-3xl bg-white/6 p-4">Check-in flow ready for role-based arrival and volunteer routing.</div>
+                        <div className="rounded-3xl bg-white/6 p-4">Wellness programming can be paired with nutrition education and movement activities.</div>
+                      </div>
+                    </GlassCard>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <GlassCard className="p-5 md:p-6">
+                    <SectionTitle icon={ShoppingBasket} title={t.marketplace} />
+                    <div className="mt-4 grid gap-3">
+                      {produceCards.map((item) => (
+                        <div key={item.name} className="flex items-center justify-between rounded-3xl bg-white/6 p-4">
+                          <div>
+                            <div className="font-medium">{item.name}</div>
+                            <div className="text-sm text-emerald-100/70">{item.note}</div>
+                          </div>
+                          <Badge className="rounded-full border-0 bg-lime-300/20 text-lime-100">{item.count}</Badge>
+                        </div>
+                      ))}
+                    </div>
+                    <Button className="mt-4 w-full rounded-full bg-lime-300 text-[#153115] hover:bg-lime-200">
+                      {t.reservePickup}
+                    </Button>
+                  </GlassCard>
+
+                  <GlassCard className="p-5 md:p-6">
+                    <SectionTitle icon={BookOpen} title={t.aiGuide} />
+                    <div className="mt-4 space-y-3">
+                      <Input
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder={t.askPlaceholder}
+                        className="rounded-2xl border-white/10 bg-white/8 text-white placeholder:text-emerald-100/50"
+                      />
+                      <div className="rounded-3xl bg-white/6 p-4 text-sm leading-7 text-emerald-50/85">
+                        Suggested topics: planting times, food safety basics, volunteer check-in, diabetes-friendly recipes, youth roles, and event navigation.
+                      </div>
+                    </div>
+                  </GlassCard>
+
+                  <GlassCard className="p-5 md:p-6">
+                    <SectionTitle icon={QrCode} title={t.checkIn} />
+                    <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-emerald-50/85">
+                      <div className="rounded-3xl bg-white/6 p-4">
+                        <div className="mb-2 font-medium">Visitor Arrival</div>
+                        <div>QR scan, ticket validation, role tagging, and welcome flow.</div>
+                      </div>
+                      <div className="rounded-3xl bg-white/6 p-4">
+                        <div className="mb-2 font-medium">Volunteer Routing</div>
+                        <div>Assign roles, handwashing stations, support zones, and safety reminders.</div>
+                      </div>
+                    </div>
+                    <Button className="mt-4 w-full rounded-full bg-white/10 text-white hover:bg-white/20">
+                      {t.scanIn}
+                    </Button>
+                  </GlassCard>
                 </div>
               </div>
-            </div>
 
-            <div style={styles.heroPanel}>
-              <img src={HERO_IMAGE} alt="Bronson Family Farm" style={styles.heroImage} />
+              <div className="grid gap-6 lg:grid-cols-3">
+                <GlassCard className="p-5 md:p-6">
+                  <SectionTitle icon={Users} title={t.workforce} />
+                  <div className="mt-4 space-y-3 text-sm text-emerald-50/85">
+                    {youthTasks.map((task) => (
+                      <div key={task} className="flex items-start gap-2 rounded-2xl bg-white/6 p-3">
+                        <ChevronRight className="mt-0.5 h-4 w-4 text-lime-300" />
+                        <span>{task}</span>
+                      </div>
+                    ))}
+                  </div>
+                </GlassCard>
 
-              <div style={styles.heroOverlay}>
-                <div style={styles.liveBadge}>● LIVE SYSTEM</div>
-                <div style={styles.clockBadge}>{timeText || "--:--:--"}</div>
+                <GlassCard className="p-5 md:p-6">
+                  <SectionTitle icon={HeartPulse} title={t.wellness} />
+                  <div className="mt-4 space-y-3 text-sm text-emerald-50/85">
+                    <div className="rounded-2xl bg-white/6 p-3">Blood pressure and BMI screenings</div>
+                    <div className="rounded-2xl bg-white/6 p-3">Healthy food vs. processed food education</div>
+                    <div className="rounded-2xl bg-white/6 p-3">Type II diabetes support and nutrition strategies</div>
+                    <div className="rounded-2xl bg-white/6 p-3">Movement, family wellness, and healthier-at-home learning</div>
+                  </div>
+                </GlassCard>
+
+                <GlassCard className="p-5 md:p-6">
+                  <SectionTitle icon={ClipboardList} title={role === "supervisor" ? "Supervisor Snapshot" : t.produceOps} />
+                  <div className="mt-4 space-y-3 text-sm text-emerald-50/85">
+                    {(role === "supervisor" ? supervisorNotes : [
+                      { name: "Wash/Sort Queue", value: "Open" },
+                      { name: "Reserved Orders", value: "14" },
+                      { name: "Volunteer Stations", value: "6" },
+                      { name: "Pickup Windows", value: "Active" },
+                    ]).map((item) => (
+                      <div key={item.name} className="flex items-center justify-between rounded-2xl bg-white/6 p-3">
+                        <span>{item.name}</span>
+                        <Badge className="rounded-full border-0 bg-white/10 text-white">{item.value}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </GlassCard>
               </div>
 
-              <div style={styles.heroTextWrap}>
-                <h1 style={styles.title}>Live Ecosystem</h1>
-                <p style={styles.text}>
-                  This is not a presentation. This is a working system with live
-                  weather, timing, store access, and operating pathways.
-                </p>
-              </div>
-            </div>
-
-            <div style={styles.grid}>
-              {dashboardCards.map((card) => (
-                <Card
-                  key={card.title}
-                  title={card.title}
-                  text={card.text}
-                  onClick={card.onClick}
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {panel === "grow" && (
-          <>
-            <h2 style={styles.sectionTitle}>Grower System</h2>
-            <div style={styles.grid2}>
-              <div style={styles.cardStatic}>
-                <h3 style={styles.cardHeading}>Production Status</h3>
-                <ProgressRow label="Collards" value={88} color="#2f7d3d" status="Ready" />
-                <ProgressRow label="Peppers" value={64} color="#6fb56d" status="Growing" />
-                <ProgressRow label="Tomatoes" value={72} color="#d2b347" status="Transplanting" />
-                <ProgressRow label="Cabbage" value={79} color="#88b97e" status="Strong" />
-              </div>
-
-              <div style={styles.cardStatic}>
-                <h3 style={styles.cardHeading}>Next Actions</h3>
-                <ActionItem number={1} text="Watering cycle and moisture check" />
-                <ActionItem number={2} text="Harvest prep for greens and herbs" />
-                <ActionItem number={3} text="Market packaging and labeling" />
-              </div>
-            </div>
-          </>
-        )}
-
-        {panel === "calendar" && (
-          <>
-            <h2 style={styles.sectionTitle}>Farm Calendar</h2>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th style={styles.th}>Time</th>
-                  <th style={styles.th}>Task</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={styles.td}>7:00 AM</td>
-                  <td style={styles.td}>Water plants and moisture check</td>
-                </tr>
-                <tr>
-                  <td style={styles.td}>9:00 AM</td>
-                  <td style={styles.td}>Harvest greens and herbs</td>
-                </tr>
-                <tr>
-                  <td style={styles.td}>12:00 PM</td>
-                  <td style={styles.td}>Prep market inventory</td>
-                </tr>
-                <tr>
-                  <td style={styles.td}>4:00 PM</td>
-                  <td style={styles.td}>Community market flow</td>
-                </tr>
-              </tbody>
-            </table>
-          </>
-        )}
-
-        {panel === "shop" && (
-          <>
-            <h2 style={styles.sectionTitle}>Marketplace</h2>
-            <div style={styles.grid2}>
-              <div style={styles.cardStatic}>
-                <h3 style={styles.cardHeading}>Market Readiness</h3>
-                <p style={styles.bodyText}>Bubble Babies: Available</p>
-                <p style={styles.bodyText}>Seedlings: In season</p>
-                <p style={styles.bodyText}>Fresh produce: Market-based</p>
-              </div>
-
-              <div style={styles.cardStatic}>
-                <h3 style={styles.cardHeading}>Store Access</h3>
-                <p style={styles.bodyText}>Open the live Bronson Family Farm GrownBy store.</p>
-                <button
-                  style={styles.button}
-                  onClick={() =>
-                    window.open(
-                      "https://grownby.com/farms/bronson-family-farm/shop",
-                      "_blank"
-                    )
-                  }
-                >
-                  OPEN LIVE STORE
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-
-        {panel === "story" && (
-          <>
-            <h2 style={styles.sectionTitle}>Our Story</h2>
-            <div style={styles.cardStatic}>
-              <div style={styles.cardAccent} />
-              <h3 style={styles.cardHeading}>Legacy + Place</h3>
-              <p style={styles.bodyText}>
-                Bronson Family Farm is more than a farm. It is legacy, land, renewal,
-                and the future growing from one place.
-              </p>
-              <p style={styles.bodyText}>
-                The ecosystem brings together food access, learning, workforce
-                development, family participation, and long-term community renewal.
-              </p>
-            </div>
-          </>
-        )}
-
-        {panel === "community" && (
-          <>
-            <h2 style={styles.sectionTitle}>Community</h2>
-            <div style={styles.grid2}>
-              <div style={styles.cardStatic}>
-                <h3 style={styles.cardHeading}>Volunteers</h3>
-                <p style={styles.bodyText}>Support planting, setup, logistics, and farm activity.</p>
-              </div>
-              <div style={styles.cardStatic}>
-                <h3 style={styles.cardHeading}>Partners</h3>
-                <p style={styles.bodyText}>
-                  Join infrastructure, workforce, wellness, and food access efforts.
-                </p>
-              </div>
-            </div>
-          </>
-        )}
-      </main>
-    </div>
-  );
-}
-
-function Card({
-  title,
-  onClick,
-  text,
-}: {
-  title: string;
-  onClick: () => void;
-  text: string;
-}) {
-  return (
-    <button style={styles.card} onClick={onClick}>
-      <div style={styles.cardAccent} />
-      <h3 style={styles.cardHeading}>{title}</h3>
-      <p style={styles.cardText}>{text}</p>
-    </button>
-  );
-}
-
-function ActionItem({ number, text }: { number: number; text: string }) {
-  return (
-    <div style={styles.actionItem}>
-      <div style={styles.actionNumber}>{number}</div>
-      <div style={styles.actionText}>{text}</div>
-    </div>
-  );
-}
-
-function ProgressRow({
-  label,
-  value,
-  color,
-  status,
-}: {
-  label: string;
-  value: number;
-  color: string;
-  status: string;
-}) {
-  return (
-    <div style={styles.progressBlock}>
-      <div style={styles.progressHeader}>
-        <span style={styles.progressLabel}>{label}</span>
-        <span style={styles.progressStatus}>
-          {status} • {value}%
-        </span>
-      </div>
-      <div style={styles.progressTrack}>
-        <div style={{ ...styles.progressFill, width: `${value}%`, background: color }} />
+              <GlassCard className="p-5 md:p-6">
+                <SectionTitle icon={Calendar} title={t.events} />
+                <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                  {eventCards.map((event) => (
+                    <Card key={event.title} className="rounded-[1.8rem] border-white/10 bg-white/6 text-white shadow-none">
+                      <CardHeader>
+                        <CardTitle className="text-xl">{event.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2 text-sm text-emerald-50/85">
+                          <div>{event.time}</div>
+                          <div>{event.place}</div>
+                          <div>{event.detail}</div>
+                        </div>
+                        <Button className="mt-4 rounded-full bg-white/10 text-white hover:bg-white/20">
+                          {t.learnMore}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </GlassCard>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  app: {
-    display: "grid",
-    gridTemplateColumns: "250px 1fr",
-    minHeight: "100vh",
-    fontFamily: "Arial, sans-serif",
-    background: "#dfe8e0",
-  },
-  sidebar: {
-    background: "#e9f2ea",
-    padding: "20px",
-    borderRight: "1px solid #cfd9d1",
-  },
-  logo: {
-    marginBottom: 20,
-    fontSize: 24,
-    fontWeight: 700,
-    color: "#173b24",
-  },
-  sidebarLabel: {
-    marginBottom: 12,
-    color: "#3d6048",
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-  },
-  navBtn: {
-    display: "block",
-    width: "100%",
-    padding: "14px 12px",
-    marginBottom: "10px",
-    cursor: "pointer",
-    border: "1px solid #b8c7b9",
-    borderRadius: "16px",
-    background: "#f8fbf8",
-    color: "#214431",
-    fontSize: 14,
-    fontWeight: 500,
-    boxShadow: "0 2px 4px rgba(0,0,0,0.03)",
-  },
-  active: {
-    background: "#3f7d4f",
-    color: "#fff",
-    border: "1px solid #3f7d4f",
-    fontWeight: 600,
-  },
-  sideInfoCard: {
-    marginTop: 26,
-    background: "#f7faf7",
-    border: "1px solid #c8d5c9",
-    borderRadius: "18px",
-    padding: 16,
-    boxShadow: "0 6px 18px rgba(0,0,0,0.04)",
-  },
-  sideInfoTitle: {
-    margin: "0 0 8px 0",
-    fontSize: 18,
-    color: "#214431",
-    fontWeight: 600,
-  },
-  sideInfoText: {
-    margin: 0,
-    lineHeight: 1.6,
-    color: "#587260",
-    fontSize: 15,
-    fontWeight: 400,
-  },
-  main: {
-    padding: "20px",
-    overflow: "auto",
-  },
-  topUtilityBar: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 16,
-    marginBottom: 20,
-  },
-  utilityCard: {
-    background: "#f7faf7",
-    border: "1px solid #c8d5c9",
-    borderRadius: "20px",
-    padding: 16,
-    boxShadow: "0 6px 18px rgba(0,0,0,0.04)",
-  },
-  utilityLabel: {
-    fontSize: 12,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    color: "#587260",
-    fontWeight: 700,
-    marginBottom: 8,
-  },
-  utilityValue: {
-    fontSize: 28,
-    color: "#1f3d2b",
-    fontWeight: 600,
-    letterSpacing: "-0.4px",
-  },
-  utilitySub: {
-    marginTop: 6,
-    fontSize: 14,
-    color: "#587260",
-    fontWeight: 400,
-  },
-  heroPanel: {
-    position: "relative",
-    marginBottom: 22,
-    borderRadius: "28px",
-    overflow: "hidden",
-    boxShadow: "0 10px 28px rgba(0,0,0,0.08)",
-  },
-  heroImage: {
-    width: "100%",
-    height: 340,
-    objectFit: "cover",
-    display: "block",
-    filter: "brightness(0.72)",
-  },
-  heroOverlay: {
-    position: "absolute",
-    top: 22,
-    left: 28,
-    right: 28,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  liveBadge: {
-    background: "rgba(89, 121, 84, 0.82)",
-    color: "#ffffff",
-    padding: "10px 16px",
-    borderRadius: 999,
-    fontSize: 14,
-    fontWeight: 700,
-    backdropFilter: "blur(6px)",
-  },
-  clockBadge: {
-    background: "rgba(120, 124, 82, 0.82)",
-    color: "#ffffff",
-    padding: "10px 16px",
-    borderRadius: 999,
-    fontSize: 14,
-    fontWeight: 700,
-    backdropFilter: "blur(6px)",
-  },
-  heroTextWrap: {
-    position: "absolute",
-    left: 28,
-    bottom: 28,
-    maxWidth: 820,
-  },
-  title: {
-    fontSize: 64,
-    margin: "0 0 10px 0",
-    color: "#ffffff",
-    fontWeight: 600,
-    letterSpacing: "-1px",
-    lineHeight: 1.02,
-  },
-  text: {
-    fontSize: 18,
-    margin: 0,
-    color: "rgba(255,255,255,0.92)",
-    lineHeight: 1.6,
-    fontWeight: 400,
-    maxWidth: 760,
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: 20,
-  },
-  grid2: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "20px",
-    marginTop: "20px",
-  },
-  card: {
-    background: "#f9fbf9",
-    padding: 20,
-    cursor: "pointer",
-    border: "1px solid #cad8cb",
-    borderRadius: "22px",
-    minHeight: 180,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    textAlign: "left",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
-  },
-  cardStatic: {
-    background: "#f9fbf9",
-    padding: 20,
-    border: "1px solid #cad8cb",
-    borderRadius: "22px",
-    minHeight: 160,
-    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
-  },
-  cardAccent: {
-    height: 10,
-    borderRadius: 999,
-    background: "#6aa56f",
-    marginBottom: 18,
-  },
-  cardHeading: {
-    margin: "0 0 10px 0",
-    color: "#244a34",
-    fontSize: 18,
-    fontWeight: 600,
-  },
-  cardText: {
-    margin: 0,
-    lineHeight: 1.6,
-    color: "#4a6b57",
-    fontSize: 15,
-    fontWeight: 400,
-  },
-  bodyText: {
-    margin: "0 0 8px 0",
-    lineHeight: 1.6,
-    color: "#4a6b57",
-    fontSize: 15,
-    fontWeight: 400,
-  },
-  sectionTitle: {
-    fontSize: 32,
-    marginBottom: 10,
-    color: "#1f3d2b",
-    fontWeight: 600,
-    letterSpacing: "-0.3px",
-  },
-  button: {
-    padding: 15,
-    background: "#2f6b3c",
-    color: "#fff",
-    border: "none",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontWeight: 700,
-    marginTop: 12,
-  },
-  table: {
-    width: "100%",
-    marginTop: 20,
-    borderCollapse: "collapse",
-    background: "#f9fbf9",
-    borderRadius: "18px",
-    overflow: "hidden",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
-  },
-  th: {
-    textAlign: "left",
-    padding: 14,
-    border: "1px solid #d5e0d6",
-    background: "#eef5ee",
-    color: "#214431",
-    fontWeight: 600,
-  },
-  td: {
-    padding: 14,
-    border: "1px solid #d5e0d6",
-    color: "#4a6b57",
-    fontWeight: 400,
-  },
-  actionItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: 14,
-    background: "#edf3ed",
-    border: "1px solid #d6e0d7",
-    borderRadius: "18px",
-    padding: "12px 14px",
-    marginBottom: 14,
-  },
-  actionNumber: {
-    width: 34,
-    height: 34,
-    borderRadius: "50%",
-    background: "#2f7d3d",
-    color: "#ffffff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 700,
-    fontSize: 15,
-    flexShrink: 0,
-  },
-  actionText: {
-    color: "#244a34",
-    fontSize: 15,
-    fontWeight: 600,
-  },
-  progressBlock: {
-    marginBottom: 18,
-  },
-  progressHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: 12,
-    marginBottom: 8,
-  },
-  progressLabel: {
-    color: "#244a34",
-    fontSize: 16,
-    fontWeight: 600,
-  },
-  progressStatus: {
-    color: "#587260",
-    fontSize: 14,
-    fontWeight: 600,
-  },
-  progressTrack: {
-    width: "100%",
-    height: 12,
-    background: "#e3e9e3",
-    borderRadius: 999,
-    overflow: "hidden",
-    border: "1px solid #d3ddd3",
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: 999,
-  },
-};
