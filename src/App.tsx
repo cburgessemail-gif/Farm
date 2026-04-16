@@ -29,6 +29,7 @@ const labels = {
     operations: "Operations",
     livePathways: "Live Pathways",
     support: "Support",
+    modulesTitle: "Core Ecosystem Modules",
     modules: {
       grow: "Grow",
       calendar: "Calendar",
@@ -131,6 +132,7 @@ const labels = {
     operations: "Operaciones",
     livePathways: "Rutas Vivas",
     support: "Apoyo",
+    modulesTitle: "Módulos Principales del Ecosistema",
     modules: {
       grow: "Cultivar",
       calendar: "Calendario",
@@ -233,6 +235,7 @@ const labels = {
     operations: "Operasyon",
     livePathways: "Buhay na Daan",
     support: "Suporta",
+    modulesTitle: "Pangunahing Mga Module ng Ecosystem",
     modules: {
       grow: "Pagtatanim",
       calendar: "Kalendaryo",
@@ -335,6 +338,7 @@ const labels = {
     operations: "Operazioni",
     livePathways: "Percorsi Vivi",
     support: "Supporto",
+    modulesTitle: "Moduli Principali dell’Ecosistema",
     modules: {
       grow: "Coltivare",
       calendar: "Calendario",
@@ -437,6 +441,7 @@ const labels = {
     operations: "Operations",
     livePathways: "Live Pathway Dem",
     support: "Support",
+    modulesTitle: "Core Ecosystem Module Dem",
     modules: {
       grow: "Grow",
       calendar: "Calendar",
@@ -539,6 +544,7 @@ const labels = {
     operations: "תפעול",
     livePathways: "מסלולים חיים",
     support: "תמיכה",
+    modulesTitle: "מודולים מרכזיים של המערכת האקולוגית",
     modules: {
       grow: "גידול",
       calendar: "לוח שנה",
@@ -765,7 +771,7 @@ export default function App() {
             <h3 style={styles.panelTitle}>{t.operations}</h3>
             <p style={styles.panelText}>{t.dashboardCards.grow.text}</p>
             <button style={styles.secondaryButton} onClick={() => setView("grow")}>
-              {t.moduleButtons.grow}
+              {t.openModule}
             </button>
           </div>
 
@@ -779,7 +785,7 @@ export default function App() {
                     style={styles.pathwayBtn}
                     onClick={() => setView(key)}
                   >
-                    {t.sections[key]}
+                    {t.modules[key]}
                   </button>
                 )
               )}
@@ -837,13 +843,13 @@ export default function App() {
         </select>
       </div>
 
-      <img src={imagePaths[key]} alt={t.sections[key as keyof typeof t.sections] || key} style={styles.sectionImage} />
+      <img src={heroImage} alt={t.appTitle} style={styles.sectionImage} />
 
       <h2 style={styles.sectionTitle}>
         {key === "calendar"
           ? t.growerCalendar
           : key === "partner"
-          ? t.supportPanelTitle
+          ? t.support
           : t.sectionTitles[key as keyof typeof t.sectionTitles]}
       </h2>
 
@@ -906,7 +912,7 @@ export default function App() {
                   ? t.growerCalendar
                   : item === "partner"
                   ? t.support
-                  : t.sections[item as keyof typeof t.sections]}
+                  : t.modules[item as keyof typeof t.modules]}
               </div>
             </button>
           ))}
