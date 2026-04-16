@@ -271,65 +271,23 @@ export default function App() {
         text="It is a place where people enter the land and find connection, work, learning, healing, and opportunity."
       />
 
-      <TextBand
-        kicker="What is live"
-        title="Visible parts of the farm, shown clearly"
-        text="No fake modules. No repeated photo trick. Just the real system pieces expressed through clean structure and clear pathways."
+      <LivePathways
+        onNavigate={(role) => {
+          setSelectedRole(role);
+          setView("role");
+        }}
       />
 
       <PathSection
-        kicker="Growing"
-        title="What’s growing is part of the story"
-        text="Crop production, land use, momentum, and the visible proof that the farm is active."
-        buttonLabel="See grower path"
-        onButton={() => {
-          setSelectedRole("grower");
-          setView("role");
-        }}
-        tone="light"
-      />
-
-      <PathSection
-        kicker="Food access"
-        title="Fresh food should feel close, simple, and real"
-        text="Shopping, pickup, SNAP-friendly access, and the customer experience belong inside the farm story, not outside it."
-        buttonLabel="See customer path"
-        onButton={() => {
-          setSelectedRole("customer");
-          setView("role");
-        }}
-        tone="dark"
-      />
-
-      <PathSection
-        kicker="Youth workforce"
-        title="Learning happens through real work"
-        text="Responsibility, structure, and growth are made visible through participation on the land."
-        buttonLabel="See youth path"
-        onButton={() => {
-          setSelectedRole("youth");
-          setView("role");
-        }}
-        tone="light"
-      />
-
-      <PathSection
-        kicker="Community"
-        title="Events and participation make the ecosystem visible"
-        text="Volunteers, visitors, partners, and community activity should feel like part of one living place."
-        buttonLabel="See volunteer path"
-        onButton={() => {
-          setSelectedRole("volunteer");
-          setView("role");
-        }}
-        tone="dark"
-      />
-
-      <TwoColumnTextSection
         kicker="Why it matters"
         title="The farm connects food, family, workforce, and community renewal"
-        left="This ecosystem is meant to serve more than one purpose. It creates visibility for growing, strengthens access to fresh food, and makes room for learning and work."
-        right="It also gives partners, volunteers, youth, customers, and families a place to belong inside one connected environment."
+        text="This ecosystem is meant to serve more than one purpose. It creates visibility for growing, strengthens access to fresh food, makes room for learning and work, and gives partners, volunteers, youth, customers, and families a place to belong."
+        buttonLabel="Enter as guest"
+        onButton={() => {
+          setSelectedRole("guest");
+          setView("role");
+        }}
+        tone="light"
       />
 
       <TextBand
@@ -412,7 +370,7 @@ function HeroSection({
     >
       <div style={styles.heroTextBlock}>
         <div style={styles.eyebrowLight}>Living ecosystem</div>
-        <h1 style={styles.heroTitle}>{title}</h1>
+        <h1 style={styles.heroTitle}>Bronson Family Farm</h1>
         <div style={styles.heroSubtitle}>{subtitle}</div>
         <p style={styles.heroDescription}>{description}</p>
         <div style={styles.heroButtonRow}>
@@ -487,6 +445,58 @@ function TextBand({
   );
 }
 
+function LivePathways({
+  onNavigate,
+}: {
+  onNavigate: (role: Role) => void;
+}) {
+  const pathways = [
+    {
+      title: "Growing",
+      text: "See what is actively growing and how the land is being used.",
+      role: "grower" as Role,
+    },
+    {
+      title: "Food Access",
+      text: "Explore fresh food, availability, and how people connect to it.",
+      role: "customer" as Role,
+    },
+    {
+      title: "Youth Workforce",
+      text: "Understand how young people learn through real work.",
+      role: "youth" as Role,
+    },
+    {
+      title: "Community",
+      text: "See events, volunteers, and how people gather here.",
+      role: "volunteer" as Role,
+    },
+  ];
+
+  return (
+    <section style={styles.liveSection}>
+      <div style={styles.container}>
+        <div style={styles.eyebrowDark}>What is live</div>
+        <h2 style={styles.liveTitle}>Step into the active parts of the farm</h2>
+
+        <div style={styles.liveGrid}>
+          {pathways.map((item) => (
+            <button
+              key={item.title}
+              style={styles.liveCard}
+              onClick={() => onNavigate(item.role)}
+            >
+              <div style={styles.liveCardTitle}>{item.title}</div>
+              <div style={styles.liveCardText}>{item.text}</div>
+              <div style={styles.liveCardAction}>Enter →</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function PathSection({
   kicker,
   title,
@@ -517,31 +527,6 @@ function PathSection({
           <button style={isDark ? styles.primaryButton : styles.darkButton} onClick={onButton}>
             {buttonLabel}
           </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TwoColumnTextSection({
-  kicker,
-  title,
-  left,
-  right,
-}: {
-  kicker: string;
-  title: string;
-  left: string;
-  right: string;
-}) {
-  return (
-    <section style={styles.twoColumnSection}>
-      <div style={styles.container}>
-        <div style={styles.eyebrowDark}>{kicker}</div>
-        <h2 style={styles.twoColumnTitle}>{title}</h2>
-        <div style={styles.twoColumnGrid}>
-          <p style={styles.twoColumnText}>{left}</p>
-          <p style={styles.twoColumnText}>{right}</p>
         </div>
       </div>
     </section>
@@ -808,6 +793,58 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.78,
   },
 
+  liveSection: {
+    background: "#f7faf5",
+    padding: "72px 0",
+  },
+
+  liveTitle: {
+    margin: 0,
+    fontSize: "clamp(2rem, 4vw, 3rem)",
+    color: "#17311f",
+    fontWeight: 500,
+    maxWidth: 720,
+  },
+
+  liveGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: 18,
+    marginTop: 32,
+  },
+
+  liveCard: {
+    background: "#ffffff",
+    borderRadius: 20,
+    padding: "22px 20px",
+    textAlign: "left",
+    border: "1px solid rgba(23,49,31,0.08)",
+    cursor: "pointer",
+    boxShadow: "0 14px 30px rgba(19,45,28,0.08)",
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
+
+  liveCardTitle: {
+    fontSize: 20,
+    fontWeight: 500,
+    color: "#183220",
+  },
+
+  liveCardText: {
+    fontSize: 15,
+    color: "#5a705f",
+    lineHeight: 1.6,
+  },
+
+  liveCardAction: {
+    marginTop: 8,
+    fontSize: 14,
+    color: "#7aa95c",
+    fontWeight: 500,
+  },
+
   pathSectionLight: {
     background: "#eef4e8",
     padding: "54px 0",
@@ -869,35 +906,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 18,
     lineHeight: 1.76,
     color: "rgba(255,255,255,0.88)",
-  },
-
-  twoColumnSection: {
-    background: "#f8fbf6",
-    padding: "72px 0",
-  },
-
-  twoColumnTitle: {
-    margin: 0,
-    fontSize: "clamp(2rem, 4vw, 3rem)",
-    lineHeight: 1.08,
-    color: "#17311f",
-    fontWeight: 500,
-    textWrap: "balance",
-    maxWidth: 760,
-  },
-
-  twoColumnGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 24,
-    marginTop: 24,
-  },
-
-  twoColumnText: {
-    margin: 0,
-    fontSize: 18,
-    lineHeight: 1.78,
-    color: "#556c5b",
   },
 
   roleEntrySection: {
