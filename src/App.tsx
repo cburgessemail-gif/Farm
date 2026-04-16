@@ -1,316 +1,120 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-type Panel = "dashboard" | "grow" | "calendar" | "shop" | "story" | "community";
+const images = {
+  hero: "/hero.jpg",
+  grow: "/grow.jpg",
+  market: "/market.jpg",
+  calendar: "/calendar.jpg",
+  community: "/community.jpg",
+  education: "/education.jpg",
+};
 
-const HERO_IMAGE = "/GrowArea.jpg";
-const STORY_IMAGE = "/GrowArea2.jpg";
+const languages = ["EN", "ES", "TL", "IT", "PATWA", "HE"];
 
 export default function App() {
-  const [panel, setPanel] = useState<Panel>("dashboard");
+  const [role, setRole] = useState<null | string>(null);
+  const [lang, setLang] = useState("EN");
+
+  if (!role) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-green-900 text-white">
+        <h1 className="text-4xl mb-6">Bronson Family Farm</h1>
+        <p className="mb-6">Enter the Ecosystem</p>
+
+        <div className="flex gap-4 mb-8">
+          <button onClick={() => setRole("guest")} className="btn">Guest</button>
+          <button onClick={() => setRole("grower")} className="btn">Grower</button>
+          <button onClick={() => setRole("customer")} className="btn">Customer</button>
+        </div>
+
+        <div className="flex gap-2">
+          {languages.map(l => (
+            <button key={l} onClick={() => setLang(l)} className="px-2">
+              {l}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={styles.app}>
-      <aside style={styles.sidebar}>
-        <h2 style={styles.logo}>Bronson Farm</h2>
+    <div className="font-sans text-gray-900">
 
-        {["dashboard", "grow", "calendar", "shop", "story", "community"].map((item) => (
-          <button
-            key={item}
-            style={{
-              ...styles.navBtn,
-              ...(panel === item ? styles.active : {}),
-            }}
-            onClick={() => setPanel(item as Panel)}
-          >
-            {item.toUpperCase()}
-          </button>
-        ))}
-      </aside>
+      {/* NAV */}
+      <nav className="fixed top-0 w-full bg-white shadow p-4 flex justify-between z-50">
+        <div className="font-bold">BFF</div>
+        <div className="flex gap-4">
+          <a href="#grow">Grow</a>
+          <a href="#market">Market</a>
+          <a href="#calendar">Calendar</a>
+          <a href="#community">Community</a>
+        </div>
+      </nav>
 
-      <main style={styles.main}>
-        {panel === "dashboard" && <Dashboard setPanel={setPanel} />}
-        {panel === "grow" && <Grow />}
-        {panel === "calendar" && <Calendar />}
-        {panel === "shop" && <Shop />}
-        {panel === "story" && <Story />}
-        {panel === "community" && <Community />}
-      </main>
+      {/* HERO */}
+      <section
+        style={{ backgroundImage: `url(${images.hero})` }}
+        className="h-screen bg-cover bg-center flex items-center justify-center text-white"
+      >
+        <div className="bg-black/40 p-10 rounded-xl text-center">
+          <h1 className="text-5xl mb-4">Farm & Family Ecosystem</h1>
+          <p>Role: {role.toUpperCase()} | Language: {lang}</p>
+        </div>
+      </section>
+
+      {/* GROW */}
+      <section
+        id="grow"
+        style={{ backgroundImage: `url(${images.grow})` }}
+        className="h-screen bg-cover bg-center flex items-center p-10 text-white"
+      >
+        <div className="bg-black/40 p-6 rounded-xl max-w-xl">
+          <h2 className="text-3xl mb-4">Grower Hub</h2>
+          <p>Track crops, seedlings, and planting cycles.</p>
+        </div>
+      </section>
+
+      {/* MARKET */}
+      <section
+        id="market"
+        style={{ backgroundImage: `url(${images.market})` }}
+        className="h-screen bg-cover bg-center flex items-center p-10 text-white"
+      >
+        <div className="bg-black/40 p-6 rounded-xl max-w-xl">
+          <h2 className="text-3xl mb-4">Marketplace</h2>
+          <p>Buy seedlings, produce, and supplies.</p>
+        </div>
+      </section>
+
+      {/* CALENDAR */}
+      <section
+        id="calendar"
+        style={{ backgroundImage: `url(${images.calendar})` }}
+        className="h-screen bg-cover bg-center flex items-center p-10 text-white"
+      >
+        <div className="bg-black/40 p-6 rounded-xl max-w-xl">
+          <h2 className="text-3xl mb-4">Grower Calendar</h2>
+          <ul>
+            <li>🌱 Seed Start – April</li>
+            <li>🌿 Transplant – May</li>
+            <li>🌽 Harvest – Summer</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* COMMUNITY */}
+      <section
+        id="community"
+        style={{ backgroundImage: `url(${images.community})` }}
+        className="h-screen bg-cover bg-center flex items-center p-10 text-white"
+      >
+        <div className="bg-black/40 p-6 rounded-xl max-w-xl">
+          <h2 className="text-3xl mb-4">Community</h2>
+          <p>Workforce training, youth programs, volunteers.</p>
+        </div>
+      </section>
+
     </div>
   );
 }
-
-function Dashboard({ setPanel }: { setPanel: (panel: Panel) => void }) {
-  return (
-    <>
-      <img src={HERO_IMAGE} alt="Bronson Family Farm" style={styles.hero} />
-
-      <h1 style={styles.title}>LIVE ECOSYSTEM</h1>
-      <p style={styles.text}>This is not a presentation. This is a working system.</p>
-
-      <div style={styles.grid}>
-        <Card title="GROW" onClick={() => setPanel("grow")} text="Crop flow, irrigation, and production status." />
-        <Card title="SHOP" onClick={() => setPanel("shop")} text="Live store access and market readiness." />
-        <Card title="CALENDAR" onClick={() => setPanel("calendar")} text="Tasks, timing, and daily farm rhythm." />
-        <Card title="STORY" onClick={() => setPanel("story")} text="Legacy, land, place, and future." />
-        <Card title="COMMUNITY" onClick={() => setPanel("community")} text="Volunteers, families, and partners." />
-      </div>
-    </>
-  );
-}
-
-function Grow() {
-  return (
-    <>
-      <h2>Grower System</h2>
-      <div style={styles.grid2}>
-        <div style={styles.cardStatic}>
-          <h3>Production Status</h3>
-          <p>Collards: Ready</p>
-          <p>Peppers: Growing</p>
-          <p>Tomatoes: Transplanting</p>
-        </div>
-
-        <div style={styles.cardStatic}>
-          <h3>Next Actions</h3>
-          <p>• Watering cycle</p>
-          <p>• Harvest prep</p>
-          <p>• Market packaging</p>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function Calendar() {
-  return (
-    <>
-      <h2>Farm Calendar</h2>
-      <table style={styles.table}>
-        <thead>
-          <tr>
-            <th style={styles.th}>Time</th>
-            <th style={styles.th}>Task</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style={styles.td}>7:00 AM</td>
-            <td style={styles.td}>Water Plants</td>
-          </tr>
-          <tr>
-            <td style={styles.td}>9:00 AM</td>
-            <td style={styles.td}>Harvest Greens</td>
-          </tr>
-          <tr>
-            <td style={styles.td}>12:00 PM</td>
-            <td style={styles.td}>Prep Market</td>
-          </tr>
-          <tr>
-            <td style={styles.td}>4:00 PM</td>
-            <td style={styles.td}>Farmers Market</td>
-          </tr>
-        </tbody>
-      </table>
-    </>
-  );
-}
-
-function Shop() {
-  return (
-    <>
-      <h2>Marketplace</h2>
-      <div style={styles.grid2}>
-        <div style={styles.cardStatic}>
-          <h3>Market Readiness</h3>
-          <p>Bubble Babies: Available</p>
-          <p>Seedlings: In season</p>
-          <p>Fresh produce: Market-based</p>
-        </div>
-
-        <div style={styles.cardStatic}>
-          <h3>Store Access</h3>
-          <p>Open the live Bronson Family Farm GrownBy store.</p>
-          <button
-            style={styles.button}
-            onClick={() =>
-              window.open(
-                "https://grownby.com/farms/bronson-family-farm/shop",
-                "_blank"
-              )
-            }
-          >
-            OPEN LIVE STORE
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function Story() {
-  return (
-    <>
-      <h2>Our Story</h2>
-      <img src={STORY_IMAGE} alt="Story" style={styles.sectionImg} />
-      <div style={styles.cardStatic}>
-        <h3>Legacy + Place</h3>
-        <p>
-          Bronson Family Farm is more than a farm. It is legacy, land, renewal,
-          and the future growing from one place.
-        </p>
-      </div>
-    </>
-  );
-}
-
-function Community() {
-  return (
-    <>
-      <h2>Community</h2>
-      <div style={styles.grid2}>
-        <div style={styles.cardStatic}>
-          <h3>Volunteers</h3>
-          <p>Support planting, setup, logistics, and farm activity.</p>
-        </div>
-        <div style={styles.cardStatic}>
-          <h3>Partners</h3>
-          <p>Join infrastructure, workforce, wellness, and food access efforts.</p>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function Card({
-  title,
-  onClick,
-  text,
-}: {
-  title: string;
-  onClick: () => void;
-  text: string;
-}) {
-  return (
-    <div style={styles.card} onClick={onClick}>
-      <h3>{title}</h3>
-      <p style={styles.cardText}>{text}</p>
-    </div>
-  );
-}
-
-const styles: Record<string, React.CSSProperties> = {
-  app: {
-    display: "grid",
-    gridTemplateColumns: "250px 1fr",
-    minHeight: "100vh",
-    fontFamily: "Arial, sans-serif",
-    background: "#dfe8e0",
-  },
-  sidebar: {
-    background: "#e9f2ea",
-    padding: "20px",
-    borderRight: "1px solid #cfd9d1",
-  },
-  logo: {
-    marginBottom: 20,
-    fontSize: 24,
-    fontWeight: 700,
-  },
-  navBtn: {
-    display: "block",
-    width: "100%",
-    padding: "12px",
-    marginBottom: "10px",
-    cursor: "pointer",
-    border: "1px solid #9fb09f",
-    background: "#ffffff",
-    fontSize: 14,
-    fontWeight: 700,
-  },
-  active: {
-    background: "#2f6b3c",
-    color: "#fff",
-  },
-  main: {
-    padding: "20px",
-    overflow: "auto",
-  },
-  hero: {
-    width: "100%",
-    height: 250,
-    objectFit: "cover",
-    marginBottom: "20px",
-    border: "1px solid #bfcabf",
-  },
-  title: {
-    fontSize: 42,
-    marginBottom: 12,
-  },
-  text: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: 20,
-  },
-  grid2: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "20px",
-    marginTop: "20px",
-  },
-  card: {
-    background: "#fff",
-    padding: 20,
-    cursor: "pointer",
-    border: "1px solid #d0d0d0",
-    minHeight: 160,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  cardStatic: {
-    background: "#fff",
-    padding: 20,
-    border: "1px solid #d0d0d0",
-    minHeight: 140,
-  },
-  cardText: {
-    marginTop: 12,
-    lineHeight: 1.5,
-  },
-  sectionImg: {
-    width: "100%",
-    height: 220,
-    objectFit: "cover",
-    marginBottom: 20,
-    border: "1px solid #ddd",
-  },
-  button: {
-    padding: 15,
-    background: "#2f6b3c",
-    color: "#fff",
-    border: "none",
-    cursor: "pointer",
-    fontWeight: 700,
-    marginTop: 12,
-  },
-  table: {
-    width: "100%",
-    marginTop: 20,
-    borderCollapse: "collapse",
-    background: "#fff",
-  },
-  th: {
-    textAlign: "left",
-    padding: 12,
-    border: "1px solid #d0d0d0",
-    background: "#eef4ef",
-  },
-  td: {
-    padding: 12,
-    border: "1px solid #d0d0d0",
-  },
-};
