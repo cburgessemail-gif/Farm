@@ -1,569 +1,852 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 type Lang = "en" | "es" | "tl" | "it" | "patwa" | "he";
-type Section = "home" | "grow" | "shop" | "story" | "workforce" | "community" | "events";
+type Panel =
+  | "dashboard"
+  | "grow"
+  | "calendar"
+  | "shop"
+  | "story"
+  | "workforce"
+  | "community"
+  | "events"
+  | "partner";
 
-const imagePaths: Record<string, string> = {
-  hero: "/GrowArea.jpg",
-  grow: "/GrowArea.jpg",
-  shop: "/GrowArea.jpg",
-  story: "/GrowArea2.jpg",
-  workforce: "/GrowArea2.jpg",
-  community: "/GrowArea2.jpg",
-  events: "/GrowArea2.jpg",
-};
+const HERO_IMAGE = "/GrowArea.jpg";
+const STORY_IMAGE = "/GrowArea2.jpg";
 
 const labels = {
   en: {
-    title: "Bronson Family Farm",
-    subtitle:
-      "A living ecosystem rooted in food, family, land, learning, and opportunity.",
-    intro:
-      "Bronson Family Farm connects food, family, workforce, wellness, and community participation through a living land-based system.",
-    enter: "Enter the Ecosystem",
-    back: "← Back to Ecosystem",
-    preview: "Explore the ecosystem",
-    askTitle: "Why this matters",
-    askText:
-      "Bronson Family Farm is building a working ecosystem where land, learning, food access, workforce development, and community renewal grow together.",
-    askButton: "View the Opportunity",
+    appTitle: "Bronson Family Farm",
+    dashboardTitle: "Live Ecosystem Workspace",
+    heroTitle: "Bronson Family Farm Live Demo",
+    heroText:
+      "A living ecosystem where food, land, family, youth opportunity, wellness, and community renewal work together in one place.",
+    navTitle: "Navigate",
+    quickTitle: "Quick Actions",
     openShop: "Open GrownBy Shop",
-    returnHome: "Return to Ecosystem",
-    supportButton: "Support the Ecosystem",
-    modulesTitle: "Core Ecosystem Modules",
-    modules: {
-      why: {
-        title: "Why This Matters",
-        text:
-          "Food access, land stewardship, youth opportunity, and community renewal are being developed together instead of separately.",
-      },
-      build: {
-        title: "What We Are Building",
-        text:
-          "A living ecosystem in Youngstown that connects production, education, family engagement, workforce pathways, commerce, and public activation.",
-      },
-      partner: {
-        title: "Opportunity to Partner",
-        text:
-          "Aligned support can expand infrastructure, irrigation, equipment, programming, and the physical capacity needed to activate this ecosystem at scale.",
-      },
-      pathways: {
-        title: "Live Pathways",
-        text:
-          "Grow, Shop, Story, Workforce, Community, and Events all connect to one unified experience instead of functioning as separate pieces.",
-      },
-    },
+    supportNow: "Support the Ecosystem",
+    dashboard: "Dashboard",
     sections: {
+      dashboard: "Dashboard",
       grow: "Grow",
+      calendar: "Calendar",
       shop: "Shop",
       story: "Story",
       workforce: "Workforce",
       community: "Community",
       events: "Events",
+      partner: "Partner",
     },
-    sectionText: {
-      grow: "Crop planning, production, and stewardship.",
-      shop: "Fresh goods and live purchasing pathways.",
-      story: "History, vision, place, and purpose.",
-      workforce: "Youth opportunity and practical learning.",
-      community: "Volunteers, families, and partners.",
-      events: "Markets, tours, and activation.",
+    stats: {
+      title: "Live Snapshot",
+      acres: "Active acres",
+      languages: "Languages",
+      pathways: "Pathways",
+      market: "Market path",
     },
-    details: {
+    calendar: {
+      title: "Grower Calendar",
+      time: "Time",
+      task: "Task",
+      owner: "Owner",
+      status: "Status",
+      ready: "Ready",
+      active: "Active",
+      pending: "Pending",
+    },
+    workspaceTitles: {
+      dashboard: "Operations Dashboard",
+      grow: "Grower Operations",
+      calendar: "Grower Calendar",
+      shop: "Shop + Market Flow",
+      story: "Story + Place",
+      workforce: "Workforce Pathway",
+      community: "Community Participation",
+      events: "Events + Activation",
+      partner: "Partner Opportunity",
+    },
+    workspaceText: {
+      dashboard:
+        "This dashboard keeps the ecosystem visible as a working system rather than a presentation. Calendar, pathways, support, and operations stay in view together.",
       grow:
-        "Explore crop planning, planting flow, growing capacity, irrigation thinking, and the systems needed to sustain real farm production.",
+        "Grower operations include crop flow, field readiness, irrigation thinking, and seasonal priorities that sustain real production.",
+      calendar:
+        "The calendar makes the ecosystem feel alive by showing tasks, milestones, and the working rhythm of the farm.",
       shop:
-        "This area represents fresh goods, value-added offerings, and the path from ecosystem visibility to real purchasing through Bronson Family Farm.",
+        "The shop pathway connects the ecosystem to actual purchasing, customer visibility, and the live GrownBy store.",
       story:
-        "Bronson Family Farm is more than a farm. It is a community-rooted vision shaped by legacy, land, service, and the belief that renewal can grow from place.",
+        "Bronson Family Farm is more than a farm. It is a community-rooted vision shaped by legacy, land, service, and renewal.",
       workforce:
-        "This area highlights youth opportunity, hands-on learning, responsibility, confidence-building, and practical pathways into future work and leadership.",
+        "The workforce pathway links youth opportunity, responsibility, practical learning, and confidence-building.",
       community:
-        "This section shows how volunteers, families, supporters, institutions, and local partners can step into the ecosystem in meaningful ways.",
+        "The community pathway shows how volunteers, families, institutions, and supporters can participate meaningfully.",
       events:
-        "This area highlights markets, tours, public demonstrations, educational gatherings, and the visible activation of the full ecosystem.",
+        "Events, markets, demonstrations, and tours make the ecosystem public, welcoming, and active.",
+      partner:
+        "The partner pathway presents the opportunity to support infrastructure, irrigation, equipment, systems, programming, and long-term activation.",
     },
-    supportTitle: "Partner with Bronson Family Farm",
-    supportText:
-      "Support can help expand infrastructure, irrigation, equipment, programming, and the long-term operating capacity needed to activate this ecosystem at scale.",
-    moduleButtons: {
-      grow: "Open Grow",
-      shop: "Open Shop",
-      story: "Open Story",
-      workforce: "Open Workforce",
-      community: "Open Community",
-      events: "Open Events",
+    support: {
+      title: "Why This Matters",
+      text:
+        "This is not simply about crops. It is about food access, land stewardship, youth opportunity, wellness, family legacy, and community renewal growing together.",
     },
+    modulesTitle: "Active Modules",
+    moduleCards: {
+      grow: "Crop flow, irrigation, and field readiness.",
+      calendar: "Schedule, milestones, and production rhythm.",
+      shop: "Live purchase path and customer visibility.",
+      story: "Vision, place, legacy, and ecosystem context.",
+      workforce: "Youth pathway, roles, skills, and learning.",
+      community: "Volunteers, partners, families, and support.",
+      events: "Markets, tours, demonstrations, and check-in.",
+      partner: "Infrastructure, systems, and activation support.",
+    },
+    openPanel: "Open panel",
+    today: "Today",
   },
 
   es: {
-    title: "Bronson Family Farm",
-    subtitle:
-      "Un ecosistema vivo con raíces en la comida, la familia, la tierra y la oportunidad.",
-    intro:
-      "Bronson Family Farm conecta alimentos, familia, trabajo, bienestar y participación comunitaria a través de un sistema vivo basado en la tierra.",
-    enter: "Entrar al Ecosistema",
-    back: "← Volver al Ecosistema",
-    preview: "Explorar el ecosistema",
-    askTitle: "Por qué importa",
-    askText:
-      "Bronson Family Farm está construyendo un ecosistema vivo donde la tierra, el aprendizaje, el acceso a alimentos, el desarrollo laboral y la renovación comunitaria crecen juntos.",
-    askButton: "Ver la Oportunidad",
+    appTitle: "Bronson Family Farm",
+    dashboardTitle: "Espacio Vivo del Ecosistema",
+    heroTitle: "Demostración en Vivo de Bronson Family Farm",
+    heroText:
+      "Un ecosistema vivo donde comida, tierra, familia, oportunidad juvenil, bienestar y renovación comunitaria trabajan juntos en un solo lugar.",
+    navTitle: "Navegar",
+    quickTitle: "Acciones Rápidas",
     openShop: "Abrir tienda GrownBy",
-    returnHome: "Volver al Ecosistema",
-    supportButton: "Apoyar el Ecosistema",
-    modulesTitle: "Módulos Principales del Ecosistema",
-    modules: {
-      why: {
-        title: "Por Qué Importa",
-        text:
-          "El acceso a alimentos, el cuidado de la tierra, la oportunidad juvenil y la renovación comunitaria se desarrollan juntos, no por separado.",
-      },
-      build: {
-        title: "Lo Que Estamos Construyendo",
-        text:
-          "Un ecosistema vivo en Youngstown que conecta producción, educación, participación familiar, rutas laborales, comercio y activación pública.",
-      },
-      partner: {
-        title: "Oportunidad de Colaborar",
-        text:
-          "El apoyo alineado puede ampliar infraestructura, riego, equipos, programación y la capacidad física necesaria para activar este ecosistema a gran escala.",
-      },
-      pathways: {
-        title: "Rutas Vivas",
-        text:
-          "Cultivar, Comprar, Historia, Trabajo, Comunidad y Eventos se conectan en una sola experiencia unificada.",
-      },
-    },
+    supportNow: "Apoyar el Ecosistema",
+    dashboard: "Panel",
     sections: {
+      dashboard: "Panel",
       grow: "Cultivar",
+      calendar: "Calendario",
       shop: "Comprar",
       story: "Historia",
       workforce: "Trabajo",
       community: "Comunidad",
       events: "Eventos",
+      partner: "Alianza",
     },
-    sectionText: {
-      grow: "Planificación de cultivos, producción y cuidado.",
-      shop: "Productos frescos y rutas reales de compra.",
-      story: "Historia, visión, lugar y propósito.",
-      workforce: "Oportunidad juvenil y aprendizaje práctico.",
-      community: "Voluntarios, familias y aliados.",
-      events: "Mercados, recorridos y activación.",
+    stats: {
+      title: "Resumen en Vivo",
+      acres: "Acres activos",
+      languages: "Idiomas",
+      pathways: "Rutas",
+      market: "Ruta de mercado",
     },
-    details: {
+    calendar: {
+      title: "Calendario del Productor",
+      time: "Hora",
+      task: "Tarea",
+      owner: "Responsable",
+      status: "Estado",
+      ready: "Listo",
+      active: "Activo",
+      pending: "Pendiente",
+    },
+    workspaceTitles: {
+      dashboard: "Panel de Operaciones",
+      grow: "Operaciones del Cultivo",
+      calendar: "Calendario del Productor",
+      shop: "Tienda y Flujo de Mercado",
+      story: "Historia y Lugar",
+      workforce: "Ruta Laboral",
+      community: "Participación Comunitaria",
+      events: "Eventos y Activación",
+      partner: "Oportunidad de Alianza",
+    },
+    workspaceText: {
+      dashboard:
+        "Este panel mantiene visible el ecosistema como un sistema de trabajo y no como una presentación. Calendario, rutas, apoyo y operaciones permanecen juntos.",
       grow:
-        "Explore la planificación de cultivos, el flujo de siembra, la capacidad de producción y los sistemas necesarios para sostener una granja real.",
+        "Las operaciones del cultivo incluyen flujo de siembra, preparación del terreno, riego y prioridades estacionales que sostienen la producción real.",
+      calendar:
+        "El calendario hace que el ecosistema se sienta vivo al mostrar tareas, hitos y el ritmo de trabajo real de la granja.",
       shop:
-        "Esta área representa productos frescos, ofertas con valor agregado y el camino desde la visibilidad del ecosistema hasta la compra real.",
+        "La ruta de tienda conecta el ecosistema con compras reales, visibilidad del cliente y la tienda GrownBy en vivo.",
       story:
-        "Bronson Family Farm es más que una granja. Es una visión comunitaria formada por legado, tierra, servicio y la creencia de que la renovación puede crecer desde el lugar.",
+        "Bronson Family Farm es más que una granja. Es una visión comunitaria formada por legado, tierra, servicio y renovación.",
       workforce:
-        "Esta área destaca la oportunidad juvenil, el aprendizaje práctico, la responsabilidad y las rutas hacia el trabajo y el liderazgo futuros.",
+        "La ruta laboral conecta oportunidad juvenil, responsabilidad, aprendizaje práctico y desarrollo de confianza.",
       community:
-        "Esta sección muestra cómo voluntarios, familias, instituciones y aliados locales pueden entrar al ecosistema de manera significativa.",
+        "La ruta comunitaria muestra cómo voluntarios, familias, instituciones y aliados pueden participar de manera significativa.",
       events:
-        "Esta área destaca mercados, recorridos, demostraciones públicas, encuentros educativos y la activación visible del ecosistema completo.",
+        "Eventos, mercados, demostraciones y recorridos hacen que el ecosistema sea público, acogedor y activo.",
+      partner:
+        "La ruta de alianza presenta la oportunidad de apoyar infraestructura, riego, equipos, sistemas, programación y activación a largo plazo.",
     },
-    supportTitle: "Asóciese con Bronson Family Farm",
-    supportText:
-      "El apoyo puede ayudar a ampliar infraestructura, riego, equipos, programación y la capacidad operativa a largo plazo necesaria para activar este ecosistema a escala.",
-    moduleButtons: {
-      grow: "Abrir Cultivar",
-      shop: "Abrir Comprar",
-      story: "Abrir Historia",
-      workforce: "Abrir Trabajo",
-      community: "Abrir Comunidad",
-      events: "Abrir Eventos",
+    support: {
+      title: "Por Qué Importa",
+      text:
+        "No se trata solo de cultivos. Se trata de acceso a alimentos, cuidado de la tierra, oportunidad juvenil, bienestar, legado familiar y renovación comunitaria creciendo juntos.",
     },
+    modulesTitle: "Módulos Activos",
+    moduleCards: {
+      grow: "Flujo de cultivos, riego y preparación del terreno.",
+      calendar: "Horario, hitos y ritmo de producción.",
+      shop: "Ruta de compra en vivo y visibilidad del cliente.",
+      story: "Visión, lugar, legado y contexto del ecosistema.",
+      workforce: "Ruta juvenil, roles, habilidades y aprendizaje.",
+      community: "Voluntarios, aliados, familias y apoyo.",
+      events: "Mercados, recorridos, demostraciones y registro.",
+      partner: "Infraestructura, sistemas y apoyo de activación.",
+    },
+    openPanel: "Abrir panel",
+    today: "Hoy",
   },
 
   tl: {
-    title: "Bronson Family Farm",
-    subtitle:
-      "Isang buhay na ecosystem na nakaugat sa pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
-    intro:
-      "Pinagdurugtong ng Bronson Family Farm ang pagkain, pamilya, trabaho, kalusugan, at pakikilahok ng komunidad sa pamamagitan ng isang buhay na sistemang nakabatay sa lupa.",
-    enter: "Pumasok sa Ecosystem",
-    back: "← Bumalik sa Ecosystem",
-    preview: "Tuklasin ang ecosystem",
-    askTitle: "Bakit ito mahalaga",
-    askText:
-      "Ang Bronson Family Farm ay bumubuo ng isang gumaganang ecosystem kung saan sabay-sabay na lumalago ang lupa, pagkatuto, access sa pagkain, pag-unlad sa trabaho, at pagbangon ng komunidad.",
-    askButton: "Tingnan ang Oportunidad",
+    appTitle: "Bronson Family Farm",
+    dashboardTitle: "Live Ecosystem Workspace",
+    heroTitle: "Bronson Family Farm Live Demo",
+    heroText:
+      "Isang buhay na ecosystem kung saan nagtutulungan ang pagkain, lupa, pamilya, oportunidad para sa kabataan, kalusugan, at pagbangon ng komunidad.",
+    navTitle: "Nabigasyon",
+    quickTitle: "Mabilis na Gawain",
     openShop: "Buksan ang GrownBy Shop",
-    returnHome: "Bumalik sa Ecosystem",
-    supportButton: "Suportahan ang Ecosystem",
-    modulesTitle: "Pangunahing Mga Module ng Ecosystem",
-    modules: {
-      why: {
-        title: "Bakit Mahalaga Ito",
-        text:
-          "Ang access sa pagkain, pangangalaga sa lupa, oportunidad para sa kabataan, at pagbangon ng komunidad ay pinauunlad nang magkakasama.",
-      },
-      build: {
-        title: "Ano ang Binubuo Namin",
-        text:
-          "Isang buhay na ecosystem sa Youngstown na nag-uugnay sa produksyon, edukasyon, pamilya, hanapbuhay, kalakalan, at pampublikong aktibasyon.",
-      },
-      partner: {
-        title: "Oportunidad na Makipagpartner",
-        text:
-          "Ang suportang naaayon sa layunin ay makakatulong sa imprastraktura, irigasyon, kagamitan, programming, at kapasidad na kailangan upang mapalago ang ecosystem na ito.",
-      },
-      pathways: {
-        title: "Buhay na mga Daan",
-        text:
-          "Ang Pagtatanim, Pamimili, Kuwento, Hanapbuhay, Komunidad, at Mga Kaganapan ay bahagi ng iisang nagkakaisang karanasan.",
-      },
-    },
+    supportNow: "Suportahan ang Ecosystem",
+    dashboard: "Dashboard",
     sections: {
+      dashboard: "Dashboard",
       grow: "Pagtatanim",
+      calendar: "Kalendaryo",
       shop: "Pamimili",
       story: "Kuwento",
       workforce: "Hanapbuhay",
       community: "Komunidad",
       events: "Mga Kaganapan",
+      partner: "Partner",
     },
-    sectionText: {
-      grow: "Pagpaplano ng tanim, produksyon, at pangangalaga.",
-      shop: "Sariwang produkto at tunay na daan sa pagbili.",
-      story: "Kasaysayan, bisyon, lugar, at layunin.",
-      workforce: "Oportunidad para sa kabataan at praktikal na pagkatuto.",
-      community: "Mga boluntaryo, pamilya, at mga katuwang.",
-      events: "Mga pamilihan, pagbisita, at aktibasyon.",
+    stats: {
+      title: "Live Snapshot",
+      acres: "Aktibong acres",
+      languages: "Mga wika",
+      pathways: "Mga daan",
+      market: "Market path",
     },
-    details: {
+    calendar: {
+      title: "Grower Calendar",
+      time: "Oras",
+      task: "Gawain",
+      owner: "May hawak",
+      status: "Estado",
+      ready: "Handa",
+      active: "Aktibo",
+      pending: "Nakahintay",
+    },
+    workspaceTitles: {
+      dashboard: "Operations Dashboard",
+      grow: "Grower Operations",
+      calendar: "Grower Calendar",
+      shop: "Shop at Market Flow",
+      story: "Kuwento at Lugar",
+      workforce: "Workforce Pathway",
+      community: "Pakikilahok ng Komunidad",
+      events: "Mga Kaganapan at Aktibasyon",
+      partner: "Partner Opportunity",
+    },
+    workspaceText: {
+      dashboard:
+        "Ipinapakita ng dashboard na ito ang ecosystem bilang isang gumaganang sistema at hindi simpleng presentasyon. Nananatiling nakikita ang kalendaryo, pathways, support, at operations.",
       grow:
-        "Tuklasin ang pagpaplano ng tanim, daloy ng pagtatanim, kapasidad ng produksyon, pag-iisip sa irigasyon, at mga sistemang kailangan upang mapanatili ang tunay na produksyon sa bukid.",
+        "Kasama sa grower operations ang daloy ng tanim, kahandaan ng bukid, pag-iisip sa irigasyon, at pana-panahong prayoridad para sa produksyon.",
+      calendar:
+        "Ang kalendaryo ang nagbibigay-buhay sa ecosystem sa pamamagitan ng pagpapakita ng mga gawain, milestones, at ritmo ng bukid.",
       shop:
-        "Kinakatawan ng bahaging ito ang sariwang produkto, value-added offerings, at ang daan mula sa pagkakakilala sa ecosystem hanggang sa aktuwal na pagbili sa Bronson Family Farm.",
+        "Ikinokonekta ng shop pathway ang ecosystem sa tunay na pagbili, visibility ng customer, at live GrownBy store.",
       story:
-        "Ang Bronson Family Farm ay higit pa sa isang bukid. Isa itong pananaw na nakaugat sa komunidad na hinubog ng pamana, lupa, paglilingkod, at paniniwalang ang pagbangon ay maaaring lumago mula sa lugar.",
+        "Ang Bronson Family Farm ay higit pa sa isang bukid. Isa itong pananaw na nakaugat sa komunidad, pamana, lupa, serbisyo, at pagbangon.",
       workforce:
-        "Itinatampok ng bahaging ito ang oportunidad para sa kabataan, hands-on na pagkatuto, pananagutan, pagbuo ng kumpiyansa, at praktikal na landas tungo sa trabaho at pamumuno sa hinaharap.",
+        "Ikinokonekta ng workforce pathway ang oportunidad para sa kabataan, pananagutan, praktikal na pagkatuto, at pagbuo ng kumpiyansa.",
       community:
-        "Ipinapakita ng bahaging ito kung paano makakapasok nang makabuluhan sa ecosystem ang mga boluntaryo, pamilya, tagasuporta, institusyon, at lokal na katuwang.",
+        "Ipinapakita ng community pathway kung paano makikilahok nang makabuluhan ang mga boluntaryo, pamilya, institusyon, at tagasuporta.",
       events:
-        "Itinatampok ng bahaging ito ang mga pamilihan, pagbisita, pampublikong demonstrasyon, pang-edukasyong pagtitipon, at ang nakikitang pag-activate ng buong ecosystem.",
+        "Ang mga event, market, demonstration, at tours ang nagpapakitang bukas, buhay, at aktibo ang ecosystem.",
+      partner:
+        "Ipinapakita ng partner pathway ang oportunidad na suportahan ang imprastraktura, irigasyon, kagamitan, systems, programming, at pangmatagalang activation.",
     },
-    supportTitle: "Makipagpartner sa Bronson Family Farm",
-    supportText:
-      "Makakatulong ang suporta sa pagpapalawak ng imprastraktura, irigasyon, kagamitan, programming, at pangmatagalang kapasidad na kailangan upang mapatakbo ang ecosystem na ito sa mas malaking saklaw.",
-    moduleButtons: {
-      grow: "Buksan ang Pagtatanim",
-      shop: "Buksan ang Pamimili",
-      story: "Buksan ang Kuwento",
-      workforce: "Buksan ang Hanapbuhay",
-      community: "Buksan ang Komunidad",
-      events: "Buksan ang Mga Kaganapan",
+    support: {
+      title: "Bakit Ito Mahalaga",
+      text:
+        "Hindi lang ito tungkol sa pananim. Ito ay tungkol sa access sa pagkain, pangangalaga sa lupa, oportunidad para sa kabataan, kalusugan, pamana ng pamilya, at pagbangon ng komunidad.",
     },
+    modulesTitle: "Active Modules",
+    moduleCards: {
+      grow: "Daloy ng tanim, irigasyon, at kahandaan ng bukid.",
+      calendar: "Iskedyul, milestones, at ritmo ng produksyon.",
+      shop: "Live purchase path at customer visibility.",
+      story: "Bisyon, lugar, pamana, at konteksto ng ecosystem.",
+      workforce: "Youth pathway, roles, skills, at learning.",
+      community: "Mga boluntaryo, partner, pamilya, at suporta.",
+      events: "Market, tours, demonstrations, at check-in.",
+      partner: "Imprastraktura, systems, at activation support.",
+    },
+    openPanel: "Buksan ang panel",
+    today: "Ngayon",
   },
 
   it: {
-    title: "Bronson Family Farm",
-    subtitle:
-      "Un ecosistema vivo radicato nel cibo, nella famiglia, nella terra, nell’apprendimento e nelle opportunità.",
-    intro:
-      "Bronson Family Farm unisce cibo, famiglia, lavoro, benessere e partecipazione della comunità attraverso un sistema vivo basato sulla terra.",
-    enter: "Entra nell’Ecosistema",
-    back: "← Torna all’Ecosistema",
-    preview: "Esplora l’ecosistema",
-    askTitle: "Perché è importante",
-    askText:
-      "Bronson Family Farm sta costruendo un ecosistema funzionante in cui terra, apprendimento, accesso al cibo, sviluppo del lavoro e rinnovamento della comunità crescono insieme.",
-    askButton: "Vedi l’Opportunità",
+    appTitle: "Bronson Family Farm",
+    dashboardTitle: "Spazio Vivo dell’Ecosistema",
+    heroTitle: "Demo Live di Bronson Family Farm",
+    heroText:
+      "Un ecosistema vivo in cui cibo, terra, famiglia, opportunità giovanili, benessere e rinnovamento della comunità lavorano insieme.",
+    navTitle: "Navigazione",
+    quickTitle: "Azioni Rapide",
     openShop: "Apri il negozio GrownBy",
-    returnHome: "Torna all’Ecosistema",
-    supportButton: "Sostieni l’Ecosistema",
-    modulesTitle: "Moduli Principali dell’Ecosistema",
-    modules: {
-      why: {
-        title: "Perché è Importante",
-        text:
-          "Accesso al cibo, cura della terra, opportunità giovanili e rinnovamento della comunità si sviluppano insieme.",
-      },
-      build: {
-        title: "Cosa Stiamo Costruendo",
-        text:
-          "Un ecosistema vivo a Youngstown che connette produzione, educazione, famiglie, percorsi di lavoro, commercio e attivazione pubblica.",
-      },
-      partner: {
-        title: "Opportunità di Collaborazione",
-        text:
-          "Un sostegno allineato può espandere infrastrutture, irrigazione, attrezzature, programmazione e la capacità necessaria per attivare questo ecosistema su larga scala.",
-      },
-      pathways: {
-        title: "Percorsi Vivi",
-        text:
-          "Coltivare, Acquistare, Storia, Lavoro, Comunità ed Eventi sono parte di un’unica esperienza connessa.",
-      },
-    },
+    supportNow: "Sostieni l’Ecosistema",
+    dashboard: "Dashboard",
     sections: {
+      dashboard: "Dashboard",
       grow: "Coltivare",
+      calendar: "Calendario",
       shop: "Acquistare",
       story: "Storia",
       workforce: "Lavoro",
       community: "Comunità",
       events: "Eventi",
+      partner: "Partner",
     },
-    sectionText: {
-      grow: "Pianificazione delle colture, produzione e cura.",
-      shop: "Prodotti freschi e percorsi reali di acquisto.",
-      story: "Storia, visione, luogo e scopo.",
-      workforce: "Opportunità giovanili e apprendimento pratico.",
-      community: "Volontari, famiglie e partner.",
-      events: "Mercati, visite e attivazione.",
+    stats: {
+      title: "Panoramica Live",
+      acres: "Acres attivi",
+      languages: "Lingue",
+      pathways: "Percorsi",
+      market: "Percorso mercato",
     },
-    details: {
+    calendar: {
+      title: "Calendario del Coltivatore",
+      time: "Ora",
+      task: "Attività",
+      owner: "Responsabile",
+      status: "Stato",
+      ready: "Pronto",
+      active: "Attivo",
+      pending: "In attesa",
+    },
+    workspaceTitles: {
+      dashboard: "Dashboard Operativa",
+      grow: "Operazioni Agricole",
+      calendar: "Calendario del Coltivatore",
+      shop: "Flusso Negozio e Mercato",
+      story: "Storia e Luogo",
+      workforce: "Percorso Lavorativo",
+      community: "Partecipazione della Comunità",
+      events: "Eventi e Attivazione",
+      partner: "Opportunità di Collaborazione",
+    },
+    workspaceText: {
+      dashboard:
+        "Questa dashboard mantiene l’ecosistema visibile come sistema di lavoro e non come presentazione. Calendario, percorsi, supporto e operazioni restano insieme.",
       grow:
-        "Esplora la pianificazione delle colture, il flusso di semina, la capacità produttiva, l’irrigazione e i sistemi necessari per sostenere una produzione agricola reale.",
+        "Le operazioni agricole includono flusso delle colture, preparazione del campo, irrigazione e priorità stagionali che sostengono la produzione reale.",
+      calendar:
+        "Il calendario rende vivo l’ecosistema mostrando attività, tappe e il ritmo reale della fattoria.",
       shop:
-        "Questa area rappresenta prodotti freschi, offerte a valore aggiunto e il percorso dalla visibilità dell’ecosistema all’acquisto reale attraverso Bronson Family Farm.",
+        "Il percorso del negozio collega l’ecosistema agli acquisti reali, alla visibilità del cliente e al negozio GrownBy live.",
       story:
-        "Bronson Family Farm è più di una fattoria. È una visione radicata nella comunità, plasmata da eredità, terra, servizio e dalla convinzione che il rinnovamento possa crescere da un luogo.",
+        "Bronson Family Farm è più di una fattoria. È una visione radicata nella comunità, nel lascito, nella terra, nel servizio e nel rinnovamento.",
       workforce:
-        "Questa area mette in evidenza opportunità per i giovani, apprendimento pratico, responsabilità, crescita della fiducia e percorsi concreti verso il lavoro e la leadership futuri.",
+        "Il percorso lavorativo collega opportunità per i giovani, responsabilità, apprendimento pratico e fiducia.",
       community:
-        "Questa sezione mostra come volontari, famiglie, sostenitori, istituzioni e partner locali possano entrare nell’ecosistema in modi significativi.",
+        "Il percorso della comunità mostra come volontari, famiglie, istituzioni e sostenitori possano partecipare in modo significativo.",
       events:
-        "Questa area evidenzia mercati, visite, dimostrazioni pubbliche, incontri educativi e l’attivazione visibile dell’intero ecosistema.",
+        "Eventi, mercati, dimostrazioni e visite rendono l’ecosistema pubblico, attivo e accogliente.",
+      partner:
+        "Il percorso partner presenta l’opportunità di sostenere infrastrutture, irrigazione, attrezzature, sistemi, programmazione e attivazione a lungo termine.",
     },
-    supportTitle: "Collabora con Bronson Family Farm",
-    supportText:
-      "Il sostegno può aiutare ad ampliare infrastrutture, irrigazione, attrezzature, programmazione e la capacità operativa a lungo termine necessaria per attivare questo ecosistema su larga scala.",
-    moduleButtons: {
-      grow: "Apri Coltivare",
-      shop: "Apri Acquistare",
-      story: "Apri Storia",
-      workforce: "Apri Lavoro",
-      community: "Apri Comunità",
-      events: "Apri Eventi",
+    support: {
+      title: "Perché è Importante",
+      text:
+        "Non si tratta solo di colture. Si tratta di accesso al cibo, cura della terra, opportunità per i giovani, benessere, eredità familiare e rinnovamento della comunità.",
     },
+    modulesTitle: "Moduli Attivi",
+    moduleCards: {
+      grow: "Flusso delle colture, irrigazione e preparazione del campo.",
+      calendar: "Programma, tappe e ritmo di produzione.",
+      shop: "Percorso di acquisto live e visibilità cliente.",
+      story: "Visione, luogo, eredità e contesto dell’ecosistema.",
+      workforce: "Percorso giovanile, ruoli, competenze e apprendimento.",
+      community: "Volontari, partner, famiglie e supporto.",
+      events: "Mercati, visite, dimostrazioni e check-in.",
+      partner: "Infrastrutture, sistemi e supporto di attivazione.",
+    },
+    openPanel: "Apri pannello",
+    today: "Oggi",
   },
 
   patwa: {
-    title: "Bronson Family Farm",
-    subtitle:
-      "A wan livin ecosystem weh root inna food, family, land, learning, an opportunity.",
-    intro:
-      "Bronson Family Farm join up food, family, work, wellness, an community participation through a livin land-based system.",
-    enter: "Go Inna di Ecosystem",
-    back: "← Go Back to di Ecosystem",
-    preview: "Explore di ecosystem",
-    askTitle: "Why dis matter",
-    askText:
-      "Bronson Family Farm a build a workin ecosystem weh land, learning, food access, workforce development, an community renewal a grow together.",
-    askButton: "See di Opportunity",
+    appTitle: "Bronson Family Farm",
+    dashboardTitle: "Live Ecosystem Workspace",
+    heroTitle: "Bronson Family Farm Live Demo",
+    heroText:
+      "A wan livin ecosystem weh food, land, family, youth opportunity, wellness, an community renewal a work together inna one place.",
+    navTitle: "Navigate",
+    quickTitle: "Quick Action Dem",
     openShop: "Open di GrownBy Shop",
-    returnHome: "Go Back to di Ecosystem",
-    supportButton: "Support di Ecosystem",
+    supportNow: "Support di Ecosystem",
+    dashboard: "Dashboard",
     sections: {
+      dashboard: "Dashboard",
       grow: "Grow",
+      calendar: "Calendar",
       shop: "Shop",
       story: "Story",
       workforce: "Workforce",
       community: "Community",
       events: "Events",
+      partner: "Partner",
     },
-    sectionText: {
-      grow: "Crop planning, production, an care.",
-      shop: "Fresh goods an real buying pathway.",
-      story: "History, vision, place, an purpose.",
-      workforce: "Youth opportunity an practical learning.",
-      community: "Volunteer, family, an partner dem.",
-      events: "Market, tour, an activation.",
+    stats: {
+      title: "Live Snapshot",
+      acres: "Active acres",
+      languages: "Language dem",
+      pathways: "Pathway dem",
+      market: "Market path",
     },
-    details: {
+    calendar: {
+      title: "Grower Calendar",
+      time: "Time",
+      task: "Task",
+      owner: "Owner",
+      status: "Status",
+      ready: "Ready",
+      active: "Active",
+      pending: "Pending",
+    },
+    workspaceTitles: {
+      dashboard: "Operations Dashboard",
+      grow: "Grower Operations",
+      calendar: "Grower Calendar",
+      shop: "Shop an Market Flow",
+      story: "Story an Place",
+      workforce: "Workforce Pathway",
+      community: "Community Participation",
+      events: "Events an Activation",
+      partner: "Partner Opportunity",
+    },
+    workspaceText: {
+      dashboard:
+        "Dis dashboard keep di ecosystem visible like a workin system an not just one presentation. Calendar, pathway dem, support, an operations stay pon di screen together.",
       grow:
-        "Explore crop planning, planting flow, growing capacity, irrigation thinking, an di systems needed fi keep up real farm production.",
+        "Grower operations include crop flow, field readiness, irrigation thinking, an seasonal priority dem fi real production.",
+      calendar:
+        "Di calendar mek di ecosystem feel live by showin task dem, milestone dem, an di rhythm a farm work.",
       shop:
-        "Dis area show fresh goods, value-added offerings, an di path from ecosystem visibility to real purchasing through Bronson Family Farm.",
+        "Di shop pathway connect di ecosystem to real buying, customer visibility, an di live GrownBy store.",
       story:
-        "Bronson Family Farm more than a farm. It a one community-rooted vision shape by legacy, land, service, an di belief seh renewal can grow from place.",
+        "Bronson Family Farm more than a farm. It a one community-rooted vision shape by legacy, land, service, an renewal.",
       workforce:
-        "Dis area highlight youth opportunity, hands-on learning, responsibility, confidence-building, an practical pathway into future work an leadership.",
+        "Di workforce pathway link youth opportunity, responsibility, practical learning, an confidence-building.",
       community:
-        "Dis section show how volunteer, family, supporter, institution, an local partner can step inna di ecosystem in meaningful ways.",
+        "Di community pathway show how volunteer, family, institution, an supporter dem can take part inna meaningful ways.",
       events:
-        "Dis area highlight market, tour, public demonstration, educational gathering, an di visible activation a di whole ecosystem.",
+        "Events, market, demonstration, an tour mek di ecosystem public, active, an welcoming.",
+      partner:
+        "Di partner pathway present di opportunity fi support infrastructure, irrigation, equipment, systems, programming, an long-term activation.",
     },
-    supportTitle: "Partner wid Bronson Family Farm",
-    supportText:
-      "Support can help expand infrastructure, irrigation, equipment, programming, an di long-term operating capacity needed fi activate dis ecosystem pon a bigger scale.",
-    moduleButtons: {
-      grow: "Open Grow",
-      shop: "Open Shop",
-      story: "Open Story",
-      workforce: "Open Workforce",
-      community: "Open Community",
-      events: "Open Events",
+    support: {
+      title: "Why Dis Matter",
+      text:
+        "Dis no just bout crop. It bout food access, land care, youth opportunity, wellness, family legacy, an community renewal a grow together.",
     },
+    modulesTitle: "Active Module Dem",
+    moduleCards: {
+      grow: "Crop flow, irrigation, an field readiness.",
+      calendar: "Schedule, milestone dem, an production rhythm.",
+      shop: "Live purchase path an customer visibility.",
+      story: "Vision, place, legacy, an ecosystem context.",
+      workforce: "Youth pathway, role dem, skill dem, an learning.",
+      community: "Volunteer, partner, family, an support.",
+      events: "Market, tour, demonstration, an check-in.",
+      partner: "Infrastructure, systems, an activation support.",
+    },
+    openPanel: "Open panel",
+    today: "Today",
   },
 
   he: {
-    title: "Bronson Family Farm",
-    subtitle:
-      "מערכת אקולוגית חיה שמבוססת על מזון, משפחה, אדמה, למידה והזדמנות.",
-    intro:
-      "Bronson Family Farm מחברת בין מזון, משפחה, עבודה, בריאות והשתתפות קהילתית דרך מערכת חיה המבוססת על אדמה.",
-    enter: "כניסה למערכת האקולוגית",
-    back: "← חזרה למערכת האקולוגית",
-    preview: "גלו את המערכת האקולוגית",
-    askTitle: "למה זה חשוב",
-    askText:
-      "Bronson Family Farm בונה מערכת אקולוגית פעילה שבה אדמה, למידה, גישה למזון, פיתוח תעסוקתי והתחדשות קהילתית צומחים יחד.",
-    askButton: "צפו בהזדמנות",
+    appTitle: "Bronson Family Farm",
+    dashboardTitle: "סביבת עבודה חיה של המערכת האקולוגית",
+    heroTitle: "הדגמה חיה של Bronson Family Farm",
+    heroText:
+      "מערכת אקולוגית חיה שבה מזון, אדמה, משפחה, הזדמנות לנוער, בריאות והתחדשות קהילתית פועלים יחד במקום אחד.",
+    navTitle: "ניווט",
+    quickTitle: "פעולות מהירות",
     openShop: "פתחו את חנות GrownBy",
-    returnHome: "חזרה למערכת האקולוגית",
-    supportButton: "תמכו במערכת האקולוגית",
+    supportNow: "תמכו במערכת האקולוגית",
+    dashboard: "לוח בקרה",
     sections: {
+      dashboard: "לוח בקרה",
       grow: "גידול",
+      calendar: "לוח שנה",
       shop: "קנייה",
       story: "סיפור",
       workforce: "כוח עבודה",
       community: "קהילה",
       events: "אירועים",
+      partner: "שותפות",
     },
-    sectionText: {
-      grow: "תכנון גידולים, ייצור וטיפוח.",
-      shop: "מוצרים טריים ומסלולי רכישה חיים.",
-      story: "היסטוריה, חזון, מקום ומשמעות.",
-      workforce: "הזדמנות לנוער ולמידה מעשית.",
-      community: "מתנדבים, משפחות ושותפים.",
-      events: "שווקים, סיורים והפעלה.",
+    stats: {
+      title: "תמונת מצב חיה",
+      acres: "אקרים פעילים",
+      languages: "שפות",
+      pathways: "מסלולים",
+      market: "מסלול שוק",
     },
-    details: {
+    calendar: {
+      title: "לוח מגדלים",
+      time: "שעה",
+      task: "משימה",
+      owner: "אחראי",
+      status: "סטטוס",
+      ready: "מוכן",
+      active: "פעיל",
+      pending: "ממתין",
+    },
+    workspaceTitles: {
+      dashboard: "לוח תפעול",
+      grow: "תפעול גידול",
+      calendar: "לוח מגדלים",
+      shop: "חנות וזרימת שוק",
+      story: "סיפור ומקום",
+      workforce: "מסלול כוח עבודה",
+      community: "השתתפות קהילתית",
+      events: "אירועים והפעלה",
+      partner: "הזדמנות לשותפות",
+    },
+    workspaceText: {
+      dashboard:
+        "לוח הבקרה הזה מציג את המערכת האקולוגית כמערכת עבודה ולא כמצגת. לוח שנה, מסלולים, תמיכה ותפעול נשארים יחד על המסך.",
       grow:
-        "גלו תכנון גידולים, זרימת שתילה, יכולת ייצור, חשיבה על השקיה והמערכות הדרושות כדי לקיים חקלאות אמיתית.",
+        "תפעול הגידול כולל זרימת גידולים, מוכנות השטח, חשיבה על השקיה וסדרי עדיפויות עונתיים שמחזיקים ייצור אמיתי.",
+      calendar:
+        "לוח השנה גורם למערכת האקולוגית להרגיש חיה על ידי הצגת משימות, אבני דרך וקצב העבודה של החווה.",
       shop:
-        "אזור זה מייצג מוצרים טריים, הצעות בעלות ערך מוסף והדרך מחשיפה במערכת האקולוגית לרכישה אמיתית דרך Bronson Family Farm.",
+        "מסלול החנות מחבר את המערכת האקולוגית לרכישות אמיתיות, לחשיפת לקוחות ולחנות GrownBy החיה.",
       story:
-        "Bronson Family Farm היא יותר מחווה. זהו חזון קהילתי שמבוסס על מורשת, אדמה, שירות והאמונה שהתחדשות יכולה לצמוח ממקום.",
+        "Bronson Family Farm היא יותר מחווה. זהו חזון קהילתי שמבוסס על מורשת, אדמה, שירות והתחדשות.",
       workforce:
-        "אזור זה מדגיש הזדמנויות לנוער, למידה מעשית, אחריות, בניית ביטחון עצמי ומסלולים מעשיים לעבודה ולהנהגה בעתיד.",
+        "מסלול כוח העבודה מחבר הזדמנות לנוער, אחריות, למידה מעשית ובניית ביטחון.",
       community:
-        "חלק זה מראה כיצד מתנדבים, משפחות, תומכים, מוסדות ושותפים מקומיים יכולים להיכנס למערכת האקולוגית בדרכים משמעותיות.",
+        "המסלול הקהילתי מראה כיצד מתנדבים, משפחות, מוסדות ותומכים יכולים להשתתף בצורה משמעותית.",
       events:
-        "אזור זה מדגיש שווקים, סיורים, הדגמות ציבוריות, מפגשים חינוכיים והפעלה נראית לעין של כל המערכת האקולוגית.",
+        "אירועים, שווקים, הדגמות וסיורים הופכים את המערכת האקולוגית לציבורית, פעילה ומזמינה.",
+      partner:
+        "מסלול השותפות מציג את ההזדמנות לתמוך בתשתיות, השקיה, ציוד, מערכות, תוכניות והפעלה ארוכת טווח.",
     },
-    supportTitle: "שתפו פעולה עם Bronson Family Farm",
-    supportText:
-      "תמיכה יכולה לסייע בהרחבת תשתיות, השקיה, ציוד, תוכניות והיכולת התפעולית ארוכת הטווח הדרושה להפעלת המערכת האקולוגית הזו בקנה מידה רחב.",
-    moduleButtons: {
-      grow: "פתחו גידול",
-      shop: "פתחו קנייה",
-      story: "פתחו סיפור",
-      workforce: "פתחו כוח עבודה",
-      community: "פתחו קהילה",
-      events: "פתחו אירועים",
+    support: {
+      title: "למה זה חשוב",
+      text:
+        "זה לא רק על גידולים. זה על גישה למזון, שמירה על אדמה, הזדמנות לנוער, בריאות, מורשת משפחתית והתחדשות קהילתית שצומחים יחד.",
     },
+    modulesTitle: "מודולים פעילים",
+    moduleCards: {
+      grow: "זרימת גידולים, השקיה ומוכנות השטח.",
+      calendar: "לוח זמנים, אבני דרך וקצב ייצור.",
+      shop: "מסלול רכישה חי וחשיפת לקוחות.",
+      story: "חזון, מקום, מורשת והקשר אקולוגי.",
+      workforce: "מסלול נוער, תפקידים, מיומנויות ולמידה.",
+      community: "מתנדבים, שותפים, משפחות ותמיכה.",
+      events: "שווקים, סיורים, הדגמות ורישום.",
+      partner: "תשתיות, מערכות ותמיכת הפעלה.",
+    },
+    openPanel: "פתחו חלון",
+    today: "היום",
   },
 };
 
 export default function App() {
   const [lang, setLang] = useState<Lang>("en");
-  const [section, setSection] = useState<Section>("home");
+  const [panel, setPanel] = useState<Panel>("dashboard");
 
   const t = labels[lang];
   const isRTL = lang === "he";
 
-  const shellStyle = {
-    ...styles.shell,
-    direction: isRTL ? ("rtl" as const) : ("ltr" as const),
-  };
+  const today = useMemo(
+    () =>
+      new Date().toLocaleDateString(lang === "he" ? "he-IL" : "en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      }),
+    [lang]
+  );
 
-  const sectionShellStyle = {
-    ...styles.sectionShell,
-    direction: isRTL ? ("rtl" as const) : ("ltr" as const),
-  };
+  const calendarRows = [
+    {
+      time: "7:30 AM",
+      task: t.sections.grow,
+      owner: t.sections.workforce,
+      status: t.calendar.ready,
+    },
+    {
+      time: "9:00 AM",
+      task: t.sections.shop,
+      owner: t.sections.community,
+      status: t.calendar.active,
+    },
+    {
+      time: "11:00 AM",
+      task: t.sections.events,
+      owner: t.sections.partner,
+      status: t.calendar.pending,
+    },
+  ];
 
-  const moduleCards = [
-    { key: "why", open: "story" as Section },
-    { key: "build", open: "grow" as Section },
-    { key: "partner", open: "community" as Section },
-    { key: "pathways", open: "events" as Section },
-  ] as const;
+  const sidebarItems: { key: Panel; label: string }[] = [
+    { key: "dashboard", label: t.sections.dashboard },
+    { key: "grow", label: t.sections.grow },
+    { key: "calendar", label: t.sections.calendar },
+    { key: "shop", label: t.sections.shop },
+    { key: "story", label: t.sections.story },
+    { key: "workforce", label: t.sections.workforce },
+    { key: "community", label: t.sections.community },
+    { key: "events", label: t.sections.events },
+    { key: "partner", label: t.sections.partner },
+  ];
 
-  if (section === "home") {
-    return (
-      <div style={styles.page}>
-        <div style={shellStyle}>
-          <div style={styles.topBar}>
-            <div style={styles.eyebrow}>Bronson Family Farm Demo</div>
-            <select
-              value={lang}
-              onChange={(e) => setLang(e.target.value as Lang)}
-              style={styles.select}
-            >
-              <option value="en">English</option>
-              <option value="es">Español</option>
-              <option value="tl">Tagalog</option>
-              <option value="it">Italiano</option>
-              <option value="patwa">Patwa</option>
-              <option value="he">עברית</option>
-            </select>
+  const renderMainPanel = () => {
+    if (panel === "dashboard") {
+      return (
+        <>
+          <div style={styles.heroCard}>
+            <img src={HERO_IMAGE} alt={t.appTitle} style={styles.heroImage} />
+            <div style={styles.heroContent}>
+              <div>
+                <div style={styles.eyebrow}>{t.appTitle}</div>
+                <h1 style={styles.heroTitle}>{t.heroTitle}</h1>
+                <p style={styles.heroText}>{t.heroText}</p>
+              </div>
+              <div style={styles.heroActions}>
+                <button style={styles.primaryButton} onClick={() => setPanel("shop")}>
+                  {t.openShop}
+                </button>
+                <button style={styles.secondaryButton} onClick={() => setPanel("partner")}>
+                  {t.supportNow}
+                </button>
+              </div>
+            </div>
           </div>
 
-          <img src={imagePaths.hero} alt="Bronson Family Farm" style={styles.heroImage} />
-
-          <h1 style={styles.title}>BRONSON FAMILY FARM LIVE TEST</h1>
-          <p style={styles.subtitle}>{t.subtitle}</p>
-          <p style={styles.intro}>{t.intro}</p>
-
-          <div style={styles.heroButtons}>
-            <button style={styles.primaryButton} onClick={() => setSection("grow")}>
-              {t.enter}
-            </button>
-            <button style={styles.secondaryButton} onClick={() => setSection("story")}>
-              {t.askButton}
-            </button>
+          <div style={styles.statsGrid}>
+            <div style={styles.statCard}>
+              <div style={styles.statLabel}>{t.stats.title}</div>
+              <div style={styles.statValue}>3</div>
+              <div style={styles.statSub}>{t.stats.acres}</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statLabel}>{t.stats.title}</div>
+              <div style={styles.statValue}>6</div>
+              <div style={styles.statSub}>{t.stats.languages}</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statLabel}>{t.stats.title}</div>
+              <div style={styles.statValue}>8</div>
+              <div style={styles.statSub}>{t.stats.pathways}</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statLabel}>{t.stats.title}</div>
+              <div style={styles.statValue}>Live</div>
+              <div style={styles.statSub}>{t.stats.market}</div>
+            </div>
           </div>
 
-          <div style={styles.askPanel}>
-            <h3 style={styles.askTitle}>{t.askTitle}</h3>
-            <p style={styles.askText}>{t.askText}</p>
+          <div style={styles.dashboardGrid}>
+            <div style={styles.panelCardLarge}>
+              <div style={styles.panelHeader}>
+                <h2 style={styles.panelTitle}>{t.calendar.title}</h2>
+                <div style={styles.panelMeta}>
+                  {t.today}: {today}
+                </div>
+              </div>
+
+              <div style={styles.table}>
+                <div style={styles.tableHead}>
+                  <div>{t.calendar.time}</div>
+                  <div>{t.calendar.task}</div>
+                  <div>{t.calendar.owner}</div>
+                  <div>{t.calendar.status}</div>
+                </div>
+                {calendarRows.map((row, index) => (
+                  <div key={index} style={styles.tableRow}>
+                    <div>{row.time}</div>
+                    <div>{row.task}</div>
+                    <div>{row.owner}</div>
+                    <div>{row.status}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={styles.rowButtons}>
+                <button style={styles.secondaryButton} onClick={() => setPanel("calendar")}>
+                  {t.openPanel}
+                </button>
+                <button style={styles.secondaryButton} onClick={() => setPanel("grow")}>
+                  {t.sections.grow}
+                </button>
+              </div>
+            </div>
+
+            <div style={styles.sideColumn}>
+              <div style={styles.panelCard}>
+                <h3 style={styles.panelTitle}>{t.support.title}</h3>
+                <p style={styles.panelBody}>{t.support.text}</p>
+                <button style={styles.primaryButton} onClick={() => setPanel("partner")}>
+                  {t.supportNow}
+                </button>
+              </div>
+
+              <div style={styles.panelCard}>
+                <h3 style={styles.panelTitle}>{t.livePathways}</h3>
+                <div style={styles.pathwayGrid}>
+                  {(["grow", "shop", "story", "workforce", "community", "events"] as const).map(
+                    (key) => (
+                      <button
+                        key={key}
+                        style={styles.pathwayButton}
+                        onClick={() => setPanel(key)}
+                      >
+                        {t.sections[key]}
+                      </button>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div style={styles.previewHeader}>{t.modulesTitle}</div>
+          <div style={styles.modulesBlock}>
+            <h3 style={styles.modulesTitle}>{t.modulesTitle}</h3>
+            <div style={styles.modulesGrid}>
+              {(["grow", "shop", "story", "workforce", "community", "events", "partner"] as const).map(
+                (key) => (
+                  <button key={key} style={styles.moduleCard} onClick={() => setPanel(key)}>
+                    <div style={styles.moduleCardTitle}>
+                      {key === "partner" ? t.sections.partner : t.sections[key]}
+                    </div>
+                    <div style={styles.moduleCardText}>{t.moduleCards[key]}</div>
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+        </>
+      );
+    }
 
-          <div style={styles.moduleGrid}>
-            {moduleCards.map((module) => (
+    if (panel === "story") {
+      return (
+        <>
+          <div style={styles.storyTop}>
+            <div>
+              <h2 style={styles.panelTitle}>{t.workspaceTitles.story}</h2>
+              <p style={styles.panelBody}>{t.workspaceText.story}</p>
+            </div>
+            <img src={STORY_IMAGE} alt={t.sections.story} style={styles.storyImage} />
+          </div>
+          <div style={styles.infoGrid}>
+            <div style={styles.infoCard}>
+              <h4 style={styles.infoTitle}>{t.sections.story}</h4>
+              <p style={styles.infoText}>{t.moduleCards.story}</p>
+            </div>
+            <div style={styles.infoCard}>
+              <h4 style={styles.infoTitle}>{t.support.title}</h4>
+              <p style={styles.infoText}>{t.support.text}</p>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    if (panel === "calendar") {
+      return (
+        <>
+          <div style={styles.sectionHeader}>
+            <h2 style={styles.panelTitle}>{t.workspaceTitles.calendar}</h2>
+            <div style={styles.panelMeta}>
+              {t.today}: {today}
+            </div>
+          </div>
+          <p style={styles.panelBody}>{t.workspaceText.calendar}</p>
+          <div style={styles.table}>
+            <div style={styles.tableHead}>
+              <div>{t.calendar.time}</div>
+              <div>{t.calendar.task}</div>
+              <div>{t.calendar.owner}</div>
+              <div>{t.calendar.status}</div>
+            </div>
+            {calendarRows.map((row, index) => (
+              <div key={index} style={styles.tableRow}>
+                <div>{row.time}</div>
+                <div>{row.task}</div>
+                <div>{row.owner}</div>
+                <div>{row.status}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      );
+    }
+
+    if (panel === "shop") {
+      return (
+        <>
+          <div style={styles.sectionHeader}>
+            <h2 style={styles.panelTitle}>{t.workspaceTitles.shop}</h2>
+          </div>
+          <p style={styles.panelBody}>{t.workspaceText.shop}</p>
+          <div style={styles.infoGrid}>
+            <div style={styles.infoCard}>
+              <h4 style={styles.infoTitle}>{t.sections.shop}</h4>
+              <p style={styles.infoText}>{t.moduleCards.shop}</p>
               <button
-                key={module.key}
-                style={styles.moduleCard}
-                onClick={() => setSection(module.open)}
+                style={styles.primaryButton}
+                onClick={() =>
+                  window.open(
+                    "https://grownby.com/farms/bronson-family-farm/shop",
+                    "_blank"
+                  )
+                }
               >
-                <h3 style={styles.moduleTitle}>{t.modules[module.key].title}</h3>
-                <p style={styles.moduleText}>{t.modules[module.key].text}</p>
+                {t.openShop}
               </button>
-            ))}
+            </div>
+            <div style={styles.infoCard}>
+              <h4 style={styles.infoTitle}>{t.support.title}</h4>
+              <p style={styles.infoText}>{t.support.text}</p>
+            </div>
           </div>
+        </>
+      );
+    }
 
-          <div style={styles.previewHeader}>{t.preview}</div>
-
-          <div style={styles.grid}>
-            {(Object.keys(t.sections) as Array<keyof typeof t.sections>).map((key) => (
-              <button key={key} style={styles.tile} onClick={() => setSection(key as Section)}>
-                <img src={imagePaths[key]} alt={t.sections[key]} style={styles.tileImage} />
-                <div style={styles.tileTitle}>{t.sections[key]}</div>
-                <div style={styles.tileText}>{t.sectionText[key]}</div>
-                <div style={styles.tileAction}>{t.moduleButtons[key]}</div>
-              </button>
-            ))}
+    return (
+      <>
+        <div style={styles.sectionHeader}>
+          <h2 style={styles.panelTitle}>{t.workspaceTitles[panel]}</h2>
+        </div>
+        <p style={styles.panelBody}>{t.workspaceText[panel]}</p>
+        <div style={styles.infoGrid}>
+          <div style={styles.infoCard}>
+            <h4 style={styles.infoTitle}>{t.sections[panel]}</h4>
+            <p style={styles.infoText}>{t.moduleCards[panel]}</p>
+          </div>
+          <div style={styles.infoCard}>
+            <h4 style={styles.infoTitle}>{t.support.title}</h4>
+            <p style={styles.infoText}>{t.support.text}</p>
           </div>
         </div>
-      </div>
+      </>
     );
-  }
+  };
 
   return (
-    <div style={styles.page}>
-      <div style={sectionShellStyle}>
-        <div style={styles.topBar}>
-          <button style={styles.backButton} onClick={() => setSection("home")}>
-            {t.back}
-          </button>
+    <div style={{ ...styles.app, direction: isRTL ? "rtl" : "ltr" }}>
+      <aside style={styles.sidebar}>
+        <div style={styles.sidebarTop}>
+          <div style={styles.sidebarBrand}>{t.appTitle}</div>
           <select
             value={lang}
             onChange={(e) => setLang(e.target.value as Lang)}
@@ -578,188 +861,358 @@ export default function App() {
           </select>
         </div>
 
-        <img
-          src={imagePaths[section]}
-          alt={t.sections[section]}
-          style={styles.sectionImage}
-        />
-
-        <h2 style={styles.sectionTitle}>{t.sections[section]}</h2>
-        <p style={styles.sectionText}>{t.details[section]}</p>
-
-        <div style={styles.supportPanel}>
-          <h3 style={styles.askTitle}>{t.supportTitle}</h3>
-          <p style={styles.askText}>{t.supportText}</p>
-        </div>
-
-        {section === "shop" && (
-          <div style={styles.ctaRow}>
+        <div style={styles.sidebarLabel}>{t.navTitle}</div>
+        <div style={styles.sidebarNav}>
+          {sidebarItems.map((item) => (
             <button
-              style={styles.primaryButton}
-              onClick={() =>
-                window.open(
-                  "https://grownby.com/farms/bronson-family-farm/shop",
-                  "_blank"
-                )
-              }
+              key={item.key}
+              style={{
+                ...styles.navButton,
+                ...(panel === item.key ? styles.navButtonActive : {}),
+              }}
+              onClick={() => setPanel(item.key)}
             >
-              {t.openShop}
+              {item.label}
             </button>
-            <button style={styles.secondaryButton} onClick={() => setSection("home")}>
-              {t.returnHome}
-            </button>
-          </div>
-        )}
-
-        {section !== "shop" && (
-          <div style={styles.ctaRow}>
-            <button style={styles.primaryButton} onClick={() => setSection("shop")}>
-              {t.openShop}
-            </button>
-            <button style={styles.secondaryButton} onClick={() => setSection("home")}>
-              {t.returnHome}
-            </button>
-          </div>
-        )}
-
-        <div style={styles.sectionGrid}>
-          {(Object.keys(t.sections) as Array<keyof typeof t.sections>)
-            .filter((key) => key !== section)
-            .map((key) => (
-              <button key={key} style={styles.miniTile} onClick={() => setSection(key as Section)}>
-                <div style={styles.miniTileTitle}>{t.sections[key]}</div>
-              </button>
-            ))}
+          ))}
         </div>
-      </div>
+
+        <div style={styles.sidebarLabel}>{t.quickTitle}</div>
+        <div style={styles.sidebarNav}>
+          <button style={styles.quickButton} onClick={() => setPanel("shop")}>
+            {t.openShop}
+          </button>
+          <button style={styles.quickButton} onClick={() => setPanel("partner")}>
+            {t.supportNow}
+          </button>
+          <button style={styles.quickButton} onClick={() => setPanel("calendar")}>
+            {t.calendar.title}
+          </button>
+        </div>
+      </aside>
+
+      <main style={styles.main}>{renderMainPanel()}</main>
     </div>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  page: {
+  app: {
     minHeight: "100vh",
     background: "#dfe8e0",
-    padding: "28px",
-    boxSizing: "border-box",
+    display: "grid",
+    gridTemplateColumns: "280px 1fr",
     fontFamily: "Arial, sans-serif",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
   },
-  shell: {
-    width: "100%",
-    maxWidth: "1180px",
-    background: "#f8faf8",
-    borderRadius: "24px",
-    padding: "28px",
+  sidebar: {
+    background: "#eef4ef",
+    borderRight: "1px solid #d2ddd4",
+    padding: "20px",
     boxSizing: "border-box",
-    boxShadow: "0 12px 34px rgba(25, 55, 35, 0.08)",
-    border: "1px solid #d2ddd4",
   },
-  sectionShell: {
-    width: "100%",
-    maxWidth: "980px",
-    background: "#f8faf8",
-    borderRadius: "24px",
-    padding: "28px",
-    boxSizing: "border-box",
-    boxShadow: "0 12px 34px rgba(25, 55, 35, 0.08)",
-    border: "1px solid #d2ddd4",
+  sidebarTop: {
+    display: "grid",
+    gap: "12px",
+    marginBottom: "20px",
   },
-  topBar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "16px",
-    marginBottom: "18px",
-    flexWrap: "wrap",
+  sidebarBrand: {
+    fontSize: "24px",
+    fontWeight: 700,
+    color: "#173b24",
+    lineHeight: 1.2,
   },
-  eyebrow: {
-    fontSize: "13px",
+  sidebarLabel: {
+    fontSize: "12px",
     fontWeight: 700,
     letterSpacing: "0.08em",
     textTransform: "uppercase",
     color: "#2f6b3c",
+    margin: "16px 0 10px 0",
   },
-  select: {
-    padding: "10px 12px",
-    borderRadius: "10px",
-    border: "1px solid #cfd9d1",
+  sidebarNav: {
+    display: "grid",
+    gap: "10px",
+  },
+  navButton: {
+    padding: "12px 14px",
+    borderRadius: "12px",
+    border: "1px solid #d2ddd4",
     background: "#ffffff",
+    color: "#173b24",
     fontSize: "15px",
+    fontWeight: 700,
+    textAlign: "left",
+    cursor: "pointer",
+  },
+  navButtonActive: {
+    background: "#2f6b3c",
+    color: "#ffffff",
+    border: "1px solid #2f6b3c",
+  },
+  quickButton: {
+    padding: "12px 14px",
+    borderRadius: "12px",
+    border: "1px solid #d2ddd4",
+    background: "#f8faf8",
+    color: "#173b24",
+    fontSize: "14px",
+    fontWeight: 700,
+    textAlign: "left",
+    cursor: "pointer",
+  },
+  main: {
+    padding: "24px",
+    boxSizing: "border-box",
+  },
+  heroCard: {
+    background: "#f8faf8",
+    borderRadius: "24px",
+    padding: "20px",
+    border: "1px solid #d2ddd4",
+    boxShadow: "0 12px 34px rgba(25, 55, 35, 0.08)",
+    marginBottom: "20px",
   },
   heroImage: {
     width: "100%",
-    height: "340px",
+    height: "260px",
     objectFit: "cover",
     borderRadius: "18px",
     display: "block",
-    marginBottom: "22px",
+    marginBottom: "18px",
   },
-  title: {
-    margin: "0 0 10px 0",
-    fontSize: "56px",
-    lineHeight: 1.05,
-    textAlign: "center",
+  heroContent: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "20px",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+  },
+  eyebrow: {
+    fontSize: "12px",
+    fontWeight: 700,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    color: "#2f6b3c",
+    marginBottom: "6px",
+  },
+  heroTitle: {
+    margin: "0 0 8px 0",
+    fontSize: "42px",
     color: "#173b24",
+    lineHeight: 1.1,
   },
-  subtitle: {
-    margin: "0 auto 12px auto",
-    maxWidth: "850px",
-    textAlign: "center",
-    fontSize: "28px",
-    lineHeight: 1.2,
-    color: "#2d4f38",
-  },
-  intro: {
-    margin: "0 auto 22px auto",
-    maxWidth: "860px",
-    textAlign: "center",
+  heroText: {
+    margin: 0,
+    maxWidth: "760px",
     fontSize: "18px",
     lineHeight: 1.6,
     color: "#486452",
   },
-  heroButtons: {
+  heroActions: {
     display: "flex",
     gap: "12px",
-    justifyContent: "center",
     flexWrap: "wrap",
-    marginBottom: "24px",
   },
-  primaryButton: {
-    padding: "14px 24px",
-    background: "#2f6b3c",
-    color: "#ffffff",
-    border: "none",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: 700,
+  statsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gap: "14px",
+    marginBottom: "20px",
   },
-  secondaryButton: {
-    padding: "14px 24px",
+  statCard: {
     background: "#ffffff",
+    border: "1px solid #d2ddd4",
+    borderRadius: "16px",
+    padding: "16px",
+  },
+  statLabel: {
+    fontSize: "12px",
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
+    color: "#2f6b3c",
+    marginBottom: "8px",
+  },
+  statValue: {
+    fontSize: "28px",
+    fontWeight: 700,
     color: "#173b24",
-    border: "1px solid #cfd9d1",
+  },
+  statSub: {
+    fontSize: "14px",
+    color: "#486452",
+  },
+  dashboardGrid: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1.5fr) minmax(300px, 0.9fr)",
+    gap: "18px",
+    marginBottom: "20px",
+  },
+  panelCardLarge: {
+    background: "#ffffff",
+    border: "1px solid #d2ddd4",
+    borderRadius: "20px",
+    padding: "18px",
+  },
+  sideColumn: {
+    display: "grid",
+    gap: "18px",
+  },
+  panelCard: {
+    background: "#ffffff",
+    border: "1px solid #d2ddd4",
+    borderRadius: "20px",
+    padding: "18px",
+  },
+  panelHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "12px",
+    alignItems: "center",
+    flexWrap: "wrap",
+    marginBottom: "12px",
+  },
+  sectionHeader: {
+    marginBottom: "12px",
+  },
+  panelTitle: {
+    margin: 0,
+    fontSize: "28px",
+    color: "#173b24",
+  },
+  panelMeta: {
+    fontSize: "14px",
+    fontWeight: 700,
+    color: "#486452",
+  },
+  panelBody: {
+    fontSize: "17px",
+    lineHeight: 1.7,
+    color: "#486452",
+    margin: "0 0 18px 0",
+  },
+  table: {
+    border: "1px solid #dbe4dd",
+    borderRadius: "14px",
+    overflow: "hidden",
+    marginBottom: "14px",
+  },
+  tableHead: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1.4fr 1fr 1fr",
+    gap: "8px",
+    padding: "12px 14px",
+    background: "#eef4ef",
+    fontWeight: 700,
+    color: "#173b24",
+    fontSize: "14px",
+  },
+  tableRow: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1.4fr 1fr 1fr",
+    gap: "8px",
+    padding: "12px 14px",
+    borderTop: "1px solid #edf2ee",
+    fontSize: "14px",
+    color: "#486452",
+    background: "#ffffff",
+  },
+  rowButtons: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+  },
+  pathwaysList: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: "10px",
+  },
+  pathwayButton: {
+    padding: "12px",
+    background: "#f8faf8",
+    color: "#173b24",
+    border: "1px solid #d2ddd4",
     borderRadius: "12px",
     cursor: "pointer",
-    fontSize: "16px",
     fontWeight: 700,
   },
-  askPanel: {
+  modulesBlock: {
+    background: "#f8faf8",
+    border: "1px solid #d2ddd4",
+    borderRadius: "20px",
+    padding: "18px",
+  },
+  modulesTitle: {
+    margin: "0 0 14px 0",
+    fontSize: "24px",
+    color: "#173b24",
+  },
+  modulesGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "14px",
+  },
+  moduleCard: {
+    background: "#ffffff",
+    border: "1px solid #d2ddd4",
+    borderRadius: "16px",
+    padding: "16px",
+    textAlign: "left",
+    cursor: "pointer",
+  },
+  moduleCardTitle: {
+    fontSize: "20px",
+    fontWeight: 700,
+    color: "#173b24",
+    marginBottom: "6px",
+  },
+  moduleCardText: {
+    fontSize: "15px",
+    lineHeight: 1.5,
+    color: "#486452",
+  },
+  storyTop: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1fr) 320px",
+    gap: "20px",
+    alignItems: "start",
+    marginBottom: "20px",
+  },
+  storyImage: {
+    width: "100%",
+    height: "220px",
+    objectFit: "cover",
+    borderRadius: "18px",
+    display: "block",
+  },
+  infoGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+    gap: "16px",
+  },
+  infoCard: {
     background: "#ffffff",
     border: "1px solid #d2ddd4",
     borderRadius: "18px",
     padding: "18px",
-    marginBottom: "24px",
+  },
+  infoTitle: {
+    margin: "0 0 8px 0",
+    fontSize: "22px",
+    color: "#173b24",
+  },
+  infoText: {
+    margin: 0,
+    fontSize: "16px",
+    lineHeight: 1.6,
+    color: "#486452",
   },
   supportPanel: {
     background: "#ffffff",
     border: "1px solid #d2ddd4",
     borderRadius: "18px",
     padding: "18px",
-    marginBottom: "22px",
+    marginBottom: "18px",
   },
   askTitle: {
     margin: "0 0 8px 0",
@@ -772,113 +1225,11 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.6,
     color: "#486452",
   },
-  previewHeader: {
-    fontSize: "18px",
-    fontWeight: 700,
-    color: "#1f3d2b",
-    marginBottom: "16px",
-  },
-  moduleGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-    gap: "16px",
-    marginBottom: "24px",
-  },
-  moduleCard: {
-    background: "#ffffff",
-    border: "1px solid #d2ddd4",
-    borderRadius: "18px",
-    padding: "18px",
-    textAlign: "left",
-    cursor: "pointer",
-    boxShadow: "0 6px 16px rgba(25, 55, 35, 0.05)",
-  },
-  moduleTitle: {
-    fontSize: "22px",
-    fontWeight: 700,
-    color: "#173b24",
-    margin: "0 0 8px 0",
-  },
-  moduleText: {
-    fontSize: "16px",
-    lineHeight: 1.6,
-    color: "#486452",
-    margin: 0,
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: "18px",
-  },
-  tile: {
-    background: "#ffffff",
-    border: "1px solid #d2ddd4",
-    borderRadius: "18px",
-    padding: "14px",
-    textAlign: "left",
-    cursor: "pointer",
-    boxShadow: "0 6px 16px rgba(25, 55, 35, 0.05)",
-  },
-  tileImage: {
-    width: "100%",
-    height: "150px",
-    objectFit: "cover",
-    borderRadius: "14px",
-    display: "block",
-    marginBottom: "12px",
-  },
-  tileTitle: {
-    fontSize: "28px",
-    fontWeight: 700,
-    color: "#173b24",
-    marginBottom: "6px",
-  },
-  tileText: {
-    fontSize: "16px",
-    lineHeight: 1.5,
-    color: "#486452",
-  },
-  tileAction: {
-    marginTop: "10px",
-    fontSize: "14px",
-    fontWeight: 700,
-    color: "#2f6b3c",
-  },
-  backButton: {
-    padding: "10px 14px",
-    borderRadius: "10px",
-    border: "1px solid #cfd9d1",
-    background: "#ffffff",
-    cursor: "pointer",
-    fontSize: "15px",
-    fontWeight: 700,
-    color: "#173b24",
-  },
-  sectionImage: {
-    width: "100%",
-    height: "360px",
-    objectFit: "cover",
-    borderRadius: "18px",
-    display: "block",
-    marginBottom: "22px",
-  },
-  sectionTitle: {
-    margin: "0 0 12px 0",
-    fontSize: "42px",
-    color: "#173b24",
-  },
-  sectionText: {
-    margin: "0 0 22px 0",
-    fontSize: "18px",
-    lineHeight: 1.7,
-    color: "#486452",
-    maxWidth: "780px",
-  },
   ctaRow: {
     display: "flex",
     gap: "12px",
     flexWrap: "wrap",
-    marginBottom: "22px",
+    marginBottom: "18px",
   },
   sectionGrid: {
     display: "grid",
@@ -897,5 +1248,32 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "18px",
     fontWeight: 700,
     color: "#173b24",
+  },
+  primaryButton: {
+    padding: "14px 22px",
+    background: "#2f6b3c",
+    color: "#ffffff",
+    border: "none",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontSize: "15px",
+    fontWeight: 700,
+  },
+  secondaryButton: {
+    padding: "14px 22px",
+    background: "#ffffff",
+    color: "#173b24",
+    border: "1px solid #cfd9d1",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontSize: "15px",
+    fontWeight: 700,
+  },
+  select: {
+    padding: "10px 12px",
+    borderRadius: "10px",
+    border: "1px solid #cfd9d1",
+    background: "#ffffff",
+    fontSize: "15px",
   },
 };
