@@ -5,6 +5,7 @@ type Role = "guest" | "customer" | "grower" | "youth" | "volunteer" | "superviso
 
 const IMAGES = {
   hero: "/GrowArea.jpg",
+  history: "/GrowArea2.jpg",
   growing: "/GrowArea2.jpg",
   market: "/GrowArea.jpg",
   youth: "/GrowArea2.jpg",
@@ -39,9 +40,9 @@ export default function App() {
         return {
           title: "Guest Experience",
           image: IMAGES.guest,
-          position: "center 42%",
+          position: "center 40%",
           intro:
-            "A welcoming path into the farm, its purpose, its activity, and the ways people can participate.",
+            "A welcoming path into the farm, its purpose, its visible activity, and the ways people can participate.",
           bullets: [
             "See the farm as a living place",
             "Understand what is active now",
@@ -53,7 +54,7 @@ export default function App() {
         return {
           title: "Customer Experience",
           image: IMAGES.customer,
-          position: "center 58%",
+          position: "center 68%",
           intro:
             "A direct path to fresh food, access, ordering, pickup, and the visible connection between food and place.",
           bullets: [
@@ -67,7 +68,7 @@ export default function App() {
         return {
           title: "Grower Experience",
           image: IMAGES.grower,
-          position: "center 40%",
+          position: "center 42%",
           intro:
             "A view into crops, production rhythm, practical workflow, and the systems that support successful growing.",
           bullets: [
@@ -95,7 +96,7 @@ export default function App() {
         return {
           title: "Volunteer Experience",
           image: IMAGES.volunteer,
-          position: "center 63%",
+          position: "center 62%",
           intro:
             "A clear path into contribution, visible needs, meaningful service, and community-powered support.",
           bullets: [
@@ -109,7 +110,7 @@ export default function App() {
         return {
           title: "Supervisor Experience",
           image: IMAGES.supervisor,
-          position: "center 52%",
+          position: "center 54%",
           intro:
             "A view into coordination, oversight, support, and the practical flow behind daily movement on the farm.",
           bullets: [
@@ -150,7 +151,7 @@ export default function App() {
         <section
           style={{
             ...styles.roleHero,
-            backgroundImage: `linear-gradient(rgba(11,22,15,0.26), rgba(11,22,15,0.60)), url(${roleData.image})`,
+            backgroundImage: `linear-gradient(rgba(11,22,15,0.24), rgba(11,22,15,0.56)), url(${roleData.image})`,
             backgroundPosition: roleData.position,
           }}
         >
@@ -182,8 +183,9 @@ export default function App() {
               <div style={styles.panelKicker}>Live feel</div>
               <h3 style={styles.panelTitle}>Built to feel like a place, not a dashboard</h3>
               <p style={styles.panelText}>
-                This role view is meant to stay grounded in the land, the work, and the real movement of the
-                farm. It should feel connected to the same ecosystem rather than detached from it.
+                This role view stays grounded in the land, the work, and the real
+                movement of the farm. It should feel connected to the same ecosystem
+                rather than detached from it.
               </p>
             </div>
 
@@ -191,8 +193,8 @@ export default function App() {
               <div style={styles.panelKicker}>What is visible</div>
               <h3 style={styles.panelTitle}>Only what belongs here</h3>
               <p style={styles.panelText}>
-                Each role should reveal the parts of the ecosystem that matter most to that person while
-                staying visually connected to the larger farm experience.
+                Each role reveals the parts of the ecosystem that matter most to that
+                person while staying visually connected to the larger farm experience.
               </p>
             </div>
           </div>
@@ -220,19 +222,41 @@ export default function App() {
         description="Land, food, work, learning, and community moving together."
         primaryLabel="Enter the farm"
         onPrimary={() => {
-          const target = document.getElementById("live-now");
+          const target = document.getElementById("history");
           target?.scrollIntoView({ behavior: "smooth" });
         }}
         secondaryLabel="Enter by role"
         onSecondary={() => setView("role")}
       />
 
+      <section
+        id="history"
+        style={{
+          ...styles.historySection,
+          backgroundImage: `linear-gradient(rgba(12,20,14,0.32), rgba(12,20,14,0.62)), url(${IMAGES.history})`,
+          backgroundPosition: "center 30%",
+        }}
+      >
+        <div style={styles.historyContent}>
+          <div style={styles.kicker}>Our Roots</div>
+          <h2 style={styles.historyTitle}>
+            A farm built from legacy, land, and lived experience
+          </h2>
+          <p style={styles.historyText}>
+            Bronson Family Farm grows from family history, resilience, and a belief
+            that land can restore connection, dignity, and opportunity. What grows
+            here is more than food — it is access, work, learning, and a future rooted
+            in community.
+          </p>
+        </div>
+      </section>
+
       <section id="live-now" style={styles.introBand}>
         <div style={styles.introBandInner}>
           <div style={styles.kickerDark}>What is live</div>
           <h2 style={styles.bandTitle}>Visible parts of the farm, shown inside the farm</h2>
           <p style={styles.bandText}>
-            No dashboard grid. No calendar block. No fake modules. Just the real system pieces expressed
+            No calendar block. No fake modules. Just the real system pieces expressed
             through the land, the work, and the people they serve.
           </p>
         </div>
@@ -254,7 +278,7 @@ export default function App() {
 
       <ImmersiveSection
         image={IMAGES.market}
-        imagePosition="center 64%"
+        imagePosition="center 70%"
         align="right"
         kicker="Food access"
         title="Fresh food should feel close, simple, and real"
@@ -268,7 +292,7 @@ export default function App() {
 
       <ImmersiveSection
         image={IMAGES.youth}
-        imagePosition="center 46%"
+        imagePosition="center 45%"
         align="left"
         kicker="Youth workforce"
         title="Learning happens through real work"
@@ -282,7 +306,7 @@ export default function App() {
 
       <ImmersiveSection
         image={IMAGES.events}
-        imagePosition="center 57%"
+        imagePosition="center 60%"
         align="right"
         kicker="Community"
         title="Events and participation make the ecosystem visible"
@@ -365,7 +389,7 @@ function Hero({
     <section
       style={{
         ...styles.hero,
-        backgroundImage: `linear-gradient(rgba(8,16,11,0.22), rgba(8,16,11,0.58)), url(${image})`,
+        backgroundImage: `linear-gradient(rgba(8,16,11,0.20), rgba(8,16,11,0.54)), url(${image})`,
         backgroundPosition: imagePosition || "center center",
       }}
     >
@@ -416,7 +440,7 @@ function ImmersiveSection({
     <section
       style={{
         ...styles.immersiveSection,
-        backgroundImage: `linear-gradient(rgba(9,18,12,0.18), rgba(9,18,12,0.56)), url(${image})`,
+        backgroundImage: `linear-gradient(rgba(9,18,12,0.16), rgba(9,18,12,0.52)), url(${image})`,
         backgroundPosition: imagePosition || "center center",
       }}
     >
@@ -454,9 +478,9 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: 18,
     padding: "14px 18px",
-    background: "rgba(10,18,12,0.22)",
+    background: "rgba(10,18,12,0.20)",
     backdropFilter: "blur(14px)",
-    borderBottom: "1px solid rgba(255,255,255,0.10)",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
   },
 
   logoButton: {
@@ -482,7 +506,7 @@ const styles: Record<string, React.CSSProperties> = {
 
   logoTitle: {
     fontSize: 15,
-    fontWeight: 800,
+    fontWeight: 700,
     letterSpacing: "0.01em",
   },
 
@@ -493,13 +517,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   navCta: {
-    border: "1px solid rgba(255,255,255,0.20)",
-    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.18)",
+    background: "rgba(255,255,255,0.10)",
     color: "#ffffff",
     padding: "12px 16px",
     borderRadius: 999,
     fontSize: 14,
-    fontWeight: 700,
+    fontWeight: 600,
     cursor: "pointer",
   },
 
@@ -514,9 +538,9 @@ const styles: Record<string, React.CSSProperties> = {
 
   heroContent: {
     maxWidth: 720,
-    background: "rgba(250,255,248,0.16)",
+    background: "rgba(250,255,248,0.12)",
     backdropFilter: "blur(8px)",
-    border: "1px solid rgba(255,255,255,0.18)",
+    border: "1px solid rgba(255,255,255,0.12)",
     borderRadius: 28,
     padding: "28px 24px",
     boxShadow: "0 24px 60px rgba(7,15,10,0.18)",
@@ -526,7 +550,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: "inline-block",
     color: "#dcebd4",
     fontSize: 12,
-    fontWeight: 800,
+    fontWeight: 700,
     letterSpacing: "0.12em",
     textTransform: "uppercase",
     marginBottom: 14,
@@ -536,7 +560,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: "inline-block",
     color: "#4f6a57",
     fontSize: 12,
-    fontWeight: 800,
+    fontWeight: 700,
     letterSpacing: "0.12em",
     textTransform: "uppercase",
     marginBottom: 14,
@@ -544,17 +568,17 @@ const styles: Record<string, React.CSSProperties> = {
 
   heroTitle: {
     margin: 0,
-    fontSize: "clamp(2.8rem, 7vw, 5.6rem)",
-    lineHeight: 0.92,
-    fontWeight: 800,
+    fontSize: "clamp(2.8rem, 7vw, 5.4rem)",
+    lineHeight: 0.94,
+    fontWeight: 700,
     color: "#ffffff",
     textWrap: "balance",
   },
 
   heroSubtitle: {
     marginTop: 12,
-    fontSize: "clamp(1.15rem, 2.5vw, 1.65rem)",
-    fontWeight: 600,
+    fontSize: "clamp(1.1rem, 2.4vw, 1.55rem)",
+    fontWeight: 500,
     color: "#eef8e7",
   },
 
@@ -564,7 +588,7 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: 640,
     fontSize: 18,
     lineHeight: 1.7,
-    color: "rgba(255,255,255,0.92)",
+    color: "rgba(255,255,255,0.90)",
   },
 
   heroButtons: {
@@ -581,19 +605,54 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "14px 18px",
     borderRadius: 999,
     fontSize: 15,
-    fontWeight: 800,
+    fontWeight: 600,
     cursor: "pointer",
   },
 
   secondaryBtn: {
-    border: "1px solid rgba(255,255,255,0.24)",
-    background: "rgba(255,255,255,0.10)",
+    border: "1px solid rgba(255,255,255,0.20)",
+    background: "rgba(255,255,255,0.08)",
     color: "#ffffff",
     padding: "14px 18px",
     borderRadius: 999,
     fontSize: 15,
-    fontWeight: 700,
+    fontWeight: 600,
     cursor: "pointer",
+  },
+
+  historySection: {
+    minHeight: "65vh",
+    display: "flex",
+    alignItems: "center",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    padding: "60px 24px",
+  },
+
+  historyContent: {
+    maxWidth: 720,
+    background: "rgba(250,255,248,0.08)",
+    backdropFilter: "blur(6px)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 24,
+    padding: "28px 24px",
+  },
+
+  historyTitle: {
+    margin: 0,
+    fontSize: "clamp(2rem, 4vw, 3rem)",
+    fontWeight: 700,
+    lineHeight: 1.08,
+    color: "#ffffff",
+    textWrap: "balance",
+  },
+
+  historyText: {
+    marginTop: 16,
+    marginBottom: 0,
+    fontSize: 17,
+    lineHeight: 1.7,
+    color: "rgba(255,255,255,0.88)",
   },
 
   introBand: {
@@ -608,10 +667,10 @@ const styles: Record<string, React.CSSProperties> = {
 
   bandTitle: {
     margin: 0,
-    fontSize: "clamp(2rem, 4vw, 3.3rem)",
-    lineHeight: 1.03,
+    fontSize: "clamp(2rem, 4vw, 3.1rem)",
+    lineHeight: 1.05,
     color: "#17311f",
-    fontWeight: 800,
+    fontWeight: 700,
     textWrap: "balance",
   },
 
@@ -619,7 +678,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: 16,
     marginBottom: 0,
     maxWidth: 760,
-    color: "#4c6753",
+    color: "#516a57",
     fontSize: 18,
     lineHeight: 1.75,
   },
@@ -639,9 +698,9 @@ const styles: Record<string, React.CSSProperties> = {
 
   storyPanel: {
     width: "min(560px, 100%)",
-    background: "rgba(250,255,248,0.14)",
+    background: "rgba(250,255,248,0.08)",
     backdropFilter: "blur(8px)",
-    border: "1px solid rgba(255,255,255,0.18)",
+    border: "1px solid rgba(255,255,255,0.10)",
     borderRadius: 28,
     padding: "28px 24px",
     boxShadow: "0 22px 54px rgba(7,15,10,0.18)",
@@ -649,9 +708,9 @@ const styles: Record<string, React.CSSProperties> = {
 
   storyTitle: {
     margin: 0,
-    fontSize: "clamp(2rem, 5vw, 3.4rem)",
-    lineHeight: 1.02,
-    fontWeight: 800,
+    fontSize: "clamp(2rem, 5vw, 3.2rem)",
+    lineHeight: 1.04,
+    fontWeight: 700,
     color: "#ffffff",
     textWrap: "balance",
   },
@@ -661,7 +720,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: 22,
     fontSize: 18,
     lineHeight: 1.72,
-    color: "rgba(255,255,255,0.93)",
+    color: "rgba(255,255,255,0.92)",
   },
 
   rolesEntrySection: {
@@ -676,10 +735,10 @@ const styles: Record<string, React.CSSProperties> = {
 
   rolesHeading: {
     margin: 0,
-    fontSize: "clamp(2rem, 4vw, 3.3rem)",
-    lineHeight: 1.03,
+    fontSize: "clamp(2rem, 4vw, 3.1rem)",
+    lineHeight: 1.05,
     color: "#17311f",
-    fontWeight: 800,
+    fontWeight: 700,
     textWrap: "balance",
   },
 
@@ -702,7 +761,7 @@ const styles: Record<string, React.CSSProperties> = {
 
   roleChooserTitle: {
     fontSize: 22,
-    fontWeight: 800,
+    fontWeight: 700,
     color: "#183220",
   },
 
@@ -721,13 +780,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   rolePill: {
-    border: "1px solid rgba(255,255,255,0.22)",
-    background: "rgba(255,255,255,0.10)",
+    border: "1px solid rgba(255,255,255,0.20)",
+    background: "rgba(255,255,255,0.08)",
     color: "#ffffff",
     padding: "10px 14px",
     borderRadius: 999,
     fontSize: 13,
-    fontWeight: 700,
+    fontWeight: 600,
     cursor: "pointer",
   },
 
@@ -748,31 +807,31 @@ const styles: Record<string, React.CSSProperties> = {
 
   roleHeroContent: {
     maxWidth: 760,
-    background: "rgba(250,255,248,0.14)",
+    background: "rgba(250,255,248,0.10)",
     backdropFilter: "blur(8px)",
-    border: "1px solid rgba(255,255,255,0.18)",
+    border: "1px solid rgba(255,255,255,0.10)",
     borderRadius: 28,
     padding: "28px 24px",
     boxShadow: "0 24px 60px rgba(7,15,10,0.18)",
   },
 
   backButton: {
-    border: "1px solid rgba(255,255,255,0.24)",
-    background: "rgba(255,255,255,0.10)",
+    border: "1px solid rgba(255,255,255,0.20)",
+    background: "rgba(255,255,255,0.08)",
     color: "#ffffff",
     padding: "11px 15px",
     borderRadius: 999,
     fontSize: 14,
-    fontWeight: 700,
+    fontWeight: 600,
     cursor: "pointer",
     marginBottom: 18,
   },
 
   roleTitle: {
     margin: 0,
-    fontSize: "clamp(2.4rem, 6vw, 4.8rem)",
-    lineHeight: 0.96,
-    fontWeight: 800,
+    fontSize: "clamp(2.4rem, 6vw, 4.5rem)",
+    lineHeight: 0.98,
+    fontWeight: 700,
     color: "#ffffff",
     textWrap: "balance",
   },
@@ -783,20 +842,20 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: 660,
     fontSize: 18,
     lineHeight: 1.72,
-    color: "rgba(255,255,255,0.93)",
+    color: "rgba(255,255,255,0.92)",
   },
 
   roleGlassPanel: {
     marginTop: 22,
-    background: "rgba(255,255,255,0.12)",
-    border: "1px solid rgba(255,255,255,0.16)",
+    background: "rgba(255,255,255,0.10)",
+    border: "1px solid rgba(255,255,255,0.12)",
     borderRadius: 22,
     padding: 18,
   },
 
   roleGlassHeader: {
     fontSize: 14,
-    fontWeight: 800,
+    fontWeight: 700,
     color: "#ebf6e4",
     letterSpacing: "0.04em",
     textTransform: "uppercase",
@@ -838,7 +897,7 @@ const styles: Record<string, React.CSSProperties> = {
   panelKicker: {
     color: "#59725e",
     fontSize: 12,
-    fontWeight: 800,
+    fontWeight: 700,
     letterSpacing: "0.1em",
     textTransform: "uppercase",
     marginBottom: 12,
@@ -847,8 +906,8 @@ const styles: Record<string, React.CSSProperties> = {
   panelTitle: {
     margin: 0,
     fontSize: 28,
-    lineHeight: 1.08,
-    fontWeight: 800,
+    lineHeight: 1.1,
+    fontWeight: 600,
     color: "#183220",
     textWrap: "balance",
   },
