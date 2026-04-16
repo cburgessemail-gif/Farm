@@ -6,398 +6,221 @@ const roles = [
   {
     id: "guest",
     title: "Guest",
-    subtitle: "See the vision, land story, event flow, and community purpose.",
+    subtitle: "See the vision, land story, and ecosystem.",
     image: "/GrowArea.jpg",
+    color: "#9BE564",
   },
   {
     id: "customer",
     title: "Customer",
-    subtitle: "Reserve produce, understand pickup, and explore healthy food choices.",
+    subtitle: "Reserve food, understand pickup, and nutrition.",
     image: "/GrowArea2.jpg",
+    color: "#6EC5FF",
   },
   {
     id: "grower",
     title: "Grower",
-    subtitle: "Track crops, tasks, growing conditions, and daily priorities.",
-    image: "/GrowArea3.jpg",
+    subtitle: "Track crops, irrigation, and production.",
+    image: "/GrowArea.jpg",
+    color: "#F7B267",
   },
   {
     id: "supervisor",
     title: "Supervisor",
-    subtitle: "Monitor youth assignments, safety, attendance, and progress.",
-    image: "/GrowArea4.jpg",
+    subtitle: "Monitor youth, safety, and attendance.",
+    image: "/GrowArea2.jpg",
+    color: "#FF6B6B",
   },
   {
     id: "youth",
     title: "Youth Workforce",
-    subtitle: "Build confidence, work skills, responsibility, and pathway readiness.",
-    image: "/GrowArea5.jpg",
+    subtitle: "Build skills, confidence, and pathways.",
+    image: "/GrowArea.jpg",
+    color: "#C77DFF",
   },
   {
     id: "admin",
     title: "Operations",
-    subtitle: "Coordinate events, produce flow, staffing, and check-in systems.",
-    image: "/GrowArea6.jpg",
+    subtitle: "Coordinate events, staffing, and flow.",
+    image: "/GrowArea2.jpg",
+    color: "#FFD93D",
   },
 ];
 
-function btnStyle(active = false): React.CSSProperties {
-  return {
-    marginRight: "8px",
-    marginBottom: "8px",
-    padding: "10px 14px",
-    borderRadius: "999px",
-    border: "1px solid rgba(255,255,255,0.25)",
-    background: active ? "#d7ff73" : "rgba(255,255,255,0.08)",
-    color: active ? "#173116" : "white",
-    cursor: "pointer",
-    fontWeight: 700,
-    fontSize: "14px",
-  };
-}
-
 function panel(extra: React.CSSProperties = {}): React.CSSProperties {
   return {
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.14)",
-    borderRadius: "24px",
-    padding: "20px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.18)",
-    ...extra,
-  };
-}
-
-function card(extra: React.CSSProperties = {}): React.CSSProperties {
-  return {
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.12)",
+    background: "rgba(0,0,0,0.35)",
     borderRadius: "20px",
-    padding: "16px",
+    padding: "20px",
+    border: "1px solid rgba(255,255,255,0.15)",
     ...extra,
   };
 }
 
 export default function App() {
-  const [lang, setLang] = useState("English");
   const [screen, setScreen] = useState<"welcome" | "demo">("welcome");
   const [role, setRole] = useState("guest");
+  const [lang, setLang] = useState("English");
 
-  const selectedRole = roles.find((r) => r.id === role) || roles[0];
+  const current = roles.find((r) => r.id === role)!;
 
   return (
     <div
       style={{
         minHeight: "100vh",
         background:
-          screen === "welcome"
-            ? "linear-gradient(rgba(15,47,27,0.88), rgba(21,70,40,0.88)), url(/GrowArea.jpg)"
-            : "linear-gradient(rgba(8,28,18,0.90), rgba(18,62,38,0.90)), url(/GrowArea2.jpg)",
+          "linear-gradient(rgba(10,30,20,0.9), rgba(20,60,40,0.9)), url(/GrowArea.jpg)",
         backgroundSize: "cover",
-        backgroundPosition: "center",
         color: "white",
-        padding: "24px",
-        fontFamily: "Arial, sans-serif",
+        padding: "20px",
+        fontFamily: "Arial",
       }}
     >
       <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
-        <div
-          style={{
-            ...panel({
-              background: "rgba(0,0,0,0.22)",
-              marginBottom: "20px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "16px",
-              flexWrap: "wrap",
-            }),
-          }}
-        >
+        {/* HEADER */}
+        <div style={{ ...panel(), marginBottom: "20px", display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
           <div>
-            <div style={{ fontSize: "42px", fontWeight: 800 }}>Bronson Family Farm</div>
-            <div style={{ fontSize: "22px", opacity: 0.95 }}>
-              {screen === "welcome" ? "Grower Ecosystem Demo" : "Live Demo Dashboard"}
+            <div style={{ fontSize: "36px", fontWeight: 800 }}>Bronson Family Farm</div>
+            <div style={{ opacity: 0.8 }}>
+              {screen === "welcome" ? "Grower Ecosystem Demo" : "Live Dashboard"}
             </div>
           </div>
 
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <div>
             {languages.map((l) => (
-              <button key={l} onClick={() => setLang(l)} style={btnStyle(lang === l)}>
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                style={{
+                  margin: "4px",
+                  padding: "6px 12px",
+                  borderRadius: "20px",
+                  border: "1px solid white",
+                  background: l === lang ? "#d7ff73" : "transparent",
+                  color: l === lang ? "#173116" : "white",
+                }}
+              >
                 {l}
               </button>
             ))}
           </div>
         </div>
 
+        {/* WELCOME */}
         {screen === "welcome" ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.2fr) minmax(320px, 0.8fr)",
-              gap: "20px",
-            }}
-          >
-            <div style={panel({ background: "rgba(0,0,0,0.22)", minHeight: "560px" })}>
-              <div
-                style={{
-                  display: "inline-block",
-                  padding: "8px 14px",
-                  borderRadius: "999px",
-                  background: "rgba(215,255,115,0.18)",
-                  color: "#e7ffc5",
-                  fontWeight: 700,
-                  marginBottom: "18px",
-                }}
-              >
-                Live Now
-              </div>
+          <div style={panel()}>
+            <h1 style={{ fontSize: "48px" }}>
+              A real working ecosystem — not a presentation
+            </h1>
 
-              <h1 style={{ fontSize: "56px", lineHeight: 1.05, margin: "0 0 18px 0" }}>
-                A welcoming, visual, role-based farm platform built for community use.
-              </h1>
+            <p style={{ fontSize: "20px" }}>
+              Bronson Family Farm, Farm & Family Alliance, Parker Farms, and the
+              historic Lansdowne Airport working as one system.
+            </p>
 
-              <p style={{ fontSize: "24px", lineHeight: 1.5, maxWidth: "980px" }}>
-                This demo shows how Bronson Family Farm, Farm &amp; Family Alliance,
-                Parker Farms, and the historic Lansdowne Airport site work together
-                as one connected ecosystem.
-              </p>
-
-              <p style={{ fontSize: "18px", lineHeight: 1.6, maxWidth: "980px", opacity: 0.95 }}>
-                Agriculture, workforce, family wellness, and community infrastructure
-                in one living ecosystem.
-              </p>
-
-              <div style={{ display: "grid", gap: "12px", marginTop: "22px" }}>
-                <div style={card()}>
-                  <strong>Bronson Family Farm</strong> operates as a regenerative, off-grid
-                  agritourism and food system hub on the historic Lansdowne Airport grounds
-                  in Youngstown, Ohio.
-                </div>
-
-                <div style={card()}>
-                  <strong>Farm &amp; Family Alliance</strong> serves as the nonprofit partner,
-                  focused on workforce training, youth development, volunteer coordination,
-                  education, and community impact.
-                </div>
-
-                <div style={card()}>
-                  <strong>Parker Farms</strong> represents a regional growing partner and
-                  marketplace model, supporting distribution, SNAP access, and grower
-                  collaboration across the Mahoning Valley.
-                </div>
-
-                <div style={card()}>
-                  <strong>Lansdowne Airport (Historic Site)</strong> provides the land
-                  foundation for this work. Once an active aviation site, it is now being
-                  reimagined as a place where land, food, learning, and community reconnect.
-                </div>
-              </div>
-
-              <div style={{ marginTop: "24px" }}>
-                <button
-                  type="button"
-                  onClick={() => setScreen("demo")}
-                  style={{
-                    ...btnStyle(true),
-                    padding: "14px 20px",
-                    fontSize: "18px",
-                  }}
-                >
-                  Enter Live Demo →
-                </button>
-              </div>
-
-              <div style={{ marginTop: "18px", fontSize: "16px", opacity: 0.9 }}>
-                Current Language: <strong>{lang}</strong>
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gap: "20px" }}>
-              <div style={panel({ background: "rgba(0,0,0,0.22)" })}>
-                <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px" }}>
-                  Growers Supply Market
-                </div>
-                <div style={{ display: "grid", gap: "10px" }}>
-                  <div style={card()}>Saturday, May 16 · 9:00 AM–2:00 PM</div>
-                  <div style={card()}>Bronson Family Farm · Youngstown, Ohio</div>
-                  <div style={card()}>
-                    Tools, growers, produce, wellness, workshops, workforce pathways,
-                    and community check-in.
-                  </div>
-                </div>
-              </div>
-
-              <div style={panel({ background: "rgba(0,0,0,0.22)" })}>
-                <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px" }}>
-                  Multilingual Access
-                </div>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "10px",
-                  }}
-                >
-                  {languages.map((name) => (
-                    <div key={name} style={card()}>
-                      {name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div style={{ display: "grid", gap: "20px" }}>
-            <div
+            <button
+              onClick={() => setScreen("demo")}
               style={{
-                ...panel({
-                  background: "rgba(0,0,0,0.30)",
-                  textAlign: "center",
-                }),
+                marginTop: "20px",
+                padding: "12px 20px",
+                background: "#d7ff73",
+                color: "#173116",
+                borderRadius: "25px",
+                fontWeight: 700,
               }}
             >
-              <div style={{ fontSize: "14px", letterSpacing: "0.18em", opacity: 0.72 }}>
-                DEMO IS ACTIVE
-              </div>
-              <div style={{ fontSize: "52px", fontWeight: 900, marginTop: "8px" }}>
-                LIVE ROLE DASHBOARD
-              </div>
-              <div style={{ fontSize: "20px", opacity: 0.92, marginTop: "8px" }}>
-                Current role: <strong>{selectedRole.title}</strong>
-              </div>
-              <div style={{ marginTop: "16px" }}>
-                <button type="button" onClick={() => setScreen("welcome")} style={btnStyle(false)}>
-                  Back to Welcome
-                </button>
-              </div>
-            </div>
-
+              Enter Live Demo →
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* ROLE GRID */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(3, minmax(240px, 1fr))",
-                gap: "14px",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "15px",
+                marginBottom: "20px",
               }}
             >
-              {roles.map((item) => (
+              {roles.map((r) => (
                 <div
-                  key={item.id}
-                  onClick={() => setRole(item.id)}
+                  key={r.id}
+                  onClick={() => setRole(r.id)}
                   style={{
                     cursor: "pointer",
-                    minHeight: "180px",
-                    borderRadius: "24px",
-                    overflow: "hidden",
-                    padding: "16px",
-                    border:
-                      role === item.id
-                        ? "2px solid rgba(215,255,115,0.9)"
-                        : "1px solid rgba(255,255,255,0.14)",
-                    backgroundImage: `linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.58)), url(${item.image})`,
+                    padding: "15px",
+                    borderRadius: "20px",
+                    backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url(${r.image})`,
                     backgroundSize: "cover",
-                    backgroundPosition: "center",
+                    border:
+                      role === r.id
+                        ? `3px solid ${r.color}`
+                        : "1px solid rgba(255,255,255,0.2)",
                   }}
                 >
-                  <div style={{ fontSize: "24px", fontWeight: 800, marginBottom: "10px" }}>
-                    {item.title}
-                  </div>
-                  <div style={{ lineHeight: 1.5, fontSize: "15px" }}>{item.subtitle}</div>
+                  <h2>{r.title}</h2>
+                  <p>{r.subtitle}</p>
                 </div>
               ))}
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.1fr 0.9fr",
-                gap: "20px",
-              }}
-            >
-              <div style={{ display: "grid", gap: "20px" }}>
-                <div style={panel({ background: "rgba(0,0,0,0.26)" })}>
-                  <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
-                    Role Overview
-                  </div>
-                  <div style={card()}>
-                    <div style={{ opacity: 0.72, marginBottom: "8px" }}>Active Role</div>
-                    <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "10px" }}>
-                      {selectedRole.title}
-                    </div>
-                    <div style={{ lineHeight: 1.6, opacity: 0.92 }}>{selectedRole.subtitle}</div>
-                  </div>
-                </div>
+            {/* ROLE CONTENT */}
+            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "20px" }}>
+              <div style={panel()}>
+                <h2 style={{ color: current.color }}>{current.title} Dashboard</h2>
 
-                <div style={panel({ background: "rgba(0,0,0,0.26)" })}>
-                  <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
-                    Youngstown Farm Weather
-                  </div>
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(4, 1fr)",
-                      gap: "12px",
-                    }}
-                  >
-                    {[
-                      { day: "Thu", temp: "62°", note: "Transplant prep" },
-                      { day: "Fri", temp: "66°", note: "Watering window" },
-                      { day: "Sat", temp: "69°", note: "Event-friendly" },
-                      { day: "Sun", temp: "64°", note: "Mulch and check beds" },
-                    ].map((item) => (
-                      <div key={item.day} style={card()}>
-                        <div style={{ opacity: 0.72 }}>{item.day}</div>
-                        <div style={{ fontSize: "36px", fontWeight: 900 }}>{item.temp}</div>
-                        <div style={{ opacity: 0.9 }}>{item.note}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                {role === "guest" && (
+                  <p>Explore the story, land history, and community vision.</p>
+                )}
+
+                {role === "customer" && (
+                  <p>Reserve produce, plan pickup, learn nutrition.</p>
+                )}
+
+                {role === "grower" && (
+                  <ul>
+                    <li>Watering schedule</li>
+                    <li>Transplant tracking</li>
+                    <li>Crop readiness</li>
+                  </ul>
+                )}
+
+                {role === "supervisor" && (
+                  <ul>
+                    <li>Attendance: 94%</li>
+                    <li>Safety: 100%</li>
+                    <li>Team readiness: High</li>
+                  </ul>
+                )}
+
+                {role === "youth" && (
+                  <ul>
+                    <li>Clock in</li>
+                    <li>Learn skills</li>
+                    <li>Work with team</li>
+                  </ul>
+                )}
+
+                {role === "admin" && (
+                  <ul>
+                    <li>Event coordination</li>
+                    <li>Inventory tracking</li>
+                    <li>Volunteer scheduling</li>
+                  </ul>
+                )}
               </div>
 
-              <div style={{ display: "grid", gap: "20px" }}>
-                <div style={panel({ background: "rgba(0,0,0,0.26)" })}>
-                  <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
-                    Marketplace
-                  </div>
-                  <div style={{ display: "grid", gap: "10px" }}>
-                    {[
-                      "Tomato Seedlings · 24",
-                      "Collard Greens · 40",
-                      "Cabbage · 100",
-                      "Peppers · 24",
-                      "Bubble Babies · 18",
-                      "Lettuce · 30",
-                    ].map((item) => (
-                      <div key={item} style={card()}>
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              {/* SIDE PANEL */}
+              <div style={panel()}>
+                <h3>Marketplace</h3>
+                <p>Tomatoes · Collards · Cabbage · Peppers</p>
 
-                <div style={panel({ background: "rgba(0,0,0,0.26)" })}>
-                  <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
-                    Workforce Pathways
-                  </div>
-                  <div style={{ display: "grid", gap: "10px" }}>
-                    {[
-                      "Clock-in and PPE check",
-                      "Watering team rotation",
-                      "Transplant assistance",
-                      "Produce washing and sorting",
-                      "Customer greeting practice",
-                      "Reflection and skill journal",
-                    ].map((item) => (
-                      <div key={item} style={card()}>
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <h3 style={{ marginTop: "15px" }}>Weather</h3>
+                <p>68° · Overcast · Wind 8 mph</p>
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>
