@@ -50,7 +50,7 @@ function btnStyle(active = false): React.CSSProperties {
   };
 }
 
-function panelStyle(extra: React.CSSProperties = {}): React.CSSProperties {
+function panel(extra: React.CSSProperties = {}): React.CSSProperties {
   return {
     background: "rgba(255,255,255,0.08)",
     border: "1px solid rgba(255,255,255,0.14)",
@@ -61,7 +61,7 @@ function panelStyle(extra: React.CSSProperties = {}): React.CSSProperties {
   };
 }
 
-function cardStyle(extra: React.CSSProperties = {}): React.CSSProperties {
+function card(extra: React.CSSProperties = {}): React.CSSProperties {
   return {
     background: "rgba(255,255,255,0.08)",
     border: "1px solid rgba(255,255,255,0.12)",
@@ -83,7 +83,9 @@ export default function App() {
       style={{
         minHeight: "100vh",
         background:
-          "linear-gradient(rgba(15,47,27,0.88), rgba(21,70,40,0.88)), url(/GrowArea.jpg)",
+          screen === "welcome"
+            ? "linear-gradient(rgba(15,47,27,0.88), rgba(21,70,40,0.88)), url(/GrowArea.jpg)"
+            : "linear-gradient(rgba(8,28,18,0.90), rgba(18,62,38,0.90)), url(/GrowArea2.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         color: "white",
@@ -94,7 +96,7 @@ export default function App() {
       <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
         <div
           style={{
-            ...panelStyle({
+            ...panel({
               background: "rgba(0,0,0,0.22)",
               marginBottom: "20px",
               display: "flex",
@@ -107,7 +109,9 @@ export default function App() {
         >
           <div>
             <div style={{ fontSize: "42px", fontWeight: 800 }}>Bronson Family Farm</div>
-            <div style={{ fontSize: "22px", opacity: 0.95 }}>Grower Ecosystem Demo</div>
+            <div style={{ fontSize: "22px", opacity: 0.95 }}>
+              {screen === "welcome" ? "Grower Ecosystem Demo" : "Live Demo Dashboard"}
+            </div>
           </div>
 
           <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -127,7 +131,7 @@ export default function App() {
               gap: "20px",
             }}
           >
-            <div style={panelStyle({ background: "rgba(0,0,0,0.22)", minHeight: "560px" })}>
+            <div style={panel({ background: "rgba(0,0,0,0.22)", minHeight: "560px" })}>
               <div
                 style={{
                   display: "inline-block",
@@ -158,25 +162,25 @@ export default function App() {
               </p>
 
               <div style={{ display: "grid", gap: "12px", marginTop: "22px" }}>
-                <div style={cardStyle()}>
+                <div style={card()}>
                   <strong>Bronson Family Farm</strong> operates as a regenerative, off-grid
                   agritourism and food system hub on the historic Lansdowne Airport grounds
                   in Youngstown, Ohio.
                 </div>
 
-                <div style={cardStyle()}>
+                <div style={card()}>
                   <strong>Farm &amp; Family Alliance</strong> serves as the nonprofit partner,
                   focused on workforce training, youth development, volunteer coordination,
                   education, and community impact.
                 </div>
 
-                <div style={cardStyle()}>
+                <div style={card()}>
                   <strong>Parker Farms</strong> represents a regional growing partner and
                   marketplace model, supporting distribution, SNAP access, and grower
                   collaboration across the Mahoning Valley.
                 </div>
 
-                <div style={cardStyle()}>
+                <div style={card()}>
                   <strong>Lansdowne Airport (Historic Site)</strong> provides the land
                   foundation for this work. Once an active aviation site, it is now being
                   reimagined as a place where land, food, learning, and community reconnect.
@@ -203,21 +207,21 @@ export default function App() {
             </div>
 
             <div style={{ display: "grid", gap: "20px" }}>
-              <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
+              <div style={panel({ background: "rgba(0,0,0,0.22)" })}>
                 <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px" }}>
                   Growers Supply Market
                 </div>
                 <div style={{ display: "grid", gap: "10px" }}>
-                  <div style={cardStyle()}>Saturday, May 16 · 9:00 AM–2:00 PM</div>
-                  <div style={cardStyle()}>Bronson Family Farm · Youngstown, Ohio</div>
-                  <div style={cardStyle()}>
+                  <div style={card()}>Saturday, May 16 · 9:00 AM–2:00 PM</div>
+                  <div style={card()}>Bronson Family Farm · Youngstown, Ohio</div>
+                  <div style={card()}>
                     Tools, growers, produce, wellness, workshops, workforce pathways,
                     and community check-in.
                   </div>
                 </div>
               </div>
 
-              <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
+              <div style={panel({ background: "rgba(0,0,0,0.22)" })}>
                 <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "12px" }}>
                   Multilingual Access
                 </div>
@@ -229,7 +233,7 @@ export default function App() {
                   }}
                 >
                   {languages.map((name) => (
-                    <div key={name} style={cardStyle()}>
+                    <div key={name} style={card()}>
                       {name}
                     </div>
                   ))}
@@ -241,31 +245,22 @@ export default function App() {
           <div style={{ display: "grid", gap: "20px" }}>
             <div
               style={{
-                ...panelStyle({ background: "rgba(0,0,0,0.22)" }),
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: "16px",
-                flexWrap: "wrap",
+                ...panel({
+                  background: "rgba(0,0,0,0.30)",
+                  textAlign: "center",
+                }),
               }}
             >
-              <div>
-                <div
-                  style={{
-                    textTransform: "uppercase",
-                    letterSpacing: "0.18em",
-                    fontSize: "12px",
-                    opacity: 0.72,
-                    marginBottom: "8px",
-                  }}
-                >
-                  Choose an Experience
-                </div>
-                <div style={{ fontSize: "34px", fontWeight: 800 }}>{selectedRole.title}</div>
-                <div style={{ fontSize: "18px", opacity: 0.92 }}>{selectedRole.subtitle}</div>
+              <div style={{ fontSize: "14px", letterSpacing: "0.18em", opacity: 0.72 }}>
+                DEMO IS ACTIVE
               </div>
-
-              <div>
+              <div style={{ fontSize: "52px", fontWeight: 900, marginTop: "8px" }}>
+                LIVE ROLE DASHBOARD
+              </div>
+              <div style={{ fontSize: "20px", opacity: 0.92, marginTop: "8px" }}>
+                Current role: <strong>{selectedRole.title}</strong>
+              </div>
+              <div style={{ marginTop: "16px" }}>
                 <button type="button" onClick={() => setScreen("welcome")} style={btnStyle(false)}>
                   Back to Welcome
                 </button>
@@ -316,11 +311,11 @@ export default function App() {
               }}
             >
               <div style={{ display: "grid", gap: "20px" }}>
-                <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
+                <div style={panel({ background: "rgba(0,0,0,0.26)" })}>
                   <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
                     Role Overview
                   </div>
-                  <div style={cardStyle()}>
+                  <div style={card()}>
                     <div style={{ opacity: 0.72, marginBottom: "8px" }}>Active Role</div>
                     <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "10px" }}>
                       {selectedRole.title}
@@ -329,7 +324,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
+                <div style={panel({ background: "rgba(0,0,0,0.26)" })}>
                   <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
                     Youngstown Farm Weather
                   </div>
@@ -346,7 +341,7 @@ export default function App() {
                       { day: "Sat", temp: "69°", note: "Event-friendly" },
                       { day: "Sun", temp: "64°", note: "Mulch and check beds" },
                     ].map((item) => (
-                      <div key={item.day} style={cardStyle()}>
+                      <div key={item.day} style={card()}>
                         <div style={{ opacity: 0.72 }}>{item.day}</div>
                         <div style={{ fontSize: "36px", fontWeight: 900 }}>{item.temp}</div>
                         <div style={{ opacity: 0.9 }}>{item.note}</div>
@@ -357,7 +352,7 @@ export default function App() {
               </div>
 
               <div style={{ display: "grid", gap: "20px" }}>
-                <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
+                <div style={panel({ background: "rgba(0,0,0,0.26)" })}>
                   <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
                     Marketplace
                   </div>
@@ -370,14 +365,14 @@ export default function App() {
                       "Bubble Babies · 18",
                       "Lettuce · 30",
                     ].map((item) => (
-                      <div key={item} style={cardStyle()}>
+                      <div key={item} style={card()}>
                         {item}
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
+                <div style={panel({ background: "rgba(0,0,0,0.26)" })}>
                   <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
                     Workforce Pathways
                   </div>
@@ -390,43 +385,8 @@ export default function App() {
                       "Customer greeting practice",
                       "Reflection and skill journal",
                     ].map((item) => (
-                      <div key={item} style={cardStyle()}>
+                      <div key={item} style={card()}>
                         {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={panelStyle({ background: "rgba(0,0,0,0.22)" })}>
-                  <div style={{ fontSize: "28px", fontWeight: 800, marginBottom: "14px" }}>
-                    {role === "supervisor" ? "Supervisor Snapshot" : "Produce & Inventory"}
-                  </div>
-                  <div style={{ display: "grid", gap: "10px" }}>
-                    {(role === "supervisor"
-                      ? [
-                          { name: "Team Readiness", value: "High" },
-                          { name: "Attendance", value: "94%" },
-                          { name: "Safety Completion", value: "100%" },
-                          { name: "Leadership Growth", value: "Strong" },
-                        ]
-                      : [
-                          { name: "Wash/Sort Queue", value: "Open" },
-                          { name: "Reserved Orders", value: "14" },
-                          { name: "Volunteer Stations", value: "6" },
-                          { name: "Pickup Windows", value: "Active" },
-                        ]
-                    ).map((item) => (
-                      <div key={item.name} style={cardStyle()}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            gap: "10px",
-                          }}
-                        >
-                          <span>{item.name}</span>
-                          <strong>{item.value}</strong>
-                        </div>
                       </div>
                     ))}
                   </div>
