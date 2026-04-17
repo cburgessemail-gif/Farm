@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 type Role = "guest" | "customer" | "grower" | "youth" | "supervisor"
 type LangKey = "en" | "es" | "tl" | "it" | "he" | "patwa"
@@ -7,10 +7,10 @@ const roles: Role[] = ["guest", "customer", "grower", "youth", "supervisor"]
 
 const imageMap: Record<Role, string> = {
   guest: "/GrowArea.jpg",
-  customer: "/GrowArea2.jpg",
-  grower: "/SAM_0220.JPG",
-  youth: "/SAM_0221.JPG",
-  supervisor: "/SAM_0222.JPG",
+  customer: "/SAM_0220.JPG",
+  grower: "/SAM_0221.JPG",
+  youth: "/SAM_0222.JPG",
+  supervisor: "/SAM_0223.JPG",
 }
 
 const languageOptions: { key: LangKey; label: string }[] = [
@@ -39,47 +39,47 @@ const content = {
     nutrition: "Nutrition & Recipes",
     calendar: "Crop Calendar",
     intro:
-      "Welcome. You are stepping into something bigger than a farm. This is where food, family, land, and future come together.",
+      "Welcome. This is more than a farm. It is a living ecosystem where food, family, land, learning, and opportunity come together.",
     roles: {
       guest: {
         title: "Guest",
-        text: "Start as a guest. Look around. Feel the place. This is the front door into a living ecosystem.",
+        text: "The guest pathway is the front door. It introduces the vision, the land, the community, and the larger purpose of the ecosystem.",
         bullets: [
-          "Understand the farm vision",
-          "See the connection between land, food, and family legacy",
+          "See the farm vision clearly",
+          "Understand the larger ecosystem",
           "Explore before choosing a pathway",
         ],
       },
       customer: {
         title: "Customer",
-        text: "Customers should move quickly into the marketplace, healthy choices, recipes, and a stronger connection to fresh food.",
+        text: "The customer pathway should move quickly into marketplace access, recipes, nutrition, and healthier food choices.",
         bullets: [
-          "Go directly to the marketplace",
-          "See nutrition and recipe guidance",
-          "Build habits around healthy food choices",
+          "Marketplace entry",
+          "Nutrition guidance",
+          "Recipes and healthy food support",
         ],
       },
       grower: {
         title: "Grower",
-        text: "Growers need crop planning, weather awareness, season readiness, and harvest coordination in one place.",
+        text: "The grower pathway supports crop planning, seasonal timing, weather awareness, and harvest coordination.",
         bullets: [
           "Crop planning",
           "Season readiness",
-          "Post-harvest coordination",
+          "Harvest coordination",
         ],
       },
       youth: {
         title: "Youth",
-        text: "This pathway is about workforce development, teamwork, safety, responsibility, and confidence.",
+        text: "The youth pathway is about workforce development, teamwork, structure, confidence, and growth.",
         bullets: [
           "Workforce development",
           "Safety and teamwork",
-          "Growth and responsibility",
+          "Responsibility and growth",
         ],
       },
       supervisor: {
         title: "Supervisor",
-        text: "Supervisors need structure for oversight, observation, progress tracking, and daily support.",
+        text: "The supervisor pathway supports oversight, observation, progress tracking, and daily readiness.",
         bullets: [
           "Observation and support",
           "Progress tracking",
@@ -90,37 +90,25 @@ const content = {
     sections: {
       marketplace: {
         title: "Marketplace Path",
-        text: "Customers should be able to move quickly into produce, seedlings, food access, and repeat buying habits.",
-        bullets: ["Fresh produce", "Seedlings", "Repeat customer flow"],
+        text: "Customers should move easily into produce, seedlings, healthy choices, and repeat buying habits.",
       },
       nutrition: {
         title: "Nutrition & Recipes",
-        text: "Fresh food should connect to everyday life through simple recipes, practical nutrition, and healthier choices.",
-        bullets: ["Nutrition guidance", "Simple recipes", "Healthy food choices"],
+        text: "Fresh food should connect to everyday life through practical nutrition guidance and simple recipe support.",
       },
       calendar: {
         title: "Crop Calendar",
-        text: "The platform should connect weather, planting, seasonal timing, and harvest planning in one clear view.",
-        bullets: ["Planting timing", "Seasonal planning", "Harvest readiness"],
+        text: "The crop calendar should connect planting, weather, seasonal timing, and harvest planning.",
       },
     },
     guidedSteps: [
       "Welcome to Bronson Family Farm. This is more than a farm. It is a living ecosystem of food, family, learning, and future.",
-      "The guest pathway introduces the land, the mission, and the broader vision for the farm and the community.",
-      "The customer pathway should lead quickly into the marketplace, nutrition guidance, recipes, and healthy food choices.",
-      "The grower pathway supports crop planning, weather awareness, seasonal timing, and harvest coordination.",
-      "The youth pathway highlights workforce development, teamwork, safety, confidence, and visible growth.",
-      "The supervisor pathway supports observation, structure, readiness, and daily support across the work environment.",
-      "Together, these pathways create a role-based platform that feels welcoming, practical, and alive.",
-    ],
-    spokenSteps: [
-      "Welcome to Bronson Family Farm. This is more than a farm. It is a living ecosystem of food, family, learning, and future.",
-      "The guest pathway introduces the land, the mission, and the broader vision for the farm and the community.",
-      "The customer pathway leads into the marketplace, nutrition guidance, recipes, and healthier food choices.",
+      "The guest pathway introduces the land, the mission, and the larger community vision.",
+      "The customer pathway leads into marketplace access, nutrition guidance, recipes, and healthier food choices.",
       "The grower pathway supports crop planning, weather awareness, seasonal timing, and harvest coordination.",
       "The youth pathway highlights workforce development, teamwork, safety, confidence, and visible growth.",
       "The supervisor pathway supports observation, structure, readiness, and daily support.",
-      "Together, these pathways create a role-based platform that feels welcoming, practical, and alive.",
+      "Together, these pathways form a connected role-based platform.",
     ],
   },
 
@@ -140,47 +128,47 @@ const content = {
     nutrition: "Nutrición y Recetas",
     calendar: "Calendario de Cultivo",
     intro:
-      "Bienvenido. Estás entrando en algo más grande que una granja. Aquí se unen alimentos, familia, tierra y futuro.",
+      "Bienvenido. Esto es más que una granja. Es un ecosistema vivo donde se unen alimentos, familia, tierra, aprendizaje y oportunidad.",
     roles: {
       guest: {
         title: "Invitado",
-        text: "Comienza como invitado. Observa el lugar. Siente la tierra. Esta es la entrada a un ecosistema vivo.",
+        text: "El camino del invitado presenta la visión, la tierra, la comunidad y el propósito general del ecosistema.",
         bullets: [
-          "Comprender la visión de la finca",
-          "Ver la conexión entre tierra, comida y legado familiar",
+          "Ver claramente la visión de la finca",
+          "Comprender el ecosistema más amplio",
           "Explorar antes de elegir",
         ],
       },
       customer: {
         title: "Cliente",
-        text: "Los clientes deben llegar rápidamente al mercado, a las elecciones saludables y a las recetas.",
+        text: "El camino del cliente debe llevar rápidamente al mercado, las recetas, la nutrición y decisiones más saludables.",
         bullets: [
-          "Ir directamente al mercado",
-          "Ver nutrición y recetas",
-          "Crear hábitos alimentarios saludables",
+          "Entrada al mercado",
+          "Guía nutricional",
+          "Recetas y apoyo alimentario",
         ],
       },
       grower: {
         title: "Productor",
-        text: "Los productores necesitan planificación, clima, temporada y cosecha en un mismo lugar.",
+        text: "El camino del productor apoya la planificación de cultivos, el clima, la temporada y la cosecha.",
         bullets: [
           "Planificación de cultivos",
           "Preparación estacional",
-          "Coordinación poscosecha",
+          "Coordinación de cosecha",
         ],
       },
       youth: {
         title: "Joven",
-        text: "Este camino trata de desarrollo laboral, trabajo en equipo, seguridad y confianza.",
+        text: "El camino juvenil trata de desarrollo laboral, trabajo en equipo, estructura, confianza y crecimiento.",
         bullets: [
           "Desarrollo laboral",
           "Seguridad y trabajo en equipo",
-          "Crecimiento y responsabilidad",
+          "Responsabilidad y crecimiento",
         ],
       },
       supervisor: {
         title: "Supervisor",
-        text: "Los supervisores necesitan estructura para observación, seguimiento y apoyo diario.",
+        text: "El camino del supervisor apoya observación, seguimiento y preparación diaria.",
         bullets: [
           "Observación y apoyo",
           "Seguimiento del progreso",
@@ -191,37 +179,25 @@ const content = {
     sections: {
       marketplace: {
         title: "Camino del Mercado",
-        text: "Los clientes deben entrar rápidamente a productos, plántulas y hábitos de compra.",
-        bullets: ["Productos frescos", "Plántulas", "Flujo de clientes"],
+        text: "Los clientes deben entrar fácilmente a productos, plántulas y elecciones saludables.",
       },
       nutrition: {
         title: "Nutrición y Recetas",
-        text: "La comida fresca debe conectarse con la vida diaria a través de recetas simples y mejores elecciones.",
-        bullets: ["Guía nutricional", "Recetas simples", "Decisiones saludables"],
+        text: "La comida fresca debe conectarse con la vida diaria mediante nutrición práctica y recetas simples.",
       },
       calendar: {
         title: "Calendario de Cultivo",
-        text: "La plataforma debe conectar clima, siembra, temporada y cosecha.",
-        bullets: ["Tiempo de siembra", "Planificación estacional", "Preparación de cosecha"],
+        text: "El calendario debe conectar siembra, clima, tiempo estacional y cosecha.",
       },
     },
     guidedSteps: [
       "Bienvenido a Bronson Family Farm. Esto es más que una granja. Es un ecosistema vivo de comida, familia, aprendizaje y futuro.",
-      "El camino del invitado presenta la tierra, la misión y la visión general.",
-      "El camino del cliente debe llevar rápidamente al mercado, la nutrición, las recetas y las decisiones saludables.",
+      "El camino del invitado presenta la tierra, la misión y la visión comunitaria.",
+      "El camino del cliente lleva al mercado, la nutrición, las recetas y decisiones más saludables.",
       "El camino del productor apoya planificación, clima, temporada y cosecha.",
       "El camino juvenil destaca desarrollo laboral, trabajo en equipo, seguridad y crecimiento.",
       "El camino del supervisor apoya observación, estructura, preparación y apoyo diario.",
-      "Juntos, estos caminos crean una plataforma viva, práctica y acogedora.",
-    ],
-    spokenSteps: [
-      "Bienvenido a Bronson Family Farm. Esto es más que una granja. Es un ecosistema vivo de comida, familia, aprendizaje y futuro.",
-      "El camino del invitado presenta la tierra, la misión y la visión general.",
-      "El camino del cliente lleva al mercado, la nutrición, las recetas y las decisiones saludables.",
-      "El camino del productor apoya planificación, clima, temporada y cosecha.",
-      "El camino juvenil destaca desarrollo laboral, trabajo en equipo, seguridad y crecimiento.",
-      "El camino del supervisor apoya observación, estructura, preparación y apoyo diario.",
-      "Juntos, estos caminos crean una plataforma viva, práctica y acogedora.",
+      "Juntos, estos caminos forman una plataforma conectada por roles.",
     ],
   },
 
@@ -241,47 +217,47 @@ const content = {
     nutrition: "Nutrisyon at Mga Recipe",
     calendar: "Kalendaryo ng Pananim",
     intro:
-      "Maligayang pagdating. Mas malaki ito kaysa sa isang farm. Dito nagtatagpo ang pagkain, pamilya, lupa, at kinabukasan.",
+      "Maligayang pagdating. Higit ito sa isang farm. Isa itong buhay na ecosystem ng pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
     roles: {
       guest: {
         title: "Bisita",
-        text: "Magsimula bilang bisita. Tumingin sa paligid. Damhin ang lugar. Ito ang pasukan sa isang buhay na ecosystem.",
+        text: "Ipinapakilala ng guest pathway ang vision, lupa, komunidad, at mas malaking layunin ng ecosystem.",
         bullets: [
-          "Unawain ang vision ng farm",
-          "Makita ang koneksyon ng lupa, pagkain, at family legacy",
+          "Makita ang vision ng farm",
+          "Maunawaan ang mas malaking ecosystem",
           "Mag-explore bago pumili",
         ],
       },
       customer: {
         title: "Customer",
-        text: "Dapat mabilis na makarating ang customer sa marketplace, healthy choices, at recipes.",
+        text: "Dapat mabilis na dalhin ng customer pathway ang tao sa marketplace, recipes, nutrition, at healthier choices.",
         bullets: [
-          "Direktang pumunta sa marketplace",
-          "Makita ang nutrition at recipe guidance",
-          "Bumuo ng healthy food habits",
+          "Marketplace entry",
+          "Nutrition guidance",
+          "Recipes at food support",
         ],
       },
       grower: {
         title: "Grower",
-        text: "Kailangan ng grower ng crop planning, weather awareness, season readiness, at harvest coordination.",
+        text: "Sinusuportahan ng grower pathway ang crop planning, weather awareness, seasonal timing, at harvest coordination.",
         bullets: [
           "Crop planning",
           "Season readiness",
-          "Post-harvest coordination",
+          "Harvest coordination",
         ],
       },
       youth: {
         title: "Kabataan",
-        text: "Tungkol ito sa workforce development, teamwork, safety, responsibility, at confidence.",
+        text: "Ang youth pathway ay tungkol sa workforce development, teamwork, structure, confidence, at growth.",
         bullets: [
           "Workforce development",
           "Safety at teamwork",
-          "Growth at responsibility",
+          "Responsibility at growth",
         ],
       },
       supervisor: {
         title: "Supervisor",
-        text: "Kailangan ng supervisor ng structure para sa oversight, observation, at support.",
+        text: "Sinusuportahan ng supervisor pathway ang observation, tracking, at daily readiness.",
         bullets: [
           "Observation at support",
           "Progress tracking",
@@ -292,37 +268,25 @@ const content = {
     sections: {
       marketplace: {
         title: "Marketplace Path",
-        text: "Dapat mabilis na makapasok ang customer sa produce, seedlings, at repeat buying habits.",
-        bullets: ["Fresh produce", "Seedlings", "Customer flow"],
+        text: "Dapat madaling makapasok ang customer sa produce, seedlings, at healthy choices.",
       },
       nutrition: {
         title: "Nutrisyon at Mga Recipe",
-        text: "Dapat konektado ang fresh food sa araw-araw sa pamamagitan ng simple recipes at healthier choices.",
-        bullets: ["Nutrition guidance", "Simple recipes", "Healthy choices"],
+        text: "Dapat konektado ang fresh food sa araw-araw sa pamamagitan ng practical nutrition at simple recipes.",
       },
       calendar: {
         title: "Kalendaryo ng Pananim",
-        text: "Dapat pinag-uugnay ng platform ang weather, planting, seasonal timing, at harvest planning.",
-        bullets: ["Planting timing", "Seasonal planning", "Harvest readiness"],
+        text: "Dapat pinagdurugtong ng calendar ang planting, weather, seasonal timing, at harvest planning.",
       },
     },
     guidedSteps: [
-      "Maligayang pagdating sa Bronson Family Farm. Ito ay higit pa sa isang farm. Isa itong buhay na ecosystem ng pagkain, pamilya, pagkatuto, at kinabukasan.",
-      "Ipinapakilala ng guest pathway ang lupa, ang mission, at ang mas malaking vision.",
-      "Dapat mabilis na dalhin ng customer pathway ang tao sa marketplace, nutrition, recipes, at healthy choices.",
+      "Maligayang pagdating sa Bronson Family Farm. Higit ito sa isang farm. Isa itong buhay na ecosystem ng pagkain, pamilya, pagkatuto, at kinabukasan.",
+      "Ipinapakilala ng guest pathway ang lupa, mission, at mas malaking community vision.",
+      "Dinadala ng customer pathway ang tao sa marketplace, nutrition, recipes, at healthier food choices.",
       "Sinusuportahan ng grower pathway ang crop planning, weather awareness, seasonal timing, at harvest coordination.",
       "Ipinapakita ng youth pathway ang workforce development, teamwork, safety, confidence, at growth.",
       "Sinusuportahan ng supervisor pathway ang observation, structure, readiness, at daily support.",
-      "Magkasama, bumubuo ang mga path na ito ng isang welcoming at practical na platform.",
-    ],
-    spokenSteps: [
-      "Maligayang pagdating sa Bronson Family Farm. Ito ay higit pa sa isang farm.",
-      "Ipinapakilala ng guest pathway ang lupa, ang mission, at ang mas malaking vision.",
-      "Dinadala ng customer pathway ang tao sa marketplace, nutrition, recipes, at healthy choices.",
-      "Sinusuportahan ng grower pathway ang crop planning, weather awareness, seasonal timing, at harvest coordination.",
-      "Ipinapakita ng youth pathway ang workforce development, teamwork, safety, confidence, at growth.",
-      "Sinusuportahan ng supervisor pathway ang observation, structure, readiness, at daily support.",
-      "Magkasama, bumubuo ang mga path na ito ng isang welcoming at practical na platform.",
+      "Magkasama, bumubuo ang mga path na ito ng isang connected role-based platform.",
     ],
   },
 
@@ -342,47 +306,47 @@ const content = {
     nutrition: "Nutrizione e Ricette",
     calendar: "Calendario delle Colture",
     intro:
-      "Benvenuto. Questo è qualcosa di più grande di una fattoria. Qui si incontrano cibo, famiglia, terra e futuro.",
+      "Benvenuto. Questo è più di una fattoria. È un ecosistema vivo dove si incontrano cibo, famiglia, terra, apprendimento e opportunità.",
     roles: {
       guest: {
         title: "Ospite",
-        text: "Inizia come ospite. Guarda intorno. Senti il luogo. Questa è la porta d’ingresso a un ecosistema vivo.",
+        text: "Il percorso ospite introduce la visione, la terra, la comunità e il grande scopo dell’ecosistema.",
         bullets: [
-          "Capire la visione della fattoria",
-          "Vedere il legame tra terra, cibo e eredità familiare",
+          "Vedere chiaramente la visione della fattoria",
+          "Capire l’ecosistema più ampio",
           "Esplorare prima di scegliere",
         ],
       },
       customer: {
         title: "Cliente",
-        text: "I clienti dovrebbero entrare rapidamente nel mercato, nelle scelte salutari e nelle ricette.",
+        text: "Il percorso cliente dovrebbe portare rapidamente a mercato, ricette, nutrizione e scelte migliori.",
         bullets: [
-          "Entrare direttamente nel mercato",
-          "Vedere nutrizione e ricette",
-          "Costruire abitudini sane",
+          "Ingresso al mercato",
+          "Guida nutrizionale",
+          "Ricette e supporto alimentare",
         ],
       },
       grower: {
         title: "Coltivatore",
-        text: "I coltivatori hanno bisogno di pianificazione, meteo, stagione e raccolto in un unico luogo.",
+        text: "Il percorso coltivatore supporta pianificazione, meteo, tempi stagionali e raccolto.",
         bullets: [
           "Pianificazione colture",
           "Preparazione stagionale",
-          "Coordinamento post-raccolta",
+          "Coordinamento raccolto",
         ],
       },
       youth: {
         title: "Giovani",
-        text: "Questo percorso riguarda sviluppo del lavoro, squadra, sicurezza, responsabilità e fiducia.",
+        text: "Il percorso giovani riguarda sviluppo del lavoro, collaborazione, struttura, fiducia e crescita.",
         bullets: [
           "Sviluppo del lavoro",
           "Sicurezza e collaborazione",
-          "Crescita e responsabilità",
+          "Responsabilità e crescita",
         ],
       },
       supervisor: {
         title: "Supervisore",
-        text: "I supervisori hanno bisogno di struttura per osservazione, monitoraggio e supporto quotidiano.",
+        text: "Il percorso supervisore supporta osservazione, monitoraggio e preparazione quotidiana.",
         bullets: [
           "Osservazione e supporto",
           "Monitoraggio del progresso",
@@ -393,37 +357,25 @@ const content = {
     sections: {
       marketplace: {
         title: "Percorso Mercato",
-        text: "I clienti dovrebbero entrare rapidamente in prodotti, piantine e abitudini di acquisto ripetute.",
-        bullets: ["Prodotti freschi", "Piantine", "Flusso clienti"],
+        text: "I clienti dovrebbero entrare facilmente in prodotti, piantine e scelte salutari.",
       },
       nutrition: {
         title: "Nutrizione e Ricette",
-        text: "Il cibo fresco dovrebbe collegarsi alla vita quotidiana attraverso ricette semplici e scelte migliori.",
-        bullets: ["Guida nutrizionale", "Ricette semplici", "Scelte sane"],
+        text: "Il cibo fresco dovrebbe collegarsi alla vita quotidiana attraverso nutrizione pratica e ricette semplici.",
       },
       calendar: {
         title: "Calendario delle Colture",
-        text: "La piattaforma dovrebbe collegare meteo, semina, tempi stagionali e raccolto.",
-        bullets: ["Tempi di semina", "Pianificazione stagionale", "Preparazione raccolto"],
+        text: "Il calendario dovrebbe collegare semina, meteo, tempi stagionali e raccolto.",
       },
     },
     guidedSteps: [
       "Benvenuto a Bronson Family Farm. Questo è più di una fattoria. È un ecosistema vivo di cibo, famiglia, apprendimento e futuro.",
-      "Il percorso ospite presenta la terra, la missione e la visione più ampia.",
-      "Il percorso cliente dovrebbe portare rapidamente a mercato, nutrizione, ricette e scelte salutari.",
-      "Il percorso coltivatore supporta pianificazione colture, meteo, tempi stagionali e raccolto.",
+      "Il percorso ospite presenta la terra, la missione e la visione della comunità.",
+      "Il percorso cliente porta a mercato, nutrizione, ricette e scelte salutari.",
+      "Il percorso coltivatore supporta pianificazione, meteo, tempi stagionali e raccolto.",
       "Il percorso giovani evidenzia sviluppo del lavoro, collaborazione, sicurezza e crescita.",
       "Il percorso supervisore supporta osservazione, struttura, preparazione e supporto quotidiano.",
-      "Insieme, questi percorsi creano una piattaforma viva, pratica e accogliente.",
-    ],
-    spokenSteps: [
-      "Benvenuto a Bronson Family Farm. Questo è più di una fattoria.",
-      "Il percorso ospite presenta la terra, la missione e la visione più ampia.",
-      "Il percorso cliente porta rapidamente a mercato, nutrizione, ricette e scelte salutari.",
-      "Il percorso coltivatore supporta pianificazione colture, meteo, tempi stagionali e raccolto.",
-      "Il percorso giovani evidenzia sviluppo del lavoro, collaborazione, sicurezza e crescita.",
-      "Il percorso supervisore supporta osservazione, struttura, preparazione e supporto quotidiano.",
-      "Insieme, questi percorsi creano una piattaforma viva, pratica e accogliente.",
+      "Insieme, questi percorsi formano una piattaforma connessa per ruoli.",
     ],
   },
 
@@ -443,47 +395,47 @@ const content = {
     nutrition: "תזונה ומתכונים",
     calendar: "לוח גידולים",
     intro:
-      "ברוכים הבאים. זה גדול יותר מחווה. כאן נפגשים מזון, משפחה, אדמה ועתיד.",
+      "ברוכים הבאים. זה יותר מחווה. זוהי מערכת חיה שבה נפגשים מזון, משפחה, אדמה, למידה והזדמנות.",
     roles: {
       guest: {
         title: "אורח",
-        text: "התחל כאורח. הסתכל סביב. הרגש את המקום. זו הכניסה למערכת חיה.",
+        text: "מסלול האורח מציג את החזון, האדמה, הקהילה והמטרה הרחבה של המערכת.",
         bullets: [
-          "להבין את חזון החווה",
-          "לראות את הקשר בין אדמה, מזון ומורשת משפחתית",
+          "לראות בבירור את חזון החווה",
+          "להבין את המערכת הרחבה יותר",
           "לחקור לפני בחירה",
         ],
       },
       customer: {
         title: "לקוח",
-        text: "לקוחות צריכים להגיע במהירות לשוק, לבחירות בריאות ולמתכונים.",
+        text: "מסלול הלקוח צריך להוביל במהירות לשוק, למתכונים, לתזונה ולבחירות טובות יותר.",
         bullets: [
-          "להיכנס ישר לשוק",
-          "לראות תזונה ומתכונים",
-          "לבנות הרגלים בריאים",
+          "כניסה לשוק",
+          "הכוונה תזונתית",
+          "מתכונים ותמיכה במזון",
         ],
       },
       grower: {
         title: "מגדל",
-        text: "מגדלים צריכים תכנון, מזג אוויר, עונה וקציר במקום אחד.",
+        text: "מסלול המגדל תומך בתכנון, מזג אוויר, עונה וקציר.",
         bullets: [
           "תכנון גידולים",
           "מוכנות עונתית",
-          "תיאום לאחר הקציר",
+          "תיאום קציר",
         ],
       },
       youth: {
         title: "נוער",
-        text: "המסלול הזה עוסק בפיתוח כוח עבודה, עבודת צוות, בטיחות, אחריות וביטחון.",
+        text: "מסלול הנוער עוסק בפיתוח כוח עבודה, עבודת צוות, מבנה, ביטחון וצמיחה.",
         bullets: [
           "פיתוח כוח עבודה",
           "בטיחות ועבודת צוות",
-          "צמיחה ואחריות",
+          "אחריות וצמיחה",
         ],
       },
       supervisor: {
         title: "מפקח",
-        text: "מפקחים צריכים מבנה לתצפית, מעקב ותמיכה יומית.",
+        text: "מסלול המפקח תומך בתצפית, מעקב ומוכנות יומית.",
         bullets: [
           "תצפית ותמיכה",
           "מעקב אחר התקדמות",
@@ -494,37 +446,25 @@ const content = {
     sections: {
       marketplace: {
         title: "מסלול שוק",
-        text: "לקוחות צריכים להיכנס במהירות לתוצרת, שתילים והרגלי קנייה חוזרים.",
-        bullets: ["תוצרת טרייה", "שתילים", "זרימת לקוחות"],
+        text: "לקוחות צריכים להיכנס בקלות לתוצרת, שתילים ובחירות בריאות.",
       },
       nutrition: {
         title: "תזונה ומתכונים",
-        text: "מזון טרי צריך להתחבר לחיי היומיום דרך מתכונים פשוטים ובחירות טובות יותר.",
-        bullets: ["הכוונה תזונתית", "מתכונים פשוטים", "בחירות בריאות"],
+        text: "מזון טרי צריך להתחבר לחיי היומיום דרך תזונה מעשית ומתכונים פשוטים.",
       },
       calendar: {
         title: "לוח גידולים",
-        text: "הפלטפורמה צריכה לחבר מזג אוויר, שתילה, תזמון עונתי ותכנון קציר.",
-        bullets: ["תזמון שתילה", "תכנון עונתי", "מוכנות לקציר"],
+        text: "הלוח צריך לחבר בין שתילה, מזג אוויר, תזמון עונתי ותכנון קציר.",
       },
     },
     guidedSteps: [
       "ברוכים הבאים ל־Bronson Family Farm. זה יותר מחווה. זוהי מערכת חיה של מזון, משפחה, למידה ועתיד.",
-      "מסלול האורח מציג את האדמה, המשימה והחזון הרחב.",
-      "מסלול הלקוח צריך להוביל במהירות לשוק, לתזונה, למתכונים ולבחירות בריאות.",
+      "מסלול האורח מציג את האדמה, המשימה וחזון הקהילה הרחב.",
+      "מסלול הלקוח מוביל לשוק, לתזונה, למתכונים ולבחירות בריאות יותר.",
       "מסלול המגדל תומך בתכנון גידולים, מודעות למזג אוויר, תזמון עונתי וקציר.",
       "מסלול הנוער מדגיש פיתוח כוח עבודה, עבודת צוות, בטיחות, ביטחון וצמיחה.",
       "מסלול המפקח תומך בתצפית, מבנה, מוכנות ותמיכה יומית.",
-      "יחד, המסלולים האלה יוצרים פלטפורמה חיה, מעשית ומזמינה.",
-    ],
-    spokenSteps: [
-      "ברוכים הבאים ל־Bronson Family Farm. זה יותר מחווה.",
-      "מסלול האורח מציג את האדמה, המשימה והחזון הרחב.",
-      "מסלול הלקוח מוביל במהירות לשוק, לתזונה, למתכונים ולבחירות בריאות.",
-      "מסלול המגדל תומך בתכנון גידולים, מודעות למזג אוויר, תזמון עונתי וקציר.",
-      "מסלול הנוער מדגיש פיתוח כוח עבודה, עבודת צוות, בטיחות, ביטחון וצמיחה.",
-      "מסלול המפקח תומך בתצפית, מבנה, מוכנות ותמיכה יומית.",
-      "יחד, המסלולים האלה יוצרים פלטפורמה חיה, מעשית ומזמינה.",
+      "יחד, המסלולים האלה יוצרים פלטפורמה מחוברת לפי תפקידים.",
     ],
   },
 
@@ -544,47 +484,47 @@ const content = {
     nutrition: "Nutrition an Recipes",
     calendar: "Crop Calendar",
     intro:
-      "Welcome. Yuh a step into something bigger than a farm. A yah so food, family, land, an future come together.",
+      "Welcome. Yuh a step into something bigger than a farm. A yah so food, family, land, learning, an opportunity come together.",
     roles: {
       guest: {
         title: "Guest",
-        text: "Start as a guest. Tek a look round. Feel di place. Dis a di front door into a living ecosystem.",
+        text: "Di guest pathway a di front door. It introduce di vision, di land, di community, an di bigger purpose a di ecosystem.",
         bullets: [
-          "Understand di farm vision",
-          "See di link between land, food, an family legacy",
+          "See di farm vision clear",
+          "Understand di bigger ecosystem",
           "Explore before yuh choose",
         ],
       },
       customer: {
         title: "Customer",
-        text: "Customers fi move quick into di marketplace, healthy choices, recipes, an better food connection.",
+        text: "Di customer pathway fi carry people quick into marketplace access, recipes, nutrition, an healthier food choices.",
         bullets: [
-          "Go straight to di marketplace",
-          "See nutrition an recipe guidance",
-          "Build healthy food habits",
+          "Marketplace entry",
+          "Nutrition guidance",
+          "Recipes an healthy food support",
         ],
       },
       grower: {
         title: "Grower",
-        text: "Growers need crop planning, weather awareness, season readiness, an harvest coordination inna one place.",
+        text: "Di grower pathway support crop planning, seasonal timing, weather awareness, an harvest coordination.",
         bullets: [
           "Crop planning",
           "Season readiness",
-          "Post-harvest coordination",
+          "Harvest coordination",
         ],
       },
       youth: {
         title: "Youth",
-        text: "Dis pathway about workforce development, teamwork, safety, responsibility, an confidence.",
+        text: "Di youth pathway about workforce development, teamwork, structure, confidence, an growth.",
         bullets: [
           "Workforce development",
           "Safety an teamwork",
-          "Growth an responsibility",
+          "Responsibility an growth",
         ],
       },
       supervisor: {
         title: "Supervisor",
-        text: "Supervisors need structure fi oversight, observation, progress tracking, an daily support.",
+        text: "Di supervisor pathway support oversight, observation, progress tracking, an daily readiness.",
         bullets: [
           "Observation an support",
           "Progress tracking",
@@ -595,37 +535,25 @@ const content = {
     sections: {
       marketplace: {
         title: "Marketplace Path",
-        text: "Customers fi move quick into produce, seedlings, food access, an repeat buying habits.",
-        bullets: ["Fresh produce", "Seedlings", "Customer flow"],
+        text: "Customers fi move easy into produce, seedlings, healthy food choices, an repeat buying habits.",
       },
       nutrition: {
         title: "Nutrition an Recipes",
-        text: "Fresh food fi connect to everyday life through simple recipes, practical nutrition, an healthier choices.",
-        bullets: ["Nutrition guidance", "Simple recipes", "Healthy choices"],
+        text: "Fresh food fi connect to everyday life through practical nutrition guidance an simple recipe support.",
       },
       calendar: {
         title: "Crop Calendar",
-        text: "Di platform fi connect weather, planting, seasonal timing, an harvest planning inna one clear view.",
-        bullets: ["Planting timing", "Season planning", "Harvest readiness"],
+        text: "Di crop calendar fi connect planting, weather, seasonal timing, an harvest planning.",
       },
     },
     guidedSteps: [
-      "Welcome. Yuh a step into something bigger than a farm. A yah so food, family, land, an future come together.",
-      "Di guest pathway introduce di land, di mission, an di bigger vision fi di farm an di community.",
-      "Di customer pathway fi carry people quick into di marketplace, nutrition guidance, recipes, an healthy food choices.",
+      "Welcome. Yuh a step into something bigger than a farm. A yah so food, family, land, learning, an opportunity come together.",
+      "Di guest pathway introduce di land, di mission, an di bigger community vision.",
+      "Di customer pathway carry people into marketplace access, nutrition guidance, recipes, an healthier food choices.",
       "Di grower pathway support crop planning, weather awareness, seasonal timing, an harvest coordination.",
-      "Di youth pathway highlight workforce development, teamwork, safety, confidence, an visible growth.",
-      "Di supervisor pathway support observation, structure, readiness, an daily support cross di work environment.",
-      "Together, dem pathways build a platform weh feel practical, welcoming, an alive.",
-    ],
-    spokenSteps: [
-      "Welcome. You are stepping into something bigger than a farm. This is where food, family, land, and future come together.",
-      "The guest pathway introduces the land, the mission, and the broader vision for the farm and the community.",
-      "The customer pathway leads people into the marketplace, nutrition guidance, recipes, and healthier food choices.",
-      "The grower pathway supports crop planning, weather awareness, seasonal timing, and harvest coordination.",
-      "The youth pathway highlights workforce development, teamwork, safety, confidence, and visible growth.",
-      "The supervisor pathway supports observation, structure, readiness, and daily support across the work environment.",
-      "Together, these pathways build a platform that feels practical, welcoming, and alive.",
+      "Di youth pathway highlight workforce development, teamwork, safety, confidence, an growth.",
+      "Di supervisor pathway support observation, structure, readiness, an daily support.",
+      "Together, dem pathways build one connected role-based platform.",
     ],
   },
 } as const
@@ -646,12 +574,13 @@ export default function App() {
   const [temp, setTemp] = useState<number | null>(null)
   const [tourOn, setTourOn] = useState(false)
   const [tourStep, setTourStep] = useState(0)
-  const [voiceOn, setVoiceOn] = useState(true)
+  const [voiceOn, setVoiceOn] = useState(false)
   const [activeTab, setActiveTab] = useState<"overview" | "marketplace" | "nutrition" | "calendar">("overview")
 
   const t = content[lang]
   const isRTL = lang === "he"
   const currentRole = t.roles[role]
+  const guidedScript = useMemo(() => t.guidedSteps, [t])
 
   useEffect(() => {
     fetch(
@@ -668,9 +597,6 @@ export default function App() {
     }
   }, [])
 
-  const visibleGuidedScript = useMemo(() => t.guidedSteps, [t])
-  const spokenGuidedScript = useMemo(() => t.spokenSteps, [t])
-
   useEffect(() => {
     if (!tourOn || !voiceOn || !("speechSynthesis" in window)) return
 
@@ -685,10 +611,10 @@ export default function App() {
       patwa: "en-US",
     }
 
-    const utter = new SpeechSynthesisUtterance(spokenGuidedScript[tourStep] || "")
+    const utter = new SpeechSynthesisUtterance(guidedScript[tourStep] || "")
     utter.lang = langMap[lang]
-    utter.rate = lang === "patwa" ? 0.86 : 0.9
-    utter.pitch = lang === "patwa" ? 0.98 : 1.05
+    utter.rate = 0.84
+    utter.pitch = 0.96
     utter.volume = 1
 
     const preferredVoice = pickVoice(langMap[lang])
@@ -697,7 +623,7 @@ export default function App() {
     utter.onend = () => {
       setTimeout(() => {
         setTourStep((prev) => {
-          if (prev >= spokenGuidedScript.length - 1) {
+          if (prev >= guidedScript.length - 1) {
             setTourOn(false)
             return 0
           }
@@ -711,7 +637,7 @@ export default function App() {
     return () => {
       window.speechSynthesis.cancel()
     }
-  }, [tourOn, voiceOn, tourStep, spokenGuidedScript, lang])
+  }, [tourOn, voiceOn, tourStep, guidedScript, lang])
 
   useEffect(() => {
     if (!tourOn) {
@@ -791,11 +717,6 @@ export default function App() {
         >
           <h2 style={{ fontSize: "34px", marginTop: 0 }}>{t.sections.marketplace.title}</h2>
           <p style={{ fontSize: "22px", lineHeight: 1.6 }}>{t.sections.marketplace.text}</p>
-          <ul style={{ fontSize: "21px", lineHeight: 1.8 }}>
-            {t.sections.marketplace.bullets.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
         </div>
       )
     }
@@ -812,11 +733,6 @@ export default function App() {
         >
           <h2 style={{ fontSize: "34px", marginTop: 0 }}>{t.sections.nutrition.title}</h2>
           <p style={{ fontSize: "22px", lineHeight: 1.6 }}>{t.sections.nutrition.text}</p>
-          <ul style={{ fontSize: "21px", lineHeight: 1.8 }}>
-            {t.sections.nutrition.bullets.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
         </div>
       )
     }
@@ -832,11 +748,6 @@ export default function App() {
       >
         <h2 style={{ fontSize: "34px", marginTop: 0 }}>{t.sections.calendar.title}</h2>
         <p style={{ fontSize: "22px", lineHeight: 1.6 }}>{t.sections.calendar.text}</p>
-        <ul style={{ fontSize: "21px", lineHeight: 1.8 }}>
-          {t.sections.calendar.bullets.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
       </div>
     )
   }
@@ -943,7 +854,7 @@ export default function App() {
           <button
             onClick={() =>
               setTourStep((prev) =>
-                prev < visibleGuidedScript.length - 1 ? prev + 1 : prev
+                prev < guidedScript.length - 1 ? prev + 1 : prev
               )
             }
             style={{
@@ -995,7 +906,7 @@ export default function App() {
               boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
             }}
           >
-            {visibleGuidedScript[tourStep]}
+            {guidedScript[tourStep]}
           </div>
         )}
 
