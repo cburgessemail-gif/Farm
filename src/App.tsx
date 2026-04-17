@@ -45,15 +45,7 @@ const images = {
   weather: "/SkyField.jpg",
 };
 
-type LangKey = "en" | "es" | "tl" | "it" | "he" | "patwa";
-type RoleKey = "guest" | "customer" | "grower" | "youth" | "supervisor" | "volunteer";
-
-type ForecastDay = {
-  date: string;
-  tempMax: number;
-  tempMin: number;
-  code: number;
-};
+type LangKey = "en";
 
 type Translations = {
   appName: string;
@@ -97,7 +89,7 @@ const text: Record<LangKey, Translations> = {
     enterDemo: "Enter Live Demo",
     guidedTour: "Start Guided Tour",
     stopTour: "Pause Guided Tour",
-    chooseLanguage: "Choose language",
+    chooseLanguage: "",
     todayAtFarm: "Today at the Farm",
     marketplace: "Marketplace",
     learning: "Food & Nutrition Learning",
@@ -122,172 +114,7 @@ const text: Record<LangKey, Translations> = {
     navCheckIn: "Check-In",
     navStory: "Story",
     narratorPrefix: "Narration",
-  },
-  es: {
-    appName: "Bronson Family Farm",
-    tagline: "Un ecosistema vivo para alimentos, aprendizaje y legado.",
-    subtag: "Regenerando la tierra. Restaurando la salud. Reconstruyendo la conexión.",
-    enterDemo: "Entrar al demo",
-    guidedTour: "Iniciar recorrido guiado",
-    stopTour: "Pausar recorrido",
-    chooseLanguage: "Elegir idioma",
-    todayAtFarm: "Hoy en la finca",
-    marketplace: "Mercado",
-    learning: "Aprendizaje de alimentos y nutrición",
-    cropCalendar: "Calendario de cultivos",
-    eventCheckIn: "Registro del evento",
-    workforce: "Rutas de trabajo juvenil",
-    weather: "Clima de la finca",
-    whyMatters: "Por qué importa",
-    roleJourney: "Recorridos por rol",
-    quickActions: "Acciones rápidas",
-    stepInto: "Entre en algo diferente.",
-    restoring: "Esta es una experiencia agrícola regenerativa, no un sitio típico.",
-    nourishment: "Cuando suben los precios de los alimentos, muchas familias recurren a productos ultraprocesados que dañan lentamente la salud. Este ecosistema reconecta a las personas con alimentos frescos, conocimiento práctico y comunidad.",
-    messageTitle: "La comida, la dignidad y el acceso van juntos.",
-    messageBody: "Bronson Family Farm y Farm & Family Alliance están construyendo un ecosistema acogedor donde productores, familias, jóvenes, voluntarios y clientes regresan por alimentos, educación, experiencia laboral y esperanza.",
-    navHome: "Inicio",
-    navRoles: "Roles",
-    navMarket: "Mercado",
-    navEducation: "Educación",
-    navCalendar: "Calendario",
-    navOperations: "Operaciones",
-    navCheckIn: "Registro",
-    navStory: "Historia",
-    narratorPrefix: "Narración",
-  },
-  tl: {
-    appName: "Bronson Family Farm",
-    tagline: "Isang buhay na ecosystem para sa pagkain, pagkatuto, at pamana.",
-    subtag: "Binubuhay ang lupa. Ibinabalik ang kalusugan. Pinagdurugtong ang komunidad.",
-    enterDemo: "Buksan ang demo",
-    guidedTour: "Simulan ang guided tour",
-    stopTour: "I-pause ang guided tour",
-    chooseLanguage: "Pumili ng wika",
-    todayAtFarm: "Ngayon sa bukid",
-    marketplace: "Pamilihan",
-    learning: "Pagkatuto sa pagkain at nutrisyon",
-    cropCalendar: "Kalendaryo ng taniman",
-    eventCheckIn: "Event check-in",
-    workforce: "Youth workforce pathways",
-    weather: "Panahon sa bukid",
-    whyMatters: "Bakit mahalaga",
-    roleJourney: "Mga paglalakbay ng papel",
-    quickActions: "Mabilis na galaw",
-    stepInto: "Pumasok sa kakaiba.",
-    restoring: "Ito ay regenerative farm experience, hindi karaniwang website.",
-    nourishment: "Kapag tumataas ang presyo ng pagkain, maraming pamilya ang napipilitang pumili ng sobrang processed na pagkain na unti-unting sumisira sa kalusugan. Ang ecosystem na ito ay nagbabalik sa sariwang pagkain, praktikal na kaalaman, at ugnayan.",
-    messageTitle: "Magkasama ang pagkain, dignidad, at access.",
-    messageBody: "Ang Bronson Family Farm at Farm & Family Alliance ay gumagawa ng mainit na ecosystem para sa growers, pamilya, kabataan, volunteers, at customers.",
-    navHome: "Home",
-    navRoles: "Mga papel",
-    navMarket: "Pamilihan",
-    navEducation: "Edukasyon",
-    navCalendar: "Kalendaryo",
-    navOperations: "Operasyon",
-    navCheckIn: "Check-In",
-    navStory: "Kuwento",
-    narratorPrefix: "Salaysay",
-  },
-  it: {
-    appName: "Bronson Family Farm",
-    tagline: "Un ecosistema vivo per cibo, apprendimento e eredità.",
-    subtag: "Rigenerare la terra. Ripristinare la salute. Ricostruire il legame.",
-    enterDemo: "Apri demo",
-    guidedTour: "Avvia tour guidato",
-    stopTour: "Metti in pausa il tour",
-    chooseLanguage: "Scegli la lingua",
-    todayAtFarm: "Oggi alla fattoria",
-    marketplace: "Mercato",
-    learning: "Educazione alimentare e nutrizione",
-    cropCalendar: "Calendario colture",
-    eventCheckIn: "Check-in evento",
-    workforce: "Percorsi per i giovani",
-    weather: "Meteo della fattoria",
-    whyMatters: "Perché conta",
-    roleJourney: "Percorsi dei ruoli",
-    quickActions: "Azioni rapide",
-    stepInto: "Entra in qualcosa di diverso.",
-    restoring: "Questa è un’esperienza agricola rigenerativa, non un sito tipico.",
-    nourishment: "Quando i costi del cibo aumentano, molte famiglie scelgono sostituti ultra-processati che danneggiano lentamente la salute. Questo ecosistema riporta le persone verso cibo fresco, conoscenza pratica e comunità.",
-    messageTitle: "Cibo, dignità e accesso devono stare insieme.",
-    messageBody: "Bronson Family Farm e Farm & Family Alliance stanno costruendo un ecosistema accogliente per coltivatori, famiglie, giovani, volontari e clienti.",
-    navHome: "Home",
-    navRoles: "Ruoli",
-    navMarket: "Mercato",
-    navEducation: "Educazione",
-    navCalendar: "Calendario",
-    navOperations: "Operazioni",
-    navCheckIn: "Check-In",
-    navStory: "Storia",
-    narratorPrefix: "Narrazione",
-  },
-  he: {
-    appName: "Bronson Family Farm",
-    tagline: "מערכת חיה של מזון, למידה ומורשת.",
-    subtag: "משקמים את האדמה. מחזירים בריאות. בונים מחדש קשר.",
-    enterDemo: "כניסה לדמו",
-    guidedTour: "התחל סיור מודרך",
-    stopTour: "השהה סיור",
-    chooseLanguage: "בחר שפה",
-    todayAtFarm: "היום בחווה",
-    marketplace: "שוק",
-    learning: "למידת תזונה ומזון",
-    cropCalendar: "לוח גידולים",
-    eventCheckIn: "צ'ק-אין לאירוע",
-    workforce: "מסלולי תעסוקה לנוער",
-    weather: "מזג האוויר בחווה",
-    whyMatters: "למה זה חשוב",
-    roleJourney: "מסלולי תפקידים",
-    quickActions: "פעולות מהירות",
-    stepInto: "היכנסו למשהו אחר.",
-    restoring: "זו חוויה של חווה רגנרטיבית, לא אתר רגיל.",
-    nourishment: "כשמחירי המזון עולים, משפחות רבות נאלצות לבחור במזון מעובד מאוד שפוגע לאט בבריאות. המערכת הזו מחברת מחדש למזון טרי, ידע מעשי וקהילה.",
-    messageTitle: "מזון, כבוד וגישה שייכים יחד.",
-    messageBody: "Bronson Family Farm ו-Farm & Family Alliance בונות מערכת מזמינה עבור מגדלים, משפחות, צעירים, מתנדבים ולקוחות.",
-    navHome: "בית",
-    navRoles: "תפקידים",
-    navMarket: "שוק",
-    navEducation: "חינוך",
-    navCalendar: "לוח שנה",
-    navOperations: "תפעול",
-    navCheckIn: "צ'ק-אין",
-    navStory: "סיפור",
-    narratorPrefix: "קריינות",
-  },
-  patwa: {
-    appName: "Bronson Family Farm",
-    tagline: "A one live ecosystem fi food, learning, an legacy.",
-    subtag: "Wi a heal di land. Build back health. Bring people back together.",
-    enterDemo: "Go ina di demo",
-    guidedTour: "Start guided tour",
-    stopTour: "Pause guided tour",
-    chooseLanguage: "Choose language",
-    todayAtFarm: "Today pon di farm",
-    marketplace: "Market",
-    learning: "Food an nutrition learning",
-    cropCalendar: "Crop planning calendar",
-    eventCheckIn: "Event check-in",
-    workforce: "Youth workforce pathways",
-    weather: "Farm weather",
-    whyMatters: "Why dis matter",
-    roleJourney: "Role journeys",
-    quickActions: "Quick actions",
-    stepInto: "Step ina supm different.",
-    restoring: "Dis a regenerative farm experience, not no regular website.",
-    nourishment: "When food price rise, whole heap a families get push toward overprocessed substitute weh slowly mash up health. Dis ecosystem link people back to fresh food, practical knowledge, an community.",
-    messageTitle: "Food, dignity, an access fi go together.",
-    messageBody: "Bronson Family Farm an Farm & Family Alliance a build one welcoming ecosystem weh growers, families, youth, volunteers, an customers waan come back to.",
-    navHome: "Home",
-    navRoles: "Roles",
-    navMarket: "Market",
-    navEducation: "Education",
-    navCalendar: "Calendar",
-    navOperations: "Operations",
-    navCheckIn: "Check-In",
-    navStory: "Story",
-    narratorPrefix: "Voice guide",
-  },
+  }
 };
 
 const roleContent: Record<
@@ -428,7 +255,7 @@ function classNames(...parts: Array<string | false | null | undefined>) {
 }
 
 export default function App() {
-  const [lang, setLang] = useState<LangKey>("en");
+  const [lang] = useState<LangKey>("en");
   const [entered, setEntered] = useState(false);
   const [tourOn, setTourOn] = useState(false);
   const [tourStep, setTourStep] = useState(0);
@@ -625,18 +452,7 @@ export default function App() {
             </div>
             <div className="flex items-center gap-2 rounded-full bg-white/80 px-3 py-2">
               <Languages className="h-4 w-4 text-emerald-700" />
-              <select
-                value={lang}
-                onChange={(e) => setLang(e.target.value as LangKey)}
-                className="bg-transparent text-sm outline-none"
-              >
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="tl">Filipino</option>
-                <option value="it">Italian</option>
-                <option value="he">Hebrew</option>
-                <option value="patwa">Patwa</option>
-              </select>
+              
             </div>
           </div>
         </div>
