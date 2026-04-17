@@ -113,7 +113,17 @@ const content = {
       "The supervisor pathway supports observation, structure, readiness, and daily support across the work environment.",
       "Together, these pathways create a role-based platform that feels welcoming, practical, and alive.",
     ],
+    spokenSteps: [
+      "Welcome to Bronson Family Farm. This is more than a farm. It is a living ecosystem of food, family, learning, and future.",
+      "The guest pathway introduces the land, the mission, and the broader vision for the farm and the community.",
+      "The customer pathway leads into the marketplace, nutrition guidance, recipes, and healthier food choices.",
+      "The grower pathway supports crop planning, weather awareness, seasonal timing, and harvest coordination.",
+      "The youth pathway highlights workforce development, teamwork, safety, confidence, and visible growth.",
+      "The supervisor pathway supports observation, structure, readiness, and daily support.",
+      "Together, these pathways create a role-based platform that feels welcoming, practical, and alive.",
+    ],
   },
+
   es: {
     appTitle: "Bronson Family Farm",
     subtitle: "Demostración Guiada del Ecosistema",
@@ -204,7 +214,17 @@ const content = {
       "El camino del supervisor apoya observación, estructura, preparación y apoyo diario.",
       "Juntos, estos caminos crean una plataforma viva, práctica y acogedora.",
     ],
+    spokenSteps: [
+      "Bienvenido a Bronson Family Farm. Esto es más que una granja. Es un ecosistema vivo de comida, familia, aprendizaje y futuro.",
+      "El camino del invitado presenta la tierra, la misión y la visión general.",
+      "El camino del cliente lleva al mercado, la nutrición, las recetas y las decisiones saludables.",
+      "El camino del productor apoya planificación, clima, temporada y cosecha.",
+      "El camino juvenil destaca desarrollo laboral, trabajo en equipo, seguridad y crecimiento.",
+      "El camino del supervisor apoya observación, estructura, preparación y apoyo diario.",
+      "Juntos, estos caminos crean una plataforma viva, práctica y acogedora.",
+    ],
   },
+
   tl: {
     appTitle: "Bronson Family Farm",
     subtitle: "Gabay na Demo ng Ecosystem",
@@ -295,7 +315,17 @@ const content = {
       "Sinusuportahan ng supervisor pathway ang observation, structure, readiness, at daily support.",
       "Magkasama, bumubuo ang mga path na ito ng isang welcoming at practical na platform.",
     ],
+    spokenSteps: [
+      "Maligayang pagdating sa Bronson Family Farm. Ito ay higit pa sa isang farm.",
+      "Ipinapakilala ng guest pathway ang lupa, ang mission, at ang mas malaking vision.",
+      "Dinadala ng customer pathway ang tao sa marketplace, nutrition, recipes, at healthy choices.",
+      "Sinusuportahan ng grower pathway ang crop planning, weather awareness, seasonal timing, at harvest coordination.",
+      "Ipinapakita ng youth pathway ang workforce development, teamwork, safety, confidence, at growth.",
+      "Sinusuportahan ng supervisor pathway ang observation, structure, readiness, at daily support.",
+      "Magkasama, bumubuo ang mga path na ito ng isang welcoming at practical na platform.",
+    ],
   },
+
   it: {
     appTitle: "Bronson Family Farm",
     subtitle: "Demo Guidata dell’Ecosistema",
@@ -386,7 +416,17 @@ const content = {
       "Il percorso supervisore supporta osservazione, struttura, preparazione e supporto quotidiano.",
       "Insieme, questi percorsi creano una piattaforma viva, pratica e accogliente.",
     ],
+    spokenSteps: [
+      "Benvenuto a Bronson Family Farm. Questo è più di una fattoria.",
+      "Il percorso ospite presenta la terra, la missione e la visione più ampia.",
+      "Il percorso cliente porta rapidamente a mercato, nutrizione, ricette e scelte salutari.",
+      "Il percorso coltivatore supporta pianificazione colture, meteo, tempi stagionali e raccolto.",
+      "Il percorso giovani evidenzia sviluppo del lavoro, collaborazione, sicurezza e crescita.",
+      "Il percorso supervisore supporta osservazione, struttura, preparazione e supporto quotidiano.",
+      "Insieme, questi percorsi creano una piattaforma viva, pratica e accogliente.",
+    ],
   },
+
   he: {
     appTitle: "Bronson Family Farm",
     subtitle: "הדגמה מודרכת של המערכת",
@@ -477,7 +517,17 @@ const content = {
       "מסלול המפקח תומך בתצפית, מבנה, מוכנות ותמיכה יומית.",
       "יחד, המסלולים האלה יוצרים פלטפורמה חיה, מעשית ומזמינה.",
     ],
+    spokenSteps: [
+      "ברוכים הבאים ל־Bronson Family Farm. זה יותר מחווה.",
+      "מסלול האורח מציג את האדמה, המשימה והחזון הרחב.",
+      "מסלול הלקוח מוביל במהירות לשוק, לתזונה, למתכונים ולבחירות בריאות.",
+      "מסלול המגדל תומך בתכנון גידולים, מודעות למזג אוויר, תזמון עונתי וקציר.",
+      "מסלול הנוער מדגיש פיתוח כוח עבודה, עבודת צוות, בטיחות, ביטחון וצמיחה.",
+      "מסלול המפקח תומך בתצפית, מבנה, מוכנות ותמיכה יומית.",
+      "יחד, המסלולים האלה יוצרים פלטפורמה חיה, מעשית ומזמינה.",
+    ],
   },
+
   patwa: {
     appTitle: "Bronson Family Farm",
     subtitle: "Guided Ecosystem Demo",
@@ -560,13 +610,22 @@ const content = {
       },
     },
     guidedSteps: [
-      "Welcome to Bronson Family Farm. Dis more than a farm. Dis a living ecosystem a food, family, learning, an future.",
+      "Welcome. Yuh a step into something bigger than a farm. A yah so food, family, land, an future come together.",
       "Di guest pathway introduce di land, di mission, an di bigger vision fi di farm an di community.",
       "Di customer pathway fi carry people quick into di marketplace, nutrition guidance, recipes, an healthy food choices.",
       "Di grower pathway support crop planning, weather awareness, seasonal timing, an harvest coordination.",
       "Di youth pathway highlight workforce development, teamwork, safety, confidence, an visible growth.",
       "Di supervisor pathway support observation, structure, readiness, an daily support cross di work environment.",
       "Together, dem pathways build a platform weh feel practical, welcoming, an alive.",
+    ],
+    spokenSteps: [
+      "Welcome. You are stepping into something bigger than a farm. This is where food, family, land, and future come together.",
+      "The guest pathway introduces the land, the mission, and the broader vision for the farm and the community.",
+      "The customer pathway leads people into the marketplace, nutrition guidance, recipes, and healthier food choices.",
+      "The grower pathway supports crop planning, weather awareness, seasonal timing, and harvest coordination.",
+      "The youth pathway highlights workforce development, teamwork, safety, confidence, and visible growth.",
+      "The supervisor pathway supports observation, structure, readiness, and daily support across the work environment.",
+      "Together, these pathways build a platform that feels practical, welcoming, and alive.",
     ],
   },
 } as const
@@ -589,10 +648,10 @@ export default function App() {
   const [tourStep, setTourStep] = useState(0)
   const [voiceOn, setVoiceOn] = useState(true)
   const [activeTab, setActiveTab] = useState<"overview" | "marketplace" | "nutrition" | "calendar">("overview")
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
 
   const t = content[lang]
   const isRTL = lang === "he"
+  const currentRole = t.roles[role]
 
   useEffect(() => {
     fetch(
@@ -609,7 +668,8 @@ export default function App() {
     }
   }, [])
 
-  const guidedScript = useMemo(() => t.guidedSteps, [t])
+  const visibleGuidedScript = useMemo(() => t.guidedSteps, [t])
+  const spokenGuidedScript = useMemo(() => t.spokenSteps, [t])
 
   useEffect(() => {
     if (!tourOn || !voiceOn || !("speechSynthesis" in window)) return
@@ -625,10 +685,10 @@ export default function App() {
       patwa: "en-US",
     }
 
-    const utter = new SpeechSynthesisUtterance(guidedScript[tourStep] || "")
+    const utter = new SpeechSynthesisUtterance(spokenGuidedScript[tourStep] || "")
     utter.lang = langMap[lang]
-    utter.rate = 0.9
-    utter.pitch = 1.05
+    utter.rate = lang === "patwa" ? 0.86 : 0.9
+    utter.pitch = lang === "patwa" ? 0.98 : 1.05
     utter.volume = 1
 
     const preferredVoice = pickVoice(langMap[lang])
@@ -637,7 +697,7 @@ export default function App() {
     utter.onend = () => {
       setTimeout(() => {
         setTourStep((prev) => {
-          if (prev >= guidedScript.length - 1) {
+          if (prev >= spokenGuidedScript.length - 1) {
             setTourOn(false)
             return 0
           }
@@ -646,13 +706,12 @@ export default function App() {
       }, 500)
     }
 
-    utteranceRef.current = utter
     window.speechSynthesis.speak(utter)
 
     return () => {
       window.speechSynthesis.cancel()
     }
-  }, [tourOn, voiceOn, tourStep, guidedScript, lang])
+  }, [tourOn, voiceOn, tourStep, spokenGuidedScript, lang])
 
   useEffect(() => {
     if (!tourOn) {
@@ -662,8 +721,6 @@ export default function App() {
       }
     }
   }, [tourOn])
-
-  const currentRole = t.roles[role]
 
   const renderTabContent = () => {
     if (activeTab === "overview") {
@@ -739,29 +796,6 @@ export default function App() {
               <li key={item}>{item}</li>
             ))}
           </ul>
-          <div
-            style={{
-              marginTop: 18,
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: 18,
-            }}
-          >
-            {["Marketplace entry", "Food access", "Customer return flow"].map((item) => (
-              <div
-                key={item}
-                style={{
-                  background: "#f3f6ef",
-                  borderRadius: 12,
-                  padding: 18,
-                  fontSize: 20,
-                  fontWeight: 700,
-                }}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
         </div>
       )
     }
@@ -783,29 +817,6 @@ export default function App() {
               <li key={item}>{item}</li>
             ))}
           </ul>
-          <div
-            style={{
-              marginTop: 18,
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: 18,
-            }}
-          >
-            {["Fresh greens", "Simple meal ideas", "Healthy food support"].map((item) => (
-              <div
-                key={item}
-                style={{
-                  background: "#f3f6ef",
-                  borderRadius: 12,
-                  padding: 18,
-                  fontSize: 20,
-                  fontWeight: 700,
-                }}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
         </div>
       )
     }
@@ -826,29 +837,6 @@ export default function App() {
             <li key={item}>{item}</li>
           ))}
         </ul>
-        <div
-          style={{
-            marginTop: 18,
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 18,
-          }}
-        >
-          {["Seed start", "Planting window", "Harvest timing"].map((item) => (
-            <div
-              key={item}
-              style={{
-                background: "#f3f6ef",
-                borderRadius: 12,
-                padding: 18,
-                fontSize: 20,
-                fontWeight: 700,
-              }}
-            >
-              {item}
-            </div>
-          ))}
-        </div>
       </div>
     )
   }
@@ -955,7 +943,7 @@ export default function App() {
           <button
             onClick={() =>
               setTourStep((prev) =>
-                prev < guidedScript.length - 1 ? prev + 1 : prev
+                prev < visibleGuidedScript.length - 1 ? prev + 1 : prev
               )
             }
             style={{
@@ -1007,7 +995,7 @@ export default function App() {
               boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
             }}
           >
-            {guidedScript[tourStep]}
+            {visibleGuidedScript[tourStep]}
           </div>
         )}
 
