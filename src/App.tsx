@@ -16,20 +16,33 @@ const IMAGES = {
   history: "/GrowArea2.jpg",
 
   guest: "/Sameera1.jpg",
+  guest2: "/GrowArea2.jpg",
+
   customer: "/GrowArea2.jpg",
+  customer2: "/GrowArea.jpg",
+
   grower: "/Sameera3.jpg",
+  grower2: "/GrowArea.jpg",
+
   youth: "/Samaeera2.jpg",
+  youth2: "/Sameera1.jpg",
+
   volunteer: "/Samerra4.jpg",
+  volunteer2: "/GrowArea2.jpg",
+
   supervisor: "/Samerra5.jpg",
+  supervisor2: "/GrowArea.jpg",
 };
 
+const MARKETPLACE_URL = "https://grownby.com/farms/bronson-family-farm/shop";
+
 const ROLES: { id: Role; label: string; subtitle: string }[] = [
-  { id: "guest", label: "Guest", subtitle: "Explore the farm" },
-  { id: "customer", label: "Customer", subtitle: "Food, access, and pickup" },
-  { id: "grower", label: "Grower", subtitle: "Crops, tasks, and timing" },
+  { id: "guest", label: "Guest", subtitle: "Explore the ecosystem" },
+  { id: "customer", label: "Customer", subtitle: "Marketplace, nutrition, recipes" },
+  { id: "grower", label: "Grower", subtitle: "Crops, timing, field work" },
   { id: "youth", label: "Youth", subtitle: "Workforce and learning" },
-  { id: "volunteer", label: "Volunteer", subtitle: "Service and events" },
-  { id: "supervisor", label: "Supervisor", subtitle: "Coordination and support" },
+  { id: "volunteer", label: "Volunteer", subtitle: "Service and support" },
+  { id: "supervisor", label: "Supervisor", subtitle: "Coordination and oversight" },
 ];
 
 const copy = {
@@ -57,7 +70,7 @@ const copy = {
     dashboardKicker: "Dashboard",
     dashboardTitle: "Live Farm Dashboard",
     dashboardSubtitle:
-      "A clearer view of what is happening now across growing, events, and people.",
+      "A clearer view of what is happening now across growing, events, food access, and people.",
     liveKicker: "What is live",
     liveTitle: "Step into the active parts of the farm",
     cropKicker: "Planning",
@@ -81,11 +94,19 @@ const copy = {
     modulesTitle: "Live modules",
     roleActivityKicker: "Live system activity",
     guestBtn: "Enter as guest",
+    customerGo: "Go to Marketplace",
+    customerNutrition: "Nutrition Guidance",
+    customerRecipes: "Recipes & Meal Ideas",
+    visualContext: "Visual context",
+    customerNutritionTitle: "Nutrition Guidance",
+    customerRecipesTitle: "Recipes & Meal Ideas",
+    buyingHabitsTitle: "Buying Habits & Preferences",
   },
   es: {
     brandSub: "Demostración inmersiva",
     weatherLeft: "Condiciones en vivo",
-    weatherRight: "Youngstown, OH • 65°F • Parcialmente nublado • Buenas condiciones de campo",
+    weatherRight:
+      "Youngstown, OH • 65°F • Parcialmente nublado • Buenas condiciones de campo",
     enterRole: "Entrar por rol",
     enterFarm: "Entrar a la granja",
     heroKicker: "Ecosistema vivo",
@@ -106,7 +127,7 @@ const copy = {
     dashboardKicker: "Panel",
     dashboardTitle: "Panel en Vivo de la Granja",
     dashboardSubtitle:
-      "Una vista más clara de lo que está ocurriendo ahora en cultivo, eventos y personas.",
+      "Una vista más clara de lo que está ocurriendo ahora en cultivo, eventos, acceso a alimentos y personas.",
     liveKicker: "Lo que está activo",
     liveTitle: "Entra en las partes activas de la granja",
     cropKicker: "Planificación",
@@ -130,11 +151,19 @@ const copy = {
     modulesTitle: "Módulos en vivo",
     roleActivityKicker: "Actividad del sistema",
     guestBtn: "Entrar como invitado",
+    customerGo: "Ir al Mercado",
+    customerNutrition: "Guía Nutricional",
+    customerRecipes: "Recetas e Ideas",
+    visualContext: "Contexto visual",
+    customerNutritionTitle: "Guía Nutricional",
+    customerRecipesTitle: "Recetas e Ideas de Comidas",
+    buyingHabitsTitle: "Hábitos y Preferencias de Compra",
   },
   tl: {
     brandSub: "Immersive live demo",
     weatherLeft: "Live na kondisyon",
-    weatherRight: "Youngstown, OH • 65°F • Medyo maulap • Magandang kondisyon sa bukid",
+    weatherRight:
+      "Youngstown, OH • 65°F • Medyo maulap • Magandang kondisyon sa bukid",
     enterRole: "Pumasok ayon sa papel",
     enterFarm: "Pumasok sa bukid",
     heroKicker: "Buhay na ecosystem",
@@ -156,7 +185,7 @@ const copy = {
     dashboardKicker: "Dashboard",
     dashboardTitle: "Live Farm Dashboard",
     dashboardSubtitle:
-      "Mas malinaw na tanaw sa nangyayari ngayon sa pagtatanim, mga event, at mga tao.",
+      "Mas malinaw na tanaw sa nangyayari ngayon sa pagtatanim, mga event, access sa pagkain, at mga tao.",
     liveKicker: "Ano ang aktibo",
     liveTitle: "Pumasok sa mga aktibong bahagi ng bukid",
     cropKicker: "Pagpaplano",
@@ -181,6 +210,13 @@ const copy = {
     modulesTitle: "Live modules",
     roleActivityKicker: "Aktibidad ng sistema",
     guestBtn: "Pumasok bilang guest",
+    customerGo: "Pumunta sa Marketplace",
+    customerNutrition: "Gabay sa Nutrisyon",
+    customerRecipes: "Mga Recipe at Meal Ideas",
+    visualContext: "Biswal na konteksto",
+    customerNutritionTitle: "Gabay sa Nutrisyon",
+    customerRecipesTitle: "Mga Recipe at Ideya ng Pagkain",
+    buyingHabitsTitle: "Mga Gawi at Kagustuhan sa Pagbili",
   },
 };
 
@@ -188,6 +224,9 @@ export default function App() {
   const [view, setView] = useState<View>("home");
   const [selectedRole, setSelectedRole] = useState<Role>("guest");
   const [language, setLanguage] = useState<Language>("en");
+  const [customerPanel, setCustomerPanel] = useState<"nutrition" | "recipes">(
+    "nutrition"
+  );
 
   const t = copy[language];
 
@@ -195,25 +234,26 @@ export default function App() {
     switch (selectedRole) {
       case "guest":
         return {
-          title: "Guest Experience",
+          title: "Guest Ecosystem Introduction",
           image: IMAGES.guest,
+          secondImage: IMAGES.guest2,
           position: "center 18%",
           intro:
-            "A welcoming path into the farm, its purpose, its visible activity, and the ways people can participate.",
+            "The guest enters the farm to understand what is happening here. This is where people first experience the land, the work, and the purpose behind the ecosystem. Guests can observe, learn, and decide how they want to participate — whether as a customer, volunteer, grower, or part of the youth workforce.",
           bullets: [
             "See the farm as a living place",
-            "Understand what is active now",
+            "Understand how the ecosystem works",
             "Explore food, events, and pathways",
             "Move into deeper participation when ready",
           ],
           sections: [
             {
-              title: "What a guest sees",
-              text: "A clear introduction to the farm, the purpose behind it, and the ways the ecosystem is already moving.",
+              title: "Why the guest role matters",
+              text: "The guest role is the front door to the ecosystem. It should make the farm understandable, welcoming, and meaningful before someone chooses a deeper pathway.",
             },
             {
-              title: "Why it matters",
-              text: "The experience should feel welcoming, grounded, and easy to understand without losing the depth of the vision.",
+              title: "Connection to the ecosystem",
+              text: "Guests see how food access, learning, youth workforce, volunteering, and growing all connect. This role introduces the full vision, not just a single activity.",
             },
           ],
           modules: [
@@ -223,55 +263,57 @@ export default function App() {
             "Seasonal highlights",
           ],
           activity: [
-            "Weather: Good field conditions",
             "Visitor path: Open",
+            "Community visibility: High",
             "Next event: Market preparation",
             "Language access: EN • ES • TL",
           ],
         };
       case "customer":
         return {
-          title: "Customer Experience",
+          title: "Customer Marketplace Experience",
           image: IMAGES.customer,
+          secondImage: IMAGES.customer2,
           position: "center 52%",
           intro:
-            "A direct path to fresh food, access, ordering, pickup, and the visible connection between food and place.",
+            "The customer pathway gives direct access to Bronson Family Farm’s marketplace, fresh produce, pickup options, nutritional guidance, and recipe ideas. It helps customers quickly find what they need, return to familiar purchases, and build a healthier relationship with local food over time.",
           bullets: [
+            "Go directly to the marketplace",
             "See what is available now",
-            "Move toward shopping and pickup",
-            "Connect food with the farm story",
-            "Support the ecosystem through purchase",
+            "Get nutritional guidance and education",
+            "Find recipes and reorder familiar items",
           ],
           sections: [
             {
-              title: "Food access",
-              text: "The customer path should feel simple, real, and directly connected to the farm rather than detached from it.",
+              title: "Marketplace first",
+              text: "Most customers are coming to shop. This pathway should make the marketplace easy to reach within one step while keeping food access simple and welcoming.",
             },
             {
-              title: "What makes it different",
-              text: "Customers are not just buying food. They are entering a local ecosystem built around access, learning, and community.",
+              title: "Health, nutrition, and recipes",
+              text: "The customer pathway should also help people understand what to do with fresh produce through nutritional guidance, healthy eating education, and simple recipe ideas tied to what is available.",
             },
           ],
           modules: [
+            "Go to marketplace",
             "Available produce",
-            "Pickup times",
-            "SNAP-friendly access",
-            "Market updates",
+            "Nutrition guidance",
+            "Recipes and meal ideas",
           ],
           activity: [
-            "Featured today: Fresh seasonal produce",
+            "Marketplace: Ready",
             "Pickup status: On schedule",
-            "Ordering path: Active",
-            "Community market: Coming soon",
+            "Nutrition tips: Active",
+            "Recipes: Linked to what is in season",
           ],
         };
       case "grower":
         return {
-          title: "Grower Experience",
+          title: "Grower Production Experience",
           image: IMAGES.grower,
+          secondImage: IMAGES.grower2,
           position: "center 75%",
           intro:
-            "A view into crops, production rhythm, practical workflow, and the systems that support successful growing.",
+            "The grower represents the working side of the ecosystem — planting, tending, and harvesting. This role connects directly to food production and supports both community access and workforce development.",
           bullets: [
             "Visible growing activity",
             "Crop priorities and workflow",
@@ -303,11 +345,12 @@ export default function App() {
         };
       case "youth":
         return {
-          title: "Youth Experience",
+          title: "Youth Workforce Experience",
           image: IMAGES.youth,
+          secondImage: IMAGES.youth2,
           position: "left center",
           intro:
-            "A structured pathway for work, learning, responsibility, growth, and belonging through real farm activity.",
+            "The youth workforce is the heart of the learning ecosystem. Young people gain real-world experience through farming, building responsibility, confidence, and skills that connect to future career pathways.",
           bullets: [
             "Learn by doing",
             "Build skills through participation",
@@ -339,11 +382,12 @@ export default function App() {
         };
       case "volunteer":
         return {
-          title: "Volunteer Experience",
+          title: "Volunteer Support Experience",
           image: IMAGES.volunteer,
+          secondImage: IMAGES.volunteer2,
           position: "right center",
           intro:
-            "A clear path into contribution, visible needs, meaningful service, and community-powered support.",
+            "Volunteers strengthen the ecosystem by supporting events, growing activities, and community engagement. This role provides an entry point for people to contribute and belong.",
           bullets: [
             "See where help is needed",
             "Join events and farm tasks",
@@ -375,11 +419,12 @@ export default function App() {
         };
       case "supervisor":
         return {
-          title: "Supervisor Experience",
+          title: "Supervisor Coordination Experience",
           image: IMAGES.supervisor,
+          secondImage: IMAGES.supervisor2,
           position: "center bottom",
           intro:
-            "A view into coordination, oversight, support, and the practical flow behind daily movement on the farm.",
+            "The supervisor ensures the ecosystem runs smoothly. This role supports youth, coordinates work, and maintains visibility across all activities happening on the farm.",
           bullets: [
             "See who is active",
             "Support daily movement",
@@ -456,8 +501,38 @@ export default function App() {
             <div style={styles.eyebrowLight}>{t.roleView}</div>
             <h1 style={styles.roleTitle}>{roleData.title}</h1>
             <p style={styles.roleIntro}>{roleData.intro}</p>
+
+            {selectedRole === "customer" && (
+              <div style={styles.roleHeroButtonRow}>
+                <a
+                  href={MARKETPLACE_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={styles.primaryLinkButton}
+                >
+                  {t.customerGo}
+                </a>
+                <button
+                  style={styles.secondaryButton}
+                  onClick={() => setCustomerPanel("nutrition")}
+                >
+                  {t.customerNutrition}
+                </button>
+                <button
+                  style={styles.secondaryButton}
+                  onClick={() => setCustomerPanel("recipes")}
+                >
+                  {t.customerRecipes}
+                </button>
+              </div>
+            )}
           </div>
         </section>
+
+        <RoleVisualSection
+          image={roleData.secondImage}
+          label={t.visualContext}
+        />
 
         <section style={styles.roleInfoBand}>
           <div style={styles.roleInfoInner}>
@@ -471,6 +546,15 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        {selectedRole === "customer" && (
+          <CustomerSupportSection
+            panel={customerPanel}
+            titleNutrition={t.customerNutritionTitle}
+            titleRecipes={t.customerRecipesTitle}
+            titleHabits={t.buyingHabitsTitle}
+          />
+        )}
 
         <section style={styles.moduleSection}>
           <div style={styles.container}>
@@ -782,6 +866,111 @@ function HistorySection({
   );
 }
 
+function RoleVisualSection({
+  image,
+  label,
+}: {
+  image: string;
+  label: string;
+}) {
+  return (
+    <section style={styles.roleVisualWrapper}>
+      <div style={styles.container}>
+        <div style={styles.eyebrowDark}>{label}</div>
+      </div>
+      <div
+        style={{
+          ...styles.roleVisualImage,
+          backgroundImage: `linear-gradient(rgba(18,28,20,0.08), rgba(18,28,20,0.18)), url(${image})`,
+        }}
+      />
+    </section>
+  );
+}
+
+function CustomerSupportSection({
+  panel,
+  titleNutrition,
+  titleRecipes,
+  titleHabits,
+}: {
+  panel: "nutrition" | "recipes";
+  titleNutrition: string;
+  titleRecipes: string;
+  titleHabits: string;
+}) {
+  const nutritionTips = [
+    "Choose more dark leafy greens for fiber, iron, and vitamins.",
+    "Pair fresh vegetables with lean proteins and whole grains for balance.",
+    "Use seasonal produce to reduce processed food and increase freshness.",
+    "Hydrate well and build meals around colorful vegetables.",
+  ];
+
+  const recipes = [
+    "Collards + garlic + olive oil quick sauté",
+    "Fresh tomato cucumber salad with herbs",
+    "Stuffed peppers with rice and greens",
+    "Simple cabbage skillet with onion and seasoning",
+  ];
+
+  const habits = [
+    "Frequently purchased: greens, tomatoes, peppers",
+    "Preferred pickup time: late afternoon",
+    "Seasonal pattern: more seedlings in spring",
+    "Helpful prompt: suggest favorites for reorder",
+  ];
+
+  return (
+    <section style={styles.customerSupportSection}>
+      <div style={styles.container}>
+        <div style={styles.customerSupportGrid}>
+          <div style={styles.customerLargeCard}>
+            <div style={styles.eyebrowDark}>
+              {panel === "nutrition" ? titleNutrition : titleRecipes}
+            </div>
+
+            {panel === "nutrition" ? (
+              <>
+                <h3 style={styles.customerPanelTitle}>{titleNutrition}</h3>
+                <div style={styles.customerList}>
+                  {nutritionTips.map((tip) => (
+                    <div key={tip} style={styles.customerListItem}>
+                      {tip}
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 style={styles.customerPanelTitle}>{titleRecipes}</h3>
+                <div style={styles.customerList}>
+                  {recipes.map((recipe) => (
+                    <div key={recipe} style={styles.customerListItem}>
+                      {recipe}
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          <div style={styles.customerSmallCard}>
+            <div style={styles.eyebrowDark}>{titleHabits}</div>
+            <h3 style={styles.customerPanelTitle}>{titleHabits}</h3>
+            <div style={styles.customerList}>
+              {habits.map((habit) => (
+                <div key={habit} style={styles.customerListItem}>
+                  {habit}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function TextBand({
   dark = false,
   kicker,
@@ -833,7 +1022,7 @@ function LiveDashboard({
     { label: "Growing Areas", value: "12 Active" },
     { label: "Next Event", value: "Market Prep" },
     { label: "Youth Team", value: "On Path" },
-    { label: "Volunteer Needs", value: "4 Open" },
+    { label: "Food Access", value: "Ready" },
   ];
 
   return (
@@ -872,8 +1061,8 @@ function LivePathways({
       role: "grower" as Role,
     },
     {
-      title: "Food Access",
-      text: "Explore fresh food, availability, and how people connect to it.",
+      title: "Marketplace",
+      text: "Go directly to food access, shopping, recipes, and nutrition.",
       role: "customer" as Role,
     },
     {
@@ -1216,6 +1405,21 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
   },
 
+  primaryLinkButton: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textDecoration: "none",
+    border: "none",
+    background: "#e9f1df",
+    color: "#17311f",
+    padding: "14px 18px",
+    borderRadius: 999,
+    fontSize: 15,
+    fontWeight: 500,
+    cursor: "pointer",
+  },
+
   darkButton: {
     border: "none",
     background: "#183220",
@@ -1261,6 +1465,19 @@ const styles: Record<string, React.CSSProperties> = {
     color: "rgba(255,255,255,0.90)",
     maxWidth: 640,
     textShadow: "0 2px 10px rgba(0,0,0,0.14)",
+  },
+
+  roleVisualWrapper: {
+    background: "#f7faf5",
+    padding: "20px 0 0",
+  },
+
+  roleVisualImage: {
+    height: 300,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    marginTop: 6,
   },
 
   textBandLight: {
@@ -1581,8 +1798,15 @@ const styles: Record<string, React.CSSProperties> = {
   },
 
   roleHeroTextBlock: {
-    maxWidth: 760,
+    maxWidth: 820,
     padding: "0",
+  },
+
+  roleHeroButtonRow: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 22,
   },
 
   backButton: {
@@ -1610,7 +1834,7 @@ const styles: Record<string, React.CSSProperties> = {
   roleIntro: {
     marginTop: 14,
     marginBottom: 0,
-    maxWidth: 700,
+    maxWidth: 780,
     fontSize: 17,
     lineHeight: 1.68,
     color: "rgba(255,255,255,0.92)",
@@ -1642,6 +1866,55 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 15,
     lineHeight: 1.62,
     boxShadow: "0 10px 22px rgba(19,45,28,0.05)",
+  },
+
+  customerSupportSection: {
+    background: "#ffffff",
+    padding: "22px 0 28px",
+  },
+
+  customerSupportGrid: {
+    display: "grid",
+    gridTemplateColumns: "1.35fr 1fr",
+    gap: 18,
+  },
+
+  customerLargeCard: {
+    background: "#f7faf5",
+    border: "1px solid rgba(23,49,31,0.08)",
+    borderRadius: 22,
+    padding: "22px 20px",
+  },
+
+  customerSmallCard: {
+    background: "#eef4e8",
+    border: "1px solid rgba(23,49,31,0.08)",
+    borderRadius: 22,
+    padding: "22px 20px",
+  },
+
+  customerPanelTitle: {
+    margin: 0,
+    fontSize: 24,
+    lineHeight: 1.15,
+    fontWeight: 500,
+    color: "#183220",
+  },
+
+  customerList: {
+    display: "grid",
+    gap: 12,
+    marginTop: 16,
+  },
+
+  customerListItem: {
+    background: "#ffffff",
+    borderRadius: 16,
+    border: "1px solid rgba(23,49,31,0.08)",
+    padding: "14px 14px",
+    color: "#556c5b",
+    fontSize: 15,
+    lineHeight: 1.6,
   },
 
   moduleSection: {
