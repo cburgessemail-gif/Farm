@@ -2,82 +2,86 @@ import { useEffect, useState } from "react"
 
 const roles = ["guest", "customer", "grower", "youth", "supervisor"] as const
 type Role = (typeof roles)[number]
-type LangKey = "en" | "es" | "tl" | "it" | "he" | "patwa"
 
-const images: Record<Role, string> = {
-  guest: "/SAM_0220.JPG",
-  customer: "/GrowArea2.jpg",
-  grower: "/SAM_0221.JPG",
-  youth: "/SAM_0223.JPG",
-  supervisor: "/SAM_0225.JPG",
+const imageMap: Record<Role, string> = {
+  guest: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/GrowArea.jpg",
+  customer: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/GrowArea2.jpg",
+  grower: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0221.JPG",
+  youth: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0223.JPG",
+  supervisor: "https://raw.githubusercontent.com/cburgessemail-gif/Farm/main/SAM_0225.JPG",
 }
 
-const languages = {
-  en: {
-    name: "English",
-    intro: "Welcome to Bronson Family Farm. Let’s explore your experience.",
-    roleTitle: {
-      guest: "Guest",
-      customer: "Customer",
-      grower: "Grower",
-      youth: "Youth",
-      supervisor: "Supervisor",
-    },
-    roleText: {
-      guest: "Introduction to the ecosystem and community.",
-      customer: "Access marketplace, recipes, and nutrition.",
-      grower: "Plan crops, monitor weather, manage harvest.",
-      youth: "Learn teamwork, safety, and growth.",
-      supervisor: "Track progress and support the system.",
-    },
-    weather: "Weather",
-    changeLanguage: "Language",
-  },
-} as const
+const roleDescriptions: Record<Role, string> = {
+  guest: "Introduction to the ecosystem and community.",
+  customer: "Explore the marketplace, nutrition, and recipes.",
+  grower: "Manage crops, weather, and harvest planning.",
+  youth: "Learn teamwork, safety, and growth.",
+  supervisor: "Track progress and oversee operations.",
+}
 
-function App() {
+export default function App() {
   const [role, setRole] = useState<Role>("guest")
-  const [weather, setWeather] = useState<any>({ loading: true })
+  const [temp, setTemp] = useState<number | null>(null)
 
   useEffect(() => {
     fetch(
       "https://api.open-meteo.com/v1/forecast?latitude=41.0998&longitude=-80.6495&current=temperature_2m"
     )
       .then((res) => res.json())
-      .then((data) =>
-        setWeather({
-          temp: data.current.temperature_2m,
-          loading: false,
-        })
-      )
+      .then((data) => {
+        setTemp(data.current.temperature_2m)
+      })
   }, [])
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Bronson Family Farm</h1>
+    <div style={{ fontFamily: "Arial", padding: 20, background: "#f5f5f5", minHeight: "100vh" }}>
+      
+      <h1 style={{ fontSize: "32px", marginBottom: "20px" }}>
+        Bronson Family Farm
+      </h1>
 
-      <div>
+      {/* ROLE BUTTONS */}
+      <div style={{ marginBottom: "20px" }}>
         {roles.map((r) => (
-          <button key={r} onClick={() => setRole(r)}>
+          <button
+            key={r}
+            onClick={() => setRole(r)}
+            style={{
+              marginRight: "10px",
+              padding: "10px 15px",
+              background: role === r ? "#2d6a4f" : "#ccc",
+              color: role === r ? "white" : "black",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
             {r}
           </button>
         ))}
       </div>
 
-      <div>
-        <img src={images[role]} style={{ width: "100%", maxHeight: 400 }} />
+      {/* IMAGE */}
+      <div style={{ marginBottom: "20px" }}>
+        <img
+          src={imageMap[role]}
+          style={{
+            width: "100%",
+            maxHeight: "400px",
+            objectFit: "cover",
+            borderRadius: "8px",
+          }}
+        />
       </div>
 
-      <h2>{role}</h2>
-      <p>{languages.en.roleText[role]}</p>
+      {/* CONTENT */}
+      <h2 style={{ textTransform: "capitalize" }}>{role}</h2>
+      <p>{roleDescriptions[role]}</p>
 
-      <div>
-        {weather.loading
-          ? "Loading weather..."
-          : `Temperature: ${weather.temp}°`}
+      {/* WEATHER */}
+      <div style={{ marginTop: "20px" }}>
+        {temp === null ? "Loading weather..." : `Temperature: ${temp}°`}
       </div>
+
     </div>
   )
 }
-
-export default App
