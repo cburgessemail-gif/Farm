@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 
 type Role = "guest" | "customer" | "grower" | "youth" | "supervisor"
 type LangKey = "en" | "es" | "tl" | "it" | "he" | "patwa"
+type ModuleKey = "overview" | "marketplace" | "nutrition" | "calendar"
 
 const roles: Role[] = ["guest", "customer", "grower", "youth", "supervisor"]
 
@@ -25,535 +26,604 @@ const languageOptions: { key: LangKey; label: string }[] = [
 const content = {
   en: {
     appTitle: "Bronson Family Farm",
-    subtitle: "Guided Ecosystem Demo",
-    chooseRole: "Choose a pathway",
-    startTour: "Start Guided Demo",
-    stopTour: "Stop Guided Demo",
-    nextStep: "Next Step",
+    subTitle: "Immersive Ecosystem Demo",
+    enterText:
+      "A role-based ecosystem connecting food, family, land, learning, and opportunity.",
     voice: "Voice",
     on: "On",
     off: "Off",
+    startTour: "Start Guided Demo",
+    stopTour: "Stop Guided Demo",
+    nextStep: "Next Step",
     weather: "Weather",
-    overview: "Overview",
-    marketplace: "Marketplace",
-    nutrition: "Nutrition & Recipes",
-    calendar: "Crop Calendar",
-    intro:
-      "Welcome. This is more than a farm. It is a living ecosystem where food, family, land, learning, and opportunity come together.",
+    modules: {
+      overview: "Overview",
+      marketplace: "Marketplace",
+      nutrition: "Nutrition",
+      calendar: "Calendar",
+    },
     roles: {
       guest: {
         title: "Guest",
-        text: "The guest pathway is the front door. It introduces the vision, the land, the community, and the larger purpose of the ecosystem.",
-        bullets: [
-          "See the farm vision clearly",
-          "Understand the larger ecosystem",
-          "Explore before choosing a pathway",
-        ],
+        intro:
+          "The guest experience introduces the land, the vision, and the larger ecosystem.",
+        stats: ["Vision", "Story", "Entry Point"],
       },
       customer: {
         title: "Customer",
-        text: "The customer pathway should move quickly into marketplace access, recipes, nutrition, and healthier food choices.",
-        bullets: [
-          "Marketplace entry",
-          "Nutrition guidance",
-          "Recipes and healthy food support",
-        ],
+        intro:
+          "The customer experience should move directly into fresh food, recipes, and healthier choices.",
+        stats: ["Marketplace", "Recipes", "Buying Habits"],
       },
       grower: {
         title: "Grower",
-        text: "The grower pathway supports crop planning, seasonal timing, weather awareness, and harvest coordination.",
-        bullets: [
-          "Crop planning",
-          "Season readiness",
-          "Harvest coordination",
-        ],
+        intro:
+          "The grower experience supports crop planning, season timing, and harvest coordination.",
+        stats: ["Crop Plan", "Season Readiness", "Harvest Flow"],
       },
       youth: {
         title: "Youth",
-        text: "The youth pathway is about workforce development, teamwork, structure, confidence, and growth.",
-        bullets: [
-          "Youth workforce development",
-          "Safety and teamwork",
-          "Responsibility and growth",
-        ],
+        intro:
+          "The youth experience centers workforce development, teamwork, confidence, and growth.",
+        stats: ["Teamwork", "Safety", "Growth"],
       },
       supervisor: {
         title: "Supervisor",
-        text: "The supervisor supports the youth workforce program through daily oversight, encouragement, readiness tracking, and coordination with support staff resources from New Vision Behavioral Health.",
-        bullets: [
-          "Youth workforce supervision",
-          "Readiness and progress tracking",
-          "Support staff coordination with New Vision Behavioral Health",
-        ],
+        intro:
+          "The supervisor supports the youth workforce program through observation, encouragement, progress tracking, and coordination with support staff resources from New Vision Behavioral Health.",
+        stats: ["Oversight", "Tracking", "Support Resources"],
       },
     },
-    sections: {
+    panels: {
+      overview: {
+        title: "Platform Overview",
+        text: "This experience is designed to feel like entering a live system, not reading a website.",
+        cards: [
+          {
+            title: "Role-Based Entry",
+            text: "Each pathway opens a different view of the ecosystem.",
+          },
+          {
+            title: "Guided Experience",
+            text: "Narration and interface work together to lead the viewer.",
+          },
+          {
+            title: "Living Platform",
+            text: "The goal is a practical system for real people, not static pages.",
+          },
+        ],
+      },
       marketplace: {
         title: "Marketplace Path",
-        text: "Customers should move easily into produce, seedlings, healthy food choices, and repeat buying habits.",
+        text: "Customers should move quickly into fresh produce, seedlings, nutrition guidance, and repeat buying habits.",
+        cards: [
+          { title: "Fresh Food", text: "Produce, seedlings, and customer-ready access." },
+          { title: "Return Visits", text: "Make it easy for customers to come back." },
+          { title: "Healthy Choices", text: "Pair food access with practical support." },
+        ],
       },
       nutrition: {
         title: "Nutrition & Recipes",
-        text: "Fresh food should connect to everyday life through practical nutrition guidance and simple recipe support.",
+        text: "Fresh food should connect to daily life through simple recipes, guidance, and better choices.",
+        cards: [
+          { title: "Simple Recipes", text: "Make preparation feel easy and realistic." },
+          { title: "Food Education", text: "Support healthier everyday decisions." },
+          { title: "Practical Guidance", text: "Connect what is grown to what families eat." },
+        ],
       },
       calendar: {
         title: "Crop Calendar",
-        text: "The crop calendar should connect planting, weather, seasonal timing, and harvest planning.",
+        text: "The system should connect weather, planting windows, seasonal timing, and harvest planning.",
+        cards: [
+          { title: "Planting Windows", text: "Know when to start and when to move." },
+          { title: "Season Timing", text: "Track readiness across the growing cycle." },
+          { title: "Harvest Planning", text: "Prepare for flow, storage, and use." },
+        ],
       },
     },
     guidedSteps: [
       "Welcome to Bronson Family Farm. This is more than a farm. It is a living ecosystem of food, family, learning, and future.",
-      "The guest pathway introduces the land, the mission, and the larger community vision.",
-      "The customer pathway carries people into marketplace access, nutrition guidance, recipes, and healthier food choices.",
-      "The grower pathway supports crop planning, weather awareness, seasonal timing, and harvest coordination.",
-      "The youth pathway highlights workforce development, teamwork, safety, confidence, and growth.",
-      "The supervisor pathway supports the youth workforce program through observation, structure, readiness, daily encouragement, and coordination with support staff resources from New Vision Behavioral Health.",
-      "Together, these pathways build one connected role-based platform.",
+      "Each role opens a different pathway through the ecosystem, making the experience feel active rather than static.",
+      "The customer pathway should move directly into marketplace access, nutrition guidance, recipes, and healthier choices.",
+      "The grower pathway supports crop planning, weather awareness, season timing, and harvest coordination.",
+      "The youth pathway highlights workforce development, teamwork, safety, confidence, and visible growth.",
+      "The supervisor pathway supports the youth workforce program through encouragement, readiness tracking, and coordination with support staff resources from New Vision Behavioral Health.",
+      "Together, these pathways create a platform experience instead of a simple website.",
     ],
   },
 
   es: {
     appTitle: "Bronson Family Farm",
-    subtitle: "Demostración Guiada del Ecosistema",
-    chooseRole: "Elige un camino",
-    startTour: "Iniciar demostración guiada",
-    stopTour: "Detener demostración guiada",
-    nextStep: "Siguiente paso",
+    subTitle: "Demostración Inmersiva del Ecosistema",
+    enterText:
+      "Un ecosistema por roles que conecta alimentos, familia, tierra, aprendizaje y oportunidad.",
     voice: "Voz",
     on: "Activada",
     off: "Desactivada",
+    startTour: "Iniciar demostración guiada",
+    stopTour: "Detener demostración guiada",
+    nextStep: "Siguiente paso",
     weather: "Clima",
-    overview: "Resumen",
-    marketplace: "Mercado",
-    nutrition: "Nutrición y Recetas",
-    calendar: "Calendario de Cultivo",
-    intro:
-      "Bienvenido. Esto es más que una granja. Es un ecosistema vivo donde se unen alimentos, familia, tierra, aprendizaje y oportunidad.",
+    modules: {
+      overview: "Resumen",
+      marketplace: "Mercado",
+      nutrition: "Nutrición",
+      calendar: "Calendario",
+    },
     roles: {
       guest: {
         title: "Invitado",
-        text: "El camino del invitado presenta la visión, la tierra, la comunidad y el propósito general del ecosistema.",
-        bullets: [
-          "Ver claramente la visión de la finca",
-          "Comprender el ecosistema más amplio",
-          "Explorar antes de elegir",
-        ],
+        intro:
+          "La experiencia del invitado presenta la tierra, la visión y el ecosistema general.",
+        stats: ["Visión", "Historia", "Entrada"],
       },
       customer: {
         title: "Cliente",
-        text: "El camino del cliente debe llevar rápidamente al mercado, las recetas, la nutrición y decisiones más saludables.",
-        bullets: [
-          "Entrada al mercado",
-          "Guía nutricional",
-          "Recetas y apoyo alimentario",
-        ],
+        intro:
+          "La experiencia del cliente debe llevar directamente a comida fresca, recetas y mejores decisiones.",
+        stats: ["Mercado", "Recetas", "Hábitos"],
       },
       grower: {
         title: "Productor",
-        text: "El camino del productor apoya la planificación de cultivos, el clima, la temporada y la cosecha.",
-        bullets: [
-          "Planificación de cultivos",
-          "Preparación estacional",
-          "Coordinación de cosecha",
-        ],
+        intro:
+          "La experiencia del productor apoya planificación, temporada y cosecha.",
+        stats: ["Plan de Cultivo", "Temporada", "Cosecha"],
       },
       youth: {
         title: "Joven",
-        text: "El camino juvenil trata de desarrollo laboral, trabajo en equipo, estructura, confianza y crecimiento.",
-        bullets: [
-          "Desarrollo laboral",
-          "Seguridad y trabajo en equipo",
-          "Responsabilidad y crecimiento",
-        ],
+        intro:
+          "La experiencia juvenil se centra en trabajo, equipo, confianza y crecimiento.",
+        stats: ["Equipo", "Seguridad", "Crecimiento"],
       },
       supervisor: {
         title: "Supervisor",
-        text: "El supervisor apoya el programa laboral juvenil mediante supervisión diaria, acompañamiento, seguimiento y coordinación con recursos de apoyo de New Vision Behavioral Health.",
-        bullets: [
-          "Supervisión del programa juvenil",
-          "Seguimiento del progreso",
-          "Coordinación con New Vision Behavioral Health",
-        ],
+        intro:
+          "El supervisor apoya el programa laboral juvenil mediante observación, acompañamiento, seguimiento y coordinación con New Vision Behavioral Health.",
+        stats: ["Supervisión", "Seguimiento", "Recursos"],
       },
     },
-    sections: {
+    panels: {
+      overview: {
+        title: "Resumen de la Plataforma",
+        text: "Esta experiencia está diseñada para sentirse como un sistema vivo, no como un sitio web.",
+        cards: [
+          { title: "Entrada por Rol", text: "Cada camino abre una vista diferente del ecosistema." },
+          { title: "Experiencia Guiada", text: "La narración y la interfaz guían al visitante." },
+          { title: "Plataforma Viva", text: "El objetivo es un sistema práctico para personas reales." },
+        ],
+      },
       marketplace: {
         title: "Camino del Mercado",
-        text: "Los clientes deben entrar fácilmente a productos, plántulas y elecciones saludables.",
+        text: "Los clientes deben moverse rápidamente hacia productos frescos, plántulas, nutrición y hábitos de compra.",
+        cards: [
+          { title: "Comida Fresca", text: "Productos, plántulas y acceso directo." },
+          { title: "Regreso", text: "Hacer fácil que el cliente vuelva." },
+          { title: "Opciones Saludables", text: "Unir acceso alimentario y apoyo práctico." },
+        ],
       },
       nutrition: {
         title: "Nutrición y Recetas",
-        text: "La comida fresca debe conectarse con la vida diaria mediante nutrición práctica y recetas simples.",
+        text: "La comida fresca debe conectarse con la vida diaria mediante recetas simples y orientación.",
+        cards: [
+          { title: "Recetas Simples", text: "Preparación fácil y realista." },
+          { title: "Educación Alimentaria", text: "Apoyo para mejores decisiones diarias." },
+          { title: "Guía Práctica", text: "Conectar lo cultivado con lo que come la familia." },
+        ],
       },
       calendar: {
         title: "Calendario de Cultivo",
-        text: "El calendario debe conectar siembra, clima, tiempo estacional y cosecha.",
+        text: "El sistema debe conectar clima, tiempos de siembra, temporada y cosecha.",
+        cards: [
+          { title: "Siembra", text: "Saber cuándo empezar y mover." },
+          { title: "Temporada", text: "Seguir la preparación del ciclo." },
+          { title: "Cosecha", text: "Prepararse para flujo, uso y almacenamiento." },
+        ],
       },
     },
     guidedSteps: [
       "Bienvenido a Bronson Family Farm. Esto es más que una granja. Es un ecosistema vivo de comida, familia, aprendizaje y futuro.",
-      "El camino del invitado presenta la tierra, la misión y la visión comunitaria.",
-      "El camino del cliente lleva al mercado, la nutrición, las recetas y decisiones más saludables.",
-      "El camino del productor apoya planificación, clima, temporada y cosecha.",
-      "El camino juvenil destaca desarrollo laboral, trabajo en equipo, seguridad y crecimiento.",
-      "El camino del supervisor apoya el programa juvenil con estructura, seguimiento y coordinación con New Vision Behavioral Health.",
-      "Juntos, estos caminos forman una plataforma conectada por roles.",
+      "Cada rol abre un camino diferente dentro del ecosistema.",
+      "El camino del cliente debe llevar directamente al mercado, la nutrición, las recetas y decisiones más saludables.",
+      "El camino del productor apoya planificación, clima, tiempos de temporada y cosecha.",
+      "El camino juvenil destaca desarrollo laboral, trabajo en equipo, seguridad, confianza y crecimiento.",
+      "El camino del supervisor apoya el programa juvenil con acompañamiento, seguimiento y coordinación con New Vision Behavioral Health.",
+      "Juntos, estos caminos crean una experiencia de plataforma y no solo un sitio web.",
     ],
   },
 
   tl: {
     appTitle: "Bronson Family Farm",
-    subtitle: "Gabay na Demo ng Ecosystem",
-    chooseRole: "Pumili ng landas",
-    startTour: "Simulan ang gabay na demo",
-    stopTour: "Itigil ang gabay na demo",
-    nextStep: "Susunod",
+    subTitle: "Immersive Ecosystem Demo",
+    enterText:
+      "Isang role-based ecosystem para sa pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
     voice: "Boses",
     on: "Bukas",
     off: "Patay",
+    startTour: "Simulan ang gabay na demo",
+    stopTour: "Itigil ang gabay na demo",
+    nextStep: "Susunod",
     weather: "Panahon",
-    overview: "Buod",
-    marketplace: "Marketplace",
-    nutrition: "Nutrisyon at Mga Recipe",
-    calendar: "Kalendaryo ng Pananim",
-    intro:
-      "Maligayang pagdating. Higit ito sa isang farm. Isa itong buhay na ecosystem ng pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
+    modules: {
+      overview: "Buod",
+      marketplace: "Marketplace",
+      nutrition: "Nutrisyon",
+      calendar: "Kalendaryo",
+    },
     roles: {
       guest: {
         title: "Bisita",
-        text: "Ipinapakilala ng guest pathway ang vision, lupa, komunidad, at mas malaking layunin ng ecosystem.",
-        bullets: [
-          "Makita ang vision ng farm",
-          "Maunawaan ang mas malaking ecosystem",
-          "Mag-explore bago pumili",
-        ],
+        intro:
+          "Ipinapakilala ng guest experience ang lupa, vision, at mas malaking ecosystem.",
+        stats: ["Vision", "Kuwento", "Pasok"],
       },
       customer: {
         title: "Customer",
-        text: "Dapat mabilis na dalhin ng customer pathway ang tao sa marketplace, recipes, nutrition, at healthier choices.",
-        bullets: [
-          "Marketplace entry",
-          "Nutrition guidance",
-          "Recipes at food support",
-        ],
+        intro:
+          "Dapat dalhin ng customer experience ang tao sa fresh food, recipes, at healthier choices.",
+        stats: ["Marketplace", "Recipes", "Habits"],
       },
       grower: {
         title: "Grower",
-        text: "Sinusuportahan ng grower pathway ang crop planning, weather awareness, seasonal timing, at harvest coordination.",
-        bullets: [
-          "Crop planning",
-          "Season readiness",
-          "Harvest coordination",
-        ],
+        intro:
+          "Sinusuportahan ng grower experience ang planning, season timing, at harvest coordination.",
+        stats: ["Crop Plan", "Season", "Harvest"],
       },
       youth: {
         title: "Kabataan",
-        text: "Ang youth pathway ay tungkol sa workforce development, teamwork, structure, confidence, at growth.",
-        bullets: [
-          "Youth workforce development",
-          "Safety at teamwork",
-          "Responsibility at growth",
-        ],
+        intro:
+          "Ang youth experience ay tungkol sa workforce development, teamwork, confidence, at growth.",
+        stats: ["Teamwork", "Safety", "Growth"],
       },
       supervisor: {
         title: "Supervisor",
-        text: "Sinusuportahan ng supervisor ang youth workforce program sa pamamagitan ng daily oversight, encouragement, readiness tracking, at support coordination kasama ang New Vision Behavioral Health.",
-        bullets: [
-          "Youth workforce supervision",
-          "Progress tracking",
-          "Coordination with New Vision Behavioral Health",
-        ],
+        intro:
+          "Sinusuportahan ng supervisor ang youth workforce program sa pamamagitan ng observation, tracking, at coordination kasama ang New Vision Behavioral Health.",
+        stats: ["Oversight", "Tracking", "Resources"],
       },
     },
-    sections: {
+    panels: {
+      overview: {
+        title: "Platform Overview",
+        text: "Ang experience na ito ay parang pagpasok sa live system, hindi website.",
+        cards: [
+          { title: "Role Entry", text: "Bawat role ay ibang view ng ecosystem." },
+          { title: "Guided Experience", text: "Magkasama ang narration at interface." },
+          { title: "Living Platform", text: "Practical system ito para sa totoong tao." },
+        ],
+      },
       marketplace: {
         title: "Marketplace Path",
-        text: "Dapat madaling makapasok ang customer sa produce, seedlings, at healthy choices.",
+        text: "Dapat mabilis na makarating ang customer sa fresh food, seedlings, nutrition, at return visits.",
+        cards: [
+          { title: "Fresh Food", text: "Produce, seedlings, at direct access." },
+          { title: "Return Visits", text: "Madaling makabalik ang customer." },
+          { title: "Healthy Choices", text: "Food access na may practical support." },
+        ],
       },
       nutrition: {
-        title: "Nutrisyon at Mga Recipe",
-        text: "Dapat konektado ang fresh food sa araw-araw sa pamamagitan ng practical nutrition at simple recipes.",
+        title: "Nutrisyon at Recipes",
+        text: "Dapat konektado ang fresh food sa araw-araw sa pamamagitan ng simple recipes at guidance.",
+        cards: [
+          { title: "Simple Recipes", text: "Madali at realistic na preparation." },
+          { title: "Food Education", text: "Tulong para sa better daily choices." },
+          { title: "Practical Guidance", text: "Ikonekta ang tanim sa kinakain." },
+        ],
       },
       calendar: {
-        title: "Kalendaryo ng Pananim",
-        text: "Dapat pinagdurugtong ng calendar ang planting, weather, seasonal timing, at harvest planning.",
+        title: "Crop Calendar",
+        text: "Dapat konektado ang weather, planting windows, season timing, at harvest planning.",
+        cards: [
+          { title: "Planting Windows", text: "Alamin kung kailan magsisimula." },
+          { title: "Season Timing", text: "Subaybayan ang readiness." },
+          { title: "Harvest Planning", text: "Maghanda para sa flow at use." },
+        ],
       },
     },
     guidedSteps: [
       "Maligayang pagdating sa Bronson Family Farm. Higit ito sa isang farm. Isa itong buhay na ecosystem ng pagkain, pamilya, pagkatuto, at kinabukasan.",
-      "Ipinapakilala ng guest pathway ang lupa, mission, at mas malaking community vision.",
-      "Dinadala ng customer pathway ang tao sa marketplace, nutrition, recipes, at healthier food choices.",
-      "Sinusuportahan ng grower pathway ang crop planning, weather awareness, seasonal timing, at harvest coordination.",
+      "Bawat role ay nagbubukas ng ibang pathway sa ecosystem.",
+      "Dapat dalhin ng customer pathway ang tao sa marketplace, nutrition, recipes, at healthier choices.",
+      "Sinusuportahan ng grower pathway ang crop planning, weather awareness, season timing, at harvest coordination.",
       "Ipinapakita ng youth pathway ang workforce development, teamwork, safety, confidence, at growth.",
-      "Sinusuportahan ng supervisor pathway ang youth workforce program sa pamamagitan ng structure, tracking, at coordination with New Vision Behavioral Health.",
-      "Magkasama, bumubuo ang mga path na ito ng isang connected role-based platform.",
+      "Sinusuportahan ng supervisor pathway ang youth workforce program kasama ang New Vision Behavioral Health resources.",
+      "Magkasama, nagiging platform experience ito at hindi simpleng website lang.",
     ],
   },
 
   it: {
     appTitle: "Bronson Family Farm",
-    subtitle: "Demo Guidata dell’Ecosistema",
-    chooseRole: "Scegli un percorso",
-    startTour: "Avvia demo guidata",
-    stopTour: "Ferma demo guidata",
-    nextStep: "Passo successivo",
+    subTitle: "Demo Immersiva dell’Ecosistema",
+    enterText:
+      "Un ecosistema per ruoli che collega cibo, famiglia, terra, apprendimento e opportunità.",
     voice: "Voce",
     on: "Attiva",
     off: "Disattiva",
+    startTour: "Avvia demo guidata",
+    stopTour: "Ferma demo guidata",
+    nextStep: "Passo successivo",
     weather: "Meteo",
-    overview: "Panoramica",
-    marketplace: "Mercato",
-    nutrition: "Nutrizione e Ricette",
-    calendar: "Calendario delle Colture",
-    intro:
-      "Benvenuto. Questo è più di una fattoria. È un ecosistema vivo dove si incontrano cibo, famiglia, terra, apprendimento e opportunità.",
+    modules: {
+      overview: "Panoramica",
+      marketplace: "Mercato",
+      nutrition: "Nutrizione",
+      calendar: "Calendario",
+    },
     roles: {
       guest: {
         title: "Ospite",
-        text: "Il percorso ospite introduce la visione, la terra, la comunità e il grande scopo dell’ecosistema.",
-        bullets: [
-          "Vedere chiaramente la visione della fattoria",
-          "Capire l’ecosistema più ampio",
-          "Esplorare prima di scegliere",
-        ],
+        intro:
+          "L’esperienza ospite introduce la terra, la visione e il sistema più ampio.",
+        stats: ["Visione", "Storia", "Ingresso"],
       },
       customer: {
         title: "Cliente",
-        text: "Il percorso cliente dovrebbe portare rapidamente a mercato, ricette, nutrizione e scelte migliori.",
-        bullets: [
-          "Ingresso al mercato",
-          "Guida nutrizionale",
-          "Ricette e supporto alimentare",
-        ],
+        intro:
+          "L’esperienza cliente dovrebbe portare rapidamente a cibo fresco, ricette e scelte migliori.",
+        stats: ["Mercato", "Ricette", "Abitudini"],
       },
       grower: {
         title: "Coltivatore",
-        text: "Il percorso coltivatore supporta pianificazione, meteo, tempi stagionali e raccolto.",
-        bullets: [
-          "Pianificazione colture",
-          "Preparazione stagionale",
-          "Coordinamento raccolto",
-        ],
+        intro:
+          "L’esperienza coltivatore supporta pianificazione, tempi stagionali e raccolto.",
+        stats: ["Piano", "Stagione", "Raccolto"],
       },
       youth: {
         title: "Giovani",
-        text: "Il percorso giovani riguarda sviluppo del lavoro, collaborazione, struttura, fiducia e crescita.",
-        bullets: [
-          "Sviluppo del lavoro",
-          "Sicurezza e collaborazione",
-          "Responsabilità e crescita",
-        ],
+        intro:
+          "L’esperienza giovani riguarda sviluppo del lavoro, collaborazione, fiducia e crescita.",
+        stats: ["Squadra", "Sicurezza", "Crescita"],
       },
       supervisor: {
         title: "Supervisore",
-        text: "Il supervisore sostiene il programma giovanile con supervisione quotidiana, incoraggiamento, monitoraggio e coordinamento con New Vision Behavioral Health.",
-        bullets: [
-          "Supervisione del programma giovani",
-          "Monitoraggio del progresso",
-          "Coordinamento con New Vision Behavioral Health",
-        ],
+        intro:
+          "Il supervisore sostiene il programma giovanile con osservazione, monitoraggio e coordinamento con New Vision Behavioral Health.",
+        stats: ["Controllo", "Monitoraggio", "Risorse"],
       },
     },
-    sections: {
+    panels: {
+      overview: {
+        title: "Panoramica della Piattaforma",
+        text: "Questa esperienza è pensata per sembrare un sistema vivo, non un sito web.",
+        cards: [
+          { title: "Ingresso per Ruolo", text: "Ogni ruolo apre una vista diversa." },
+          { title: "Esperienza Guidata", text: "Voce e interfaccia guidano insieme." },
+          { title: "Piattaforma Viva", text: "Un sistema pratico per persone reali." },
+        ],
+      },
       marketplace: {
         title: "Percorso Mercato",
-        text: "I clienti dovrebbero entrare facilmente in prodotti, piantine e scelte salutari.",
+        text: "I clienti dovrebbero muoversi rapidamente tra prodotti freschi, piantine e abitudini di ritorno.",
+        cards: [
+          { title: "Cibo Fresco", text: "Prodotti, piantine e accesso diretto." },
+          { title: "Ritorno", text: "Rendere facile tornare." },
+          { title: "Scelte Salutari", text: "Accesso al cibo con supporto pratico." },
+        ],
       },
       nutrition: {
         title: "Nutrizione e Ricette",
-        text: "Il cibo fresco dovrebbe collegarsi alla vita quotidiana attraverso nutrizione pratica e ricette semplici.",
+        text: "Il cibo fresco dovrebbe collegarsi alla vita quotidiana con ricette semplici e guida pratica.",
+        cards: [
+          { title: "Ricette Semplici", text: "Preparazione facile e realistica." },
+          { title: "Educazione Alimentare", text: "Supporto per decisioni migliori." },
+          { title: "Guida Pratica", text: "Collegare ciò che si coltiva con ciò che si mangia." },
+        ],
       },
       calendar: {
         title: "Calendario delle Colture",
-        text: "Il calendario dovrebbe collegare semina, meteo, tempi stagionali e raccolto.",
+        text: "Il sistema dovrebbe collegare meteo, tempi di semina, stagione e raccolto.",
+        cards: [
+          { title: "Semina", text: "Sapere quando iniziare." },
+          { title: "Stagione", text: "Seguire la preparazione." },
+          { title: "Raccolto", text: "Prepararsi per flusso e utilizzo." },
+        ],
       },
     },
     guidedSteps: [
       "Benvenuto a Bronson Family Farm. Questo è più di una fattoria. È un ecosistema vivo di cibo, famiglia, apprendimento e futuro.",
-      "Il percorso ospite presenta la terra, la missione e la visione della comunità.",
-      "Il percorso cliente porta a mercato, nutrizione, ricette e scelte salutari.",
+      "Ogni ruolo apre un percorso diverso attraverso l’ecosistema.",
+      "Il percorso cliente dovrebbe portare direttamente a mercato, nutrizione, ricette e scelte migliori.",
       "Il percorso coltivatore supporta pianificazione, meteo, tempi stagionali e raccolto.",
-      "Il percorso giovani evidenzia sviluppo del lavoro, collaborazione, sicurezza e crescita.",
-      "Il percorso supervisore sostiene il programma giovanile con struttura, monitoraggio e coordinamento con New Vision Behavioral Health.",
-      "Insieme, questi percorsi formano una piattaforma connessa per ruoli.",
+      "Il percorso giovani evidenzia sviluppo del lavoro, collaborazione, sicurezza, fiducia e crescita.",
+      "Il percorso supervisore sostiene il programma giovani con supporto e coordinamento con New Vision Behavioral Health.",
+      "Insieme, questi percorsi creano un’esperienza di piattaforma e non un semplice sito web.",
     ],
   },
 
   he: {
     appTitle: "Bronson Family Farm",
-    subtitle: "הדגמה מודרכת של המערכת",
-    chooseRole: "בחר מסלול",
-    startTour: "התחל הדגמה מודרכת",
-    stopTour: "עצור הדגמה מודרכת",
-    nextStep: "השלב הבא",
+    subTitle: "הדגמת מערכת סוחפת",
+    enterText:
+      "מערכת מבוססת תפקידים המחברת מזון, משפחה, אדמה, למידה והזדמנות.",
     voice: "קול",
     on: "פועל",
     off: "כבוי",
+    startTour: "התחל הדגמה מודרכת",
+    stopTour: "עצור הדגמה מודרכת",
+    nextStep: "השלב הבא",
     weather: "מזג אוויר",
-    overview: "סקירה",
-    marketplace: "שוק",
-    nutrition: "תזונה ומתכונים",
-    calendar: "לוח גידולים",
-    intro:
-      "ברוכים הבאים. זה יותר מחווה. זוהי מערכת חיה שבה נפגשים מזון, משפחה, אדמה, למידה והזדמנות.",
+    modules: {
+      overview: "סקירה",
+      marketplace: "שוק",
+      nutrition: "תזונה",
+      calendar: "לוח שנה",
+    },
     roles: {
       guest: {
         title: "אורח",
-        text: "מסלול האורח מציג את החזון, האדמה, הקהילה והמטרה הרחבה של המערכת.",
-        bullets: [
-          "לראות בבירור את חזון החווה",
-          "להבין את המערכת הרחבה יותר",
-          "לחקור לפני בחירה",
-        ],
+        intro:
+          "חוויית האורח מציגה את האדמה, החזון והמערכת הרחבה.",
+        stats: ["חזון", "סיפור", "כניסה"],
       },
       customer: {
         title: "לקוח",
-        text: "מסלול הלקוח צריך להוביל במהירות לשוק, למתכונים, לתזונה ולבחירות טובות יותר.",
-        bullets: [
-          "כניסה לשוק",
-          "הכוונה תזונתית",
-          "מתכונים ותמיכה במזון",
-        ],
+        intro:
+          "חוויית הלקוח צריכה להוביל במהירות למזון טרי, מתכונים ובחירות טובות יותר.",
+        stats: ["שוק", "מתכונים", "הרגלים"],
       },
       grower: {
         title: "מגדל",
-        text: "מסלול המגדל תומך בתכנון, מזג אוויר, עונה וקציר.",
-        bullets: [
-          "תכנון גידולים",
-          "מוכנות עונתית",
-          "תיאום קציר",
-        ],
+        intro:
+          "חוויית המגדל תומכת בתכנון, עונה וקציר.",
+        stats: ["תכנון", "עונה", "קציר"],
       },
       youth: {
         title: "נוער",
-        text: "מסלול הנוער עוסק בפיתוח כוח עבודה, עבודת צוות, מבנה, ביטחון וצמיחה.",
-        bullets: [
-          "פיתוח כוח עבודה",
-          "בטיחות ועבודת צוות",
-          "אחריות וצמיחה",
-        ],
+        intro:
+          "חוויית הנוער עוסקת בפיתוח כוח עבודה, עבודת צוות, ביטחון וצמיחה.",
+        stats: ["צוות", "בטיחות", "צמיחה"],
       },
       supervisor: {
         title: "מפקח",
-        text: "המפקח תומך בתוכנית כוח העבודה לנוער באמצעות פיקוח יומי, עידוד, מעקב אחר מוכנות ותיאום עם New Vision Behavioral Health.",
-        bullets: [
-          "פיקוח על תוכנית הנוער",
-          "מעקב אחר התקדמות",
-          "תיאום עם New Vision Behavioral Health",
-        ],
+        intro:
+          "המפקח תומך בתוכנית הנוער באמצעות תצפית, מעקב ותיאום עם New Vision Behavioral Health.",
+        stats: ["פיקוח", "מעקב", "משאבים"],
       },
     },
-    sections: {
+    panels: {
+      overview: {
+        title: "סקירת המערכת",
+        text: "החוויה הזאת נועדה להרגיש כמו כניסה למערכת חיה, לא לאתר.",
+        cards: [
+          { title: "כניסה לפי תפקיד", text: "כל תפקיד פותח מבט אחר על המערכת." },
+          { title: "חוויה מודרכת", text: "קול וממשק עובדים יחד." },
+          { title: "פלטפורמה חיה", text: "מערכת מעשית לאנשים אמיתיים." },
+        ],
+      },
       marketplace: {
         title: "מסלול שוק",
-        text: "לקוחות צריכים להיכנס בקלות לתוצרת, שתילים ובחירות בריאות.",
+        text: "לקוחות צריכים לעבור במהירות לתוצרת, שתילים והרגלי חזרה.",
+        cards: [
+          { title: "מזון טרי", text: "תוצרת, שתילים וגישה ישירה." },
+          { title: "חזרה", text: "להקל על חזרה של הלקוח." },
+          { title: "בחירות בריאות", text: "גישה למזון עם תמיכה מעשית." },
+        ],
       },
       nutrition: {
         title: "תזונה ומתכונים",
-        text: "מזון טרי צריך להתחבר לחיי היומיום דרך תזונה מעשית ומתכונים פשוטים.",
+        text: "מזון טרי צריך להתחבר לחיי היומיום עם מתכונים פשוטים והכוונה מעשית.",
+        cards: [
+          { title: "מתכונים פשוטים", text: "הכנה קלה ומציאותית." },
+          { title: "חינוך תזונתי", text: "תמיכה בהחלטות יומיומיות טובות יותר." },
+          { title: "הכוונה מעשית", text: "לחבר בין מה שגדל למה שאוכלים." },
+        ],
       },
       calendar: {
         title: "לוח גידולים",
-        text: "הלוח צריך לחבר בין שתילה, מזג אוויר, תזמון עונתי ותכנון קציר.",
+        text: "המערכת צריכה לחבר מזג אוויר, זמני שתילה, עונה וקציר.",
+        cards: [
+          { title: "זמני שתילה", text: "לדעת מתי להתחיל." },
+          { title: "עונה", text: "לעקוב אחר מוכנות." },
+          { title: "קציר", text: "להתכונן לזרימה ולשימוש." },
+        ],
       },
     },
     guidedSteps: [
       "ברוכים הבאים ל־Bronson Family Farm. זה יותר מחווה. זוהי מערכת חיה של מזון, משפחה, למידה ועתיד.",
-      "מסלול האורח מציג את האדמה, המשימה וחזון הקהילה הרחב.",
-      "מסלול הלקוח מוביל לשוק, לתזונה, למתכונים ולבחירות בריאות יותר.",
-      "מסלול המגדל תומך בתכנון גידולים, מודעות למזג אוויר, תזמון עונתי וקציר.",
+      "כל תפקיד פותח מסלול שונה בתוך המערכת.",
+      "מסלול הלקוח צריך להוביל ישירות לשוק, תזונה, מתכונים ובחירות טובות יותר.",
+      "מסלול המגדל תומך בתכנון, מזג אוויר, עונה וקציר.",
       "מסלול הנוער מדגיש פיתוח כוח עבודה, עבודת צוות, בטיחות, ביטחון וצמיחה.",
-      "מסלול המפקח תומך בתוכנית כוח העבודה לנוער באמצעות מבנה, מעקב ותיאום עם New Vision Behavioral Health.",
-      "יחד, המסלולים האלה יוצרים פלטפורמה מחוברת לפי תפקידים.",
+      "מסלול המפקח תומך בתוכנית הנוער ובתיאום עם New Vision Behavioral Health.",
+      "יחד, המסלולים האלה יוצרים חוויית פלטפורמה ולא אתר רגיל.",
     ],
   },
 
   patwa: {
     appTitle: "Bronson Family Farm",
-    subtitle: "Guided Ecosystem Demo",
-    chooseRole: "Pick a pathway",
-    startTour: "Start Guided Demo",
-    stopTour: "Stop Guided Demo",
-    nextStep: "Next Step",
+    subTitle: "Immersive Ecosystem Demo",
+    enterText:
+      "One role-based ecosystem fi food, family, land, learning, an opportunity.",
     voice: "Voice",
     on: "On",
     off: "Off",
+    startTour: "Start Guided Demo",
+    stopTour: "Stop Guided Demo",
+    nextStep: "Next Step",
     weather: "Weather",
-    overview: "Overview",
-    marketplace: "Marketplace",
-    nutrition: "Nutrition an Recipes",
-    calendar: "Crop Calendar",
-    intro:
-      "Welcome. Yuh a step into something bigger than a farm. A yah so food, family, land, learning, an opportunity come together.",
+    modules: {
+      overview: "Overview",
+      marketplace: "Marketplace",
+      nutrition: "Nutrition",
+      calendar: "Calendar",
+    },
     roles: {
       guest: {
         title: "Guest",
-        text: "Di guest pathway a di front door. It introduce di vision, di land, di community, an di bigger purpose a di ecosystem.",
-        bullets: [
-          "See di farm vision clear",
-          "Understand di bigger ecosystem",
-          "Explore before yuh choose",
-        ],
+        intro:
+          "Di guest experience introduce di land, di vision, an di bigger ecosystem.",
+        stats: ["Vision", "Story", "Entry"],
       },
       customer: {
         title: "Customer",
-        text: "Di customer pathway fi carry people quick into marketplace access, recipes, nutrition, an healthier food choices.",
-        bullets: [
-          "Marketplace entry",
-          "Nutrition guidance",
-          "Recipes an healthy food support",
-        ],
+        intro:
+          "Di customer experience fi carry people straight to fresh food, recipes, an healthier choices.",
+        stats: ["Marketplace", "Recipes", "Habits"],
       },
       grower: {
         title: "Grower",
-        text: "Di grower pathway support crop planning, seasonal timing, weather awareness, an harvest coordination.",
-        bullets: [
-          "Crop planning",
-          "Season readiness",
-          "Harvest coordination",
-        ],
+        intro:
+          "Di grower experience support planning, season timing, an harvest flow.",
+        stats: ["Crop Plan", "Season", "Harvest"],
       },
       youth: {
         title: "Youth",
-        text: "Di youth pathway about workforce development, teamwork, structure, confidence, an growth.",
-        bullets: [
-          "Youth workforce development",
-          "Safety an teamwork",
-          "Responsibility an growth",
-        ],
+        intro:
+          "Di youth experience center workforce development, teamwork, confidence, an growth.",
+        stats: ["Teamwork", "Safety", "Growth"],
       },
       supervisor: {
         title: "Supervisor",
-        text: "Di supervisor support di youth workforce program through daily oversight, encouragement, readiness tracking, an coordination wid support staff resources from New Vision Behavioral Health.",
-        bullets: [
-          "Youth workforce supervision",
-          "Progress tracking",
-          "Support staff coordination wid New Vision Behavioral Health",
-        ],
+        intro:
+          "Di supervisor support di youth workforce program through observation, tracking, encouragement, an coordination wid New Vision Behavioral Health.",
+        stats: ["Oversight", "Tracking", "Resources"],
       },
     },
-    sections: {
+    panels: {
+      overview: {
+        title: "Platform Overview",
+        text: "Dis experience build fi feel like yuh enter a live system, not a website.",
+        cards: [
+          { title: "Role Entry", text: "Every role open a different view a di ecosystem." },
+          { title: "Guided Flow", text: "Voice an interface work together." },
+          { title: "Living Platform", text: "A practical system fi real people." },
+        ],
+      },
       marketplace: {
         title: "Marketplace Path",
-        text: "Customers fi move easy into produce, seedlings, healthy food choices, an repeat buying habits.",
+        text: "Customers fi move quick to fresh produce, seedlings, an return habits.",
+        cards: [
+          { title: "Fresh Food", text: "Produce, seedlings, an direct access." },
+          { title: "Return Visits", text: "Mek it easy fi people come back." },
+          { title: "Healthy Choices", text: "Food access wid practical support." },
+        ],
       },
       nutrition: {
         title: "Nutrition an Recipes",
-        text: "Fresh food fi connect to everyday life through practical nutrition guidance an simple recipe support.",
+        text: "Fresh food fi connect to everyday life through simple recipes an practical guidance.",
+        cards: [
+          { title: "Simple Recipes", text: "Easy an realistic preparation." },
+          { title: "Food Education", text: "Support better everyday choices." },
+          { title: "Practical Guidance", text: "Connect wah grow to wah people eat." },
+        ],
       },
       calendar: {
         title: "Crop Calendar",
-        text: "Di crop calendar fi connect planting, weather, seasonal timing, an harvest planning.",
+        text: "Di system fi connect weather, planting windows, season timing, an harvest planning.",
+        cards: [
+          { title: "Planting Windows", text: "Know when fi start." },
+          { title: "Season Timing", text: "Track readiness through di cycle." },
+          { title: "Harvest Planning", text: "Prepare fi flow an use." },
+        ],
       },
     },
     guidedSteps: [
-      "Welcome. Yuh a step into something bigger than a farm. A yah so food, family, land, learning, an opportunity come together.",
-      "Di guest pathway introduce di land, di mission, an di bigger community vision.",
-      "Di customer pathway carry people into marketplace access, nutrition guidance, recipes, an healthier food choices.",
-      "Di grower pathway support crop planning, weather awareness, seasonal timing, an harvest coordination.",
+      "Welcome to Bronson Family Farm. Dis more than a farm. Dis a living ecosystem a food, family, learning, an future.",
+      "Every role open a different pathway through di ecosystem.",
+      "Di customer pathway fi move people straight to marketplace access, nutrition guidance, recipes, an healthier choices.",
+      "Di grower pathway support crop planning, weather awareness, season timing, an harvest coordination.",
       "Di youth pathway highlight workforce development, teamwork, safety, confidence, an growth.",
-      "Di supervisor pathway support di youth workforce program through structure, tracking, encouragement, an coordination wid New Vision Behavioral Health.",
-      "Together, dem pathways build one connected role-based platform.",
+      "Di supervisor pathway support di youth workforce program an coordinate wid New Vision Behavioral Health resources.",
+      "Together, dem pathways create a platform experience instead of a regular website.",
     ],
   },
 } as const
@@ -575,12 +645,10 @@ export default function App() {
   const [tourOn, setTourOn] = useState(false)
   const [tourStep, setTourStep] = useState(0)
   const [voiceOn, setVoiceOn] = useState(false)
-  const [activeTab, setActiveTab] = useState<"overview" | "marketplace" | "nutrition" | "calendar">("overview")
+  const [moduleKey, setModuleKey] = useState<ModuleKey>("overview")
 
   const t = content[lang]
   const isRTL = lang === "he"
-  const currentRole = t.roles[role]
-  const guidedScript = useMemo(() => t.guidedSteps, [t])
 
   useEffect(() => {
     fetch(
@@ -596,6 +664,8 @@ export default function App() {
       window.speechSynthesis.getVoices()
     }
   }, [])
+
+  const guidedScript = useMemo(() => t.guidedSteps, [t])
 
   useEffect(() => {
     if (!tourOn || !voiceOn || !("speechSynthesis" in window)) return
@@ -613,8 +683,8 @@ export default function App() {
 
     const utter = new SpeechSynthesisUtterance(guidedScript[tourStep] || "")
     utter.lang = langMap[lang]
-    utter.rate = 0.84
-    utter.pitch = 0.96
+    utter.rate = 0.82
+    utter.pitch = 0.94
     utter.volume = 1
 
     const preferredVoice = pickVoice(langMap[lang])
@@ -629,7 +699,7 @@ export default function App() {
           }
           return prev + 1
         })
-      }, 500)
+      }, 450)
     }
 
     window.speechSynthesis.speak(utter)
@@ -648,304 +718,515 @@ export default function App() {
     }
   }, [tourOn])
 
-  const renderTabContent = () => {
-    if (activeTab === "overview") {
-      return (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "24px",
-          }}
-        >
-          <div
-            style={{
-              background: "#ffffff",
-              padding: "24px",
-              borderRadius: "14px",
-              boxShadow: "0 5px 14px rgba(0,0,0,0.08)",
-            }}
-          >
-            <div style={{ fontSize: "18px", color: "#5b6d5d", fontWeight: 700, marginBottom: 10 }}>
-              {t.overview}
-            </div>
-            <h2 style={{ fontSize: "38px", marginTop: 0 }}>{currentRole.title}</h2>
-            <p style={{ fontSize: "22px", lineHeight: 1.5 }}>{t.intro}</p>
-            <p style={{ fontSize: "21px", lineHeight: 1.6 }}>{currentRole.text}</p>
-          </div>
-
-          <div
-            style={{
-              background: "#ffffff",
-              padding: "24px",
-              borderRadius: "14px",
-              boxShadow: "0 5px 14px rgba(0,0,0,0.08)",
-            }}
-          >
-            <h3 style={{ fontSize: "30px", marginTop: 0 }}>{currentRole.title}</h3>
-            <ul style={{ fontSize: "21px", lineHeight: 1.7, marginBottom: "20px" }}>
-              {currentRole.bullets.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <div
-              style={{
-                background: "#edf4ec",
-                padding: "16px",
-                borderRadius: "10px",
-                fontSize: "22px",
-                fontWeight: 700,
-                color: "#23452d",
-              }}
-            >
-              {t.weather}: {temp === null ? "Loading..." : `${temp}°`}
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (activeTab === "marketplace") {
-      return (
-        <div
-          style={{
-            background: "#ffffff",
-            padding: "24px",
-            borderRadius: "14px",
-            boxShadow: "0 5px 14px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h2 style={{ fontSize: "34px", marginTop: 0 }}>{t.sections.marketplace.title}</h2>
-          <p style={{ fontSize: "22px", lineHeight: 1.6 }}>{t.sections.marketplace.text}</p>
-        </div>
-      )
-    }
-
-    if (activeTab === "nutrition") {
-      return (
-        <div
-          style={{
-            background: "#ffffff",
-            padding: "24px",
-            borderRadius: "14px",
-            boxShadow: "0 5px 14px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h2 style={{ fontSize: "34px", marginTop: 0 }}>{t.sections.nutrition.title}</h2>
-          <p style={{ fontSize: "22px", lineHeight: 1.6 }}>{t.sections.nutrition.text}</p>
-        </div>
-      )
-    }
-
-    return (
-      <div
-        style={{
-          background: "#ffffff",
-          padding: "24px",
-          borderRadius: "14px",
-          boxShadow: "0 5px 14px rgba(0,0,0,0.08)",
-        }}
-      >
-        <h2 style={{ fontSize: "34px", marginTop: 0 }}>{t.sections.calendar.title}</h2>
-        <p style={{ fontSize: "22px", lineHeight: 1.6 }}>{t.sections.calendar.text}</p>
-      </div>
-    )
-  }
+  const roleInfo = t.roles[role]
+  const panel = t.panels[moduleKey]
 
   return (
     <div
       dir={isRTL ? "rtl" : "ltr"}
       style={{
-        fontFamily: "Arial, sans-serif",
-        backgroundColor: "#f4f1ea",
         minHeight: "100vh",
-        padding: "30px",
-        color: "#1e2a1f",
+        background: "#151914",
+        color: "#f4f1ea",
+        fontFamily: "Arial, sans-serif",
+        overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: "1450px", margin: "0 auto" }}>
-        <h1 style={{ fontSize: "58px", margin: "0 0 10px 0", fontWeight: 800 }}>
-          {t.appTitle}
-        </h1>
-
-        <p style={{ fontSize: "22px", margin: "0 0 22px 0", color: "#4f5e51" }}>
-          {t.subtitle}
-        </p>
+      <div
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(${imageMap[role]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "brightness(0.6)",
+          }}
+        />
 
         <div
           style={{
-            display: "flex",
-            gap: "12px",
-            flexWrap: "wrap",
-            alignItems: "center",
-            marginBottom: "20px",
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(180deg, rgba(9,10,9,0.20) 0%, rgba(9,10,9,0.55) 45%, rgba(9,10,9,0.92) 100%)",
           }}
-        >
-          <div style={{ fontSize: 18, fontWeight: 700, color: "#38503d" }}>{t.chooseRole}</div>
-
-          {roles.map((r) => (
-            <button
-              key={r}
-              onClick={() => setRole(r)}
-              style={{
-                padding: "12px 18px",
-                borderRadius: "8px",
-                border: "none",
-                cursor: "pointer",
-                backgroundColor: role === r ? "#2f6b49" : "#d3d3d3",
-                color: role === r ? "#fff" : "#000",
-                fontWeight: "bold",
-                fontSize: "18px",
-              }}
-            >
-              {t.roles[r].title}
-            </button>
-          ))}
-
-          <select
-            value={lang}
-            onChange={(e) => setLang(e.target.value as LangKey)}
-            style={{
-              marginLeft: isRTL ? 0 : "auto",
-              marginRight: isRTL ? "auto" : 0,
-              padding: "10px 14px",
-              borderRadius: "8px",
-              fontSize: "17px",
-              border: "1px solid #c9c9c9",
-            }}
-          >
-            {languageOptions.map((option) => (
-              <option key={option.key} value={option.key}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-
-          <button
-            onClick={() => setVoiceOn((v) => !v)}
-            style={{
-              padding: "10px 14px",
-              borderRadius: "8px",
-              border: "none",
-              background: voiceOn ? "#385f90" : "#a9a9a9",
-              color: "#fff",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            {t.voice}: {voiceOn ? t.on : t.off}
-          </button>
-
-          <button
-            onClick={() => setTourOn((v) => !v)}
-            style={{
-              padding: "12px 18px",
-              borderRadius: "8px",
-              border: "none",
-              background: tourOn ? "#8a3d3d" : "#244a72",
-              color: "#fff",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            {tourOn ? t.stopTour : t.startTour}
-          </button>
-
-          <button
-            onClick={() =>
-              setTourStep((prev) =>
-                prev < guidedScript.length - 1 ? prev + 1 : prev
-              )
-            }
-            style={{
-              padding: "12px 18px",
-              borderRadius: "8px",
-              border: "none",
-              background: "#7d6a2d",
-              color: "#fff",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            {t.nextStep}
-          </button>
-        </div>
+        />
 
         <div
           style={{
-            width: "100%",
-            height: "430px",
-            overflow: "hidden",
-            borderRadius: "14px",
-            marginBottom: "24px",
-            backgroundColor: "#d9dfd7",
+            position: "relative",
+            zIndex: 2,
+            padding: "26px 28px 170px",
+            maxWidth: "1500px",
+            margin: "0 auto",
           }}
         >
-          <img
-            src={imageMap[role]}
-            alt={currentRole.title}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
-        </div>
-
-        {tourOn && (
           <div
             style={{
-              background: "#fff7da",
-              borderLeft: "8px solid #c29a17",
-              borderRadius: "10px",
-              padding: "18px 20px",
-              marginBottom: "24px",
-              fontSize: "22px",
-              lineHeight: 1.5,
-              boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+              display: "flex",
+              gap: 12,
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 26,
             }}
           >
-            {guidedScript[tourStep]}
+            <div>
+              <div
+                style={{
+                  fontSize: 18,
+                  color: "#c8d2c8",
+                  marginBottom: 8,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {t.subTitle}
+              </div>
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: 62,
+                  lineHeight: 0.98,
+                  fontWeight: 800,
+                }}
+              >
+                {t.appTitle}
+              </h1>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value as LangKey)}
+                style={{
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  background: "rgba(20,24,20,0.72)",
+                  color: "#fff",
+                  fontSize: 16,
+                }}
+              >
+                {languageOptions.map((option) => (
+                  <option key={option.key} value={option.key}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                onClick={() => setVoiceOn((v) => !v)}
+                style={{
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  border: "none",
+                  background: voiceOn ? "#466a9c" : "#666",
+                  color: "#fff",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {t.voice}: {voiceOn ? t.on : t.off}
+              </button>
+
+              <button
+                onClick={() => setTourOn((v) => !v)}
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: 12,
+                  border: "none",
+                  background: tourOn ? "#8a4444" : "#204f7c",
+                  color: "#fff",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {tourOn ? t.stopTour : t.startTour}
+              </button>
+
+              <button
+                onClick={() =>
+                  setTourStep((prev) =>
+                    prev < guidedScript.length - 1 ? prev + 1 : prev
+                  )
+                }
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: 12,
+                  border: "none",
+                  background: "#8b7331",
+                  color: "#fff",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {t.nextStep}
+              </button>
+            </div>
           </div>
-        )}
+
+          <div
+            style={{
+              maxWidth: 760,
+              marginTop: 30,
+              marginBottom: 28,
+            }}
+          >
+            <div
+              style={{
+                display: "inline-block",
+                padding: "8px 12px",
+                borderRadius: 999,
+                background: "rgba(255,255,255,0.10)",
+                border: "1px solid rgba(255,255,255,0.15)",
+                fontSize: 15,
+                marginBottom: 16,
+              }}
+            >
+              {roleInfo.title}
+            </div>
+
+            <div
+              style={{
+                fontSize: 28,
+                lineHeight: 1.35,
+                color: "#f3f0e8",
+                maxWidth: 720,
+              }}
+            >
+              {t.enterText}
+            </div>
+          </div>
+
+          {tourOn && (
+            <div
+              style={{
+                width: "min(760px, 100%)",
+                background: "rgba(250, 241, 197, 0.16)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderLeft: "8px solid #d8b44a",
+                borderRadius: 18,
+                padding: "20px 22px",
+                fontSize: 24,
+                lineHeight: 1.45,
+                marginBottom: 26,
+                color: "#fff6d6",
+              }}
+            >
+              {guidedScript[tourStep]}
+            </div>
+          )}
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.15fr 0.85fr",
+              gap: 20,
+              alignItems: "start",
+            }}
+          >
+            <div
+              style={{
+                background: "rgba(18,22,18,0.68)",
+                backdropFilter: "blur(14px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 22,
+                padding: 22,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 15,
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  color: "#b8c4b8",
+                  marginBottom: 8,
+                }}
+              >
+                {roleInfo.title}
+              </div>
+
+              <div
+                style={{
+                  fontSize: 34,
+                  fontWeight: 800,
+                  marginBottom: 12,
+                }}
+              >
+                {roleInfo.title}
+              </div>
+
+              <div
+                style={{
+                  fontSize: 22,
+                  lineHeight: 1.55,
+                  color: "#e8efe8",
+                  marginBottom: 18,
+                }}
+              >
+                {roleInfo.intro}
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, minmax(0,1fr))",
+                  gap: 14,
+                }}
+              >
+                {roleInfo.stats.map((item) => (
+                  <div
+                    key={item}
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      borderRadius: 16,
+                      padding: 16,
+                      textAlign: "center",
+                      fontWeight: 700,
+                      fontSize: 18,
+                    }}
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "rgba(18,22,18,0.68)",
+                backdropFilter: "blur(14px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 22,
+                padding: 22,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 15,
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                  color: "#b8c4b8",
+                  marginBottom: 8,
+                }}
+              >
+                Live Status
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gap: 14,
+                }}
+              >
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    borderRadius: 16,
+                    padding: 16,
+                    fontSize: 20,
+                    fontWeight: 700,
+                  }}
+                >
+                  {t.weather}: {temp === null ? "Loading..." : `${temp}°`}
+                </div>
+
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    borderRadius: 16,
+                    padding: 16,
+                    fontSize: 20,
+                    fontWeight: 700,
+                  }}
+                >
+                  Role: {roleInfo.title}
+                </div>
+
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    borderRadius: 16,
+                    padding: 16,
+                    fontSize: 20,
+                    fontWeight: 700,
+                  }}
+                >
+                  Module: {t.modules[moduleKey]}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              marginTop: 20,
+              background: "rgba(18,22,18,0.72)",
+              backdropFilter: "blur(14px)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 22,
+              padding: 22,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                flexWrap: "wrap",
+                marginBottom: 18,
+              }}
+            >
+              {(
+                [
+                  { key: "overview", label: t.modules.overview },
+                  { key: "marketplace", label: t.modules.marketplace },
+                  { key: "nutrition", label: t.modules.nutrition },
+                  { key: "calendar", label: t.modules.calendar },
+                ] as { key: ModuleKey; label: string }[]
+              ).map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => setModuleKey(item.key)}
+                  style={{
+                    padding: "12px 16px",
+                    borderRadius: 12,
+                    border: "none",
+                    cursor: "pointer",
+                    background: moduleKey === item.key ? "#295d8b" : "rgba(255,255,255,0.10)",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: 16,
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            <div
+              style={{
+                fontSize: 34,
+                fontWeight: 800,
+                marginBottom: 10,
+              }}
+            >
+              {panel.title}
+            </div>
+
+            <div
+              style={{
+                fontSize: 22,
+                lineHeight: 1.55,
+                color: "#e8efe8",
+                marginBottom: 18,
+                maxWidth: 980,
+              }}
+            >
+              {panel.text}
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0,1fr))",
+                gap: 16,
+              }}
+            >
+              {panel.cards.map((card) => (
+                <div
+                  key={card.title}
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 18,
+                    padding: 18,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 22,
+                      fontWeight: 800,
+                      marginBottom: 8,
+                    }}
+                  >
+                    {card.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 18,
+                      lineHeight: 1.55,
+                      color: "#d8e0d8",
+                    }}
+                  >
+                    {card.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
         <div
           style={{
+            position: "fixed",
+            left: 20,
+            right: 20,
+            bottom: 18,
+            zIndex: 4,
             display: "flex",
-            gap: 12,
-            flexWrap: "wrap",
-            marginBottom: 20,
+            justifyContent: "center",
           }}
         >
-          {[
-            { key: "overview", label: t.overview },
-            { key: "marketplace", label: t.marketplace },
-            { key: "nutrition", label: t.nutrition },
-            { key: "calendar", label: t.calendar },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() =>
-                setActiveTab(tab.key as "overview" | "marketplace" | "nutrition" | "calendar")
-              }
-              style={{
-                padding: "12px 18px",
-                borderRadius: 10,
-                border: "none",
-                cursor: "pointer",
-                background: activeTab === tab.key ? "#234a72" : "#d8d8d8",
-                color: activeTab === tab.key ? "#fff" : "#000",
-                fontWeight: 700,
-                fontSize: 18,
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+              background: "rgba(16,20,16,0.84)",
+              backdropFilter: "blur(16px)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 999,
+              padding: "12px 14px",
+              boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
+            }}
+          >
+            {roles.map((r) => (
+              <button
+                key={r}
+                onClick={() => setRole(r)}
+                style={{
+                  padding: "12px 18px",
+                  borderRadius: 999,
+                  border: "none",
+                  cursor: "pointer",
+                  background: role === r ? "#2f6b49" : "rgba(255,255,255,0.08)",
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: 16,
+                  minWidth: 110,
+                }}
+              >
+                {t.roles[r].title}
+              </button>
+            ))}
+          </div>
         </div>
-
-        {renderTabContent()}
       </div>
     </div>
   )
