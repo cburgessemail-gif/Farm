@@ -1,1233 +1,1167 @@
-import { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  CloudSun,
+  ShoppingBasket,
+  Sprout,
+  Users,
+  ShieldCheck,
+  CalendarDays,
+  MapPin,
+  ArrowRight,
+  PlayCircle,
+  PauseCircle,
+  Volume2,
+  Languages,
+  BookOpen,
+  HeartPulse,
+  Tractor,
+  Trees,
+  Leaf,
+  Droplets,
+  GraduationCap,
+  ClipboardList,
+  ScanLine,
+  Bell,
+  Star,
+  Package,
+  ChevronRight,
+  Home,
+  Sun,
+  Cloud,
+  Wind,
+  CloudRain,
+} from "lucide-react";
 
-type Role = "guest" | "customer" | "grower" | "youth" | "supervisor"
-type LangKey = "en" | "es" | "tl" | "it" | "he" | "patwa"
-type ModuleKey = "overview" | "marketplace" | "nutrition" | "calendar"
+const images = {
+  hero: "/GrowArea.jpg",
+  guest: "/GrowArea2.jpg",
+  customer: "/ProduceDisplay.jpg",
+  grower: "/FarmerHands.jpg",
+  youth: "/YouthWorkforce.jpg",
+  supervisor: "/SupervisorField.jpg",
+  volunteer: "/CommunityGrow.jpg",
+  market: "/MarketTable.jpg",
+  education: "/NutritionLearning.jpg",
+  weather: "/SkyField.jpg",
+};
 
-const roles: Role[] = ["guest", "customer", "grower", "youth", "supervisor"]
+type LangKey = "en" | "es" | "tl" | "it" | "he" | "patwa";
+type RoleKey = "guest" | "customer" | "grower" | "youth" | "supervisor" | "volunteer";
 
-const imageMap: Record<Role, string> = {
-  guest: "/GrowArea.jpg",
-  customer: "/SAM_0220.JPG",
-  grower: "/SAM_0221.JPG",
-  youth: "/SAM_0222.JPG",
-  supervisor: "/SAM_0223.JPG",
-}
+type ForecastDay = {
+  date: string;
+  tempMax: number;
+  tempMin: number;
+  code: number;
+};
 
-const languageOptions: { key: LangKey; label: string }[] = [
-  { key: "en", label: "English" },
-  { key: "es", label: "Español" },
-  { key: "tl", label: "Tagalog" },
-  { key: "it", label: "Italiano" },
-  { key: "he", label: "עברית" },
-  { key: "patwa", label: "Patwa" },
-]
+type Translations = {
+  appName: string;
+  tagline: string;
+  subtag: string;
+  enterDemo: string;
+  guidedTour: string;
+  stopTour: string;
+  chooseLanguage: string;
+  todayAtFarm: string;
+  marketplace: string;
+  learning: string;
+  cropCalendar: string;
+  eventCheckIn: string;
+  workforce: string;
+  weather: string;
+  whyMatters: string;
+  roleJourney: string;
+  quickActions: string;
+  stepInto: string;
+  restoring: string;
+  nourishment: string;
+  messageTitle: string;
+  messageBody: string;
+  navHome: string;
+  navRoles: string;
+  navMarket: string;
+  navEducation: string;
+  navCalendar: string;
+  navOperations: string;
+  navCheckIn: string;
+  navStory: string;
+  narratorPrefix: string;
+};
 
-const content = {
+const text: Record<LangKey, Translations> = {
   en: {
-    appTitle: "Bronson Family Farm",
-    subTitle: "Immersive Ecosystem Demo",
-    enterText:
-      "A role-based ecosystem connecting food, family, land, learning, and opportunity.",
-    voice: "Voice",
-    on: "On",
-    off: "Off",
-    startTour: "Start Guided Demo",
-    stopTour: "Stop Guided Demo",
-    nextStep: "Next Step",
-    weather: "Weather",
-    modules: {
-      overview: "Overview",
-      marketplace: "Marketplace",
-      nutrition: "Nutrition",
-      calendar: "Calendar",
-    },
-    roles: {
-      guest: {
-        title: "Guest",
-        intro:
-          "The guest experience introduces the land, the vision, and the larger ecosystem.",
-        stats: ["Vision", "Story", "Entry Point"],
-      },
-      customer: {
-        title: "Customer",
-        intro:
-          "The customer experience should move directly into fresh food, recipes, and healthier choices.",
-        stats: ["Marketplace", "Recipes", "Buying Habits"],
-      },
-      grower: {
-        title: "Grower",
-        intro:
-          "The grower experience supports crop planning, season timing, and harvest coordination.",
-        stats: ["Crop Plan", "Season Readiness", "Harvest Flow"],
-      },
-      youth: {
-        title: "Youth",
-        intro:
-          "The youth experience centers workforce development, teamwork, confidence, and growth.",
-        stats: ["Teamwork", "Safety", "Growth"],
-      },
-      supervisor: {
-        title: "Supervisor",
-        intro:
-          "The supervisor supports the youth workforce program through observation, encouragement, progress tracking, and coordination with support staff resources from New Vision Behavioral Health.",
-        stats: ["Oversight", "Tracking", "Support Resources"],
-      },
-    },
-    panels: {
-      overview: {
-        title: "Platform Overview",
-        text: "This experience is designed to feel like entering a live system, not reading a website.",
-        cards: [
-          {
-            title: "Role-Based Entry",
-            text: "Each pathway opens a different view of the ecosystem.",
-          },
-          {
-            title: "Guided Experience",
-            text: "Narration and interface work together to lead the viewer.",
-          },
-          {
-            title: "Living Platform",
-            text: "The goal is a practical system for real people, not static pages.",
-          },
-        ],
-      },
-      marketplace: {
-        title: "Marketplace Path",
-        text: "Customers should move quickly into fresh produce, seedlings, nutrition guidance, and repeat buying habits.",
-        cards: [
-          { title: "Fresh Food", text: "Produce, seedlings, and customer-ready access." },
-          { title: "Return Visits", text: "Make it easy for customers to come back." },
-          { title: "Healthy Choices", text: "Pair food access with practical support." },
-        ],
-      },
-      nutrition: {
-        title: "Nutrition & Recipes",
-        text: "Fresh food should connect to daily life through simple recipes, guidance, and better choices.",
-        cards: [
-          { title: "Simple Recipes", text: "Make preparation feel easy and realistic." },
-          { title: "Food Education", text: "Support healthier everyday decisions." },
-          { title: "Practical Guidance", text: "Connect what is grown to what families eat." },
-        ],
-      },
-      calendar: {
-        title: "Crop Calendar",
-        text: "The system should connect weather, planting windows, seasonal timing, and harvest planning.",
-        cards: [
-          { title: "Planting Windows", text: "Know when to start and when to move." },
-          { title: "Season Timing", text: "Track readiness across the growing cycle." },
-          { title: "Harvest Planning", text: "Prepare for flow, storage, and use." },
-        ],
-      },
-    },
-    guidedSteps: [
-      "Welcome to Bronson Family Farm. This is more than a farm. It is a living ecosystem of food, family, learning, and future.",
-      "Each role opens a different pathway through the ecosystem, making the experience feel active rather than static.",
-      "The customer pathway should move directly into marketplace access, nutrition guidance, recipes, and healthier choices.",
-      "The grower pathway supports crop planning, weather awareness, season timing, and harvest coordination.",
-      "The youth pathway highlights workforce development, teamwork, safety, confidence, and visible growth.",
-      "The supervisor pathway supports the youth workforce program through encouragement, readiness tracking, and coordination with support staff resources from New Vision Behavioral Health.",
-      "Together, these pathways create a platform experience instead of a simple website.",
-    ],
+    appName: "Bronson Family Farm",
+    tagline: "A living grower ecosystem for food, learning, and legacy.",
+    subtag: "Regenerating land. Restoring health. Rebuilding connection.",
+    enterDemo: "Enter Live Demo",
+    guidedTour: "Start Guided Tour",
+    stopTour: "Pause Guided Tour",
+    chooseLanguage: "Choose language",
+    todayAtFarm: "Today at the Farm",
+    marketplace: "Marketplace",
+    learning: "Food & Nutrition Learning",
+    cropCalendar: "Crop Planning Calendar",
+    eventCheckIn: "Event Check-In",
+    workforce: "Youth Workforce Pathways",
+    weather: "Farm Weather",
+    whyMatters: "Why this matters",
+    roleJourney: "Role journeys",
+    quickActions: "Quick actions",
+    stepInto: "Step into something different.",
+    restoring: "This is a regenerative farm experience, not a typical website.",
+    nourishment: "When food costs rise, many families are pushed toward overprocessed substitutes that slowly damage health. This ecosystem reconnects people to fresh food, practical knowledge, and each other.",
+    messageTitle: "Food, dignity, and access belong together.",
+    messageBody: "Bronson Family Farm and Farm & Family Alliance are building a welcoming ecosystem where growers, families, youth, volunteers, and customers can return again and again for produce, education, workforce experience, and hope.",
+    navHome: "Home",
+    navRoles: "Roles",
+    navMarket: "Market",
+    navEducation: "Education",
+    navCalendar: "Calendar",
+    navOperations: "Operations",
+    navCheckIn: "Check-In",
+    navStory: "Story",
+    narratorPrefix: "Narration",
   },
-
   es: {
-    appTitle: "Bronson Family Farm",
-    subTitle: "Demostración Inmersiva del Ecosistema",
-    enterText:
-      "Un ecosistema por roles que conecta alimentos, familia, tierra, aprendizaje y oportunidad.",
-    voice: "Voz",
-    on: "Activada",
-    off: "Desactivada",
-    startTour: "Iniciar demostración guiada",
-    stopTour: "Detener demostración guiada",
-    nextStep: "Siguiente paso",
-    weather: "Clima",
-    modules: {
-      overview: "Resumen",
-      marketplace: "Mercado",
-      nutrition: "Nutrición",
-      calendar: "Calendario",
-    },
-    roles: {
-      guest: {
-        title: "Invitado",
-        intro:
-          "La experiencia del invitado presenta la tierra, la visión y el ecosistema general.",
-        stats: ["Visión", "Historia", "Entrada"],
-      },
-      customer: {
-        title: "Cliente",
-        intro:
-          "La experiencia del cliente debe llevar directamente a comida fresca, recetas y mejores decisiones.",
-        stats: ["Mercado", "Recetas", "Hábitos"],
-      },
-      grower: {
-        title: "Productor",
-        intro:
-          "La experiencia del productor apoya planificación, temporada y cosecha.",
-        stats: ["Plan de Cultivo", "Temporada", "Cosecha"],
-      },
-      youth: {
-        title: "Joven",
-        intro:
-          "La experiencia juvenil se centra en trabajo, equipo, confianza y crecimiento.",
-        stats: ["Equipo", "Seguridad", "Crecimiento"],
-      },
-      supervisor: {
-        title: "Supervisor",
-        intro:
-          "El supervisor apoya el programa laboral juvenil mediante observación, acompañamiento, seguimiento y coordinación con New Vision Behavioral Health.",
-        stats: ["Supervisión", "Seguimiento", "Recursos"],
-      },
-    },
-    panels: {
-      overview: {
-        title: "Resumen de la Plataforma",
-        text: "Esta experiencia está diseñada para sentirse como un sistema vivo, no como un sitio web.",
-        cards: [
-          { title: "Entrada por Rol", text: "Cada camino abre una vista diferente del ecosistema." },
-          { title: "Experiencia Guiada", text: "La narración y la interfaz guían al visitante." },
-          { title: "Plataforma Viva", text: "El objetivo es un sistema práctico para personas reales." },
-        ],
-      },
-      marketplace: {
-        title: "Camino del Mercado",
-        text: "Los clientes deben moverse rápidamente hacia productos frescos, plántulas, nutrición y hábitos de compra.",
-        cards: [
-          { title: "Comida Fresca", text: "Productos, plántulas y acceso directo." },
-          { title: "Regreso", text: "Hacer fácil que el cliente vuelva." },
-          { title: "Opciones Saludables", text: "Unir acceso alimentario y apoyo práctico." },
-        ],
-      },
-      nutrition: {
-        title: "Nutrición y Recetas",
-        text: "La comida fresca debe conectarse con la vida diaria mediante recetas simples y orientación.",
-        cards: [
-          { title: "Recetas Simples", text: "Preparación fácil y realista." },
-          { title: "Educación Alimentaria", text: "Apoyo para mejores decisiones diarias." },
-          { title: "Guía Práctica", text: "Conectar lo cultivado con lo que come la familia." },
-        ],
-      },
-      calendar: {
-        title: "Calendario de Cultivo",
-        text: "El sistema debe conectar clima, tiempos de siembra, temporada y cosecha.",
-        cards: [
-          { title: "Siembra", text: "Saber cuándo empezar y mover." },
-          { title: "Temporada", text: "Seguir la preparación del ciclo." },
-          { title: "Cosecha", text: "Prepararse para flujo, uso y almacenamiento." },
-        ],
-      },
-    },
-    guidedSteps: [
-      "Bienvenido a Bronson Family Farm. Esto es más que una granja. Es un ecosistema vivo de comida, familia, aprendizaje y futuro.",
-      "Cada rol abre un camino diferente dentro del ecosistema.",
-      "El camino del cliente debe llevar directamente al mercado, la nutrición, las recetas y decisiones más saludables.",
-      "El camino del productor apoya planificación, clima, tiempos de temporada y cosecha.",
-      "El camino juvenil destaca desarrollo laboral, trabajo en equipo, seguridad, confianza y crecimiento.",
-      "El camino del supervisor apoya el programa juvenil con acompañamiento, seguimiento y coordinación con New Vision Behavioral Health.",
-      "Juntos, estos caminos crean una experiencia de plataforma y no solo un sitio web.",
-    ],
+    appName: "Bronson Family Farm",
+    tagline: "Un ecosistema vivo para alimentos, aprendizaje y legado.",
+    subtag: "Regenerando la tierra. Restaurando la salud. Reconstruyendo la conexión.",
+    enterDemo: "Entrar al demo",
+    guidedTour: "Iniciar recorrido guiado",
+    stopTour: "Pausar recorrido",
+    chooseLanguage: "Elegir idioma",
+    todayAtFarm: "Hoy en la finca",
+    marketplace: "Mercado",
+    learning: "Aprendizaje de alimentos y nutrición",
+    cropCalendar: "Calendario de cultivos",
+    eventCheckIn: "Registro del evento",
+    workforce: "Rutas de trabajo juvenil",
+    weather: "Clima de la finca",
+    whyMatters: "Por qué importa",
+    roleJourney: "Recorridos por rol",
+    quickActions: "Acciones rápidas",
+    stepInto: "Entre en algo diferente.",
+    restoring: "Esta es una experiencia agrícola regenerativa, no un sitio típico.",
+    nourishment: "Cuando suben los precios de los alimentos, muchas familias recurren a productos ultraprocesados que dañan lentamente la salud. Este ecosistema reconecta a las personas con alimentos frescos, conocimiento práctico y comunidad.",
+    messageTitle: "La comida, la dignidad y el acceso van juntos.",
+    messageBody: "Bronson Family Farm y Farm & Family Alliance están construyendo un ecosistema acogedor donde productores, familias, jóvenes, voluntarios y clientes regresan por alimentos, educación, experiencia laboral y esperanza.",
+    navHome: "Inicio",
+    navRoles: "Roles",
+    navMarket: "Mercado",
+    navEducation: "Educación",
+    navCalendar: "Calendario",
+    navOperations: "Operaciones",
+    navCheckIn: "Registro",
+    navStory: "Historia",
+    narratorPrefix: "Narración",
   },
-
   tl: {
-    appTitle: "Bronson Family Farm",
-    subTitle: "Immersive Ecosystem Demo",
-    enterText:
-      "Isang role-based ecosystem para sa pagkain, pamilya, lupa, pagkatuto, at oportunidad.",
-    voice: "Boses",
-    on: "Bukas",
-    off: "Patay",
-    startTour: "Simulan ang gabay na demo",
-    stopTour: "Itigil ang gabay na demo",
-    nextStep: "Susunod",
-    weather: "Panahon",
-    modules: {
-      overview: "Buod",
-      marketplace: "Marketplace",
-      nutrition: "Nutrisyon",
-      calendar: "Kalendaryo",
-    },
-    roles: {
-      guest: {
-        title: "Bisita",
-        intro:
-          "Ipinapakilala ng guest experience ang lupa, vision, at mas malaking ecosystem.",
-        stats: ["Vision", "Kuwento", "Pasok"],
-      },
-      customer: {
-        title: "Customer",
-        intro:
-          "Dapat dalhin ng customer experience ang tao sa fresh food, recipes, at healthier choices.",
-        stats: ["Marketplace", "Recipes", "Habits"],
-      },
-      grower: {
-        title: "Grower",
-        intro:
-          "Sinusuportahan ng grower experience ang planning, season timing, at harvest coordination.",
-        stats: ["Crop Plan", "Season", "Harvest"],
-      },
-      youth: {
-        title: "Kabataan",
-        intro:
-          "Ang youth experience ay tungkol sa workforce development, teamwork, confidence, at growth.",
-        stats: ["Teamwork", "Safety", "Growth"],
-      },
-      supervisor: {
-        title: "Supervisor",
-        intro:
-          "Sinusuportahan ng supervisor ang youth workforce program sa pamamagitan ng observation, tracking, at coordination kasama ang New Vision Behavioral Health.",
-        stats: ["Oversight", "Tracking", "Resources"],
-      },
-    },
-    panels: {
-      overview: {
-        title: "Platform Overview",
-        text: "Ang experience na ito ay parang pagpasok sa live system, hindi website.",
-        cards: [
-          { title: "Role Entry", text: "Bawat role ay ibang view ng ecosystem." },
-          { title: "Guided Experience", text: "Magkasama ang narration at interface." },
-          { title: "Living Platform", text: "Practical system ito para sa totoong tao." },
-        ],
-      },
-      marketplace: {
-        title: "Marketplace Path",
-        text: "Dapat mabilis na makarating ang customer sa fresh food, seedlings, nutrition, at return visits.",
-        cards: [
-          { title: "Fresh Food", text: "Produce, seedlings, at direct access." },
-          { title: "Return Visits", text: "Madaling makabalik ang customer." },
-          { title: "Healthy Choices", text: "Food access na may practical support." },
-        ],
-      },
-      nutrition: {
-        title: "Nutrisyon at Recipes",
-        text: "Dapat konektado ang fresh food sa araw-araw sa pamamagitan ng simple recipes at guidance.",
-        cards: [
-          { title: "Simple Recipes", text: "Madali at realistic na preparation." },
-          { title: "Food Education", text: "Tulong para sa better daily choices." },
-          { title: "Practical Guidance", text: "Ikonekta ang tanim sa kinakain." },
-        ],
-      },
-      calendar: {
-        title: "Crop Calendar",
-        text: "Dapat konektado ang weather, planting windows, season timing, at harvest planning.",
-        cards: [
-          { title: "Planting Windows", text: "Alamin kung kailan magsisimula." },
-          { title: "Season Timing", text: "Subaybayan ang readiness." },
-          { title: "Harvest Planning", text: "Maghanda para sa flow at use." },
-        ],
-      },
-    },
-    guidedSteps: [
-      "Maligayang pagdating sa Bronson Family Farm. Higit ito sa isang farm. Isa itong buhay na ecosystem ng pagkain, pamilya, pagkatuto, at kinabukasan.",
-      "Bawat role ay nagbubukas ng ibang pathway sa ecosystem.",
-      "Dapat dalhin ng customer pathway ang tao sa marketplace, nutrition, recipes, at healthier choices.",
-      "Sinusuportahan ng grower pathway ang crop planning, weather awareness, season timing, at harvest coordination.",
-      "Ipinapakita ng youth pathway ang workforce development, teamwork, safety, confidence, at growth.",
-      "Sinusuportahan ng supervisor pathway ang youth workforce program kasama ang New Vision Behavioral Health resources.",
-      "Magkasama, nagiging platform experience ito at hindi simpleng website lang.",
-    ],
+    appName: "Bronson Family Farm",
+    tagline: "Isang buhay na ecosystem para sa pagkain, pagkatuto, at pamana.",
+    subtag: "Binubuhay ang lupa. Ibinabalik ang kalusugan. Pinagdurugtong ang komunidad.",
+    enterDemo: "Buksan ang demo",
+    guidedTour: "Simulan ang guided tour",
+    stopTour: "I-pause ang guided tour",
+    chooseLanguage: "Pumili ng wika",
+    todayAtFarm: "Ngayon sa bukid",
+    marketplace: "Pamilihan",
+    learning: "Pagkatuto sa pagkain at nutrisyon",
+    cropCalendar: "Kalendaryo ng taniman",
+    eventCheckIn: "Event check-in",
+    workforce: "Youth workforce pathways",
+    weather: "Panahon sa bukid",
+    whyMatters: "Bakit mahalaga",
+    roleJourney: "Mga paglalakbay ng papel",
+    quickActions: "Mabilis na galaw",
+    stepInto: "Pumasok sa kakaiba.",
+    restoring: "Ito ay regenerative farm experience, hindi karaniwang website.",
+    nourishment: "Kapag tumataas ang presyo ng pagkain, maraming pamilya ang napipilitang pumili ng sobrang processed na pagkain na unti-unting sumisira sa kalusugan. Ang ecosystem na ito ay nagbabalik sa sariwang pagkain, praktikal na kaalaman, at ugnayan.",
+    messageTitle: "Magkasama ang pagkain, dignidad, at access.",
+    messageBody: "Ang Bronson Family Farm at Farm & Family Alliance ay gumagawa ng mainit na ecosystem para sa growers, pamilya, kabataan, volunteers, at customers.",
+    navHome: "Home",
+    navRoles: "Mga papel",
+    navMarket: "Pamilihan",
+    navEducation: "Edukasyon",
+    navCalendar: "Kalendaryo",
+    navOperations: "Operasyon",
+    navCheckIn: "Check-In",
+    navStory: "Kuwento",
+    narratorPrefix: "Salaysay",
   },
-
   it: {
-    appTitle: "Bronson Family Farm",
-    subTitle: "Demo Immersiva dell’Ecosistema",
-    enterText:
-      "Un ecosistema per ruoli che collega cibo, famiglia, terra, apprendimento e opportunità.",
-    voice: "Voce",
-    on: "Attiva",
-    off: "Disattiva",
-    startTour: "Avvia demo guidata",
-    stopTour: "Ferma demo guidata",
-    nextStep: "Passo successivo",
-    weather: "Meteo",
-    modules: {
-      overview: "Panoramica",
-      marketplace: "Mercato",
-      nutrition: "Nutrizione",
-      calendar: "Calendario",
-    },
-    roles: {
-      guest: {
-        title: "Ospite",
-        intro:
-          "L’esperienza ospite introduce la terra, la visione e il sistema più ampio.",
-        stats: ["Visione", "Storia", "Ingresso"],
-      },
-      customer: {
-        title: "Cliente",
-        intro:
-          "L’esperienza cliente dovrebbe portare rapidamente a cibo fresco, ricette e scelte migliori.",
-        stats: ["Mercato", "Ricette", "Abitudini"],
-      },
-      grower: {
-        title: "Coltivatore",
-        intro:
-          "L’esperienza coltivatore supporta pianificazione, tempi stagionali e raccolto.",
-        stats: ["Piano", "Stagione", "Raccolto"],
-      },
-      youth: {
-        title: "Giovani",
-        intro:
-          "L’esperienza giovani riguarda sviluppo del lavoro, collaborazione, fiducia e crescita.",
-        stats: ["Squadra", "Sicurezza", "Crescita"],
-      },
-      supervisor: {
-        title: "Supervisore",
-        intro:
-          "Il supervisore sostiene il programma giovanile con osservazione, monitoraggio e coordinamento con New Vision Behavioral Health.",
-        stats: ["Controllo", "Monitoraggio", "Risorse"],
-      },
-    },
-    panels: {
-      overview: {
-        title: "Panoramica della Piattaforma",
-        text: "Questa esperienza è pensata per sembrare un sistema vivo, non un sito web.",
-        cards: [
-          { title: "Ingresso per Ruolo", text: "Ogni ruolo apre una vista diversa." },
-          { title: "Esperienza Guidata", text: "Voce e interfaccia guidano insieme." },
-          { title: "Piattaforma Viva", text: "Un sistema pratico per persone reali." },
-        ],
-      },
-      marketplace: {
-        title: "Percorso Mercato",
-        text: "I clienti dovrebbero muoversi rapidamente tra prodotti freschi, piantine e abitudini di ritorno.",
-        cards: [
-          { title: "Cibo Fresco", text: "Prodotti, piantine e accesso diretto." },
-          { title: "Ritorno", text: "Rendere facile tornare." },
-          { title: "Scelte Salutari", text: "Accesso al cibo con supporto pratico." },
-        ],
-      },
-      nutrition: {
-        title: "Nutrizione e Ricette",
-        text: "Il cibo fresco dovrebbe collegarsi alla vita quotidiana con ricette semplici e guida pratica.",
-        cards: [
-          { title: "Ricette Semplici", text: "Preparazione facile e realistica." },
-          { title: "Educazione Alimentare", text: "Supporto per decisioni migliori." },
-          { title: "Guida Pratica", text: "Collegare ciò che si coltiva con ciò che si mangia." },
-        ],
-      },
-      calendar: {
-        title: "Calendario delle Colture",
-        text: "Il sistema dovrebbe collegare meteo, tempi di semina, stagione e raccolto.",
-        cards: [
-          { title: "Semina", text: "Sapere quando iniziare." },
-          { title: "Stagione", text: "Seguire la preparazione." },
-          { title: "Raccolto", text: "Prepararsi per flusso e utilizzo." },
-        ],
-      },
-    },
-    guidedSteps: [
-      "Benvenuto a Bronson Family Farm. Questo è più di una fattoria. È un ecosistema vivo di cibo, famiglia, apprendimento e futuro.",
-      "Ogni ruolo apre un percorso diverso attraverso l’ecosistema.",
-      "Il percorso cliente dovrebbe portare direttamente a mercato, nutrizione, ricette e scelte migliori.",
-      "Il percorso coltivatore supporta pianificazione, meteo, tempi stagionali e raccolto.",
-      "Il percorso giovani evidenzia sviluppo del lavoro, collaborazione, sicurezza, fiducia e crescita.",
-      "Il percorso supervisore sostiene il programma giovani con supporto e coordinamento con New Vision Behavioral Health.",
-      "Insieme, questi percorsi creano un’esperienza di piattaforma e non un semplice sito web.",
-    ],
+    appName: "Bronson Family Farm",
+    tagline: "Un ecosistema vivo per cibo, apprendimento e eredità.",
+    subtag: "Rigenerare la terra. Ripristinare la salute. Ricostruire il legame.",
+    enterDemo: "Apri demo",
+    guidedTour: "Avvia tour guidato",
+    stopTour: "Metti in pausa il tour",
+    chooseLanguage: "Scegli la lingua",
+    todayAtFarm: "Oggi alla fattoria",
+    marketplace: "Mercato",
+    learning: "Educazione alimentare e nutrizione",
+    cropCalendar: "Calendario colture",
+    eventCheckIn: "Check-in evento",
+    workforce: "Percorsi per i giovani",
+    weather: "Meteo della fattoria",
+    whyMatters: "Perché conta",
+    roleJourney: "Percorsi dei ruoli",
+    quickActions: "Azioni rapide",
+    stepInto: "Entra in qualcosa di diverso.",
+    restoring: "Questa è un’esperienza agricola rigenerativa, non un sito tipico.",
+    nourishment: "Quando i costi del cibo aumentano, molte famiglie scelgono sostituti ultra-processati che danneggiano lentamente la salute. Questo ecosistema riporta le persone verso cibo fresco, conoscenza pratica e comunità.",
+    messageTitle: "Cibo, dignità e accesso devono stare insieme.",
+    messageBody: "Bronson Family Farm e Farm & Family Alliance stanno costruendo un ecosistema accogliente per coltivatori, famiglie, giovani, volontari e clienti.",
+    navHome: "Home",
+    navRoles: "Ruoli",
+    navMarket: "Mercato",
+    navEducation: "Educazione",
+    navCalendar: "Calendario",
+    navOperations: "Operazioni",
+    navCheckIn: "Check-In",
+    navStory: "Storia",
+    narratorPrefix: "Narrazione",
   },
-
   he: {
-    appTitle: "Bronson Family Farm",
-    subTitle: "הדגמת מערכת סוחפת",
-    enterText:
-      "מערכת מבוססת תפקידים המחברת מזון, משפחה, אדמה, למידה והזדמנות.",
-    voice: "קול",
-    on: "פועל",
-    off: "כבוי",
-    startTour: "התחל הדגמה מודרכת",
-    stopTour: "עצור הדגמה מודרכת",
-    nextStep: "השלב הבא",
-    weather: "מזג אוויר",
-    modules: {
-      overview: "סקירה",
-      marketplace: "שוק",
-      nutrition: "תזונה",
-      calendar: "לוח שנה",
-    },
-    roles: {
-      guest: {
-        title: "אורח",
-        intro:
-          "חוויית האורח מציגה את האדמה, החזון והמערכת הרחבה.",
-        stats: ["חזון", "סיפור", "כניסה"],
-      },
-      customer: {
-        title: "לקוח",
-        intro:
-          "חוויית הלקוח צריכה להוביל במהירות למזון טרי, מתכונים ובחירות טובות יותר.",
-        stats: ["שוק", "מתכונים", "הרגלים"],
-      },
-      grower: {
-        title: "מגדל",
-        intro:
-          "חוויית המגדל תומכת בתכנון, עונה וקציר.",
-        stats: ["תכנון", "עונה", "קציר"],
-      },
-      youth: {
-        title: "נוער",
-        intro:
-          "חוויית הנוער עוסקת בפיתוח כוח עבודה, עבודת צוות, ביטחון וצמיחה.",
-        stats: ["צוות", "בטיחות", "צמיחה"],
-      },
-      supervisor: {
-        title: "מפקח",
-        intro:
-          "המפקח תומך בתוכנית הנוער באמצעות תצפית, מעקב ותיאום עם New Vision Behavioral Health.",
-        stats: ["פיקוח", "מעקב", "משאבים"],
-      },
-    },
-    panels: {
-      overview: {
-        title: "סקירת המערכת",
-        text: "החוויה הזאת נועדה להרגיש כמו כניסה למערכת חיה, לא לאתר.",
-        cards: [
-          { title: "כניסה לפי תפקיד", text: "כל תפקיד פותח מבט אחר על המערכת." },
-          { title: "חוויה מודרכת", text: "קול וממשק עובדים יחד." },
-          { title: "פלטפורמה חיה", text: "מערכת מעשית לאנשים אמיתיים." },
-        ],
-      },
-      marketplace: {
-        title: "מסלול שוק",
-        text: "לקוחות צריכים לעבור במהירות לתוצרת, שתילים והרגלי חזרה.",
-        cards: [
-          { title: "מזון טרי", text: "תוצרת, שתילים וגישה ישירה." },
-          { title: "חזרה", text: "להקל על חזרה של הלקוח." },
-          { title: "בחירות בריאות", text: "גישה למזון עם תמיכה מעשית." },
-        ],
-      },
-      nutrition: {
-        title: "תזונה ומתכונים",
-        text: "מזון טרי צריך להתחבר לחיי היומיום עם מתכונים פשוטים והכוונה מעשית.",
-        cards: [
-          { title: "מתכונים פשוטים", text: "הכנה קלה ומציאותית." },
-          { title: "חינוך תזונתי", text: "תמיכה בהחלטות יומיומיות טובות יותר." },
-          { title: "הכוונה מעשית", text: "לחבר בין מה שגדל למה שאוכלים." },
-        ],
-      },
-      calendar: {
-        title: "לוח גידולים",
-        text: "המערכת צריכה לחבר מזג אוויר, זמני שתילה, עונה וקציר.",
-        cards: [
-          { title: "זמני שתילה", text: "לדעת מתי להתחיל." },
-          { title: "עונה", text: "לעקוב אחר מוכנות." },
-          { title: "קציר", text: "להתכונן לזרימה ולשימוש." },
-        ],
-      },
-    },
-    guidedSteps: [
-      "ברוכים הבאים ל־Bronson Family Farm. זה יותר מחווה. זוהי מערכת חיה של מזון, משפחה, למידה ועתיד.",
-      "כל תפקיד פותח מסלול שונה בתוך המערכת.",
-      "מסלול הלקוח צריך להוביל ישירות לשוק, תזונה, מתכונים ובחירות טובות יותר.",
-      "מסלול המגדל תומך בתכנון, מזג אוויר, עונה וקציר.",
-      "מסלול הנוער מדגיש פיתוח כוח עבודה, עבודת צוות, בטיחות, ביטחון וצמיחה.",
-      "מסלול המפקח תומך בתוכנית הנוער ובתיאום עם New Vision Behavioral Health.",
-      "יחד, המסלולים האלה יוצרים חוויית פלטפורמה ולא אתר רגיל.",
-    ],
+    appName: "Bronson Family Farm",
+    tagline: "מערכת חיה של מזון, למידה ומורשת.",
+    subtag: "משקמים את האדמה. מחזירים בריאות. בונים מחדש קשר.",
+    enterDemo: "כניסה לדמו",
+    guidedTour: "התחל סיור מודרך",
+    stopTour: "השהה סיור",
+    chooseLanguage: "בחר שפה",
+    todayAtFarm: "היום בחווה",
+    marketplace: "שוק",
+    learning: "למידת תזונה ומזון",
+    cropCalendar: "לוח גידולים",
+    eventCheckIn: "צ'ק-אין לאירוע",
+    workforce: "מסלולי תעסוקה לנוער",
+    weather: "מזג האוויר בחווה",
+    whyMatters: "למה זה חשוב",
+    roleJourney: "מסלולי תפקידים",
+    quickActions: "פעולות מהירות",
+    stepInto: "היכנסו למשהו אחר.",
+    restoring: "זו חוויה של חווה רגנרטיבית, לא אתר רגיל.",
+    nourishment: "כשמחירי המזון עולים, משפחות רבות נאלצות לבחור במזון מעובד מאוד שפוגע לאט בבריאות. המערכת הזו מחברת מחדש למזון טרי, ידע מעשי וקהילה.",
+    messageTitle: "מזון, כבוד וגישה שייכים יחד.",
+    messageBody: "Bronson Family Farm ו-Farm & Family Alliance בונות מערכת מזמינה עבור מגדלים, משפחות, צעירים, מתנדבים ולקוחות.",
+    navHome: "בית",
+    navRoles: "תפקידים",
+    navMarket: "שוק",
+    navEducation: "חינוך",
+    navCalendar: "לוח שנה",
+    navOperations: "תפעול",
+    navCheckIn: "צ'ק-אין",
+    navStory: "סיפור",
+    narratorPrefix: "קריינות",
   },
-
   patwa: {
-    appTitle: "Bronson Family Farm",
-    subTitle: "Immersive Ecosystem Demo",
-    enterText:
-      "One role-based ecosystem fi food, family, land, learning, an opportunity.",
-    voice: "Voice",
-    on: "On",
-    off: "Off",
-    startTour: "Start Guided Demo",
-    stopTour: "Stop Guided Demo",
-    nextStep: "Next Step",
-    weather: "Weather",
-    modules: {
-      overview: "Overview",
-      marketplace: "Marketplace",
-      nutrition: "Nutrition",
-      calendar: "Calendar",
-    },
-    roles: {
-      guest: {
-        title: "Guest",
-        intro:
-          "Di guest experience introduce di land, di vision, an di bigger ecosystem.",
-        stats: ["Vision", "Story", "Entry"],
-      },
-      customer: {
-        title: "Customer",
-        intro:
-          "Di customer experience fi carry people straight to fresh food, recipes, an healthier choices.",
-        stats: ["Marketplace", "Recipes", "Habits"],
-      },
-      grower: {
-        title: "Grower",
-        intro:
-          "Di grower experience support planning, season timing, an harvest flow.",
-        stats: ["Crop Plan", "Season", "Harvest"],
-      },
-      youth: {
-        title: "Youth",
-        intro:
-          "Di youth experience center workforce development, teamwork, confidence, an growth.",
-        stats: ["Teamwork", "Safety", "Growth"],
-      },
-      supervisor: {
-        title: "Supervisor",
-        intro:
-          "Di supervisor support di youth workforce program through observation, tracking, encouragement, an coordination wid New Vision Behavioral Health.",
-        stats: ["Oversight", "Tracking", "Resources"],
-      },
-    },
-    panels: {
-      overview: {
-        title: "Platform Overview",
-        text: "Dis experience build fi feel like yuh enter a live system, not a website.",
-        cards: [
-          { title: "Role Entry", text: "Every role open a different view a di ecosystem." },
-          { title: "Guided Flow", text: "Voice an interface work together." },
-          { title: "Living Platform", text: "A practical system fi real people." },
-        ],
-      },
-      marketplace: {
-        title: "Marketplace Path",
-        text: "Customers fi move quick to fresh produce, seedlings, an return habits.",
-        cards: [
-          { title: "Fresh Food", text: "Produce, seedlings, an direct access." },
-          { title: "Return Visits", text: "Mek it easy fi people come back." },
-          { title: "Healthy Choices", text: "Food access wid practical support." },
-        ],
-      },
-      nutrition: {
-        title: "Nutrition an Recipes",
-        text: "Fresh food fi connect to everyday life through simple recipes an practical guidance.",
-        cards: [
-          { title: "Simple Recipes", text: "Easy an realistic preparation." },
-          { title: "Food Education", text: "Support better everyday choices." },
-          { title: "Practical Guidance", text: "Connect wah grow to wah people eat." },
-        ],
-      },
-      calendar: {
-        title: "Crop Calendar",
-        text: "Di system fi connect weather, planting windows, season timing, an harvest planning.",
-        cards: [
-          { title: "Planting Windows", text: "Know when fi start." },
-          { title: "Season Timing", text: "Track readiness through di cycle." },
-          { title: "Harvest Planning", text: "Prepare fi flow an use." },
-        ],
-      },
-    },
-    guidedSteps: [
-      "Welcome to Bronson Family Farm. Dis more than a farm. Dis a living ecosystem a food, family, learning, an future.",
-      "Every role open a different pathway through di ecosystem.",
-      "Di customer pathway fi move people straight to marketplace access, nutrition guidance, recipes, an healthier choices.",
-      "Di grower pathway support crop planning, weather awareness, season timing, an harvest coordination.",
-      "Di youth pathway highlight workforce development, teamwork, safety, confidence, an growth.",
-      "Di supervisor pathway support di youth workforce program an coordinate wid New Vision Behavioral Health resources.",
-      "Together, dem pathways create a platform experience instead of a regular website.",
-    ],
+    appName: "Bronson Family Farm",
+    tagline: "A one live ecosystem fi food, learning, an legacy.",
+    subtag: "Wi a heal di land. Build back health. Bring people back together.",
+    enterDemo: "Go ina di demo",
+    guidedTour: "Start guided tour",
+    stopTour: "Pause guided tour",
+    chooseLanguage: "Choose language",
+    todayAtFarm: "Today pon di farm",
+    marketplace: "Market",
+    learning: "Food an nutrition learning",
+    cropCalendar: "Crop planning calendar",
+    eventCheckIn: "Event check-in",
+    workforce: "Youth workforce pathways",
+    weather: "Farm weather",
+    whyMatters: "Why dis matter",
+    roleJourney: "Role journeys",
+    quickActions: "Quick actions",
+    stepInto: "Step ina supm different.",
+    restoring: "Dis a regenerative farm experience, not no regular website.",
+    nourishment: "When food price rise, whole heap a families get push toward overprocessed substitute weh slowly mash up health. Dis ecosystem link people back to fresh food, practical knowledge, an community.",
+    messageTitle: "Food, dignity, an access fi go together.",
+    messageBody: "Bronson Family Farm an Farm & Family Alliance a build one welcoming ecosystem weh growers, families, youth, volunteers, an customers waan come back to.",
+    navHome: "Home",
+    navRoles: "Roles",
+    navMarket: "Market",
+    navEducation: "Education",
+    navCalendar: "Calendar",
+    navOperations: "Operations",
+    navCheckIn: "Check-In",
+    navStory: "Story",
+    narratorPrefix: "Voice guide",
   },
-} as const
+};
 
-function pickVoice(targetLang: string) {
-  const voices = window.speechSynthesis.getVoices()
-  const exact = voices.find((v) => v.lang.toLowerCase() === targetLang.toLowerCase())
-  if (exact) return exact
-  const partial = voices.find((v) =>
-    v.lang.toLowerCase().startsWith(targetLang.toLowerCase().split("-")[0])
-  )
-  return partial || null
-}
+const roleContent: Record<
+  RoleKey,
+  {
+    title: string;
+    intro: string;
+    image: string;
+    accent: string;
+    bullets: string[];
+    primary: string;
+    secondary: string;
+    icon: React.ReactNode;
+  }
+> = {
+  guest: {
+    title: "Guest",
+    intro:
+      "A welcoming first step into the ecosystem. Guests discover the farm story, upcoming events, weather, and simple paths into learning, visiting, and growing.",
+    image: images.guest,
+    accent: "from-amber-200/70 via-emerald-100/50 to-white/70",
+    bullets: [
+      "Explore the regenerative farm vision",
+      "See event invitations and guided stories",
+      "Discover community impact before creating an account",
+    ],
+    primary: "Explore the Farm Story",
+    secondary: "See Upcoming Events",
+    icon: <Home className="h-5 w-5" />,
+  },
+  customer: {
+    title: "Customer",
+    intro:
+      "Customers move quickly to produce, pantry support, nutrition guidance, recipes, and buying history that makes healthy repeat ordering easier.",
+    image: images.customer,
+    accent: "from-green-200/70 via-lime-100/60 to-white/80",
+    bullets: [
+      "Go directly to the marketplace",
+      "Track buying habits and reorder favorites",
+      "Get nutrition and recipe guidance tied to purchases",
+    ],
+    primary: "Open Marketplace",
+    secondary: "View Nutrition Support",
+    icon: <ShoppingBasket className="h-5 w-5" />,
+  },
+  grower: {
+    title: "Grower",
+    intro:
+      "Growers use the ecosystem for crop planning, weather, supply coordination, pricing visibility, post-harvest guidance, and seasonal confidence.",
+    image: images.grower,
+    accent: "from-emerald-200/70 via-teal-100/60 to-white/80",
+    bullets: [
+      "Review crop plan and field tasks",
+      "Check weather and production timing",
+      "Access pricing, learning, and marketplace pathways",
+    ],
+    primary: "Open Grower Hub",
+    secondary: "See Crop Calendar",
+    icon: <Sprout className="h-5 w-5" />,
+  },
+  youth: {
+    title: "Youth Workforce",
+    intro:
+      "Youth experience real pathways through agriculture, teamwork, safety, confidence, and career-building—supported by meaningful structure, not just tasks.",
+    image: images.youth,
+    accent: "from-sky-200/70 via-cyan-100/60 to-white/80",
+    bullets: [
+      "Daily check-in, goals, and skills tracking",
+      "Learning tied to food, business, and responsibility",
+      "Career pathways connected to real work experience",
+    ],
+    primary: "Enter Youth Pathway",
+    secondary: "See Skills Journey",
+    icon: <GraduationCap className="h-5 w-5" />,
+  },
+  supervisor: {
+    title: "Supervisor",
+    intro:
+      "Supervisors coordinate youth support, attendance, daily tasks, resource needs, and personal growth observations for a stronger workforce experience.",
+    image: images.supervisor,
+    accent: "from-violet-200/70 via-fuchsia-100/60 to-white/80",
+    bullets: [
+      "Oversee progress, attendance, and safety",
+      "Coordinate support staff and field needs",
+      "Document growth through structured observations",
+    ],
+    primary: "Open Supervisor Desk",
+    secondary: "Review Support Notes",
+    icon: <ShieldCheck className="h-5 w-5" />,
+  },
+  volunteer: {
+    title: "Volunteer",
+    intro:
+      "Volunteers are welcomed into a joyful, organized environment where they can sign up, learn the mission, and contribute to food access and restoration.",
+    image: images.volunteer,
+    accent: "from-rose-200/70 via-orange-100/60 to-white/80",
+    bullets: [
+      "See volunteer days and event needs",
+      "Receive role-specific guidance and orientation",
+      "Connect service to food access and community healing",
+    ],
+    primary: "Join Volunteer Day",
+    secondary: "See Service Opportunities",
+    icon: <Users className="h-5 w-5" />,
+  },
+};
 
-export default function App() {
-  const [role, setRole] = useState<Role>("guest")
-  const [lang, setLang] = useState<LangKey>("en")
-  const [temp, setTemp] = useState<number | null>(null)
-  const [tourOn, setTourOn] = useState(false)
-  const [tourStep, setTourStep] = useState(0)
-  const [voiceOn, setVoiceOn] = useState(false)
-  const [moduleKey, setModuleKey] = useState<ModuleKey>("overview")
+const weatherCodeLabel = (code: number) => {
+  if ([0].includes(code)) return { label: "Clear", icon: Sun };
+  if ([1, 2, 3].includes(code)) return { label: "Cloudy", icon: Cloud };
+  if ([45, 48].includes(code)) return { label: "Fog", icon: Wind };
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return { label: "Rain", icon: CloudRain };
+  return { label: "Mixed", icon: CloudSun };
+};
 
-  const t = content[lang]
-  const isRTL = lang === "he"
-
+function useSpeech(textToSpeak: string, enabled: boolean, lang: LangKey) {
   useEffect(() => {
-    fetch(
-      "https://api.open-meteo.com/v1/forecast?latitude=41.0998&longitude=-80.6495&current=temperature_2m"
-    )
-      .then((res) => res.json())
-      .then((data) => setTemp(data.current.temperature_2m))
-      .catch(() => setTemp(null))
-  }, [])
-
-  useEffect(() => {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.getVoices()
-    }
-  }, [])
-
-  const guidedScript = useMemo(() => t.guidedSteps, [t])
-
-  useEffect(() => {
-    if (!tourOn || !voiceOn || !("speechSynthesis" in window)) return
-
-    window.speechSynthesis.cancel()
-
+    if (!enabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
     const langMap: Record<LangKey, string> = {
       en: "en-US",
       es: "es-ES",
       tl: "fil-PH",
       it: "it-IT",
       he: "he-IL",
-      patwa: "en-US",
-    }
+      patwa: "en-JM",
+    };
+    utterance.lang = langMap[lang] || "en-US";
+    utterance.rate = lang === "patwa" ? 0.9 : 0.95;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+    return () => window.speechSynthesis.cancel();
+  }, [textToSpeak, enabled, lang]);
+}
 
-    const utter = new SpeechSynthesisUtterance(guidedScript[tourStep] || "")
-    utter.lang = langMap[lang]
-    utter.rate = 0.82
-    utter.pitch = 0.94
-    utter.volume = 1
+function classNames(...parts: Array<string | false | null | undefined>) {
+  return parts.filter(Boolean).join(" ");
+}
 
-    const preferredVoice = pickVoice(langMap[lang])
-    if (preferredVoice) utter.voice = preferredVoice
+export default function App() {
+  const [lang, setLang] = useState<LangKey>("en");
+  const [entered, setEntered] = useState(false);
+  const [tourOn, setTourOn] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+  const [activeRole, setActiveRole] = useState<RoleKey>("guest");
+  const [section, setSection] = useState<
+    "home" | "roles" | "market" | "education" | "calendar" | "operations" | "checkin" | "story"
+  >("home");
+  const [forecast, setForecast] = useState<ForecastDay[]>([]);
+  const [currentTemp, setCurrentTemp] = useState<number | null>(null);
+  const [weatherLabel, setWeatherLabel] = useState("Loading");
+  const [voiceOn, setVoiceOn] = useState(true);
+  const [timeNow, setTimeNow] = useState("");
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
 
-    utter.onend = () => {
-      setTimeout(() => {
-        setTourStep((prev) => {
-          if (prev >= guidedScript.length - 1) {
-            setTourOn(false)
-            return 0
-          }
-          return prev + 1
-        })
-      }, 450)
-    }
+  const t = text[lang];
+  const role = roleContent[activeRole];
 
-    window.speechSynthesis.speak(utter)
-
-    return () => {
-      window.speechSynthesis.cancel()
-    }
-  }, [tourOn, voiceOn, tourStep, guidedScript, lang])
+  const tourStops = useMemo(
+    () => [
+      { section: "home", role: "guest" },
+      { section: "roles", role: "customer" },
+      { section: "market", role: "customer" },
+      { section: "education", role: "customer" },
+      { section: "calendar", role: "grower" },
+      { section: "operations", role: "supervisor" },
+      { section: "checkin", role: "youth" },
+      { section: "story", role: "volunteer" },
+    ] as Array<{ section: typeof section; role: RoleKey }>,
+    [section]
+  );
 
   useEffect(() => {
-    if (!tourOn) {
-      setTourStep(0)
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel()
-      }
-    }
-  }, [tourOn])
+    const tick = () => {
+      const now = new Date();
+      setTimeNow(
+        now.toLocaleString([], {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      );
+    };
+    tick();
+    const id = setInterval(tick, 30000);
+    return () => clearInterval(id);
+  }, []);
 
-  const roleInfo = t.roles[role]
-  const panel = t.panels[moduleKey]
+  useEffect(() => {
+    const url =
+      "https://api.open-meteo.com/v1/forecast?latitude=41.10&longitude=-80.65&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto";
+    fetch(url)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.current) {
+          setCurrentTemp(Math.round(data.current.temperature_2m));
+          const currentWeather = weatherCodeLabel(data.current.weather_code || 0);
+          setWeatherLabel(currentWeather.label);
+        }
+        if (data?.daily?.time) {
+          const next = data.daily.time.slice(0, 5).map((date: string, i: number) => ({
+            date,
+            tempMax: Math.round(data.daily.temperature_2m_max[i]),
+            tempMin: Math.round(data.daily.temperature_2m_min[i]),
+            code: data.daily.weather_code[i],
+          }));
+          setForecast(next);
+        }
+      })
+      .catch(() => {
+        setCurrentTemp(61);
+        setWeatherLabel("Local conditions");
+        setForecast([
+          { date: "Today", tempMax: 65, tempMin: 48, code: 2 },
+          { date: "Tomorrow", tempMax: 68, tempMin: 50, code: 1 },
+          { date: "Next", tempMax: 62, tempMin: 45, code: 61 },
+        ]);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!tourOn) return;
+    const current = tourStops[tourStep % tourStops.length];
+    setSection(current.section);
+    setActiveRole(current.role);
+    const id = setTimeout(() => setTourStep((s) => (s + 1) % tourStops.length), 4500);
+    return () => clearTimeout(id);
+  }, [tourOn, tourStep, tourStops]);
+
+  const narration = useMemo(() => {
+    const sectionLines: Record<typeof section, string> = {
+      home: `${t.stepInto} ${t.restoring} ${t.messageBody}`,
+      roles: `${role.title}. ${role.intro}`,
+      market: `Customers can move directly into the marketplace for produce, seedlings, nutrition guidance, recipes, and repeat ordering support.`,
+      education: `Education connects food choices with health, diabetes support, cooking confidence, and practical knowledge for families.`,
+      calendar: `Growers can plan crops, track tasks, monitor weather, and align production with the season.`,
+      operations: `Supervisors manage support, youth progress, safety, attendance, and daily logistics from one coordinated place.`,
+      checkin: `The event check-in experience uses mobile QR scanning, role-based color signals, and welcoming arrival flow.`,
+      story: `The story view centers restoration of land, health, legacy, and regional belonging.`,
+    };
+    return `${t.narratorPrefix}. ${sectionLines[section]}`;
+  }, [section, role, t]);
+
+  useSpeech(narration, tourOn && voiceOn, lang);
+
+  const cards = [
+    {
+      title: t.marketplace,
+      desc: "Fresh produce, seedlings, SNAP-aligned pathways, nutrition support, recipes, and habit-aware customer journeys.",
+      icon: <ShoppingBasket className="h-5 w-5" />,
+      image: images.market,
+      action: () => {
+        setSection("market");
+        setActiveRole("customer");
+      },
+    },
+    {
+      title: t.learning,
+      desc: "Practical learning around fresh food, overprocessed food risks, diabetes support, gardening, and family wellness.",
+      icon: <HeartPulse className="h-5 w-5" />,
+      image: images.education,
+      action: () => setSection("education"),
+    },
+    {
+      title: t.cropCalendar,
+      desc: "Seasonal planning, planting windows, harvest timing, weather awareness, and grower confidence.",
+      icon: <CalendarDays className="h-5 w-5" />,
+      image: images.grower,
+      action: () => {
+        setSection("calendar");
+        setActiveRole("grower");
+      },
+    },
+    {
+      title: t.workforce,
+      desc: "A real workforce pathway for youth supported by structure, supervision, skills, and meaningful outcomes.",
+      icon: <GraduationCap className="h-5 w-5" />,
+      image: images.youth,
+      action: () => {
+        setSection("operations");
+        setActiveRole("supervisor");
+      },
+    },
+  ];
 
   return (
-    <div
-      dir={isRTL ? "rtl" : "ltr"}
-      style={{
-        minHeight: "100vh",
-        background: "#151914",
-        color: "#f4f1ea",
-        fontFamily: "Arial, sans-serif",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "relative",
-          minHeight: "100vh",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `url(${imageMap[role]})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            filter: "brightness(0.6)",
-          }}
-        />
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(220,252,231,0.7),rgba(255,255,255,0.92),rgba(240,253,244,0.8))] text-slate-900">
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/GrowArea.jpg')] bg-cover bg-center opacity-[0.08]" />
+        <div className="absolute -top-24 right-0 h-80 w-80 rounded-full bg-amber-200/40 blur-3xl" />
+        <div className="absolute left-0 top-1/3 h-96 w-96 rounded-full bg-emerald-200/40 blur-3xl" />
+      </div>
 
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(180deg, rgba(9,10,9,0.20) 0%, rgba(9,10,9,0.55) 45%, rgba(9,10,9,0.92) 100%)",
-          }}
-        />
-
-        <div
-          style={{
-            position: "relative",
-            zIndex: 2,
-            padding: "26px 28px 170px",
-            maxWidth: "1500px",
-            margin: "0 auto",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              flexWrap: "wrap",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: 26,
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  fontSize: 18,
-                  color: "#c8d2c8",
-                  marginBottom: 8,
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {t.subTitle}
-              </div>
-              <h1
-                style={{
-                  margin: 0,
-                  fontSize: 62,
-                  lineHeight: 0.98,
-                  fontWeight: 800,
-                }}
-              >
-                {t.appTitle}
-              </h1>
+      <header className="sticky top-0 z-40 border-b border-white/50 bg-white/70 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-200">
+              <Leaf className="h-5 w-5" />
             </div>
+            <div>
+              <div className="text-lg font-semibold tracking-tight">{t.appName}</div>
+              <div className="text-xs text-slate-600">Developed by Bronson Family Farm</div>
+            </div>
+          </div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: 10,
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
+          <nav className="hidden items-center gap-2 md:flex">
+            {[
+              ["home", t.navHome],
+              ["roles", t.navRoles],
+              ["market", t.navMarket],
+              ["education", t.navEducation],
+              ["calendar", t.navCalendar],
+              ["operations", t.navOperations],
+              ["checkin", t.navCheckIn],
+              ["story", t.navStory],
+            ].map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setSection(key as typeof section)}
+                className={classNames(
+                  "rounded-full px-4 py-2 text-sm transition",
+                  section === key ? "bg-emerald-600 text-white shadow" : "bg-white/80 text-slate-700 hover:bg-emerald-50"
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <div className="hidden rounded-full bg-white/80 px-3 py-2 text-xs text-slate-600 sm:block">
+              Youngstown, Ohio · {timeNow}
+            </div>
+            <div className="flex items-center gap-2 rounded-full bg-white/80 px-3 py-2">
+              <Languages className="h-4 w-4 text-emerald-700" />
               <select
                 value={lang}
                 onChange={(e) => setLang(e.target.value as LangKey)}
-                style={{
-                  padding: "12px 14px",
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.18)",
-                  background: "rgba(20,24,20,0.72)",
-                  color: "#fff",
-                  fontSize: 16,
-                }}
+                className="bg-transparent text-sm outline-none"
               >
-                {languageOptions.map((option) => (
-                  <option key={option.key} value={option.key}>
-                    {option.label}
-                  </option>
-                ))}
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="tl">Filipino</option>
+                <option value="it">Italian</option>
+                <option value="he">Hebrew</option>
+                <option value="patwa">Patwa</option>
               </select>
-
-              <button
-                onClick={() => setVoiceOn((v) => !v)}
-                style={{
-                  padding: "12px 14px",
-                  borderRadius: 12,
-                  border: "none",
-                  background: voiceOn ? "#466a9c" : "#666",
-                  color: "#fff",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                {t.voice}: {voiceOn ? t.on : t.off}
-              </button>
-
-              <button
-                onClick={() => setTourOn((v) => !v)}
-                style={{
-                  padding: "12px 16px",
-                  borderRadius: 12,
-                  border: "none",
-                  background: tourOn ? "#8a4444" : "#204f7c",
-                  color: "#fff",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                {tourOn ? t.stopTour : t.startTour}
-              </button>
-
-              <button
-                onClick={() =>
-                  setTourStep((prev) =>
-                    prev < guidedScript.length - 1 ? prev + 1 : prev
-                  )
-                }
-                style={{
-                  padding: "12px 16px",
-                  borderRadius: 12,
-                  border: "none",
-                  background: "#8b7331",
-                  color: "#fff",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                {t.nextStep}
-              </button>
             </div>
           </div>
+        </div>
+      </header>
 
-          <div
-            style={{
-              maxWidth: 760,
-              marginTop: 30,
-              marginBottom: 28,
-            }}
-          >
-            <div
-              style={{
-                display: "inline-block",
-                padding: "8px 12px",
-                borderRadius: 999,
-                background: "rgba(255,255,255,0.10)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                fontSize: 15,
-                marginBottom: 16,
-              }}
-            >
-              {roleInfo.title}
+      {!entered ? (
+        <main className="mx-auto grid max-w-7xl gap-8 px-4 py-8 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:py-12">
+          <section className="relative overflow-hidden rounded-[2rem] border border-white/50 bg-white/55 shadow-2xl shadow-emerald-100 backdrop-blur-xl">
+            <div className="absolute inset-0">
+              <img src={images.hero} alt="Bronson Family Farm growing area" className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/65 via-emerald-900/35 to-amber-700/20" />
+            </div>
+            <div className="relative flex min-h-[560px] flex-col justify-between p-6 text-white sm:p-8 lg:p-10">
+              <div className="max-w-3xl">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm backdrop-blur">
+                  <Trees className="h-4 w-4" /> {t.subtag}
+                </div>
+                <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+                  {t.stepInto}
+                </h1>
+                <p className="mt-4 max-w-2xl text-lg text-white/90 sm:text-xl">{t.tagline}</p>
+                <p className="mt-6 max-w-2xl text-base leading-7 text-white/85">{t.restoring}</p>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-3">
+                <div className="rounded-3xl bg-black/20 p-4 backdrop-blur-md">
+                  <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white/90">
+                    <CloudSun className="h-4 w-4" /> {t.weather}
+                  </div>
+                  <div className="text-3xl font-semibold">{currentTemp ?? "--"}°</div>
+                  <div className="text-sm text-white/80">{weatherLabel}</div>
+                </div>
+                <div className="rounded-3xl bg-black/20 p-4 backdrop-blur-md">
+                  <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white/90">
+                    <Sprout className="h-4 w-4" /> {t.cropCalendar}
+                  </div>
+                  <div className="text-sm text-white/85">Seed starting, transplanting, harvest timing, and grower readiness at a glance.</div>
+                </div>
+                <div className="rounded-3xl bg-black/20 p-4 backdrop-blur-md">
+                  <div className="mb-2 flex items-center gap-2 text-sm font-medium text-white/90">
+                    <ScanLine className="h-4 w-4" /> {t.eventCheckIn}
+                  </div>
+                  <div className="text-sm text-white/85">QR-driven arrival, role colors, visitor flow, and a branded welcome experience.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="space-y-5">
+            <div className="rounded-[2rem] border border-white/60 bg-white/70 p-6 shadow-xl shadow-emerald-100 backdrop-blur-xl">
+              <div className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-700">{t.whyMatters}</div>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight">{t.messageTitle}</h2>
+              <p className="mt-4 text-base leading-7 text-slate-700">{t.nourishment}</p>
+              <p className="mt-4 text-base leading-7 text-slate-700">{t.messageBody}</p>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button
+                  onClick={() => {
+                    setEntered(true);
+                    setSection("home");
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5"
+                >
+                  <ArrowRight className="h-4 w-4" /> {t.enterDemo}
+                </button>
+                <button
+                  onClick={() => {
+                    setEntered(true);
+                    setTourOn(true);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5"
+                >
+                  <PlayCircle className="h-4 w-4" /> {t.guidedTour}
+                </button>
+              </div>
             </div>
 
-            <div
-              style={{
-                fontSize: 28,
-                lineHeight: 1.35,
-                color: "#f3f0e8",
-                maxWidth: 720,
-              }}
-            >
-              {t.enterText}
+            <div className="rounded-[2rem] border border-white/60 bg-white/70 p-5 shadow-xl shadow-amber-100 backdrop-blur-xl">
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <Star className="h-4 w-4 text-amber-500" /> {t.quickActions}
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {cards.map((card) => (
+                  <button
+                    key={card.title}
+                    onClick={() => {
+                      setEntered(true);
+                      card.action();
+                    }}
+                    className="group overflow-hidden rounded-3xl border border-slate-200 bg-white text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    <div className="h-28 overflow-hidden">
+                      <img src={card.image} alt={card.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                    </div>
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 text-sm font-medium text-emerald-700">{card.icon} {card.title}</div>
+                      <div className="mt-2 text-sm leading-6 text-slate-600">{card.desc}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          </section>
+        </main>
+      ) : (
+        <main ref={scrollerRef} className="mx-auto max-w-7xl space-y-8 px-4 py-6 lg:px-8 lg:py-8">
+          <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-white/70 shadow-xl shadow-emerald-100 backdrop-blur-xl">
+              <div className="absolute inset-0">
+                <img src={role.image} alt={role.title} className="h-full w-full object-cover" />
+                <div className={classNames("absolute inset-0 bg-gradient-to-br opacity-90", role.accent)} />
+              </div>
+              <div className="relative p-6 sm:p-8 lg:p-10">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-medium text-slate-800 shadow-sm">
+                    {role.icon} {role.title}
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-medium text-white">
+                    <MapPin className="h-4 w-4" /> Youngstown, Ohio
+                  </span>
+                  {tourOn && (
+                    <span className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white">
+                      <Volume2 className="h-4 w-4" /> {t.narratorPrefix} on
+                    </span>
+                  )}
+                </div>
 
-          {tourOn && (
-            <div
-              style={{
-                width: "min(760px, 100%)",
-                background: "rgba(250, 241, 197, 0.16)",
-                backdropFilter: "blur(12px)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                borderLeft: "8px solid #d8b44a",
-                borderRadius: 18,
-                padding: "20px 22px",
-                fontSize: 24,
-                lineHeight: 1.45,
-                marginBottom: 26,
-                color: "#fff6d6",
-              }}
-            >
-              {guidedScript[tourStep]}
+                <h2 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+                  {role.intro}
+                </h2>
+                <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700">{t.messageBody}</p>
+
+                <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                  {role.bullets.map((bullet) => (
+                    <div key={bullet} className="rounded-3xl bg-white/75 p-4 text-sm leading-6 text-slate-700 shadow-sm backdrop-blur">
+                      {bullet}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <button className="rounded-full bg-emerald-600 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-emerald-200">
+                    {role.primary}
+                  </button>
+                  <button className="rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white">
+                    {role.secondary}
+                  </button>
+                  <button
+                    onClick={() => setTourOn((v) => !v)}
+                    className="rounded-full bg-white/80 px-5 py-3 text-sm font-medium text-slate-800"
+                  >
+                    {tourOn ? <PauseCircle className="mr-2 inline h-4 w-4" /> : <PlayCircle className="mr-2 inline h-4 w-4" />}
+                    {tourOn ? t.stopTour : t.guidedTour}
+                  </button>
+                  <button
+                    onClick={() => setVoiceOn((v) => !v)}
+                    className="rounded-full bg-white/80 px-5 py-3 text-sm font-medium text-slate-800"
+                  >
+                    <Volume2 className="mr-2 inline h-4 w-4" /> Voice {voiceOn ? "On" : "Off"}
+                  </button>
+                </div>
+              </div>
             </div>
+
+            <div className="grid gap-5">
+              <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-sky-100 backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <CloudSun className="h-4 w-4 text-sky-600" /> {t.todayAtFarm}
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <StatCard label={t.weather} value={`${currentTemp ?? "--"}°`} sub={weatherLabel} icon={<CloudSun className="h-4 w-4" />} />
+                  <StatCard label={t.marketplace} value="Open" sub="Produce · Seedlings · Recipes" icon={<ShoppingBasket className="h-4 w-4" />} />
+                  <StatCard label={t.workforce} value="Active" sub="Check-in · Skills · Supervision" icon={<Users className="h-4 w-4" />} />
+                  <StatCard label={t.eventCheckIn} value="QR Ready" sub="iPhone scan flow" icon={<ScanLine className="h-4 w-4" />} />
+                </div>
+              </div>
+
+              <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-emerald-100 backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <Users className="h-4 w-4 text-emerald-700" /> {t.roleJourney}
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {(Object.keys(roleContent) as RoleKey[]).map((key) => (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        setActiveRole(key);
+                        setSection("roles");
+                      }}
+                      className={classNames(
+                        "flex items-center justify-between rounded-2xl border px-4 py-3 text-left transition",
+                        activeRole === key ? "border-emerald-500 bg-emerald-50" : "border-slate-200 bg-white hover:border-emerald-300"
+                      )}
+                    >
+                      <span>
+                        <div className="font-medium text-slate-800">{roleContent[key].title}</div>
+                        <div className="text-xs text-slate-500">Journey view</div>
+                      </span>
+                      <ChevronRight className="h-4 w-4 text-slate-400" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <SectionTabs section={section} setSection={setSection} t={t} />
+
+          {section === "home" && (
+            <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+              <InfoPanel
+                title={t.messageTitle}
+                icon={<Leaf className="h-5 w-5" />}
+                body={t.nourishment}
+                image={images.hero}
+              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                {cards.map((card) => (
+                  <ActionCard key={card.title} title={card.title} desc={card.desc} image={card.image} onClick={card.action} icon={card.icon} />
+                ))}
+              </div>
+            </section>
           )}
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1.15fr 0.85fr",
-              gap: 20,
-              alignItems: "start",
-            }}
+          {section === "roles" && (
+            <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+              <InfoPanel title={role.title} icon={role.icon} body={role.intro} image={role.image} />
+              <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-emerald-100 backdrop-blur-xl">
+                <div className="mb-4 text-lg font-semibold text-slate-800">Platform fit for this role</div>
+                <div className="space-y-3">
+                  {role.bullets.map((item) => (
+                    <div key={item} className="rounded-2xl bg-emerald-50 p-4 text-sm leading-6 text-slate-700">{item}</div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {section === "market" && (
+            <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
+              <InfoPanel
+                title="Marketplace-first customer experience"
+                icon={<ShoppingBasket className="h-5 w-5" />}
+                body="Customers can move immediately into produce and seedling ordering, then continue into recipes, nutrition education, repeat ordering, and buying-history support. The marketplace is the most visible path because that is where many customers naturally want to go first."
+                image={images.market}
+              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <MiniFeature icon={<Package className="h-5 w-5" />} title="Fresh produce" body="Produce, seedlings, pantry pathways, and seasonally relevant items." />
+                <MiniFeature icon={<BookOpen className="h-5 w-5" />} title="Recipes" body="Simple ideas connected to what the customer buys most often." />
+                <MiniFeature icon={<HeartPulse className="h-5 w-5" />} title="Nutrition support" body="Education around diabetes, whole foods, and lower-processed choices." />
+                <MiniFeature icon={<Bell className="h-5 w-5" />} title="Buying habits" body="Reorder favorites and receive gentle prompts based on past shopping." />
+              </div>
+            </section>
+          )}
+
+          {section === "education" && (
+            <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+              <InfoPanel
+                title="Food and nutrition learning"
+                icon={<HeartPulse className="h-5 w-5" />}
+                body="This ecosystem helps people compare natural food to overprocessed substitutes, understand diet and exercise, support Type II diabetes management, and build confidence around food choices for work, play, and daily life."
+                image={images.education}
+              />
+              <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-rose-100 backdrop-blur-xl">
+                <div className="grid gap-4">
+                  <MiniFeature icon={<Leaf className="h-5 w-5" />} title="Fresh food literacy" body="Learn why real food matters and how to choose it on a budget." />
+                  <MiniFeature icon={<HeartPulse className="h-5 w-5" />} title="Diabetes-friendly guidance" body="Nutrition patterns that support stability, energy, and informed daily choices." />
+                  <MiniFeature icon={<BookOpen className="h-5 w-5" />} title="Recipes and practical use" body="Show customers what to do with the foods they bring home." />
+                  <MiniFeature icon={<Users className="h-5 w-5" />} title="Family wellness" body="Support for households, seniors, youth, and community learners." />
+                </div>
+              </div>
+            </section>
+          )}
+
+          {section === "calendar" && (
+            <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+              <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-emerald-100 backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-800">
+                  <CalendarDays className="h-5 w-5 text-emerald-700" /> {t.cropCalendar}
+                </div>
+                <div className="space-y-3">
+                  {[
+                    ["Seed Starting", "Indoor starts, propagation rhythms, and inventory readiness."],
+                    ["Transplant Window", "Field timing tied to conditions, protection, and labor flow."],
+                    ["Harvest Planning", "Align expected yields with market days and education events."],
+                    ["Season Notes", "Track crop observations, pests, soil, and water needs."],
+                  ].map(([title, body]) => (
+                    <div key={title} className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
+                      <div className="font-medium text-slate-800">{title}</div>
+                      <div className="mt-1 text-sm leading-6 text-slate-600">{body}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-sky-100 backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-800">
+                  <CloudSun className="h-5 w-5 text-sky-600" /> Local forecast
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  {forecast.map((day, idx) => {
+                    const weather = weatherCodeLabel(day.code);
+                    const Icon = weather.icon;
+                    return (
+                      <div key={`${day.date}-${idx}`} className="rounded-2xl bg-sky-50 p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="text-sm font-medium text-slate-800">
+                              {String(day.date).includes("-")
+                                ? new Date(day.date).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" })
+                                : day.date}
+                            </div>
+                            <div className="text-xs text-slate-500">{weather.label}</div>
+                          </div>
+                          <Icon className="h-5 w-5 text-sky-600" />
+                        </div>
+                        <div className="mt-3 text-sm text-slate-700">High {day.tempMax}° · Low {day.tempMin}°</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {section === "operations" && (
+            <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
+              <InfoPanel
+                title="Supervisor operations desk"
+                icon={<ClipboardList className="h-5 w-5" />}
+                body="The supervisor dashboard supports the youth workforce experience through attendance, task assignments, safety tracking, support resource coordination, and growth observation. It reflects the role of the supervisor and support staff resources from New Vision Behavioral Health."
+                image={images.supervisor}
+              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <MiniFeature icon={<Users className="h-5 w-5" />} title="Attendance" body="Daily presence, role assignments, and active crew visibility." />
+                <MiniFeature icon={<ShieldCheck className="h-5 w-5" />} title="Safety" body="PPE readiness, work zones, and reminders before tasks begin." />
+                <MiniFeature icon={<ClipboardList className="h-5 w-5" />} title="Support notes" body="Track needs, interventions, and positive growth observations." />
+                <MiniFeature icon={<GraduationCap className="h-5 w-5" />} title="Pathway progress" body="Connect today’s work to confidence, life skills, and career exposure." />
+              </div>
+            </section>
+          )}
+
+          {section === "checkin" && (
+            <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+              <InfoPanel
+                title="Branded event check-in"
+                icon={<ScanLine className="h-5 w-5" />}
+                body="A Bronson Family Farm event arrival flow can use iPhone-based QR scanning with role colors, fast lookups, welcome prompts, and engagement paths tied to customer, vendor, volunteer, youth, and guest status."
+                image={images.market}
+              />
+              <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-amber-100 backdrop-blur-xl">
+                <div className="mb-4 text-lg font-semibold text-slate-800">Arrival flow</div>
+                <div className="space-y-3">
+                  {[
+                    ["1", "Scan Eventbrite QR using iPhone organizer flow"],
+                    ["2", "Display role color and visitor type instantly"],
+                    ["3", "Guide visitor toward market, education, workforce, or welcome station"],
+                    ["4", "Support follow-up engagement after the event"],
+                  ].map(([num, label]) => (
+                    <div key={num} className="flex items-start gap-3 rounded-2xl bg-amber-50 p-4">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 font-semibold text-white">{num}</div>
+                      <div className="text-sm leading-6 text-slate-700">{label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {section === "story" && (
+            <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+              <InfoPanel
+                title="A story of restoration"
+                icon={<Trees className="h-5 w-5" />}
+                body="Bronson Family Farm is restoring land while creating practical pathways for food access, learning, health, and belonging. The platform should feel friendly, visually appealing, and welcoming so people want to return to it again and again."
+                image={images.hero}
+              />
+              <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-emerald-100 backdrop-blur-xl">
+                <div className="mb-4 text-lg font-semibold text-slate-800">Platform values</div>
+                <div className="grid gap-3">
+                  <MiniFeature icon={<Trees className="h-5 w-5" />} title="Regeneration" body="Restore the land and build healthier systems." />
+                  <MiniFeature icon={<Users className="h-5 w-5" />} title="Belonging" body="Create a return-worthy experience for many kinds of users." />
+                  <MiniFeature icon={<Sprout className="h-5 w-5" />} title="Practical growth" body="Help growers, families, and youth take the next step." />
+                  <MiniFeature icon={<HeartPulse className="h-5 w-5" />} title="Health" body="Reconnect communities to nourishment and whole-food learning." />
+                </div>
+              </div>
+            </section>
+          )}
+        </main>
+      )}
+    </div>
+  );
+}
+
+function SectionTabs({
+  section,
+  setSection,
+  t,
+}: {
+  section: string;
+  setSection: (value: any) => void;
+  t: Translations;
+}) {
+  const tabs = [
+    ["home", t.navHome, <Home className="h-4 w-4" />],
+    ["roles", t.navRoles, <Users className="h-4 w-4" />],
+    ["market", t.navMarket, <ShoppingBasket className="h-4 w-4" />],
+    ["education", t.navEducation, <BookOpen className="h-4 w-4" />],
+    ["calendar", t.navCalendar, <CalendarDays className="h-4 w-4" />],
+    ["operations", t.navOperations, <ClipboardList className="h-4 w-4" />],
+    ["checkin", t.navCheckIn, <ScanLine className="h-4 w-4" />],
+    ["story", t.navStory, <Trees className="h-4 w-4" />],
+  ];
+
+  return (
+    <section className="overflow-x-auto rounded-[2rem] border border-white/60 bg-white/70 p-3 shadow-lg shadow-emerald-100 backdrop-blur-xl">
+      <div className="flex min-w-max gap-2">
+        {tabs.map(([key, label, icon]) => (
+          <button
+            key={String(key)}
+            onClick={() => setSection(key)}
+            className={classNames(
+              "inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-medium transition",
+              section === key ? "bg-emerald-600 text-white shadow" : "bg-white text-slate-700 hover:bg-emerald-50"
+            )}
           >
-            <div
-              style={{
-                background: "rgba(18,22,18,0.68)",
-                backdropFilter: "blur(14px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 22,
-                padding: 22,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 15,
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
-                  color: "#b8c4b8",
-                  marginBottom: 8,
-                }}
-              >
-                {roleInfo.title}
-              </div>
+            {icon}
+            {label}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-              <div
-                style={{
-                  fontSize: 34,
-                  fontWeight: 800,
-                  marginBottom: 12,
-                }}
-              >
-                {roleInfo.title}
-              </div>
+function StatCard({
+  label,
+  value,
+  sub,
+  icon,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-3xl bg-slate-50 p-4">
+      <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+        {icon} {label}
+      </div>
+      <div className="text-2xl font-semibold text-slate-900">{value}</div>
+      <div className="text-sm text-slate-600">{sub}</div>
+    </div>
+  );
+}
 
-              <div
-                style={{
-                  fontSize: 22,
-                  lineHeight: 1.55,
-                  color: "#e8efe8",
-                  marginBottom: 18,
-                }}
-              >
-                {roleInfo.intro}
-              </div>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, minmax(0,1fr))",
-                  gap: 14,
-                }}
-              >
-                {roleInfo.stats.map((item) => (
-                  <div
-                    key={item}
-                    style={{
-                      background: "rgba(255,255,255,0.06)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      borderRadius: 16,
-                      padding: 16,
-                      textAlign: "center",
-                      fontWeight: 700,
-                      fontSize: 18,
-                    }}
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "rgba(18,22,18,0.68)",
-                backdropFilter: "blur(14px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 22,
-                padding: 22,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 15,
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
-                  color: "#b8c4b8",
-                  marginBottom: 8,
-                }}
-              >
-                Live Status
-              </div>
-
-              <div
-                style={{
-                  display: "grid",
-                  gap: 14,
-                }}
-              >
-                <div
-                  style={{
-                    background: "rgba(255,255,255,0.06)",
-                    borderRadius: 16,
-                    padding: 16,
-                    fontSize: 20,
-                    fontWeight: 700,
-                  }}
-                >
-                  {t.weather}: {temp === null ? "Loading..." : `${temp}°`}
-                </div>
-
-                <div
-                  style={{
-                    background: "rgba(255,255,255,0.06)",
-                    borderRadius: 16,
-                    padding: 16,
-                    fontSize: 20,
-                    fontWeight: 700,
-                  }}
-                >
-                  Role: {roleInfo.title}
-                </div>
-
-                <div
-                  style={{
-                    background: "rgba(255,255,255,0.06)",
-                    borderRadius: 16,
-                    padding: 16,
-                    fontSize: 20,
-                    fontWeight: 700,
-                  }}
-                >
-                  Module: {t.modules[moduleKey]}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              marginTop: 20,
-              background: "rgba(18,22,18,0.72)",
-              backdropFilter: "blur(14px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 22,
-              padding: 22,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                gap: 12,
-                flexWrap: "wrap",
-                marginBottom: 18,
-              }}
-            >
-              {(
-                [
-                  { key: "overview", label: t.modules.overview },
-                  { key: "marketplace", label: t.modules.marketplace },
-                  { key: "nutrition", label: t.modules.nutrition },
-                  { key: "calendar", label: t.modules.calendar },
-                ] as { key: ModuleKey; label: string }[]
-              ).map((item) => (
-                <button
-                  key={item.key}
-                  onClick={() => setModuleKey(item.key)}
-                  style={{
-                    padding: "12px 16px",
-                    borderRadius: 12,
-                    border: "none",
-                    cursor: "pointer",
-                    background: moduleKey === item.key ? "#295d8b" : "rgba(255,255,255,0.10)",
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 16,
-                  }}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-
-            <div
-              style={{
-                fontSize: 34,
-                fontWeight: 800,
-                marginBottom: 10,
-              }}
-            >
-              {panel.title}
-            </div>
-
-            <div
-              style={{
-                fontSize: 22,
-                lineHeight: 1.55,
-                color: "#e8efe8",
-                marginBottom: 18,
-                maxWidth: 980,
-              }}
-            >
-              {panel.text}
-            </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, minmax(0,1fr))",
-                gap: 16,
-              }}
-            >
-              {panel.cards.map((card) => (
-                <div
-                  key={card.title}
-                  style={{
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    borderRadius: 18,
-                    padding: 18,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 22,
-                      fontWeight: 800,
-                      marginBottom: 8,
-                    }}
-                  >
-                    {card.title}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 18,
-                      lineHeight: 1.55,
-                      color: "#d8e0d8",
-                    }}
-                  >
-                    {card.text}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+function InfoPanel({
+  title,
+  body,
+  image,
+  icon,
+}: {
+  title: string;
+  body: string;
+  image: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="overflow-hidden rounded-[2rem] border border-white/60 bg-white/75 shadow-xl shadow-emerald-100 backdrop-blur-xl">
+      <div className="h-72 overflow-hidden">
+        <img src={image} alt={title} className="h-full w-full object-cover" />
+      </div>
+      <div className="p-6">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-800">
+          {icon} {title}
         </div>
-
-        <div
-          style={{
-            position: "fixed",
-            left: 20,
-            right: 20,
-            bottom: 18,
-            zIndex: 4,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              flexWrap: "wrap",
-              background: "rgba(16,20,16,0.84)",
-              backdropFilter: "blur(16px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 999,
-              padding: "12px 14px",
-              boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
-            }}
-          >
-            {roles.map((r) => (
-              <button
-                key={r}
-                onClick={() => setRole(r)}
-                style={{
-                  padding: "12px 18px",
-                  borderRadius: 999,
-                  border: "none",
-                  cursor: "pointer",
-                  background: role === r ? "#2f6b49" : "rgba(255,255,255,0.08)",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: 16,
-                  minWidth: 110,
-                }}
-              >
-                {t.roles[r].title}
-              </button>
-            ))}
-          </div>
-        </div>
+        <p className="text-base leading-7 text-slate-700">{body}</p>
       </div>
     </div>
-  )
+  );
+}
+
+function ActionCard({
+  title,
+  desc,
+  image,
+  onClick,
+  icon,
+}: {
+  title: string;
+  desc: string;
+  image: string;
+  onClick: () => void;
+  icon: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="group overflow-hidden rounded-[2rem] border border-white/60 bg-white/80 text-left shadow-xl shadow-emerald-100 transition hover:-translate-y-1 hover:shadow-2xl"
+    >
+      <div className="h-48 overflow-hidden">
+        <img src={image} alt={title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+      </div>
+      <div className="p-5">
+        <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-emerald-700">{icon} {title}</div>
+        <div className="text-sm leading-6 text-slate-600">{desc}</div>
+      </div>
+    </button>
+  );
+}
+
+function MiniFeature({
+  icon,
+  title,
+  body,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="rounded-[1.5rem] border border-white/70 bg-white/80 p-5 shadow-sm">
+      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-800">{icon} {title}</div>
+      <div className="text-sm leading-6 text-slate-600">{body}</div>
+    </div>
+  );
 }
