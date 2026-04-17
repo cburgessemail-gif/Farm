@@ -16,7 +16,7 @@ const IMAGES = {
   history: "/GrowArea2.jpg",
 
   guest: "/Sameera1.jpg",
-  customer: "/culinary_edibleflowers.jpeg",
+  customer: "/GrowArea2.jpg",
   grower: "/Sameera3.jpg",
   youth: "/Samaeera2.jpg",
   volunteer: "/Samerra4.jpg",
@@ -25,25 +25,26 @@ const IMAGES = {
 
 const ROLES: { id: Role; label: string; subtitle: string }[] = [
   { id: "guest", label: "Guest", subtitle: "Explore the farm" },
-  { id: "customer", label: "Customer", subtitle: "Find food and shop" },
-  { id: "grower", label: "Grower", subtitle: "See crops and workflow" },
-  { id: "youth", label: "Youth", subtitle: "Learn and work" },
-  { id: "volunteer", label: "Volunteer", subtitle: "Help where needed" },
-  { id: "supervisor", label: "Supervisor", subtitle: "Guide and support" },
+  { id: "customer", label: "Customer", subtitle: "Food, access, and pickup" },
+  { id: "grower", label: "Grower", subtitle: "Crops, tasks, and timing" },
+  { id: "youth", label: "Youth", subtitle: "Workforce and learning" },
+  { id: "volunteer", label: "Volunteer", subtitle: "Service and events" },
+  { id: "supervisor", label: "Supervisor", subtitle: "Coordination and support" },
 ];
 
 const copy = {
   en: {
     brandSub: "Immersive live demo",
-    weather: "Youngstown, OH • 62°F • Good growing day",
+    weatherLeft: "Live Conditions",
+    weatherRight: "Youngstown, OH • 65°F • Partly cloudy • Good field conditions",
+    enterRole: "Enter by role",
+    enterFarm: "Enter the farm",
     heroKicker: "Living ecosystem",
     heroTitle: "Bronson Family Farm",
     heroSubtitle: "A living ecosystem.",
     heroDescription:
       "Land, food, work, learning, and community moving together.",
-    enterFarm: "Enter the farm",
-    enterRole: "Enter by role",
-    historyKicker: "Our Roots",
+    historyKicker: "Our roots",
     historyTitle: "A farm built from legacy, land, and lived experience",
     historyP1:
       "Bronson Family Farm grows from family history, resilience, and a belief that land can restore connection, dignity, and opportunity.",
@@ -53,8 +54,16 @@ const copy = {
     growsTitle: "What grows here is more than food.",
     growsText:
       "It is a place where people enter the land and find connection, work, learning, healing, and opportunity.",
+    dashboardKicker: "Dashboard",
+    dashboardTitle: "Live Farm Dashboard",
+    dashboardSubtitle:
+      "A clearer view of what is happening now across growing, events, and people.",
     liveKicker: "What is live",
     liveTitle: "Step into the active parts of the farm",
+    cropKicker: "Planning",
+    cropTitle: "Crop Planning Calendar",
+    cropSubtitle:
+      "A visible rhythm for planting, tending, harvesting, and upcoming activity.",
     whyKicker: "Why it matters",
     whyTitle:
       "The farm connects food, family, workforce, and community renewal",
@@ -66,28 +75,24 @@ const copy = {
       "After the farm, the roots, the live movement, and the community are made visible, each person can step into the part of the ecosystem that fits their role.",
     systemKicker: "Enter the system",
     systemTitle: "Choose how you are entering the farm today",
-    cropTitle: "Crop Planning Calendar",
-    cropSubtitle:
-      "A visible rhythm for planting, tending, harvesting, and upcoming activity.",
-    dashboardTitle: "Live Farm Dashboard",
-    dashboardSubtitle:
-      "A clearer view of what is happening now across growing, events, and people.",
     back: "← Back to farm",
     roleView: "Role-based live view",
     pathShows: "What this path shows",
     modulesTitle: "Live modules",
+    roleActivityKicker: "Live system activity",
     guestBtn: "Enter as guest",
   },
   es: {
     brandSub: "Demostración inmersiva",
-    weather: "Youngstown, OH • 62°F • Buen día para cultivar",
+    weatherLeft: "Condiciones en vivo",
+    weatherRight: "Youngstown, OH • 65°F • Parcialmente nublado • Buenas condiciones de campo",
+    enterRole: "Entrar por rol",
+    enterFarm: "Entrar a la granja",
     heroKicker: "Ecosistema vivo",
     heroTitle: "Bronson Family Farm",
     heroSubtitle: "Un ecosistema vivo.",
     heroDescription:
       "Tierra, alimentos, trabajo, aprendizaje y comunidad avanzando juntos.",
-    enterFarm: "Entrar a la granja",
-    enterRole: "Entrar por rol",
     historyKicker: "Nuestras raíces",
     historyTitle: "Una granja construida con legado, tierra y experiencia vivida",
     historyP1:
@@ -98,8 +103,16 @@ const copy = {
     growsTitle: "Lo que crece aquí es más que comida.",
     growsText:
       "Es un lugar donde las personas entran a la tierra y encuentran conexión, trabajo, aprendizaje, sanación y oportunidad.",
+    dashboardKicker: "Panel",
+    dashboardTitle: "Panel en Vivo de la Granja",
+    dashboardSubtitle:
+      "Una vista más clara de lo que está ocurriendo ahora en cultivo, eventos y personas.",
     liveKicker: "Lo que está activo",
     liveTitle: "Entra en las partes activas de la granja",
+    cropKicker: "Planificación",
+    cropTitle: "Calendario de Cultivo",
+    cropSubtitle:
+      "Un ritmo visible para sembrar, cuidar, cosechar y ver la actividad próxima.",
     whyKicker: "Por qué importa",
     whyTitle:
       "La granja conecta alimentos, familia, fuerza laboral y renovación comunitaria",
@@ -111,29 +124,25 @@ const copy = {
       "Después de hacer visible la granja, las raíces, el movimiento y la comunidad, cada persona puede entrar en la parte del ecosistema que se ajusta a su rol.",
     systemKicker: "Entrar al sistema",
     systemTitle: "Elige cómo entras hoy a la granja",
-    cropTitle: "Calendario de Cultivo",
-    cropSubtitle:
-      "Un ritmo visible para sembrar, cuidar, cosechar y ver la actividad próxima.",
-    dashboardTitle: "Panel en Vivo de la Granja",
-    dashboardSubtitle:
-      "Una vista más clara de lo que está ocurriendo ahora en cultivo, eventos y personas.",
     back: "← Volver a la granja",
     roleView: "Vista en vivo por rol",
     pathShows: "Lo que muestra este camino",
     modulesTitle: "Módulos en vivo",
+    roleActivityKicker: "Actividad del sistema",
     guestBtn: "Entrar como invitado",
   },
   tl: {
     brandSub: "Immersive live demo",
-    weather: "Youngstown, OH • 62°F • Magandang araw para magtanim",
+    weatherLeft: "Live na kondisyon",
+    weatherRight: "Youngstown, OH • 65°F • Medyo maulap • Magandang kondisyon sa bukid",
+    enterRole: "Pumasok ayon sa papel",
+    enterFarm: "Pumasok sa bukid",
     heroKicker: "Buhay na ecosystem",
     heroTitle: "Bronson Family Farm",
     heroSubtitle: "Isang buhay na ecosystem.",
     heroDescription:
       "Lupa, pagkain, trabaho, pagkatuto, at komunidad na magkakasamang umuunlad.",
-    enterFarm: "Pumasok sa bukid",
-    enterRole: "Pumasok ayon sa papel",
-    historyKicker: "Aming Ugat",
+    historyKicker: "Aming ugat",
     historyTitle:
       "Isang bukid na binuo mula sa pamana, lupa, at tunay na karanasan",
     historyP1:
@@ -144,8 +153,16 @@ const copy = {
     growsTitle: "Ang tumutubo rito ay higit pa sa pagkain.",
     growsText:
       "Ito ay lugar kung saan pumapasok ang mga tao sa lupa at nakakahanap ng koneksyon, trabaho, pagkatuto, paggaling, at oportunidad.",
+    dashboardKicker: "Dashboard",
+    dashboardTitle: "Live Farm Dashboard",
+    dashboardSubtitle:
+      "Mas malinaw na tanaw sa nangyayari ngayon sa pagtatanim, mga event, at mga tao.",
     liveKicker: "Ano ang aktibo",
     liveTitle: "Pumasok sa mga aktibong bahagi ng bukid",
+    cropKicker: "Pagpaplano",
+    cropTitle: "Kalendaryo ng Pananim",
+    cropSubtitle:
+      "Isang nakikitang ritmo para sa pagtatanim, pag-aalaga, pag-aani, at mga susunod na gawain.",
     whyKicker: "Bakit mahalaga",
     whyTitle:
       "Pinagdurugtong ng bukid ang pagkain, pamilya, trabaho, at pagbangon ng komunidad",
@@ -158,16 +175,11 @@ const copy = {
       "Pagkatapos makita ang bukid, mga ugat, galaw, at komunidad, maaaring pumasok ang bawat tao sa bahagi ng ecosystem na para sa kanila.",
     systemKicker: "Pumasok sa sistema",
     systemTitle: "Piliin kung paano ka papasok sa bukid ngayon",
-    cropTitle: "Kalendaryo ng Pananim",
-    cropSubtitle:
-      "Isang nakikitang ritmo para sa pagtatanim, pag-aalaga, pag-aani, at mga susunod na gawain.",
-    dashboardTitle: "Live Farm Dashboard",
-    dashboardSubtitle:
-      "Mas malinaw na tanaw sa nangyayari ngayon sa pagtatanim, mga event, at mga tao.",
     back: "← Bumalik sa bukid",
     roleView: "Live view ayon sa papel",
     pathShows: "Ano ang ipinapakita ng landas na ito",
     modulesTitle: "Live modules",
+    roleActivityKicker: "Aktibidad ng sistema",
     guestBtn: "Pumasok bilang guest",
   },
 };
@@ -185,7 +197,7 @@ export default function App() {
         return {
           title: "Guest Experience",
           image: IMAGES.guest,
-          position: "center 20%",
+          position: "center 18%",
           intro:
             "A welcoming path into the farm, its purpose, its visible activity, and the ways people can participate.",
           bullets: [
@@ -206,16 +218,22 @@ export default function App() {
           ],
           modules: [
             "Welcome map",
-            "Upcoming events",
             "Farm story",
+            "Upcoming events",
             "Seasonal highlights",
+          ],
+          activity: [
+            "Weather: Good field conditions",
+            "Visitor path: Open",
+            "Next event: Market preparation",
+            "Language access: EN • ES • TL",
           ],
         };
       case "customer":
         return {
           title: "Customer Experience",
           image: IMAGES.customer,
-          position: "center center",
+          position: "center 52%",
           intro:
             "A direct path to fresh food, access, ordering, pickup, and the visible connection between food and place.",
           bullets: [
@@ -236,16 +254,22 @@ export default function App() {
           ],
           modules: [
             "Available produce",
-            "Pickup flow",
+            "Pickup times",
             "SNAP-friendly access",
             "Market updates",
+          ],
+          activity: [
+            "Featured today: Fresh seasonal produce",
+            "Pickup status: On schedule",
+            "Ordering path: Active",
+            "Community market: Coming soon",
           ],
         };
       case "grower":
         return {
           title: "Grower Experience",
           image: IMAGES.grower,
-          position: "center 78%",
+          position: "center 75%",
           intro:
             "A view into crops, production rhythm, practical workflow, and the systems that support successful growing.",
           bullets: [
@@ -266,9 +290,15 @@ export default function App() {
           ],
           modules: [
             "Crop plan",
-            "Watering status",
             "Field tasks",
+            "Watering status",
             "Harvest targets",
+          ],
+          activity: [
+            "Beds active: 12",
+            "Irrigation: Monitor today",
+            "Harvest priority: Greens and seedlings",
+            "Soil work: Ongoing",
           ],
         };
       case "youth":
@@ -300,6 +330,12 @@ export default function App() {
             "Safety reminders",
             "Mentor support",
           ],
+          activity: [
+            "Check-in: Active",
+            "Work focus: Field readiness",
+            "Learning mode: Hands-on",
+            "Support: Supervisor visible",
+          ],
         };
       case "volunteer":
         return {
@@ -328,7 +364,13 @@ export default function App() {
             "Open shifts",
             "Event help",
             "Service opportunities",
-            "Welcome guide",
+            "Volunteer welcome guide",
+          ],
+          activity: [
+            "Help needed: Event prep",
+            "Entry point: Open",
+            "Team support: Visible",
+            "Community activity: Growing",
           ],
         };
       case "supervisor":
@@ -360,6 +402,12 @@ export default function App() {
             "Schedule visibility",
             "Supervisor notes",
           ],
+          activity: [
+            "Movement: Steady",
+            "Assignments: In progress",
+            "Youth support: Active",
+            "System visibility: Good",
+          ],
         };
       default:
         return null;
@@ -370,8 +418,6 @@ export default function App() {
     return (
       <div style={styles.app}>
         <TopNav
-          language={language}
-          setLanguage={setLanguage}
           onHome={() => setView("home")}
           rightContent={
             <div style={styles.rolePillRow}>
@@ -389,10 +435,12 @@ export default function App() {
               ))}
             </div>
           }
+          language={language}
+          setLanguage={setLanguage}
           brandSub={t.brandSub}
         />
 
-        <WeatherBar text={t.weather} />
+        <WeatherBar left={t.weatherLeft} right={t.weatherRight} />
 
         <section
           style={{
@@ -432,8 +480,24 @@ export default function App() {
                 <div key={module} style={styles.moduleCard}>
                   <div style={styles.moduleCardTitle}>{module}</div>
                   <div style={styles.moduleCardText}>
-                    This area is designed to feel active, visible, and useful in
-                    the live ecosystem.
+                    This module is designed to feel active, visible, and useful
+                    inside the live ecosystem.
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={styles.liveMiniSection}>
+          <div style={styles.container}>
+            <div style={styles.eyebrowDark}>{t.roleActivityKicker}</div>
+            <div style={styles.liveMiniGrid}>
+              {roleData.activity.map((item) => (
+                <div key={item} style={styles.liveMiniCard}>
+                  <div style={styles.liveMiniTitle}>{item}</div>
+                  <div style={styles.liveMiniText}>
+                    Visible now in the role-based experience.
                   </div>
                 </div>
               ))}
@@ -458,18 +522,18 @@ export default function App() {
   return (
     <div style={styles.app}>
       <TopNav
-        language={language}
-        setLanguage={setLanguage}
         onHome={() => setView("home")}
         rightContent={
           <button style={styles.navButton} onClick={() => setView("role")}>
             {t.enterRole}
           </button>
         }
+        language={language}
+        setLanguage={setLanguage}
         brandSub={t.brandSub}
       />
 
-      <WeatherBar text={t.weather} />
+      <WeatherBar left={t.weatherLeft} right={t.weatherRight} />
 
       <HeroSection
         image={IMAGES.hero}
@@ -501,7 +565,11 @@ export default function App() {
         text={t.growsText}
       />
 
-      <LiveDashboard title={t.dashboardTitle} subtitle={t.dashboardSubtitle} />
+      <LiveDashboard
+        kicker={t.dashboardKicker}
+        title={t.dashboardTitle}
+        subtitle={t.dashboardSubtitle}
+      />
 
       <LivePathways
         kicker={t.liveKicker}
@@ -512,7 +580,11 @@ export default function App() {
         }}
       />
 
-      <CropCalendar title={t.cropTitle} subtitle={t.cropSubtitle} />
+      <CropCalendar
+        kicker={t.cropKicker}
+        title={t.cropTitle}
+        subtitle={t.cropSubtitle}
+      />
 
       <PathSection
         kicker={t.whyKicker}
@@ -583,7 +655,7 @@ function TopNav({
         </div>
       </button>
 
-      <div style={styles.navRight}>
+      <div style={styles.topControls}>
         <div style={styles.langWrap}>
           <button
             onClick={() => setLanguage("en")}
@@ -613,18 +685,19 @@ function TopNav({
             TL
           </button>
         </div>
+
         <div>{rightContent}</div>
       </div>
     </header>
   );
 }
 
-function WeatherBar({ text }: { text: string }) {
+function WeatherBar({ left, right }: { left: string; right: string }) {
   return (
     <div style={styles.weatherBar}>
       <div style={styles.weatherInner}>
-        <div>Live Conditions</div>
-        <div>{text}</div>
+        <div>{left}</div>
+        <div>{right}</div>
       </div>
     </div>
   );
@@ -748,15 +821,17 @@ function TextBand({
 }
 
 function LiveDashboard({
+  kicker,
   title,
   subtitle,
 }: {
+  kicker: string;
   title: string;
   subtitle: string;
 }) {
   const items = [
     { label: "Growing Areas", value: "12 Active" },
-    { label: "Next Event", value: "Community Market" },
+    { label: "Next Event", value: "Market Prep" },
     { label: "Youth Team", value: "On Path" },
     { label: "Volunteer Needs", value: "4 Open" },
   ];
@@ -764,7 +839,7 @@ function LiveDashboard({
   return (
     <section style={styles.dashboardSection}>
       <div style={styles.container}>
-        <div style={styles.eyebrowDark}>Dashboard</div>
+        <div style={styles.eyebrowDark}>{kicker}</div>
         <h2 style={styles.liveTitle}>{title}</h2>
         <p style={styles.dashboardText}>{subtitle}</p>
 
@@ -838,23 +913,25 @@ function LivePathways({
 }
 
 function CropCalendar({
+  kicker,
   title,
   subtitle,
 }: {
+  kicker: string;
   title: string;
   subtitle: string;
 }) {
   const months = [
     { month: "April", task: "Seed starting" },
     { month: "May", task: "Transplanting" },
-    { month: "June", task: "Tending + watering" },
+    { month: "June", task: "Watering and tending" },
     { month: "July", task: "Harvest begins" },
   ];
 
   return (
     <section style={styles.cropSection}>
       <div style={styles.container}>
-        <div style={styles.eyebrowDark}>Planning</div>
+        <div style={styles.eyebrowDark}>{kicker}</div>
         <h2 style={styles.liveTitle}>{title}</h2>
         <p style={styles.dashboardText}>{subtitle}</p>
 
@@ -940,20 +1017,20 @@ const styles: Record<string, React.CSSProperties> = {
     zIndex: 60,
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     gap: 18,
     padding: "14px 18px",
-    background: "rgba(10,18,12,0.14)",
+    background: "rgba(10,18,12,0.20)",
     backdropFilter: "blur(14px)",
     borderBottom: "1px solid rgba(255,255,255,0.08)",
   },
 
-  navRight: {
+  topControls: {
     display: "flex",
-    alignItems: "center",
-    gap: 12,
-    flexWrap: "wrap",
-    justifyContent: "flex-end",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    gap: 10,
+    minWidth: 420,
   },
 
   brandButton: {
@@ -992,17 +1069,17 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "center",
     gap: 6,
-    padding: 4,
+    padding: 6,
     borderRadius: 999,
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.12)",
+    background: "rgba(255,255,255,0.14)",
+    border: "1px solid rgba(255,255,255,0.16)",
   },
 
   langButton: {
     border: "none",
     background: "transparent",
     color: "#ffffff",
-    padding: "8px 10px",
+    padding: "8px 12px",
     borderRadius: 999,
     fontSize: 12,
     fontWeight: 600,
@@ -1027,7 +1104,7 @@ const styles: Record<string, React.CSSProperties> = {
 
   weatherBar: {
     position: "fixed",
-    top: 72,
+    top: 98,
     left: 0,
     right: 0,
     zIndex: 40,
@@ -1073,7 +1150,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "flex-end",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    padding: "152px 24px 42px",
+    padding: "190px 24px 42px",
     transition: "all 0.6s ease",
   },
 
@@ -1473,6 +1550,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexWrap: "wrap",
     justifyContent: "flex-end",
     gap: 10,
+    maxWidth: 520,
   },
 
   rolePill: {
@@ -1498,7 +1576,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "flex-end",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    padding: "156px 24px 24px",
+    padding: "190px 24px 24px",
     transition: "all 0.6s ease",
   },
 
@@ -1595,6 +1673,38 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: 10,
     fontSize: 15,
     lineHeight: 1.65,
+    color: "#5a705f",
+  },
+
+  liveMiniSection: {
+    background: "#f3f7ef",
+    padding: "12px 0 42px",
+  },
+
+  liveMiniGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 16,
+  },
+
+  liveMiniCard: {
+    background: "#ffffff",
+    border: "1px solid rgba(23,49,31,0.08)",
+    borderRadius: 18,
+    padding: "18px 16px",
+    boxShadow: "0 10px 22px rgba(19,45,28,0.05)",
+  },
+
+  liveMiniTitle: {
+    fontSize: 17,
+    fontWeight: 500,
+    color: "#183220",
+  },
+
+  liveMiniText: {
+    marginTop: 8,
+    fontSize: 14,
+    lineHeight: 1.6,
     color: "#5a705f",
   },
 
