@@ -1,7 +1,15 @@
 import React, { useMemo, useState } from "react";
 
 type View = "home" | "role";
-type Role = "guest" | "customer" | "grower" | "youth" | "volunteer" | "supervisor";
+type Role =
+  | "guest"
+  | "customer"
+  | "grower"
+  | "youth"
+  | "volunteer"
+  | "supervisor";
+
+type Language = "en" | "es" | "tl";
 
 const IMAGES = {
   hero: "/GrowArea.jpg",
@@ -24,9 +32,152 @@ const ROLES: { id: Role; label: string; subtitle: string }[] = [
   { id: "supervisor", label: "Supervisor", subtitle: "Guide and support" },
 ];
 
+const copy = {
+  en: {
+    brandSub: "Immersive live demo",
+    weather: "Youngstown, OH • 62°F • Good growing day",
+    heroKicker: "Living ecosystem",
+    heroTitle: "Bronson Family Farm",
+    heroSubtitle: "A living ecosystem.",
+    heroDescription:
+      "Land, food, work, learning, and community moving together.",
+    enterFarm: "Enter the farm",
+    enterRole: "Enter by role",
+    historyKicker: "Our Roots",
+    historyTitle: "A farm built from legacy, land, and lived experience",
+    historyP1:
+      "Bronson Family Farm grows from family history, resilience, and a belief that land can restore connection, dignity, and opportunity.",
+    historyP2:
+      "What grows here is more than food — it is access, work, learning, community renewal, and a future rooted in shared possibility.",
+    growsKicker: "What grows here",
+    growsTitle: "What grows here is more than food.",
+    growsText:
+      "It is a place where people enter the land and find connection, work, learning, healing, and opportunity.",
+    liveKicker: "What is live",
+    liveTitle: "Step into the active parts of the farm",
+    whyKicker: "Why it matters",
+    whyTitle:
+      "The farm connects food, family, workforce, and community renewal",
+    whyText:
+      "This ecosystem is meant to serve more than one purpose. It creates visibility for growing, strengthens access to fresh food, makes room for learning and work, and gives partners, volunteers, youth, customers, and families a place to belong.",
+    nextKicker: "What comes next",
+    nextTitle: "Enter the living system through the path that belongs to you",
+    nextText:
+      "After the farm, the roots, the live movement, and the community are made visible, each person can step into the part of the ecosystem that fits their role.",
+    systemKicker: "Enter the system",
+    systemTitle: "Choose how you are entering the farm today",
+    cropTitle: "Crop Planning Calendar",
+    cropSubtitle:
+      "A visible rhythm for planting, tending, harvesting, and upcoming activity.",
+    dashboardTitle: "Live Farm Dashboard",
+    dashboardSubtitle:
+      "A clearer view of what is happening now across growing, events, and people.",
+    back: "← Back to farm",
+    roleView: "Role-based live view",
+    pathShows: "What this path shows",
+    modulesTitle: "Live modules",
+    guestBtn: "Enter as guest",
+  },
+  es: {
+    brandSub: "Demostración inmersiva",
+    weather: "Youngstown, OH • 62°F • Buen día para cultivar",
+    heroKicker: "Ecosistema vivo",
+    heroTitle: "Bronson Family Farm",
+    heroSubtitle: "Un ecosistema vivo.",
+    heroDescription:
+      "Tierra, alimentos, trabajo, aprendizaje y comunidad avanzando juntos.",
+    enterFarm: "Entrar a la granja",
+    enterRole: "Entrar por rol",
+    historyKicker: "Nuestras raíces",
+    historyTitle: "Una granja construida con legado, tierra y experiencia vivida",
+    historyP1:
+      "Bronson Family Farm surge de la historia familiar, la resiliencia y la creencia de que la tierra puede restaurar conexión, dignidad y oportunidad.",
+    historyP2:
+      "Lo que crece aquí es más que comida: es acceso, trabajo, aprendizaje, renovación comunitaria y un futuro arraigado en la posibilidad compartida.",
+    growsKicker: "Lo que crece aquí",
+    growsTitle: "Lo que crece aquí es más que comida.",
+    growsText:
+      "Es un lugar donde las personas entran a la tierra y encuentran conexión, trabajo, aprendizaje, sanación y oportunidad.",
+    liveKicker: "Lo que está activo",
+    liveTitle: "Entra en las partes activas de la granja",
+    whyKicker: "Por qué importa",
+    whyTitle:
+      "La granja conecta alimentos, familia, fuerza laboral y renovación comunitaria",
+    whyText:
+      "Este ecosistema está diseñado para servir a más de un propósito. Da visibilidad al cultivo, fortalece el acceso a alimentos frescos, abre espacio para el aprendizaje y el trabajo, y ofrece a socios, voluntarios, jóvenes, clientes y familias un lugar de pertenencia.",
+    nextKicker: "Lo que sigue",
+    nextTitle: "Entra al sistema vivo por el camino que te corresponde",
+    nextText:
+      "Después de hacer visible la granja, las raíces, el movimiento y la comunidad, cada persona puede entrar en la parte del ecosistema que se ajusta a su rol.",
+    systemKicker: "Entrar al sistema",
+    systemTitle: "Elige cómo entras hoy a la granja",
+    cropTitle: "Calendario de Cultivo",
+    cropSubtitle:
+      "Un ritmo visible para sembrar, cuidar, cosechar y ver la actividad próxima.",
+    dashboardTitle: "Panel en Vivo de la Granja",
+    dashboardSubtitle:
+      "Una vista más clara de lo que está ocurriendo ahora en cultivo, eventos y personas.",
+    back: "← Volver a la granja",
+    roleView: "Vista en vivo por rol",
+    pathShows: "Lo que muestra este camino",
+    modulesTitle: "Módulos en vivo",
+    guestBtn: "Entrar como invitado",
+  },
+  tl: {
+    brandSub: "Immersive live demo",
+    weather: "Youngstown, OH • 62°F • Magandang araw para magtanim",
+    heroKicker: "Buhay na ecosystem",
+    heroTitle: "Bronson Family Farm",
+    heroSubtitle: "Isang buhay na ecosystem.",
+    heroDescription:
+      "Lupa, pagkain, trabaho, pagkatuto, at komunidad na magkakasamang umuunlad.",
+    enterFarm: "Pumasok sa bukid",
+    enterRole: "Pumasok ayon sa papel",
+    historyKicker: "Aming Ugat",
+    historyTitle:
+      "Isang bukid na binuo mula sa pamana, lupa, at tunay na karanasan",
+    historyP1:
+      "Ang Bronson Family Farm ay lumalago mula sa kasaysayan ng pamilya, katatagan, at paniniwalang ang lupa ay maaaring magbalik ng koneksyon, dignidad, at oportunidad.",
+    historyP2:
+      "Ang tumutubo rito ay higit pa sa pagkain — ito ay access, trabaho, pagkatuto, pagbangon ng komunidad, at kinabukasang nakaugat sa sama-samang posibilidad.",
+    growsKicker: "Ano ang tumutubo rito",
+    growsTitle: "Ang tumutubo rito ay higit pa sa pagkain.",
+    growsText:
+      "Ito ay lugar kung saan pumapasok ang mga tao sa lupa at nakakahanap ng koneksyon, trabaho, pagkatuto, paggaling, at oportunidad.",
+    liveKicker: "Ano ang aktibo",
+    liveTitle: "Pumasok sa mga aktibong bahagi ng bukid",
+    whyKicker: "Bakit mahalaga",
+    whyTitle:
+      "Pinagdurugtong ng bukid ang pagkain, pamilya, trabaho, at pagbangon ng komunidad",
+    whyText:
+      "Ang ecosystem na ito ay para sa higit sa isang layunin. Pinapakita nito ang aktibong pagtatanim, pinapalakas ang access sa sariwang pagkain, nagbibigay ng puwang para sa pagkatuto at trabaho, at lumilikha ng lugar ng pag-aari para sa mga kasosyo, boluntaryo, kabataan, mamimili, at pamilya.",
+    nextKicker: "Susunod",
+    nextTitle:
+      "Pumasok sa buhay na sistemang ito sa paraang nababagay sa iyong papel",
+    nextText:
+      "Pagkatapos makita ang bukid, mga ugat, galaw, at komunidad, maaaring pumasok ang bawat tao sa bahagi ng ecosystem na para sa kanila.",
+    systemKicker: "Pumasok sa sistema",
+    systemTitle: "Piliin kung paano ka papasok sa bukid ngayon",
+    cropTitle: "Kalendaryo ng Pananim",
+    cropSubtitle:
+      "Isang nakikitang ritmo para sa pagtatanim, pag-aalaga, pag-aani, at mga susunod na gawain.",
+    dashboardTitle: "Live Farm Dashboard",
+    dashboardSubtitle:
+      "Mas malinaw na tanaw sa nangyayari ngayon sa pagtatanim, mga event, at mga tao.",
+    back: "← Bumalik sa bukid",
+    roleView: "Live view ayon sa papel",
+    pathShows: "Ano ang ipinapakita ng landas na ito",
+    modulesTitle: "Live modules",
+    guestBtn: "Pumasok bilang guest",
+  },
+};
+
 export default function App() {
   const [view, setView] = useState<View>("home");
   const [selectedRole, setSelectedRole] = useState<Role>("guest");
+  const [language, setLanguage] = useState<Language>("en");
+
+  const t = copy[language];
 
   const roleData = useMemo(() => {
     switch (selectedRole) {
@@ -34,7 +185,7 @@ export default function App() {
         return {
           title: "Guest Experience",
           image: IMAGES.guest,
-          position: "center 68%",
+          position: "center 20%",
           intro:
             "A welcoming path into the farm, its purpose, its visible activity, and the ways people can participate.",
           bullets: [
@@ -53,12 +204,18 @@ export default function App() {
               text: "The experience should feel welcoming, grounded, and easy to understand without losing the depth of the vision.",
             },
           ],
+          modules: [
+            "Welcome map",
+            "Upcoming events",
+            "Farm story",
+            "Seasonal highlights",
+          ],
         };
       case "customer":
         return {
           title: "Customer Experience",
           image: IMAGES.customer,
-          position: "center 52%",
+          position: "center center",
           intro:
             "A direct path to fresh food, access, ordering, pickup, and the visible connection between food and place.",
           bullets: [
@@ -77,12 +234,18 @@ export default function App() {
               text: "Customers are not just buying food. They are entering a local ecosystem built around access, learning, and community.",
             },
           ],
+          modules: [
+            "Available produce",
+            "Pickup flow",
+            "SNAP-friendly access",
+            "Market updates",
+          ],
         };
       case "grower":
         return {
           title: "Grower Experience",
           image: IMAGES.grower,
-          position: "center 62%",
+          position: "center 78%",
           intro:
             "A view into crops, production rhythm, practical workflow, and the systems that support successful growing.",
           bullets: [
@@ -101,12 +264,18 @@ export default function App() {
               text: "Growing is not separate from the rest of the system. It supports food access, learning, events, and long-term development.",
             },
           ],
+          modules: [
+            "Crop plan",
+            "Watering status",
+            "Field tasks",
+            "Harvest targets",
+          ],
         };
       case "youth":
         return {
           title: "Youth Experience",
           image: IMAGES.youth,
-          position: "center 56%",
+          position: "left center",
           intro:
             "A structured pathway for work, learning, responsibility, growth, and belonging through real farm activity.",
           bullets: [
@@ -125,12 +294,18 @@ export default function App() {
               text: "This role makes visible how the farm can support confidence, responsibility, and broader opportunity.",
             },
           ],
+          modules: [
+            "Daily assignments",
+            "Skills progress",
+            "Safety reminders",
+            "Mentor support",
+          ],
         };
       case "volunteer":
         return {
           title: "Volunteer Experience",
           image: IMAGES.volunteer,
-          position: "center 58%",
+          position: "right center",
           intro:
             "A clear path into contribution, visible needs, meaningful service, and community-powered support.",
           bullets: [
@@ -149,12 +324,18 @@ export default function App() {
               text: "This path should feel active, useful, and connected to the larger purpose of the ecosystem.",
             },
           ],
+          modules: [
+            "Open shifts",
+            "Event help",
+            "Service opportunities",
+            "Welcome guide",
+          ],
         };
       case "supervisor":
         return {
           title: "Supervisor Experience",
           image: IMAGES.supervisor,
-          position: "center 58%",
+          position: "center bottom",
           intro:
             "A view into coordination, oversight, support, and the practical flow behind daily movement on the farm.",
           bullets: [
@@ -173,6 +354,12 @@ export default function App() {
               text: "A supervisor is not just managing tasks. This role helps hold people, timing, and movement together.",
             },
           ],
+          modules: [
+            "Team activity",
+            "Task assignment",
+            "Schedule visibility",
+            "Supervisor notes",
+          ],
         };
       default:
         return null;
@@ -183,6 +370,8 @@ export default function App() {
     return (
       <div style={styles.app}>
         <TopNav
+          language={language}
+          setLanguage={setLanguage}
           onHome={() => setView("home")}
           rightContent={
             <div style={styles.rolePillRow}>
@@ -200,20 +389,23 @@ export default function App() {
               ))}
             </div>
           }
+          brandSub={t.brandSub}
         />
+
+        <WeatherBar text={t.weather} />
 
         <section
           style={{
             ...styles.roleHero,
-            backgroundImage: `linear-gradient(rgba(10,16,11,0.16), rgba(10,16,11,0.50)), url(${roleData.image})`,
+            backgroundImage: `linear-gradient(rgba(10,16,11,0.18), rgba(10,16,11,0.55)), url(${roleData.image})`,
             backgroundPosition: roleData.position,
           }}
         >
           <div style={styles.roleHeroTextBlock}>
             <button style={styles.backButton} onClick={() => setView("home")}>
-              ← Back to farm
+              {t.back}
             </button>
-            <div style={styles.eyebrowLight}>Role-based live view</div>
+            <div style={styles.eyebrowLight}>{t.roleView}</div>
             <h1 style={styles.roleTitle}>{roleData.title}</h1>
             <p style={styles.roleIntro}>{roleData.intro}</p>
           </div>
@@ -221,11 +413,28 @@ export default function App() {
 
         <section style={styles.roleInfoBand}>
           <div style={styles.roleInfoInner}>
-            <div style={styles.eyebrowDark}>What this path shows</div>
+            <div style={styles.eyebrowDark}>{t.pathShows}</div>
             <div style={styles.roleBulletGrid}>
               {roleData.bullets.map((bullet) => (
                 <div key={bullet} style={styles.roleBulletItem}>
                   {bullet}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={styles.moduleSection}>
+          <div style={styles.container}>
+            <div style={styles.eyebrowDark}>{t.modulesTitle}</div>
+            <div style={styles.moduleGrid}>
+              {roleData.modules.map((module) => (
+                <div key={module} style={styles.moduleCard}>
+                  <div style={styles.moduleCardTitle}>{module}</div>
+                  <div style={styles.moduleCardText}>
+                    This area is designed to feel active, visible, and useful in
+                    the live ecosystem.
+                  </div>
                 </div>
               ))}
             </div>
@@ -249,19 +458,27 @@ export default function App() {
   return (
     <div style={styles.app}>
       <TopNav
+        language={language}
+        setLanguage={setLanguage}
         onHome={() => setView("home")}
         rightContent={
           <button style={styles.navButton} onClick={() => setView("role")}>
-            Enter by role
+            {t.enterRole}
           </button>
         }
+        brandSub={t.brandSub}
       />
+
+      <WeatherBar text={t.weather} />
 
       <HeroSection
         image={IMAGES.hero}
-        title="Bronson Family Farm"
-        subtitle="A living ecosystem."
-        description="Land, food, work, learning, and community moving together."
+        kicker={t.heroKicker}
+        title={t.heroTitle}
+        subtitle={t.heroSubtitle}
+        description={t.heroDescription}
+        enterLabel={t.enterFarm}
+        roleLabel={t.enterRole}
         onEnter={() => {
           const target = document.getElementById("history");
           target?.scrollIntoView({ behavior: "smooth" });
@@ -269,27 +486,39 @@ export default function App() {
         onRole={() => setView("role")}
       />
 
-      <HistorySection image={IMAGES.history} />
+      <HistorySection
+        image={IMAGES.history}
+        kicker={t.historyKicker}
+        title={t.historyTitle}
+        p1={t.historyP1}
+        p2={t.historyP2}
+      />
 
       <TextBand
         dark
-        kicker="What grows here"
-        title="What grows here is more than food."
-        text="It is a place where people enter the land and find connection, work, learning, healing, and opportunity."
+        kicker={t.growsKicker}
+        title={t.growsTitle}
+        text={t.growsText}
       />
 
+      <LiveDashboard title={t.dashboardTitle} subtitle={t.dashboardSubtitle} />
+
       <LivePathways
+        kicker={t.liveKicker}
+        title={t.liveTitle}
         onNavigate={(role) => {
           setSelectedRole(role);
           setView("role");
         }}
       />
 
+      <CropCalendar title={t.cropTitle} subtitle={t.cropSubtitle} />
+
       <PathSection
-        kicker="Why it matters"
-        title="The farm connects food, family, workforce, and community renewal"
-        text="This ecosystem is meant to serve more than one purpose. It creates visibility for growing, strengthens access to fresh food, makes room for learning and work, and gives partners, volunteers, youth, customers, and families a place to belong."
-        buttonLabel="Enter as guest"
+        kicker={t.whyKicker}
+        title={t.whyTitle}
+        text={t.whyText}
+        buttonLabel={t.guestBtn}
         onButton={() => {
           setSelectedRole("guest");
           setView("role");
@@ -299,17 +528,17 @@ export default function App() {
 
       <TextBand
         dark
-        kicker="What comes next"
-        title="Enter the living system through the path that belongs to you"
-        text="After the farm, the roots, the live movement, and the community are made visible, each person can step into the part of the ecosystem that fits their role."
-        buttonLabel="Enter by role"
+        kicker={t.nextKicker}
+        title={t.nextTitle}
+        text={t.nextText}
+        buttonLabel={t.enterRole}
         onButton={() => setView("role")}
       />
 
       <section style={styles.roleEntrySection}>
         <div style={styles.container}>
-          <div style={styles.eyebrowDark}>Enter the system</div>
-          <h2 style={styles.roleEntryTitle}>Choose how you are entering the farm today</h2>
+          <div style={styles.eyebrowDark}>{t.systemKicker}</div>
+          <h2 style={styles.roleEntryTitle}>{t.systemTitle}</h2>
           <div style={styles.roleGrid}>
             {ROLES.map((role) => (
               <button
@@ -334,9 +563,15 @@ export default function App() {
 function TopNav({
   onHome,
   rightContent,
+  language,
+  setLanguage,
+  brandSub,
 }: {
   onHome: () => void;
   rightContent: React.ReactNode;
+  language: Language;
+  setLanguage: (value: Language) => void;
+  brandSub: string;
 }) {
   return (
     <header style={styles.nav}>
@@ -344,26 +579,75 @@ function TopNav({
         <div style={styles.brandDot} />
         <div>
           <div style={styles.brandTitle}>Bronson Family Farm</div>
-          <div style={styles.brandSub}>Immersive live demo</div>
+          <div style={styles.brandSub}>{brandSub}</div>
         </div>
       </button>
-      <div>{rightContent}</div>
+
+      <div style={styles.navRight}>
+        <div style={styles.langWrap}>
+          <button
+            onClick={() => setLanguage("en")}
+            style={{
+              ...styles.langButton,
+              ...(language === "en" ? styles.langButtonActive : {}),
+            }}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setLanguage("es")}
+            style={{
+              ...styles.langButton,
+              ...(language === "es" ? styles.langButtonActive : {}),
+            }}
+          >
+            ES
+          </button>
+          <button
+            onClick={() => setLanguage("tl")}
+            style={{
+              ...styles.langButton,
+              ...(language === "tl" ? styles.langButtonActive : {}),
+            }}
+          >
+            TL
+          </button>
+        </div>
+        <div>{rightContent}</div>
+      </div>
     </header>
+  );
+}
+
+function WeatherBar({ text }: { text: string }) {
+  return (
+    <div style={styles.weatherBar}>
+      <div style={styles.weatherInner}>
+        <div>Live Conditions</div>
+        <div>{text}</div>
+      </div>
+    </div>
   );
 }
 
 function HeroSection({
   image,
+  kicker,
   title,
   subtitle,
   description,
+  enterLabel,
+  roleLabel,
   onEnter,
   onRole,
 }: {
   image: string;
+  kicker: string;
   title: string;
   subtitle: string;
   description: string;
+  enterLabel: string;
+  roleLabel: string;
   onEnter: () => void;
   onRole: () => void;
 }) {
@@ -371,21 +655,21 @@ function HeroSection({
     <section
       style={{
         ...styles.hero,
-        backgroundImage: `linear-gradient(rgba(8,13,10,0.14), rgba(8,13,10,0.46)), url(${image})`,
+        backgroundImage: `linear-gradient(rgba(8,13,10,0.14), rgba(8,13,10,0.48)), url(${image})`,
         backgroundPosition: "center 58%",
       }}
     >
       <div style={styles.heroTextBlock}>
-        <div style={styles.eyebrowLight}>Living ecosystem</div>
+        <div style={styles.eyebrowLight}>{kicker}</div>
         <h1 style={styles.heroTitle}>{title}</h1>
         <div style={styles.heroSubtitle}>{subtitle}</div>
         <p style={styles.heroDescription}>{description}</p>
         <div style={styles.heroButtonRow}>
           <button style={styles.primaryButton} onClick={onEnter}>
-            Enter the farm
+            {enterLabel}
           </button>
           <button style={styles.secondaryButton} onClick={onRole}>
-            Enter by role
+            {roleLabel}
           </button>
         </div>
       </div>
@@ -393,29 +677,33 @@ function HeroSection({
   );
 }
 
-function HistorySection({ image }: { image: string }) {
+function HistorySection({
+  image,
+  kicker,
+  title,
+  p1,
+  p2,
+}: {
+  image: string;
+  kicker: string;
+  title: string;
+  p1: string;
+  p2: string;
+}) {
   return (
     <section
       id="history"
       style={{
         ...styles.historySection,
-        backgroundImage: `linear-gradient(rgba(12,20,14,0.22), rgba(12,20,14,0.54)), url(${image})`,
+        backgroundImage: `linear-gradient(rgba(12,20,14,0.22), rgba(12,20,14,0.56)), url(${image})`,
         backgroundPosition: "center 24%",
       }}
     >
       <div style={styles.historyTextBlock}>
-        <div style={styles.eyebrowLight}>Our Roots</div>
-        <h2 style={styles.historyTitle}>
-          A farm built from legacy, land, and lived experience
-        </h2>
-        <p style={styles.historyText}>
-          Bronson Family Farm grows from family history, resilience, and a belief
-          that land can restore connection, dignity, and opportunity.
-        </p>
-        <p style={styles.historyText}>
-          What grows here is more than food — it is access, work, learning,
-          community renewal, and a future rooted in shared possibility.
-        </p>
+        <div style={styles.eyebrowLight}>{kicker}</div>
+        <h2 style={styles.historyTitle}>{title}</h2>
+        <p style={styles.historyText}>{p1}</p>
+        <p style={styles.historyText}>{p2}</p>
       </div>
     </section>
   );
@@ -439,11 +727,18 @@ function TextBand({
   return (
     <section style={dark ? styles.textBandDark : styles.textBandLight}>
       <div style={styles.container}>
-        <div style={dark ? styles.eyebrowLight : styles.eyebrowDark}>{kicker}</div>
-        <h2 style={dark ? styles.bandTitleLight : styles.bandTitleDark}>{title}</h2>
+        <div style={dark ? styles.eyebrowLight : styles.eyebrowDark}>
+          {kicker}
+        </div>
+        <h2 style={dark ? styles.bandTitleLight : styles.bandTitleDark}>
+          {title}
+        </h2>
         <p style={dark ? styles.bandTextLight : styles.bandTextDark}>{text}</p>
         {buttonLabel && onButton && (
-          <button style={dark ? styles.primaryButton : styles.darkButton} onClick={onButton}>
+          <button
+            style={dark ? styles.primaryButton : styles.darkButton}
+            onClick={onButton}
+          >
             {buttonLabel}
           </button>
         )}
@@ -452,9 +747,47 @@ function TextBand({
   );
 }
 
+function LiveDashboard({
+  title,
+  subtitle,
+}: {
+  title: string;
+  subtitle: string;
+}) {
+  const items = [
+    { label: "Growing Areas", value: "12 Active" },
+    { label: "Next Event", value: "Community Market" },
+    { label: "Youth Team", value: "On Path" },
+    { label: "Volunteer Needs", value: "4 Open" },
+  ];
+
+  return (
+    <section style={styles.dashboardSection}>
+      <div style={styles.container}>
+        <div style={styles.eyebrowDark}>Dashboard</div>
+        <h2 style={styles.liveTitle}>{title}</h2>
+        <p style={styles.dashboardText}>{subtitle}</p>
+
+        <div style={styles.dashboardGrid}>
+          {items.map((item) => (
+            <div key={item.label} style={styles.dashboardCard}>
+              <div style={styles.dashboardValue}>{item.value}</div>
+              <div style={styles.dashboardLabel}>{item.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function LivePathways({
+  kicker,
+  title,
   onNavigate,
 }: {
+  kicker: string;
+  title: string;
   onNavigate: (role: Role) => void;
 }) {
   const pathways = [
@@ -483,8 +816,8 @@ function LivePathways({
   return (
     <section style={styles.liveSection}>
       <div style={styles.container}>
-        <div style={styles.eyebrowDark}>What is live</div>
-        <h2 style={styles.liveTitle}>Step into the active parts of the farm</h2>
+        <div style={styles.eyebrowDark}>{kicker}</div>
+        <h2 style={styles.liveTitle}>{title}</h2>
 
         <div style={styles.liveGrid}>
           {pathways.map((item) => (
@@ -497,6 +830,40 @@ function LivePathways({
               <div style={styles.liveCardText}>{item.text}</div>
               <div style={styles.liveCardAction}>Enter →</div>
             </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CropCalendar({
+  title,
+  subtitle,
+}: {
+  title: string;
+  subtitle: string;
+}) {
+  const months = [
+    { month: "April", task: "Seed starting" },
+    { month: "May", task: "Transplanting" },
+    { month: "June", task: "Tending + watering" },
+    { month: "July", task: "Harvest begins" },
+  ];
+
+  return (
+    <section style={styles.cropSection}>
+      <div style={styles.container}>
+        <div style={styles.eyebrowDark}>Planning</div>
+        <h2 style={styles.liveTitle}>{title}</h2>
+        <p style={styles.dashboardText}>{subtitle}</p>
+
+        <div style={styles.cropGrid}>
+          {months.map((item) => (
+            <div key={item.month} style={styles.cropCard}>
+              <div style={styles.cropMonth}>{item.month}</div>
+              <div style={styles.cropTask}>{item.task}</div>
+            </div>
           ))}
         </div>
       </div>
@@ -525,13 +892,22 @@ function PathSection({
     <section style={isDark ? styles.pathSectionDark : styles.pathSectionLight}>
       <div style={styles.pathInner}>
         <div>
-          <div style={isDark ? styles.eyebrowLight : styles.eyebrowDark}>{kicker}</div>
-          <h2 style={isDark ? styles.pathTitleLight : styles.pathTitleDark}>{title}</h2>
+          <div style={isDark ? styles.eyebrowLight : styles.eyebrowDark}>
+            {kicker}
+          </div>
+          <h2 style={isDark ? styles.pathTitleLight : styles.pathTitleDark}>
+            {title}
+          </h2>
         </div>
 
         <div style={styles.pathRight}>
-          <p style={isDark ? styles.pathTextLight : styles.pathTextDark}>{text}</p>
-          <button style={isDark ? styles.primaryButton : styles.darkButton} onClick={onButton}>
+          <p style={isDark ? styles.pathTextLight : styles.pathTextDark}>
+            {text}
+          </p>
+          <button
+            style={isDark ? styles.primaryButton : styles.darkButton}
+            onClick={onButton}
+          >
             {buttonLabel}
           </button>
         </div>
@@ -561,15 +937,23 @@ const styles: Record<string, React.CSSProperties> = {
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 50,
+    zIndex: 60,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     gap: 18,
     padding: "14px 18px",
-    background: "rgba(10,18,12,0.12)",
+    background: "rgba(10,18,12,0.14)",
     backdropFilter: "blur(14px)",
     borderBottom: "1px solid rgba(255,255,255,0.08)",
+  },
+
+  navRight: {
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    flexWrap: "wrap",
+    justifyContent: "flex-end",
   },
 
   brandButton: {
@@ -604,6 +988,32 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: 2,
   },
 
+  langWrap: {
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    padding: 4,
+    borderRadius: 999,
+    background: "rgba(255,255,255,0.08)",
+    border: "1px solid rgba(255,255,255,0.12)",
+  },
+
+  langButton: {
+    border: "none",
+    background: "transparent",
+    color: "#ffffff",
+    padding: "8px 10px",
+    borderRadius: 999,
+    fontSize: 12,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+
+  langButtonActive: {
+    background: "#e9f1df",
+    color: "#17311f",
+  },
+
   navButton: {
     border: "1px solid rgba(255,255,255,0.18)",
     background: "rgba(255,255,255,0.08)",
@@ -613,6 +1023,28 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 14,
     fontWeight: 500,
     cursor: "pointer",
+  },
+
+  weatherBar: {
+    position: "fixed",
+    top: 72,
+    left: 0,
+    right: 0,
+    zIndex: 40,
+    background: "#e8f1de",
+    borderBottom: "1px solid rgba(23,49,31,0.08)",
+  },
+
+  weatherInner: {
+    maxWidth: 1080,
+    margin: "0 auto",
+    padding: "10px 24px",
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    flexWrap: "wrap",
+    fontSize: 14,
+    color: "#294132",
   },
 
   eyebrowLight: {
@@ -641,7 +1073,8 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "flex-end",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    padding: "112px 24px 42px",
+    padding: "152px 24px 42px",
+    transition: "all 0.6s ease",
   },
 
   heroTextBlock: {
@@ -651,12 +1084,12 @@ const styles: Record<string, React.CSSProperties> = {
 
   heroTitle: {
     margin: 0,
-    fontSize: "clamp(3rem, 7vw, 5.7rem)",
-    lineHeight: 0.96,
+    fontSize: "clamp(3rem, 7vw, 5.5rem)",
+    lineHeight: 0.98,
     fontWeight: 500,
     color: "#ffffff",
     textWrap: "balance",
-    textShadow: "0 2px 18px rgba(0,0,0,0.16)",
+    textShadow: "0 2px 14px rgba(0,0,0,0.16)",
   },
 
   heroSubtitle: {
@@ -725,6 +1158,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     padding: "56px 24px",
+    transition: "all 0.6s ease",
   },
 
   historyTextBlock: {
@@ -734,12 +1168,12 @@ const styles: Record<string, React.CSSProperties> = {
 
   historyTitle: {
     margin: 0,
-    fontSize: "clamp(2rem, 4vw, 3.15rem)",
+    fontSize: "clamp(2rem, 4vw, 3.1rem)",
     lineHeight: 1.08,
     fontWeight: 500,
     color: "#ffffff",
     textWrap: "balance",
-    textShadow: "0 2px 16px rgba(0,0,0,0.14)",
+    textShadow: "0 2px 14px rgba(0,0,0,0.14)",
   },
 
   historyText: {
@@ -800,6 +1234,48 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.78,
   },
 
+  dashboardSection: {
+    background: "#ffffff",
+    padding: "72px 0 48px",
+  },
+
+  dashboardText: {
+    marginTop: 14,
+    marginBottom: 0,
+    maxWidth: 760,
+    fontSize: 17,
+    lineHeight: 1.72,
+    color: "#5a705f",
+  },
+
+  dashboardGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 16,
+    marginTop: 28,
+  },
+
+  dashboardCard: {
+    background: "#f7faf5",
+    borderRadius: 22,
+    border: "1px solid rgba(23,49,31,0.08)",
+    padding: "24px 20px",
+    boxShadow: "0 12px 24px rgba(19,45,28,0.05)",
+  },
+
+  dashboardValue: {
+    fontSize: 28,
+    fontWeight: 500,
+    color: "#17311f",
+  },
+
+  dashboardLabel: {
+    marginTop: 8,
+    fontSize: 14,
+    color: "#59705f",
+    lineHeight: 1.55,
+  },
+
   liveSection: {
     background: "#f7faf5",
     padding: "72px 0",
@@ -810,7 +1286,8 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "clamp(2rem, 4vw, 3rem)",
     color: "#17311f",
     fontWeight: 500,
-    maxWidth: 720,
+    maxWidth: 760,
+    lineHeight: 1.08,
   },
 
   liveGrid: {
@@ -850,6 +1327,38 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 14,
     color: "#7aa95c",
     fontWeight: 500,
+  },
+
+  cropSection: {
+    background: "#ffffff",
+    padding: "64px 0 74px",
+  },
+
+  cropGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+    gap: 16,
+    marginTop: 28,
+  },
+
+  cropCard: {
+    background: "#eef4e8",
+    borderRadius: 20,
+    padding: "22px 18px",
+    border: "1px solid rgba(23,49,31,0.08)",
+  },
+
+  cropMonth: {
+    fontSize: 20,
+    fontWeight: 500,
+    color: "#183220",
+  },
+
+  cropTask: {
+    marginTop: 10,
+    fontSize: 15,
+    lineHeight: 1.6,
+    color: "#556c5b",
   },
 
   pathSectionLight: {
@@ -989,7 +1498,8 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "flex-end",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    padding: "96px 24px 24px",
+    padding: "156px 24px 24px",
+    transition: "all 0.6s ease",
   },
 
   roleHeroTextBlock: {
@@ -1054,6 +1564,38 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 15,
     lineHeight: 1.62,
     boxShadow: "0 10px 22px rgba(19,45,28,0.05)",
+  },
+
+  moduleSection: {
+    background: "#ffffff",
+    padding: "22px 0 52px",
+  },
+
+  moduleGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 16,
+    marginTop: 12,
+  },
+
+  moduleCard: {
+    background: "#f7faf5",
+    border: "1px solid rgba(23,49,31,0.08)",
+    borderRadius: 20,
+    padding: "20px 18px",
+  },
+
+  moduleCardTitle: {
+    fontSize: 19,
+    fontWeight: 500,
+    color: "#183220",
+  },
+
+  moduleCardText: {
+    marginTop: 10,
+    fontSize: 15,
+    lineHeight: 1.65,
+    color: "#5a705f",
   },
 
   detailSection: {
