@@ -11,7 +11,6 @@ import {
   PlayCircle,
   PauseCircle,
   Volume2,
-  Languages,
   BookOpen,
   HeartPulse,
   Tractor,
@@ -46,6 +45,14 @@ const images = {
 };
 
 type LangKey = "en";
+type RoleKey = "guest" | "customer" | "grower" | "youth" | "supervisor" | "volunteer";
+
+type ForecastDay = {
+  date: string;
+  tempMax: number;
+  tempMin: number;
+  code: number;
+};
 
 type Translations = {
   appName: string;
@@ -230,24 +237,16 @@ const weatherCodeLabel = (code: number) => {
   return { label: "Mixed", icon: CloudSun };
 };
 
-function useSpeech(textToSpeak: string, enabled: boolean, lang: LangKey) {
+function useSpeech(textToSpeak: string, enabled: boolean) {
   useEffect(() => {
     if (!enabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    const langMap: Record<LangKey, string> = {
-      en: "en-US",
-      es: "es-ES",
-      tl: "fil-PH",
-      it: "it-IT",
-      he: "he-IL",
-      patwa: "en-JM",
-    };
-    utterance.lang = langMap[lang] || "en-US";
-    utterance.rate = lang === "patwa" ? 0.9 : 0.95;
+    utterance.lang = "en-US";
+    utterance.rate = 0.95;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
     return () => window.speechSynthesis.cancel();
-  }, [textToSpeak, enabled, lang]);
+  }, [textToSpeak, enabled]);
 }
 
 function classNames(...parts: Array<string | false | null | undefined>) {
@@ -256,10 +255,10 @@ function classNames(...parts: Array<string | false | null | undefined>) {
 
 export default function App() {
   const [lang] = useState<LangKey>("en");
-  const [entered, setEntered] = useState(false);
+  const [entered, setEntered] = useState(true);
   const [tourOn, setTourOn] = useState(false);
   const [tourStep, setTourStep] = useState(0);
-  const [activeRole, setActiveRole] = useState<RoleKey>("guest");
+  const [activeRole, setActiveRole] = useState<RoleKey>("customer");
   const [section, setSection] = useState<
     "home" | "roles" | "market" | "education" | "calendar" | "operations" | "checkin" | "story"
   >("home");
@@ -360,7 +359,7 @@ export default function App() {
     return `${t.narratorPrefix}. ${sectionLines[section]}`;
   }, [section, role, t]);
 
-  useSpeech(narration, tourOn && voiceOn, lang);
+  useSpeech(narration, tourOn && voiceOn);
 
   const cards = [
     {
@@ -405,7 +404,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(220,252,231,0.7),rgba(255,255,255,0.92),rgba(240,253,244,0.8))] text-slate-900">
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/GrowArea.jpg')] bg-cover bg-center opacity-[0.08]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(240,253,244,0.92),rgba(255,255,255,0.96),rgba(254,249,195,0.45))]" />
         <div className="absolute -top-24 right-0 h-80 w-80 rounded-full bg-amber-200/40 blur-3xl" />
         <div className="absolute left-0 top-1/3 h-96 w-96 rounded-full bg-emerald-200/40 blur-3xl" />
       </div>
@@ -446,13 +445,8 @@ export default function App() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <div className="hidden rounded-full bg-white/80 px-3 py-2 text-xs text-slate-600 sm:block">
+          <div className="hidden rounded-full bg-white/80 px-3 py-2 text-xs text-slate-600 sm:block">
               Youngstown, Ohio · {timeNow}
-            </div>
-            <div className="flex items-center gap-2 rounded-full bg-white/80 px-3 py-2">
-              <Languages className="h-4 w-4 text-emerald-700" />
-              
             </div>
           </div>
         </div>
@@ -667,7 +661,7 @@ export default function App() {
                 title={t.messageTitle}
                 icon={<Leaf className="h-5 w-5" />}
                 body={t.nourishment}
-                image={images.hero}
+                image={images.market}
               />
               <div className="grid gap-4 sm:grid-cols-2">
                 {cards.map((card) => (
@@ -828,7 +822,7 @@ export default function App() {
                 title="A story of restoration"
                 icon={<Trees className="h-5 w-5" />}
                 body="Bronson Family Farm is restoring land while creating practical pathways for food access, learning, health, and belonging. The platform should feel friendly, visually appealing, and welcoming so people want to return to it again and again."
-                image={images.hero}
+                image={images.market}
               />
               <div className="rounded-[2rem] border border-white/60 bg-white/75 p-6 shadow-xl shadow-emerald-100 backdrop-blur-xl">
                 <div className="mb-4 text-lg font-semibold text-slate-800">Platform values</div>
