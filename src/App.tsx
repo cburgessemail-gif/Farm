@@ -1,358 +1,141 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type LanguageCode = "en" | "es" | "tl" | "it" | "pat" | "he";
+
 type ViewMode =
   | "entrance"
+  | "story"
   | "ecosystem"
   | "guest"
   | "customer"
   | "grower"
   | "youth"
-  | "supervisor";
+  | "parent"
+  | "supervisor"
+  | "impact"
+  | "partnerships";
 
 const copy = {
   en: {
-    eyebrow: "Bronson Family Farm",
-    title: "Enter the Bronson Family Farm Ecosystem.",
+    location: "Bronson Family Farm, Youngstown, Ohio",
+    headline: "Bronson Family Farm creates conditions for growth.",
     subtitle:
-      "This demo is a guided view into a real ecosystem now being implemented through Bronson Family Farm. It shows how the platform supports customer access, grower coordination, youth workforce pathways, and community connection.",
-    credibility:
-      "This demo is not a concept board. It is a guided view into a real ecosystem now being actively implemented.",
-    enter: "Open the Live Ecosystem",
-    tour: "Take the Guided Walkthrough",
-    language: "Language",
+      "Through food access, learning, family support, wellness, and opportunity.",
+    supportLine: "Built with community. Growing for generations.",
+    trustBar:
+      "Food Access • Youth Opportunity • Family Support • Wellness • Partnerships",
+    enter: "Enter the Ecosystem",
+    walkthrough: "Take the Guided Walkthrough",
+    impact: "See Community Impact",
+    story: "Why I Built This",
+    ecosystem: "How the Ecosystem Works",
     back: "Back",
-    backToEntrance: "Back to Entrance",
-    ecosystemTitle: "Platform Access Points",
-    ecosystemText:
-      "These role-based entry points show how the Bronson Family Farm ecosystem functions in practice across public engagement, marketplace access, production planning, youth workforce participation, and supervised support.",
-    guest: "Guest",
-    guestText: "Public information, events, story, and partner-facing access.",
-    customer: "Customer",
-    customerText:
-      "Marketplace access, food education, nutrition guidance, and customer engagement tools.",
-    grower: "Grower",
-    growerText:
-      "Crop planning, production coordination, seasonal tracking, and grower support pathways.",
-    youth: "Youth Workforce",
-    youthText:
-      "Training access, learning pathways, supervised participation, and workforce readiness tools.",
-    supervisor: "Supervisor",
-    supervisorText:
-      "Youth workforce oversight, support coordination, progress visibility, and resource management.",
-    guideText:
-      "Welcome to Bronson Family Farm. You are entering a real ecosystem now being actively implemented. This platform supports food access, grower coordination, customer engagement, youth workforce pathways, and community connection.",
-    enterRole: "Enter Access Point",
-    heroBadge: "Active Ecosystem",
-    overview: "Overview",
-    highlights: "Highlights",
-    actions: "Actions",
-    openMarketplace: "Open Marketplace Access",
-    viewEvents: "View Events & Public Access",
-    explorePlanning: "Open Grower Planning Tools",
-    openYouthHub: "Open Youth Workforce Hub",
-    supervisorArea: "Open Supervisor Support",
-    guestTitle: "Guest Access Point",
-    guestLead:
-      "A public-facing entry into Bronson Family Farm, providing story, events, updates, partnerships, and community connection.",
-    customerTitle: "Customer Access Point",
-    customerLead:
-      "A customer-centered path for marketplace activity, healthy food discovery, nutrition education, recipes, and repeat engagement.",
-    growerTitle: "Grower Access Point",
-    growerLead:
-      "An operational space for crop planning, production timing, grower coordination, seasonal readiness, and field decision support.",
-    youthTitle: "Youth Workforce Access Point",
-    youthLead:
-      "A structured pathway for learning, supervised participation, work readiness, mentoring, and practical farm experience.",
-    supervisorTitle: "Supervisor Support Access Point",
-    supervisorLead:
-      "A dedicated management space for youth workforce support, scheduling, oversight, progress tracking, and resource visibility.",
-  },
-  es: {
-    eyebrow: "Bronson Family Farm",
-    title: "Entre al Ecosistema de Bronson Family Farm.",
-    subtitle:
-      "Esta demostración es una vista guiada de un ecosistema real que ya se está implementando a través de Bronson Family Farm. Muestra cómo la plataforma apoya el acceso de clientes, la coordinación de productores, las rutas laborales juveniles y la conexión comunitaria.",
-    credibility:
-      "Esta demostración no es un tablero conceptual. Es una vista guiada de un ecosistema real que ya está en implementación activa.",
-    enter: "Abrir el Ecosistema Activo",
-    tour: "Tomar el Recorrido Guiado",
-    language: "Idioma",
-    back: "Volver",
-    backToEntrance: "Volver a la Entrada",
-    ecosystemTitle: "Puntos de Acceso de la Plataforma",
-    ecosystemText:
-      "Estos puntos de entrada por rol muestran cómo funciona en la práctica el ecosistema de Bronson Family Farm en participación pública, acceso al mercado, planificación productiva, participación juvenil y apoyo supervisado.",
-    guest: "Invitado",
-    guestText: "Información pública, eventos, historia y acceso para socios.",
-    customer: "Cliente",
-    customerText:
-      "Acceso al mercado, educación alimentaria, orientación nutricional y herramientas de participación del cliente.",
-    grower: "Productor",
-    growerText:
-      "Planificación de cultivos, coordinación de producción, seguimiento estacional y rutas de apoyo al productor.",
-    youth: "Fuerza Laboral Juvenil",
-    youthText:
-      "Acceso a capacitación, rutas de aprendizaje, participación supervisada y herramientas de preparación laboral.",
-    supervisor: "Supervisor",
-    supervisorText:
-      "Supervisión juvenil, coordinación de apoyo, visibilidad del progreso y gestión de recursos.",
-    guideText:
-      "Bienvenido a Bronson Family Farm. Usted está entrando en un ecosistema real que ya se está implementando activamente. Esta plataforma apoya el acceso a alimentos, la coordinación de productores, la participación del cliente, las rutas laborales juveniles y la conexión comunitaria.",
-    enterRole: "Entrar al Punto de Acceso",
-    heroBadge: "Ecosistema Activo",
-    overview: "Resumen",
-    highlights: "Aspectos Clave",
-    actions: "Acciones",
-    openMarketplace: "Abrir Acceso al Mercado",
-    viewEvents: "Ver Eventos y Acceso Público",
-    explorePlanning: "Abrir Herramientas de Planificación",
-    openYouthHub: "Abrir Centro Juvenil",
-    supervisorArea: "Abrir Soporte del Supervisor",
-    guestTitle: "Punto de Acceso del Invitado",
-    guestLead:
-      "Una entrada pública a Bronson Family Farm con historia, eventos, actualizaciones, alianzas y conexión comunitaria.",
-    customerTitle: "Punto de Acceso del Cliente",
-    customerLead:
-      "Una ruta centrada en el cliente para actividad de mercado, descubrimiento de alimentos saludables, educación nutricional, recetas y participación continua.",
-    growerTitle: "Punto de Acceso del Productor",
-    growerLead:
-      "Un espacio operativo para planificación de cultivos, tiempos de producción, coordinación de productores, preparación estacional y apoyo práctico en campo.",
-    youthTitle: "Punto de Acceso de la Fuerza Laboral Juvenil",
-    youthLead:
-      "Una ruta estructurada para aprendizaje, participación supervisada, preparación laboral, mentoría y experiencia práctica en la granja.",
-    supervisorTitle: "Punto de Acceso de Soporte del Supervisor",
-    supervisorLead:
-      "Un espacio de gestión dedicado al apoyo juvenil, programación, supervisión, seguimiento del progreso y visibilidad de recursos.",
-  },
-  tl: {
-    eyebrow: "Bronson Family Farm",
-    title: "Pumasok sa Bronson Family Farm Ecosystem.",
-    subtitle:
-      "Ang demo na ito ay guided view ng isang totoong ecosystem na isinasagawa na ngayon sa Bronson Family Farm. Ipinapakita nito kung paano sinusuportahan ng platform ang customer access, grower coordination, youth workforce pathways, at community connection.",
-    credibility:
-      "Ang demo na ito ay hindi concept board. Isa itong guided view ng totoong ecosystem na aktibong ipinapatupad ngayon.",
-    enter: "Buksan ang Live Ecosystem",
-    tour: "Simulan ang Guided Walkthrough",
-    language: "Wika",
-    back: "Bumalik",
-    backToEntrance: "Bumalik sa Entrance",
-    ecosystemTitle: "Platform Access Points",
-    ecosystemText:
-      "Ipinapakita ng mga role-based entry points na ito kung paano gumagana ang Bronson Family Farm ecosystem sa public engagement, marketplace access, production planning, youth workforce participation, at supervised support.",
-    guest: "Bisita",
-    guestText:
-      "Pampublikong impormasyon, events, kuwento, at partner-facing access.",
-    customer: "Customer",
-    customerText:
-      "Marketplace access, food education, nutrition guidance, at customer engagement tools.",
-    grower: "Grower",
-    growerText:
-      "Crop planning, production coordination, seasonal tracking, at grower support pathways.",
-    youth: "Youth Workforce",
-    youthText:
-      "Training access, learning pathways, supervised participation, at workforce readiness tools.",
-    supervisor: "Supervisor",
-    supervisorText:
-      "Youth workforce oversight, support coordination, progress visibility, at resource management.",
-    guideText:
-      "Maligayang pagdating sa Bronson Family Farm. Papasok ka sa isang totoong ecosystem na aktibong ipinapatupad ngayon. Sinusuportahan ng platform na ito ang food access, grower coordination, customer engagement, youth workforce pathways, at community connection.",
-    enterRole: "Buksan ang Access Point",
-    heroBadge: "Active Ecosystem",
-    overview: "Overview",
-    highlights: "Highlights",
-    actions: "Actions",
-    openMarketplace: "Buksan ang Marketplace Access",
-    viewEvents: "Tingnan ang Events at Public Access",
-    explorePlanning: "Buksan ang Grower Planning Tools",
-    openYouthHub: "Buksan ang Youth Workforce Hub",
-    supervisorArea: "Buksan ang Supervisor Support",
-    guestTitle: "Guest Access Point",
-    guestLead:
-      "Isang public-facing entry sa Bronson Family Farm para sa story, events, updates, partnerships, at community connection.",
-    customerTitle: "Customer Access Point",
-    customerLead:
-      "Isang customer-centered path para sa marketplace activity, healthy food discovery, nutrition education, recipes, at repeat engagement.",
-    growerTitle: "Grower Access Point",
-    growerLead:
-      "Isang operational space para sa crop planning, production timing, grower coordination, seasonal readiness, at field decision support.",
-    youthTitle: "Youth Workforce Access Point",
-    youthLead:
-      "Isang structured pathway para sa learning, supervised participation, work readiness, mentoring, at practical farm experience.",
-    supervisorTitle: "Supervisor Support Access Point",
-    supervisorLead:
-      "Isang dedicated management space para sa youth workforce support, scheduling, oversight, progress tracking, at resource visibility.",
-  },
-  it: {
-    eyebrow: "Bronson Family Farm",
-    title: "Entra nell’Ecosistema Bronson Family Farm.",
-    subtitle:
-      "Questa demo è una vista guidata di un ecosistema reale già in fase di implementazione attraverso Bronson Family Farm. Mostra come la piattaforma supporta accesso clienti, coordinamento dei coltivatori, percorsi di lavoro giovanile e connessione comunitaria.",
-    credibility:
-      "Questa demo non è una bacheca concettuale. È una vista guidata di un ecosistema reale attivamente in implementazione.",
-    enter: "Apri l’Ecosistema Attivo",
-    tour: "Avvia la Guida",
-    language: "Lingua",
-    back: "Indietro",
-    backToEntrance: "Torna all’Ingresso",
-    ecosystemTitle: "Punti di Accesso della Piattaforma",
-    ecosystemText:
-      "Questi punti di ingresso basati sui ruoli mostrano come l’ecosistema Bronson Family Farm funziona nella pratica tra coinvolgimento pubblico, accesso al mercato, pianificazione produttiva, partecipazione giovanile e supporto supervisionato.",
-    guest: "Ospite",
-    guestText: "Informazioni pubbliche, eventi, storia e accesso per partner.",
-    customer: "Cliente",
-    customerText:
-      "Accesso al mercato, educazione alimentare, orientamento nutrizionale e strumenti di coinvolgimento clienti.",
-    grower: "Coltivatore",
-    growerText:
-      "Pianificazione delle colture, coordinamento della produzione, monitoraggio stagionale e percorsi di supporto per coltivatori.",
-    youth: "Forza Lavoro Giovanile",
-    youthText:
-      "Accesso alla formazione, percorsi di apprendimento, partecipazione supervisionata e strumenti di preparazione al lavoro.",
-    supervisor: "Supervisore",
-    supervisorText:
-      "Supervisione del lavoro giovanile, coordinamento del supporto, visibilità dei progressi e gestione delle risorse.",
-    guideText:
-      "Benvenuti a Bronson Family Farm. State entrando in un ecosistema reale attualmente in fase di implementazione attiva. Questa piattaforma supporta accesso al cibo, coordinamento dei coltivatori, coinvolgimento dei clienti, percorsi di lavoro giovanile e connessione comunitaria.",
-    enterRole: "Entra nel Punto di Accesso",
-    heroBadge: "Ecosistema Attivo",
-    overview: "Panoramica",
-    highlights: "Punti Chiave",
-    actions: "Azioni",
-    openMarketplace: "Apri Accesso Marketplace",
-    viewEvents: "Visualizza Eventi e Accesso Pubblico",
-    explorePlanning: "Apri Strumenti di Pianificazione",
-    openYouthHub: "Apri Hub Giovanile",
-    supervisorArea: "Apri Supporto Supervisore",
-    guestTitle: "Punto di Accesso Ospite",
-    guestLead:
-      "Un ingresso pubblico a Bronson Family Farm con storia, eventi, aggiornamenti, partnership e connessione comunitaria.",
-    customerTitle: "Punto di Accesso Cliente",
-    customerLead:
-      "Un percorso centrato sul cliente per attività di marketplace, scoperta di cibo sano, educazione nutrizionale, ricette e coinvolgimento continuativo.",
-    growerTitle: "Punto di Accesso Coltivatore",
-    growerLead:
-      "Uno spazio operativo per pianificazione delle colture, tempi di produzione, coordinamento dei coltivatori, preparazione stagionale e supporto decisionale sul campo.",
-    youthTitle: "Punto di Accesso Forza Lavoro Giovanile",
-    youthLead:
-      "Un percorso strutturato per apprendimento, partecipazione supervisionata, preparazione al lavoro, mentoring ed esperienza pratica in fattoria.",
-    supervisorTitle: "Punto di Accesso Supporto Supervisore",
-    supervisorLead:
-      "Uno spazio gestionale dedicato al supporto della forza lavoro giovanile, programmazione, supervisione, monitoraggio dei progressi e visibilità delle risorse.",
-  },
-  pat: {
-    eyebrow: "Bronson Family Farm",
-    title: "Enter di Bronson Family Farm Ecosystem.",
-    subtitle:
-      "Dis ya demo a one guided view into a real ecosystem weh a get implement right now through Bronson Family Farm. It show how di platform support customer access, grower coordination, youth workforce pathways, an community connection.",
-    credibility:
-      "Dis demo no be no concept board. A one guided view into a real ecosystem weh a get actively implement right now.",
-    enter: "Open di Live Ecosystem",
-    tour: "Tek di Guided Walkthrough",
+    backHome: "Back to Home",
+    backToEcosystem: "Back to Ecosystem",
     language: "Language",
-    back: "Go Back",
-    backToEntrance: "Back to Entrance",
+    stopVoice: "Stop Voice",
+    storyIntroTitle: "Why I Built This",
+    storyIntroText:
+      "Bronson Family Farm is rooted in family, shaped by lived experience, and being implemented to serve real people in real ways.",
     ecosystemTitle: "Platform Access Points",
     ecosystemText:
-      "Dem role-based entry points yah show how di Bronson Family Farm ecosystem function in practice across public engagement, marketplace access, production planning, youth workforce participation, an supervised support.",
-    guest: "Guest",
-    guestText: "Public information, events, story, an partner-facing access.",
-    customer: "Customer",
-    customerText:
-      "Marketplace access, food education, nutrition guidance, an customer engagement tools.",
-    grower: "Grower",
-    growerText:
-      "Crop planning, production coordination, seasonal tracking, an grower support pathways.",
-    youth: "Youth Workforce",
-    youthText:
-      "Training access, learning pathways, supervised participation, an workforce readiness tools.",
-    supervisor: "Supervisor",
-    supervisorText:
-      "Youth workforce oversight, support coordination, progress visibility, an resource management.",
-    guideText:
-      "Welcome to Bronson Family Farm. Yuh a enter a real ecosystem weh a get actively implement right now. Dis platform support food access, grower coordination, customer engagement, youth workforce pathways, an community connection.",
-    enterRole: "Enter Access Point",
-    heroBadge: "Active Ecosystem",
+      "These access points show how Bronson Family Farm works across public engagement, food access, youth workforce development, family connection, grower coordination, wellness education, and partnership-based community change.",
+    impactTitle: "Community Impact",
+    impactText:
+      "This ecosystem responds to real community needs with practical strategies designed to improve food access, opportunity, engagement, and healthier outcomes over time.",
+    partnershipsTitle: "Partnerships for Change",
+    partnershipsText:
+      "This work grows through collaboration with schools, growers, health educators, civic partners, businesses, and community organizations.",
+    guidedText:
+      "Welcome to Bronson Family Farm in Youngstown, Ohio. Bronson Family Farm creates conditions for growth through food access, learning, family support, wellness, and opportunity. This demo offers a guided view into a real ecosystem now being implemented for the community.",
+    roleGuest: "Guest Access",
+    roleGuestText:
+      "Public information, events, story, and partner-facing access.",
+    roleCustomer: "Customer Access",
+    roleCustomerText:
+      "Marketplace access, food education, nutrition guidance, and customer engagement tools.",
+    roleGrower: "Grower Access",
+    roleGrowerText:
+      "Crop planning, production coordination, seasonal timing, and grower support.",
+    roleYouth: "Youth Workforce",
+    roleYouthText:
+      "Hands-on learning, work readiness, mentoring, and supervised participation.",
+    roleParent: "Parent Portal",
+    roleParentText:
+      "Family connection, progress visibility, updates, support, and trust-building.",
+    roleSupervisor: "Supervisor Support",
+    roleSupervisorText:
+      "Oversight, coordination, progress visibility, and resource support for youth workforce participation.",
+    enterAccessPoint: "Enter Access Point",
+    viewStory: "View Founder Story",
+    viewImpact: "View Community Impact",
+    viewPartnerships: "View Partnerships",
+    rootsTitle: "My roots taught me how food sustains families.",
+    rootsText:
+      "My grandmother was Filipino and lived on a farm in Santa Rosa. She gardened, raised animals, and worked with the butcher to feed the household. She taught us that food systems begin long before the grocery shelf.",
+    systemsTitle: "I grew up learning how things are built.",
+    systemsText:
+      "Raised in East Palo Alto, part of the Silicon Valley region, I learned to value systems, innovation, and building solutions that solve real problems.",
+    healthTitle: "Food access became personal.",
+    healthText:
+      "After being diagnosed with Type II Diabetes in 2006, I managed my health through food and exercise. After moving to Youngstown, limited access to affordable fresh produce and rising costs changed that reality. I need fresh produce.",
+    youngstownTitle: "My family is here. My work is here.",
+    youngstownText:
+      "I am a grandmother of nine. Four of my grandchildren live here in Youngstown, along with their father, my son. This place matters to me because family is here, community is here, and this is where I have planted my life.",
+    landTitle: "The land and airport history inspired me.",
+    landText:
+      "The history of the airport and surrounding land spoke to movement, possibility, and renewal. I saw land with a story and believed it could serve the community again in a new way.",
+    trainingTitle: "Training turned vision into structure.",
+    trainingText:
+      "In Central State University’s Fast Track Farming class, I got the vision for agritourism and wrote a business plan. That learning helped turn inspiration into strategy.",
+    resilienceTitle: "I am still building.",
+    resilienceText:
+      "I am 68 years old and building this after surviving two traumatic brain injuries. That is why I can get frustrated. I need help. But I have not stopped building.",
+    missionTitle: "A place where a seed starts the journey.",
+    missionText:
+      "Bronson Family Farm creates conditions for growth—for food, people, families, skills, wellness, and future opportunity.",
+    guestTitle: "Guest Access Point",
+    guestLead:
+      "A welcoming public-facing space for story, events, place, and understanding what Bronson Family Farm is building in Youngstown.",
+    customerTitle: "Customer Access Point",
+    customerLead:
+      "A practical and educational space that connects people to fresh food, healthier choices, recipes, and marketplace participation.",
+    growerTitle: "Grower Access Point",
+    growerLead:
+      "An operational space for crop planning, coordination, timing, and practical support that connects growing to real community need.",
+    youthTitle: "Youth Workforce Access Point",
+    youthLead:
+      "A real learning and participation space where young people can build skills, confidence, work readiness, and future direction.",
+    parentTitle: "Parent Portal",
+    parentLead:
+      "A family-facing view that helps parents stay informed, see progress, receive updates, and support young people as they grow.",
+    supervisorTitle: "Supervisor Support",
+    supervisorLead:
+      "A support layer for youth workforce participation with visibility, coordination, scheduling, and resource awareness.",
     overview: "Overview",
     highlights: "Highlights",
     actions: "Actions",
-    openMarketplace: "Open Marketplace Access",
-    viewEvents: "View Events an Public Access",
-    explorePlanning: "Open Grower Planning Tools",
-    openYouthHub: "Open Youth Workforce Hub",
-    supervisorArea: "Open Supervisor Support",
-    guestTitle: "Guest Access Point",
-    guestLead:
-      "A public-facing entry into Bronson Family Farm fi story, events, updates, partnerships, an community connection.",
-    customerTitle: "Customer Access Point",
-    customerLead:
-      "A customer-centered path fi marketplace activity, healthy food discovery, nutrition education, recipes, an repeat engagement.",
-    growerTitle: "Grower Access Point",
-    growerLead:
-      "A operational space fi crop planning, production timing, grower coordination, seasonal readiness, an field decision support.",
-    youthTitle: "Youth Workforce Access Point",
-    youthLead:
-      "A structured pathway fi learning, supervised participation, work readiness, mentoring, an practical farm experience.",
-    supervisorTitle: "Supervisor Support Access Point",
-    supervisorLead:
-      "A dedicated management space fi youth workforce support, scheduling, oversight, progress tracking, an resource visibility.",
-  },
-  he: {
-    eyebrow: "Bronson Family Farm",
-    title: "היכנסו לאקוסיסטם של Bronson Family Farm.",
-    subtitle:
-      "הדמו הזה הוא מבט מודרך אל אקוסיסטם אמיתי שכבר מיושם כעת דרך Bronson Family Farm. הוא מראה כיצד הפלטפורמה תומכת בגישת לקוחות, תיאום מגדלים, מסלולי כוח עבודה לנוער וחיבור קהילתי.",
-    credibility:
-      "הדמו הזה אינו לוח רעיונות. זהו מבט מודרך אל אקוסיסטם אמיתי שנמצא ביישום פעיל כעת.",
-    enter: "פתחו את האקוסיסטם הפעיל",
-    tour: "התחילו סיור מודרך",
-    language: "שפה",
-    back: "חזרה",
-    backToEntrance: "חזרה לכניסה",
-    ecosystemTitle: "נקודות גישה לפלטפורמה",
-    ecosystemText:
-      "נקודות הכניסה המבוססות-תפקיד הללו מראות כיצד אקוסיסטם Bronson Family Farm פועל בפועל דרך מעורבות ציבורית, גישת שוק, תכנון ייצור, השתתפות נוער ותמיכה בפיקוח.",
-    guest: "אורח",
-    guestText: "מידע ציבורי, אירועים, סיפור וגישה עבור שותפים.",
-    customer: "לקוח",
-    customerText:
-      "גישת שוק, חינוך תזונתי, הכוונה תזונתית וכלי מעורבות לקוחות.",
-    grower: "מגדל",
-    growerText:
-      "תכנון גידולים, תיאום ייצור, מעקב עונתי ומסלולי תמיכה למגדלים.",
-    youth: "כוח עבודה לנוער",
-    youthText:
-      "גישה להכשרה, מסלולי למידה, השתתפות בפיקוח וכלי מוכנות לעבודה.",
-    supervisor: "מפקח",
-    supervisorText:
-      "פיקוח על כוח עבודה לנוער, תיאום תמיכה, נראות התקדמות וניהול משאבים.",
-    guideText:
-      "ברוכים הבאים ל-Bronson Family Farm. אתם נכנסים לאקוסיסטם אמיתי שנמצא כעת ביישום פעיל. הפלטפורמה הזו תומכת בגישה למזון, תיאום מגדלים, מעורבות לקוחות, מסלולי כוח עבודה לנוער וחיבור קהילתי.",
-    enterRole: "כניסה לנקודת הגישה",
-    heroBadge: "אקוסיסטם פעיל",
-    overview: "סקירה",
-    highlights: "נקודות עיקריות",
-    actions: "פעולות",
-    openMarketplace: "פתחו גישת שוק",
-    viewEvents: "צפו באירועים וגישה ציבורית",
-    explorePlanning: "פתחו כלי תכנון למגדלים",
-    openYouthHub: "פתחו מרכז נוער",
-    supervisorArea: "פתחו תמיכת מפקח",
-    guestTitle: "נקודת גישה לאורח",
-    guestLead:
-      "כניסה ציבורית אל Bronson Family Farm עם סיפור, אירועים, עדכונים, שותפויות וחיבור קהילתי.",
-    customerTitle: "נקודת גישה ללקוח",
-    customerLead:
-      "מסלול ממוקד-לקוח עבור פעילות שוק, גילוי מזון בריא, חינוך תזונתי, מתכונים ומעורבות חוזרת.",
-    growerTitle: "נקודת גישה למגדל",
-    growerLead:
-      "מרחב תפעולי עבור תכנון גידולים, תזמון ייצור, תיאום מגדלים, מוכנות עונתית ותמיכה בהחלטות בשטח.",
-    youthTitle: "נקודת גישה לכוח עבודה לנוער",
-    youthLead:
-      "מסלול מובנה ללמידה, השתתפות בפיקוח, מוכנות לעבודה, חונכות וניסיון מעשי בחווה.",
-    supervisorTitle: "נקודת גישה לתמיכת מפקח",
-    supervisorLead:
-      "מרחב ניהולי ייעודי לתמיכה בכוח העבודה לנוער, תזמון, פיקוח, מעקב התקדמות ונראות משאבים.",
+    dataTitle: "What a healthier community means",
+    dataText:
+      "A healthier community means more than the absence of illness. It means better access to fresh food, stronger families, more youth opportunity, practical health education, local pride, and better daily conditions for people to live well.",
+    dataFood: "Fresh food access shapes health outcomes.",
+    dataYouth: "Young people need real opportunities to learn, work, and grow.",
+    dataFamily: "Families are stronger when they can see and support progress.",
+    dataLand: "Land can become a place of nourishment, learning, and belonging.",
+    dataWellness:
+      "Health advice means more when healthy food is actually within reach.",
+    partnerSchools: "Schools and youth development partners",
+    partnerHealth: "Health and wellness educators",
+    partnerGrowers: "Growers, producers, and local food partners",
+    partnerCivic: "Civic, business, and community organizations",
+    actionMarketplace: "Open Marketplace Access",
+    actionEvents: "View Events & Public Access",
+    actionPlanning: "Open Grower Planning Tools",
+    actionYouth: "Open Youth Workforce Hub",
+    actionParent: "Open Parent Portal",
+    actionSupervisor: "Open Supervisor Support",
+    actionImpact: "See Community Impact",
+    actionPartnerships: "See Partnerships",
   },
 } as const;
 
@@ -394,7 +177,7 @@ function InfoPanel({
           <div className="section-label">{labels.actions}</div>
           <div className="action-stack">
             {actions.map((action) => (
-              <button key={action} className="ghost-action" type="button">
+              <button className="ghost-action" type="button" key={action}>
                 {action}
               </button>
             ))}
@@ -405,13 +188,30 @@ function InfoPanel({
   );
 }
 
-export default function App() {
-  const [view, setView] = useState<ViewMode>("entrance");
-  const [language, setLanguage] = useState<LanguageCode>("en");
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
+function StoryPanel({
+  index,
+  title,
+  text,
+}: {
+  index: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <section className="story-panel">
+      <div className="story-number">{index}</div>
+      <h2 className="story-title">{title}</h2>
+      <p className="story-text">{text}</p>
+    </section>
+  );
+}
 
+export default function App() {
+  const [language, setLanguage] = useState<LanguageCode>("en");
+  const [view, setView] = useState<ViewMode>("entrance");
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const t = useMemo(() => copy[language], [language]);
+  const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const heroImage = "/GrowArea.jpg";
   const pathwayImage = "/GrowArea2.jpg";
@@ -422,8 +222,8 @@ export default function App() {
     };
   }, []);
 
-  const startGuidedTour = () => {
-    const utterance = new SpeechSynthesisUtterance(t.guideText);
+  const startGuidedWalkthrough = () => {
+    const utterance = new SpeechSynthesisUtterance(t.guidedText);
     utterance.rate = 0.95;
     utterance.pitch = 1;
     utterance.lang =
@@ -442,7 +242,7 @@ export default function App() {
 
     utterance.onend = () => {
       setIsSpeaking(false);
-      setView("ecosystem");
+      setView("story");
     };
 
     utterance.onerror = () => {
@@ -453,9 +253,15 @@ export default function App() {
     window.speechSynthesis.speak(utterance);
   };
 
-  const stopGuidedTour = () => {
+  const stopGuidedWalkthrough = () => {
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
+  };
+
+  const labels = {
+    overview: t.overview,
+    highlights: t.highlights,
+    actions: t.actions,
   };
 
   const renderRoleView = () => {
@@ -470,30 +276,26 @@ export default function App() {
           <div className="role-wrap">
             <div className="role-header">
               <div>
-                <div className="eyebrow">{t.eyebrow}</div>
+                <div className="eyebrow">{t.location}</div>
                 <h1 className="role-page-title">{t.guestTitle}</h1>
               </div>
               <div className="controls">
                 <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.back}
+                  {t.backToEcosystem}
                 </button>
               </div>
             </div>
 
             <InfoPanel
-              labels={{
-                overview: t.overview,
-                highlights: t.highlights,
-                actions: t.actions,
-              }}
+              labels={labels}
               title={t.guestTitle}
               lead={t.guestLead}
               bullets={[
-                "Story, updates, and public-facing communication",
-                "Events, visits, and partnership visibility",
-                "Welcoming entry into the active ecosystem",
+                "Public welcome and first understanding",
+                "Story, identity, and place-based context",
+                "Events, updates, and partner-facing information",
               ]}
-              actions={[t.viewEvents, t.backToEntrance]}
+              actions={[t.actionEvents, t.actionImpact]}
             />
           </div>
         </section>
@@ -511,30 +313,26 @@ export default function App() {
           <div className="role-wrap">
             <div className="role-header">
               <div>
-                <div className="eyebrow">{t.eyebrow}</div>
+                <div className="eyebrow">{t.location}</div>
                 <h1 className="role-page-title">{t.customerTitle}</h1>
               </div>
               <div className="controls">
                 <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.back}
+                  {t.backToEcosystem}
                 </button>
               </div>
             </div>
 
             <InfoPanel
-              labels={{
-                overview: t.overview,
-                highlights: t.highlights,
-                actions: t.actions,
-              }}
+              labels={labels}
               title={t.customerTitle}
               lead={t.customerLead}
               bullets={[
-                "Marketplace access and purchase flow",
-                "Nutrition education and recipe guidance",
-                "Customer relationship and repeat engagement",
+                "Fresh food access and marketplace connection",
+                "Nutrition guidance and healthier food choices",
+                "Recipes, education, and repeat engagement",
               ]}
-              actions={[t.openMarketplace, "Nutrition & Recipes", t.backToEntrance]}
+              actions={[t.actionMarketplace, t.actionImpact]}
             />
           </div>
         </section>
@@ -552,30 +350,26 @@ export default function App() {
           <div className="role-wrap">
             <div className="role-header">
               <div>
-                <div className="eyebrow">{t.eyebrow}</div>
+                <div className="eyebrow">{t.location}</div>
                 <h1 className="role-page-title">{t.growerTitle}</h1>
               </div>
               <div className="controls">
                 <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.back}
+                  {t.backToEcosystem}
                 </button>
               </div>
             </div>
 
             <InfoPanel
-              labels={{
-                overview: t.overview,
-                highlights: t.highlights,
-                actions: t.actions,
-              }}
+              labels={labels}
               title={t.growerTitle}
               lead={t.growerLead}
               bullets={[
-                "Seasonal timing and crop planning",
-                "Production flow and grower coordination",
-                "Field-based practical decision support",
+                "Crop planning, seasonal timing, and coordination",
+                "Production tools that connect growing to community need",
+                "Support for practical decision-making and readiness",
               ]}
-              actions={[t.explorePlanning, "Production Pathways", t.backToEntrance]}
+              actions={[t.actionPlanning, t.actionPartnerships]}
             />
           </div>
         </section>
@@ -593,40 +387,87 @@ export default function App() {
           <div className="role-wrap">
             <div className="role-header">
               <div>
-                <div className="eyebrow">{t.eyebrow}</div>
+                <div className="eyebrow">{t.location}</div>
                 <h1 className="role-page-title">{t.youthTitle}</h1>
               </div>
               <div className="controls">
                 <button className="ghost-btn" onClick={() => setView("ecosystem")}>
+                  {t.backToEcosystem}
+                </button>
+              </div>
+            </div>
+
+            <InfoPanel
+              labels={labels}
+              title={t.youthTitle}
+              lead={t.youthLead}
+              bullets={[
+                "Learn real skills and build confidence",
+                "Gain hands-on experience and work readiness",
+                "Grow with mentoring, structure, and support",
+              ]}
+              actions={[t.actionYouth, t.actionParent, t.actionSupervisor]}
+            />
+
+            <div className="nested-grid">
+              <div className="nested-panel card-glass youth-nested">
+                <div className="section-label">{t.roleParent}</div>
+                <h3 className="nested-title">{t.parentTitle}</h3>
+                <p className="nested-copy">{t.parentLead}</p>
+                <button className="primary nested-btn" onClick={() => setView("parent")}>
+                  {t.actionParent}
+                </button>
+              </div>
+
+              <div className="nested-panel card-glass youth-nested purple">
+                <div className="section-label">{t.roleSupervisor}</div>
+                <h3 className="nested-title">{t.supervisorTitle}</h3>
+                <p className="nested-copy">{t.supervisorLead}</p>
+                <button
+                  className="primary nested-btn"
+                  onClick={() => setView("supervisor")}
+                >
+                  {t.actionSupervisor}
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    if (view === "parent") {
+      return (
+        <section
+          className="role-page role-parent"
+          style={{
+            backgroundImage: `linear-gradient(to bottom, rgba(12,10,7,0.90), rgba(14,16,12,0.98)), url("${pathwayImage}")`,
+          }}
+        >
+          <div className="role-wrap">
+            <div className="role-header">
+              <div>
+                <div className="eyebrow">{t.location}</div>
+                <h1 className="role-page-title">{t.parentTitle}</h1>
+              </div>
+              <div className="controls">
+                <button className="ghost-btn" onClick={() => setView("youth")}>
                   {t.back}
                 </button>
               </div>
             </div>
 
             <InfoPanel
-              labels={{
-                overview: t.overview,
-                highlights: t.highlights,
-                actions: t.actions,
-              }}
-              title={t.youthTitle}
-              lead={t.youthLead}
+              labels={labels}
+              title={t.parentTitle}
+              lead={t.parentLead}
               bullets={[
-                "Hands-on learning and work readiness",
-                "Mentoring, participation, and practical growth",
-                "Supervisor support connected only to this program",
+                "See participation and progress more clearly",
+                "Stay connected through updates and communication",
+                "Support growth through family awareness and trust",
               ]}
-              actions={[t.openYouthHub, t.supervisorArea, t.backToEntrance]}
+              actions={[t.actionYouth, t.actionImpact]}
             />
-
-            <div className="nested-panel card-glass youth-nested">
-              <div className="section-label">{t.supervisor}</div>
-              <h3 className="nested-title">{t.supervisorTitle}</h3>
-              <p className="nested-copy">{t.supervisorLead}</p>
-              <button className="primary nested-btn" onClick={() => setView("supervisor")}>
-                {t.supervisorArea}
-              </button>
-            </div>
           </div>
         </section>
       );
@@ -643,7 +484,7 @@ export default function App() {
           <div className="role-wrap">
             <div className="role-header">
               <div>
-                <div className="eyebrow">{t.eyebrow}</div>
+                <div className="eyebrow">{t.location}</div>
                 <h1 className="role-page-title">{t.supervisorTitle}</h1>
               </div>
               <div className="controls">
@@ -654,20 +495,126 @@ export default function App() {
             </div>
 
             <InfoPanel
-              labels={{
-                overview: t.overview,
-                highlights: t.highlights,
-                actions: t.actions,
-              }}
+              labels={labels}
               title={t.supervisorTitle}
               lead={t.supervisorLead}
               bullets={[
-                "Daily youth support coordination",
-                "Mentoring, oversight, and progress visibility",
-                "Support staff and resource awareness",
+                "Support youth participation with structure and care",
+                "Coordinate schedules, progress, and practical needs",
+                "Strengthen consistency through visibility and support",
               ]}
-              actions={["Support Resources", "Daily Coordination", "Return to Youth Workforce"]}
+              actions={[t.actionYouth, t.actionParent]}
             />
+          </div>
+        </section>
+      );
+    }
+
+    if (view === "impact") {
+      return (
+        <section
+          className="role-page role-impact"
+          style={{
+            backgroundImage: `linear-gradient(to bottom, rgba(9,11,10,0.92), rgba(12,15,12,0.98)), url("${heroImage}")`,
+          }}
+        >
+          <div className="role-wrap">
+            <div className="role-header">
+              <div>
+                <div className="eyebrow">{t.location}</div>
+                <h1 className="role-page-title">{t.impactTitle}</h1>
+                <p className="ecosystem-copy">{t.impactText}</p>
+              </div>
+              <div className="controls">
+                <button className="ghost-btn" onClick={() => setView("ecosystem")}>
+                  {t.backToEcosystem}
+                </button>
+              </div>
+            </div>
+
+            <div className="impact-grid">
+              <div className="card-glass stat-card">
+                <div className="stat-number">01</div>
+                <div className="stat-title">{t.dataFood}</div>
+              </div>
+              <div className="card-glass stat-card">
+                <div className="stat-number">02</div>
+                <div className="stat-title">{t.dataYouth}</div>
+              </div>
+              <div className="card-glass stat-card">
+                <div className="stat-number">03</div>
+                <div className="stat-title">{t.dataFamily}</div>
+              </div>
+              <div className="card-glass stat-card">
+                <div className="stat-number">04</div>
+                <div className="stat-title">{t.dataLand}</div>
+              </div>
+              <div className="card-glass stat-card wide">
+                <div className="section-label">Healthier Community</div>
+                <div className="detail-lead">{t.dataText}</div>
+              </div>
+              <div className="card-glass stat-card wide">
+                <div className="section-label">Wellness Connection</div>
+                <div className="detail-lead">{t.dataWellness}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    if (view === "partnerships") {
+      return (
+        <section
+          className="role-page role-partnerships"
+          style={{
+            backgroundImage: `linear-gradient(to bottom, rgba(11,12,17,0.92), rgba(13,14,18,0.98)), url("${pathwayImage}")`,
+          }}
+        >
+          <div className="role-wrap">
+            <div className="role-header">
+              <div>
+                <div className="eyebrow">{t.location}</div>
+                <h1 className="role-page-title">{t.partnershipsTitle}</h1>
+                <p className="ecosystem-copy">{t.partnershipsText}</p>
+              </div>
+              <div className="controls">
+                <button className="ghost-btn" onClick={() => setView("ecosystem")}>
+                  {t.backToEcosystem}
+                </button>
+              </div>
+            </div>
+
+            <div className="partner-grid">
+              <div className="card-glass partner-card">
+                <h3>{t.partnerSchools}</h3>
+                <p>
+                  Youth access, educational pathways, supervised participation,
+                  and stronger future opportunity.
+                </p>
+              </div>
+              <div className="card-glass partner-card">
+                <h3>{t.partnerHealth}</h3>
+                <p>
+                  Nutrition learning, healthier choices, prevention education,
+                  and stronger daily habits.
+                </p>
+              </div>
+              <div className="card-glass partner-card">
+                <h3>{t.partnerGrowers}</h3>
+                <p>
+                  Production support, crop coordination, local food systems, and
+                  practical growing knowledge.
+                </p>
+              </div>
+              <div className="card-glass partner-card">
+                <h3>{t.partnerCivic}</h3>
+                <p>
+                  Community activation, land use, local investment, and systems
+                  that create better outcomes together.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
       );
@@ -773,6 +720,7 @@ export default function App() {
           align-items: center;
           gap: 16px;
           padding: 24px 28px;
+          flex-wrap: wrap;
         }
 
         .brand {
@@ -784,9 +732,8 @@ export default function App() {
           border: 1px solid rgba(255,255,255,0.16);
           background: rgba(255,255,255,0.08);
           backdrop-filter: blur(12px);
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          font-size: 11px;
+          letter-spacing: 0.08em;
+          font-size: 12px;
           color: rgba(255,255,255,0.95);
           box-shadow: 0 8px 24px rgba(0,0,0,0.16);
         }
@@ -828,7 +775,7 @@ export default function App() {
 
         .inner {
           width: 100%;
-          max-width: 1080px;
+          max-width: 1100px;
         }
 
         .eyebrow {
@@ -840,8 +787,7 @@ export default function App() {
           background: rgba(255,255,255,0.10);
           backdrop-filter: blur(10px);
           font-size: 12px;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
+          letter-spacing: 0.18em;
           color: rgba(255,255,255,0.90);
           box-shadow: 0 8px 28px rgba(0,0,0,0.18);
         }
@@ -864,13 +810,21 @@ export default function App() {
           text-shadow: 0 2px 10px rgba(0,0,0,0.24);
         }
 
-        .credibility {
-          margin: 20px auto 0;
+        .support-line {
+          margin: 16px auto 0;
           max-width: 860px;
-          font-size: 15px;
+          font-size: 18px;
+          line-height: 1.6;
+          color: rgba(255,255,255,0.83);
+        }
+
+        .trust-bar {
+          margin: 24px auto 0;
+          max-width: 980px;
+          font-size: 14px;
           line-height: 1.7;
-          color: rgba(255,255,255,0.78);
-          letter-spacing: 0.01em;
+          letter-spacing: 0.06em;
+          color: rgba(255,255,255,0.75);
         }
 
         .buttons {
@@ -923,6 +877,7 @@ export default function App() {
           background: rgba(255,255,255,0.16);
         }
 
+        .story-page,
         .ecosystem,
         .role-page {
           min-height: 100vh;
@@ -934,6 +889,7 @@ export default function App() {
           overflow: hidden;
         }
 
+        .story-page::before,
         .ecosystem::before,
         .role-page::before {
           content: "";
@@ -947,6 +903,7 @@ export default function App() {
           pointer-events: none;
         }
 
+        .story-wrap,
         .ecosystem-wrap,
         .role-wrap {
           max-width: 1220px;
@@ -955,6 +912,7 @@ export default function App() {
           z-index: 1;
         }
 
+        .story-head,
         .ecosystem-head,
         .role-header {
           display: flex;
@@ -965,6 +923,45 @@ export default function App() {
           flex-wrap: wrap;
         }
 
+        .story-intro,
+        .ecosystem-copy {
+          max-width: 900px;
+          margin-top: 10px;
+          font-size: 19px;
+          line-height: 1.7;
+          color: rgba(255,255,255,0.84);
+        }
+
+        .story-sequence {
+          display: grid;
+          gap: 18px;
+          margin-top: 24px;
+        }
+
+        .story-panel,
+        .role-card,
+        .card-glass {
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.09);
+          backdrop-filter: blur(14px);
+          border-radius: 28px;
+          padding: 24px;
+          box-shadow: 0 16px 42px rgba(0,0,0,0.22);
+        }
+
+        .story-panel {
+          min-height: 220px;
+        }
+
+        .story-number {
+          font-size: 12px;
+          letter-spacing: 0.18em;
+          color: rgba(255,255,255,0.62);
+          text-transform: uppercase;
+          margin-bottom: 14px;
+        }
+
+        .story-title,
         .ecosystem-title,
         .role-page-title {
           font-size: clamp(34px, 5vw, 62px);
@@ -972,33 +969,35 @@ export default function App() {
           margin: 0;
         }
 
-        .ecosystem-copy {
-          max-width: 860px;
-          margin-top: 10px;
+        .story-panel .story-title {
+          font-size: clamp(26px, 3vw, 46px);
+          margin-bottom: 12px;
+        }
+
+        .story-text {
           font-size: 19px;
-          line-height: 1.7;
-          color: rgba(255,255,255,0.84);
+          line-height: 1.8;
+          color: rgba(255,255,255,0.86);
+          margin: 0;
+          max-width: 900px;
+        }
+
+        .story-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+          margin-top: 28px;
         }
 
         .role-grid {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(5, minmax(0, 1fr));
           gap: 18px;
           margin-top: 24px;
         }
 
-        .role-card,
-        .card-glass {
-          border: 1px solid rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.09);
-          backdrop-filter: blur(14px);
-          border-radius: 28px;
-          padding: 22px;
-          box-shadow: 0 16px 42px rgba(0,0,0,0.22);
-        }
-
         .role-card {
-          min-height: 270px;
+          min-height: 290px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -1030,6 +1029,10 @@ export default function App() {
 
         .role-card:nth-child(4) {
           box-shadow: 0 16px 42px rgba(191, 96, 42, 0.10), 0 16px 42px rgba(0,0,0,0.20);
+        }
+
+        .role-card:nth-child(5) {
+          box-shadow: 0 16px 42px rgba(118, 84, 171, 0.10), 0 16px 42px rgba(0,0,0,0.20);
         }
 
         .role-name {
@@ -1123,8 +1126,15 @@ export default function App() {
           width: 100%;
         }
 
-        .nested-panel {
+        .nested-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 18px;
           margin-top: 18px;
+        }
+
+        .nested-panel {
+          margin-top: 0;
         }
 
         .nested-title {
@@ -1139,6 +1149,52 @@ export default function App() {
         .youth-nested {
           border-color: rgba(226, 159, 63, 0.20);
           box-shadow: 0 16px 42px rgba(226, 159, 63, 0.08), 0 16px 42px rgba(0,0,0,0.22);
+        }
+
+        .youth-nested.purple {
+          border-color: rgba(138, 92, 179, 0.22);
+          box-shadow: 0 16px 42px rgba(138, 92, 179, 0.10), 0 16px 42px rgba(0,0,0,0.22);
+        }
+
+        .impact-grid,
+        .partner-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 18px;
+          margin-top: 24px;
+        }
+
+        .stat-card {
+          min-height: 180px;
+        }
+
+        .stat-card.wide {
+          min-height: 220px;
+        }
+
+        .stat-number {
+          font-size: 14px;
+          letter-spacing: 0.18em;
+          color: rgba(255,255,255,0.60);
+          margin-bottom: 18px;
+        }
+
+        .stat-title {
+          font-size: 28px;
+          line-height: 1.35;
+          color: rgba(255,255,255,0.92);
+        }
+
+        .partner-card h3 {
+          margin: 0 0 10px;
+          font-size: 26px;
+        }
+
+        .partner-card p {
+          margin: 0;
+          font-size: 18px;
+          line-height: 1.75;
+          color: rgba(255,255,255,0.82);
         }
 
         @keyframes zoom {
@@ -1157,7 +1213,7 @@ export default function App() {
           100% { opacity: 0.92; filter: saturate(104%); }
         }
 
-        @media (max-width: 1050px) {
+        @media (max-width: 1180px) {
           .role-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
@@ -1167,15 +1223,25 @@ export default function App() {
           }
         }
 
+        @media (max-width: 900px) {
+          .impact-grid,
+          .partner-grid,
+          .nested-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
         @media (max-width: 720px) {
           .topbar,
+          .story-head,
           .ecosystem-head,
           .role-header {
             flex-direction: column;
             align-items: stretch;
           }
 
-          .buttons {
+          .buttons,
+          .story-actions {
             flex-direction: column;
           }
 
@@ -1193,22 +1259,23 @@ export default function App() {
             padding: 18px;
           }
 
-          .credibility {
-            font-size: 14px;
+          .support-line,
+          .trust-bar {
+            font-size: 15px;
           }
         }
       `}</style>
 
       <div className="page">
-        {view === "entrance" ? (
+        {view === "entrance" && (
           <section className="entrance">
-            <img src={heroImage} alt="Farm entrance" className="bg" />
+            <img src={heroImage} alt="Bronson Family Farm" className="bg" />
             <img src={pathwayImage} alt="" className="bg-path" />
             <div className="forest-wash" />
             <div className="shade" />
 
             <div className="topbar">
-              <div className="brand">{t.eyebrow}</div>
+              <div className="brand">{t.location}</div>
 
               <div className="controls">
                 <select
@@ -1226,8 +1293,8 @@ export default function App() {
                 </select>
 
                 {isSpeaking ? (
-                  <button className="ghost-btn" onClick={stopGuidedTour}>
-                    Stop Voice
+                  <button className="ghost-btn" onClick={stopGuidedWalkthrough}>
+                    {t.stopVoice}
                   </button>
                 ) : null}
               </div>
@@ -1235,23 +1302,80 @@ export default function App() {
 
             <div className="content">
               <div className="inner">
-                <div className="eyebrow">{t.heroBadge}</div>
-                <h1>{t.title}</h1>
+                <div className="eyebrow">A place where a seed starts the journey.</div>
+                <h1>{t.headline}</h1>
                 <div className="copy">{t.subtitle}</div>
-                <div className="credibility">{t.credibility}</div>
+                <div className="support-line">{t.supportLine}</div>
+                <div className="trust-bar">{t.trustBar}</div>
 
                 <div className="buttons">
-                  <button className="primary" onClick={() => setView("ecosystem")}>
+                  <button className="primary" onClick={() => setView("story")}>
                     {t.enter}
                   </button>
-                  <button className="secondary" onClick={startGuidedTour}>
-                    {t.tour}
+                  <button className="secondary" onClick={startGuidedWalkthrough}>
+                    {t.walkthrough}
+                  </button>
+                  <button className="secondary" onClick={() => setView("impact")}>
+                    {t.impact}
                   </button>
                 </div>
               </div>
             </div>
           </section>
-        ) : view === "ecosystem" ? (
+        )}
+
+        {view === "story" && (
+          <section
+            className="story-page"
+            style={{
+              backgroundImage: `linear-gradient(to bottom, rgba(10,12,9,0.88), rgba(12,15,12,0.96)), url("${pathwayImage}")`,
+            }}
+          >
+            <div className="story-wrap">
+              <div className="story-head">
+                <div>
+                  <div className="eyebrow">{t.location}</div>
+                  <h1 className="story-title">{t.storyIntroTitle}</h1>
+                  <p className="story-intro">{t.storyIntroText}</p>
+                </div>
+                <div className="controls">
+                  <button className="ghost-btn" onClick={() => setView("entrance")}>
+                    {t.backHome}
+                  </button>
+                </div>
+              </div>
+
+              <div className="story-sequence">
+                <StoryPanel index="01" title={t.rootsTitle} text={t.rootsText} />
+                <StoryPanel index="02" title={t.systemsTitle} text={t.systemsText} />
+                <StoryPanel index="03" title={t.healthTitle} text={t.healthText} />
+                <StoryPanel index="04" title={t.youngstownTitle} text={t.youngstownText} />
+                <StoryPanel index="05" title={t.landTitle} text={t.landText} />
+                <StoryPanel index="06" title={t.trainingTitle} text={t.trainingText} />
+                <StoryPanel
+                  index="07"
+                  title={t.resilienceTitle}
+                  text={t.resilienceText}
+                />
+                <StoryPanel index="08" title={t.missionTitle} text={t.missionText} />
+              </div>
+
+              <div className="story-actions">
+                <button className="primary" onClick={() => setView("ecosystem")}>
+                  {t.ecosystem}
+                </button>
+                <button className="secondary" onClick={() => setView("impact")}>
+                  {t.viewImpact}
+                </button>
+                <button className="secondary" onClick={() => setView("partnerships")}>
+                  {t.viewPartnerships}
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {view === "ecosystem" && (
           <section
             className="ecosystem"
             style={{
@@ -1261,28 +1385,17 @@ export default function App() {
             <div className="ecosystem-wrap">
               <div className="ecosystem-head">
                 <div>
-                  <div className="eyebrow">{t.eyebrow}</div>
+                  <div className="eyebrow">{t.location}</div>
                   <h2 className="ecosystem-title">{t.ecosystemTitle}</h2>
                   <div className="ecosystem-copy">{t.ecosystemText}</div>
                 </div>
 
                 <div className="controls">
-                  <select
-                    className="select"
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value as LanguageCode)}
-                    aria-label={t.language}
-                  >
-                    <option value="en">English</option>
-                    <option value="es">Español</option>
-                    <option value="tl">Tagalog</option>
-                    <option value="it">Italiano</option>
-                    <option value="pat">Patwa</option>
-                    <option value="he">עברית</option>
-                  </select>
-
-                  <button className="ghost-btn" onClick={() => setView("entrance")}>
-                    {t.backToEntrance}
+                  <button className="ghost-btn" onClick={() => setView("story")}>
+                    {t.viewStory}
+                  </button>
+                  <button className="ghost-btn" onClick={() => setView("impact")}>
+                    {t.viewImpact}
                   </button>
                 </div>
               </div>
@@ -1290,49 +1403,68 @@ export default function App() {
               <div className="role-grid">
                 <div className="role-card">
                   <div>
-                    <h3 className="role-name">{t.guest}</h3>
-                    <p className="role-text">{t.guestText}</p>
+                    <h3 className="role-name">{t.roleGuest}</h3>
+                    <p className="role-text">{t.roleGuestText}</p>
                   </div>
                   <a className="role-link" onClick={() => setView("guest")}>
-                    {t.enterRole}
+                    {t.enterAccessPoint}
                   </a>
                 </div>
 
                 <div className="role-card">
                   <div>
-                    <h3 className="role-name">{t.customer}</h3>
-                    <p className="role-text">{t.customerText}</p>
+                    <h3 className="role-name">{t.roleCustomer}</h3>
+                    <p className="role-text">{t.roleCustomerText}</p>
                   </div>
                   <a className="role-link" onClick={() => setView("customer")}>
-                    {t.enterRole}
+                    {t.enterAccessPoint}
                   </a>
                 </div>
 
                 <div className="role-card">
                   <div>
-                    <h3 className="role-name">{t.grower}</h3>
-                    <p className="role-text">{t.growerText}</p>
+                    <h3 className="role-name">{t.roleGrower}</h3>
+                    <p className="role-text">{t.roleGrowerText}</p>
                   </div>
                   <a className="role-link" onClick={() => setView("grower")}>
-                    {t.enterRole}
+                    {t.enterAccessPoint}
                   </a>
                 </div>
 
                 <div className="role-card">
                   <div>
-                    <h3 className="role-name">{t.youth}</h3>
-                    <p className="role-text">{t.youthText}</p>
+                    <h3 className="role-name">{t.roleYouth}</h3>
+                    <p className="role-text">{t.roleYouthText}</p>
                   </div>
                   <a className="role-link" onClick={() => setView("youth")}>
-                    {t.enterRole}
+                    {t.enterAccessPoint}
+                  </a>
+                </div>
+
+                <div className="role-card">
+                  <div>
+                    <h3 className="role-name">{t.roleParent}</h3>
+                    <p className="role-text">{t.roleParentText}</p>
+                  </div>
+                  <a className="role-link" onClick={() => setView("parent")}>
+                    {t.enterAccessPoint}
                   </a>
                 </div>
               </div>
+
+              <div className="story-actions" style={{ marginTop: 28 }}>
+                <button className="secondary" onClick={() => setView("impact")}>
+                  {t.viewImpact}
+                </button>
+                <button className="secondary" onClick={() => setView("partnerships")}>
+                  {t.viewPartnerships}
+                </button>
+              </div>
             </div>
           </section>
-        ) : (
-          renderRoleView()
         )}
+
+        {!["entrance", "story", "ecosystem"].includes(view) && renderRoleView()}
       </div>
     </>
   );
