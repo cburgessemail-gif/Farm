@@ -1705,6 +1705,10 @@ export default function App() {
   const [youthView, setYouthView] = useState<YouthView>("overview");
   const [tourIndex, setTourIndex] = useState(0);
 
+  const entranceRef = useRef<HTMLDivElement | null>(null);
+  const roleRef = useRef<HTMLDivElement | null>(null);
+  const marketplaceRef = useRef<HTMLDivElement | null>(null);
+
   const t = translations[language];
   const clock = useLocalClock();
   const speech = useSpeech();
@@ -1773,13 +1777,36 @@ export default function App() {
     };
   }, []);
 
+  const navigateTo = (nextScreen: ScreenKey, nextRole?: RoleKey) => {
+    setScreen(nextScreen);
+
+    if (nextRole) {
+      setSelectedRole(nextRole);
+      if (nextRole === "youth") {
+        setYouthView("overview");
+      }
+    }
+
+    window.setTimeout(() => {
+      if (nextScreen === "entrance") {
+        entranceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (nextScreen === "role") {
+        roleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (nextScreen === "marketplace") {
+        marketplaceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 40);
+  };
+
   const startTour = () => {
     if (tourAdvanceTimeoutRef.current) {
       window.clearTimeout(tourAdvanceTimeoutRef.current);
     }
     setTourIndex(0);
     speech.setEnabled(true);
-    setScreen("entrance");
+    navigateTo("entrance");
   };
 
   const stopTour = () => {
@@ -1790,9 +1817,7 @@ export default function App() {
   };
 
   const openRole = (role: RoleKey) => {
-    setSelectedRole(role);
-    setScreen("role");
-    if (role === "youth") setYouthView("overview");
+    navigateTo("role", role);
   };
 
   const pageBg = gradientForRole(
@@ -1917,9 +1942,9 @@ export default function App() {
                 alignItems: "center",
               }}
             >
-              <ActionButton label={t.backToEntrance} onClick={() => setScreen("entrance")} />
-              <ActionButton label={t.exploreRoles} onClick={() => setScreen("role")} />
-              <ActionButton label={t.openMarketplace} onClick={() => setScreen("marketplace")} />
+              <ActionButton label={t.backToEntrance} onClick={() => navigateTo("entrance")} />
+              <ActionButton label={t.exploreRoles} onClick={() => navigateTo("role", "guest")} />
+              <ActionButton label={t.openMarketplace} onClick={() => navigateTo("marketplace")} />
               {!speech.enabled ? (
                 <ActionButton label={t.guidedDemo} onClick={startTour} primary />
               ) : (
@@ -1939,7 +1964,7 @@ export default function App() {
         >
           <div style={{ minWidth: 0 }}>
             {screen === "entrance" && (
-              <>
+              <div ref={entranceRef}>
                 <GlassCard>
                   <div
                     style={{
@@ -2031,10 +2056,7 @@ export default function App() {
                   >
                     <ActionButton
                       label={t.enterDemo}
-                      onClick={() => {
-                        setScreen("role");
-                        setSelectedRole("guest");
-                      }}
+                      onClick={() => navigateTo("role", "guest")}
                       primary
                     />
                     <ActionButton label={t.guidedDemo} onClick={startTour} />
@@ -2100,11 +2122,11 @@ export default function App() {
                     </div>
                   </GlassCard>
                 </div>
-              </>
+              </div>
             )}
 
             {screen === "role" && (
-              <>
+              <div ref={roleRef}>
                 <GlassCard>
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
                     <Pill text={t.roleTitle} />
@@ -2150,9 +2172,9 @@ export default function App() {
                           flexWrap: "wrap",
                         }}
                       >
-                        <ActionButton label={t.backToEntrance} onClick={() => setScreen("entrance")} />
+                        <ActionButton label={t.backToEntrance} onClick={() => navigateTo("entrance")} />
                         {selectedRole === "customer" ? (
-                          <ActionButton label={t.openMarketplace} onClick={() => setScreen("marketplace")} primary />
+                          <ActionButton label={t.openMarketplace} onClick={() => navigateTo("marketplace")} primary />
                         ) : null}
                       </div>
                     </div>
@@ -2284,11 +2306,11 @@ export default function App() {
                     </GlassCard>
                   </div>
                 )}
-              </>
+              </div>
             )}
 
             {screen === "marketplace" && (
-              <>
+              <div ref={marketplaceRef}>
                 <GlassCard>
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
                     <Pill text={t.marketplaceTitle} />
@@ -2328,14 +2350,11 @@ export default function App() {
                   >
                     <ActionButton
                       label={t.returnToRoles}
-                      onClick={() => {
-                        setScreen("role");
-                        setSelectedRole("customer");
-                      }}
+                      onClick={() => navigateTo("role", "customer")}
                     />
                     <ActionButton
                       label={t.backToEntrance}
-                      onClick={() => setScreen("entrance")}
+                      onClick={() => navigateTo("entrance")}
                       primary
                     />
                   </div>
@@ -2365,7 +2384,7 @@ export default function App() {
                     </div>
                   </GlassCard>
                 </div>
-              </>
+              </div>
             )}
           </div>
 
