@@ -1644,7 +1644,6 @@ export default function App() {
   const roleContent = t.roleContent[selectedRole];
   const youthContent = t.youthContent[youthView];
   const currentImage = getImageForScreen(screen, selectedRole);
-  const currentRoleCard = roleCards.find((r) => r.key === selectedRole)!;
 
   const timeText = useMemo(() => formatLocalTime(clock, language), [clock, language]);
   const seasonText = getSeasonPulse(clock);
@@ -1722,8 +1721,7 @@ export default function App() {
       dir={t.dir}
       style={{
         minHeight: "100vh",
-        fontFamily:
-          'Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+        fontFamily: 'Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
         color: "#ffffff",
         background: pageBg,
       }}
