@@ -336,6 +336,7 @@ function ActionButton({
         fontWeight: 700,
         fontSize: 14,
         cursor: "pointer",
+        textAlign: "left",
       }}
     >
       {label}
@@ -466,6 +467,32 @@ function CropPlannerPanel() {
         ))}
       </div>
     </Card>
+  );
+}
+
+function DestinationLayout({
+  title,
+  menu,
+  content,
+  aside,
+}: {
+  title: string;
+  menu: React.ReactNode;
+  content: React.ReactNode;
+  aside?: React.ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "280px minmax(0, 1fr) 320px",
+        gap: 18,
+      }}
+    >
+      <Card title={title}>{menu}</Card>
+      <Card title="Destination">{content}</Card>
+      <div style={{ display: "grid", gap: 18 }}>{aside}</div>
+    </div>
   );
 }
 
@@ -807,6 +834,79 @@ export default function App() {
   }
 
   if (screen === "guest") {
+    const menu = (
+      <div style={{ display: "grid", gap: 10 }}>
+        <ActionButton label="Story" onClick={() => setGuestView("story")} active={guestView === "story"} />
+        <ActionButton label="Mission" onClick={() => setGuestView("mission")} active={guestView === "mission"} />
+        <ActionButton label="Events" onClick={() => setGuestView("events")} active={guestView === "events"} />
+        <ActionButton label="Partners" onClick={() => setGuestView("partners")} active={guestView === "partners"} />
+      </div>
+    );
+
+    let content: React.ReactNode = null;
+    if (guestView === "story") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Story">
+            Bronson Family Farm is a place-based ecosystem where land, family, food, and future belong together.
+          </SoftBlock>
+          <SoftBlock>
+            Guests begin by understanding that this farm is not only for growing crops. It is also a place for learning, wellness, participation, and hope.
+          </SoftBlock>
+          <SoftBlock>
+            This destination helps people feel welcomed before they move deeper into the platform.
+          </SoftBlock>
+        </div>
+      );
+    } else if (guestView === "mission") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Mission">
+            The mission is to grow food, strengthen families, restore land, develop people, and create long-term community value.
+          </SoftBlock>
+          <SoftBlock>
+            This is where guests understand why the farm matters beyond agriculture alone.
+          </SoftBlock>
+        </div>
+      );
+    } else if (guestView === "events") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Events">
+            Tours, demonstrations, youth activity, market participation, and community experiences help move people from curiosity into belonging.
+          </SoftBlock>
+          <SoftBlock>
+            This destination should feel like real activity, not a note that events exist.
+          </SoftBlock>
+        </div>
+      );
+    } else {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Partners">
+            Growers, educators, vendors, community supporters, youth partners, and wellness collaborators all have a place in this ecosystem.
+          </SoftBlock>
+          <SoftBlock>
+            This destination shows guests that Bronson Family Farm is built for connection, not isolation.
+          </SoftBlock>
+        </div>
+      );
+    }
+
+    const aside = (
+      <>
+        <WeatherPanel data={weatherByScreen.guest} />
+        <Card title="Go Next">
+          <div style={{ display: "grid", gap: 10 }}>
+            <ActionButton label="Open Customer" onClick={() => navigate("customer")} primary />
+            <ActionButton label="Open Grower" onClick={() => navigate("grower")} />
+            <ActionButton label="Open Youth" onClick={() => navigate("youth")} />
+            <ActionButton label="Open Marketplace" onClick={() => navigate("market")} />
+          </div>
+        </Card>
+      </>
+    );
+
     return (
       <ScreenShell
         screen="guest"
@@ -816,116 +916,84 @@ export default function App() {
       >
         <div style={{ display: "grid", gap: 18 }}>
           {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.45fr) minmax(320px, 0.95fr)",
-              gap: 18,
-            }}
-          >
-            <div style={{ display: "grid", gap: 18 }}>
-              <Card title="Guest Destinations">
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-                  <ActionButton label="Story" onClick={() => setGuestView("story")} active={guestView === "story"} />
-                  <ActionButton label="Mission" onClick={() => setGuestView("mission")} active={guestView === "mission"} />
-                  <ActionButton label="Events" onClick={() => setGuestView("events")} active={guestView === "events"} />
-                  <ActionButton label="Partners" onClick={() => setGuestView("partners")} active={guestView === "partners"} />
-                </div>
-
-                {guestView === "story" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Story">
-                      Bronson Family Farm is a place-based ecosystem where land, family, food, and future belong together.
-                    </SoftBlock>
-                    <SoftBlock>
-                      Guests begin by understanding that this farm is not only for growing crops. It is also a place for learning, wellness, participation, and hope.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This destination helps people feel welcomed before they move deeper into the platform.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {guestView === "mission" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Mission">
-                      The mission is to grow food, strengthen families, restore land, develop people, and create long-term community value.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This is where guests understand why the farm matters beyond agriculture alone.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {guestView === "events" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Events">
-                      Tours, demonstrations, youth activity, market participation, and community experiences help move people from curiosity into belonging.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This destination should feel like real activity, not a note that events exist.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {guestView === "partners" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Partners">
-                      Growers, educators, vendors, community supporters, youth partners, and wellness collaborators all have a place in this ecosystem.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This destination shows guests that Bronson Family Farm is built for connection, not isolation.
-                    </SoftBlock>
-                  </div>
-                )}
-              </Card>
-
-              <Card title="Where Guests Can Go Next">
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                    gap: 12,
-                  }}
-                >
-                  <SoftBlock title="Customer">
-                    Food access, nutrition, recipes, and market pathways.
-                    <div style={{ marginTop: 12 }}>
-                      <ActionButton label="Open Customer" onClick={() => navigate("customer")} primary />
-                    </div>
-                  </SoftBlock>
-                  <SoftBlock title="Grower">
-                    Weather, planner, and field decision tools.
-                    <div style={{ marginTop: 12 }}>
-                      <ActionButton label="Open Grower" onClick={() => navigate("grower")} primary />
-                    </div>
-                  </SoftBlock>
-                  <SoftBlock title="Youth Workforce">
-                    Learning, parent portal, supervisor view.
-                    <div style={{ marginTop: 12 }}>
-                      <ActionButton label="Open Youth" onClick={() => navigate("youth")} primary />
-                    </div>
-                  </SoftBlock>
-                  <SoftBlock title="Marketplace">
-                    Products, education, and community participation.
-                    <div style={{ marginTop: 12 }}>
-                      <ActionButton label="Open Marketplace" onClick={() => navigate("market")} primary />
-                    </div>
-                  </SoftBlock>
-                </div>
-              </Card>
-            </div>
-
-            <div style={{ display: "grid", gap: 18 }}>
-              <WeatherPanel data={weatherByScreen.guest} />
-            </div>
-          </div>
+          <DestinationLayout title="Guest Destinations" menu={menu} content={content} aside={aside} />
         </div>
       </ScreenShell>
     );
   }
 
   if (screen === "customer") {
+    const menu = (
+      <div style={{ display: "grid", gap: 10 }}>
+        <ActionButton label="Produce" onClick={() => setCustomerView("produce")} active={customerView === "produce"} />
+        <ActionButton label="Nutrition" onClick={() => setCustomerView("nutrition")} active={customerView === "nutrition"} />
+        <ActionButton label="Recipes" onClick={() => setCustomerView("recipes")} active={customerView === "recipes"} />
+        <ActionButton label="Marketplace Path" onClick={() => setCustomerView("market")} active={customerView === "market"} />
+      </div>
+    );
+
+    let content: React.ReactNode = null;
+    if (customerView === "produce") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Produce">
+            Tomatoes, collards, cabbage, lettuce, broccoli, peppers, spinach, and greens move from visibility into real food access.
+          </SoftBlock>
+          <SoftBlock>
+            This destination should make food feel present, useful, and close at hand.
+          </SoftBlock>
+        </div>
+      );
+    } else if (customerView === "nutrition") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Nutrition">
+            Natural food supports healthier households and reduces dependence on overprocessed substitutes.
+          </SoftBlock>
+          <SoftBlock>
+            This destination connects fresh food to daily family wellness.
+          </SoftBlock>
+        </div>
+      );
+    } else if (customerView === "recipes") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Recipes">
+            Garden greens bowl, fresh tomato salad, pepper and cabbage skillet, and practical family meal ideas.
+          </SoftBlock>
+          <SoftBlock>
+            This destination helps customers imagine the food already in use.
+          </SoftBlock>
+        </div>
+      );
+    } else {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Marketplace Path">
+            This destination turns interest into action.
+          </SoftBlock>
+          <SoftBlock>
+            Customers can move directly into products, education, community activity, and ordering flow.
+          </SoftBlock>
+          <div>
+            <ActionButton label="Open Marketplace" onClick={() => navigate("market")} primary />
+          </div>
+        </div>
+      );
+    }
+
+    const aside = (
+      <>
+        <WeatherPanel data={weatherByScreen.customer} />
+        <Card title="Learn More">
+          <div style={{ display: "grid", gap: 10 }}>
+            <ActionButton label="Go to Grower Side" onClick={() => navigate("grower")} />
+            <ActionButton label="Go to Marketplace" onClick={() => navigate("market")} primary />
+          </div>
+        </Card>
+      </>
+    );
+
     return (
       <ScreenShell
         screen="customer"
@@ -935,81 +1003,66 @@ export default function App() {
       >
         <div style={{ display: "grid", gap: 18 }}>
           {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.45fr) minmax(320px, 0.95fr)",
-              gap: 18,
-            }}
-          >
-            <div style={{ display: "grid", gap: 18 }}>
-              <Card title="Customer Destinations">
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-                  <ActionButton label="Produce" onClick={() => setCustomerView("produce")} active={customerView === "produce"} />
-                  <ActionButton label="Nutrition" onClick={() => setCustomerView("nutrition")} active={customerView === "nutrition"} />
-                  <ActionButton label="Recipes" onClick={() => setCustomerView("recipes")} active={customerView === "recipes"} />
-                  <ActionButton label="Marketplace Path" onClick={() => setCustomerView("market")} active={customerView === "market"} />
-                </div>
-
-                {customerView === "produce" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Fresh Availability">
-                      Tomatoes, collards, cabbage, lettuce, broccoli, peppers, spinach, and greens move from visibility into real food access.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This destination should make food feel present, useful, and close at hand.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {customerView === "nutrition" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Nutrition">
-                      Natural food supports healthier households and reduces dependence on overprocessed substitutes.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This destination connects fresh food to daily family wellness.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {customerView === "recipes" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Recipes">
-                      Garden greens bowl, fresh tomato salad, pepper and cabbage skillet, and practical family meal ideas.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This destination helps customers imagine the food already in use.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {customerView === "market" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Marketplace Path">
-                      This destination turns interest into action.
-                    </SoftBlock>
-                    <SoftBlock>
-                      Customers can move directly into products, education, community activity, and ordering flow.
-                    </SoftBlock>
-                    <div>
-                      <ActionButton label="Open Marketplace" onClick={() => navigate("market")} primary />
-                    </div>
-                  </div>
-                )}
-              </Card>
-            </div>
-
-            <div style={{ display: "grid", gap: 18 }}>
-              <WeatherPanel data={weatherByScreen.customer} />
-            </div>
-          </div>
+          <DestinationLayout title="Customer Destinations" menu={menu} content={content} aside={aside} />
         </div>
       </ScreenShell>
     );
   }
 
   if (screen === "grower") {
+    const menu = (
+      <div style={{ display: "grid", gap: 10 }}>
+        <ActionButton label="Weather" onClick={() => setGrowerView("weather")} active={growerView === "weather"} />
+        <ActionButton label="Crop Planner" onClick={() => setGrowerView("planner")} active={growerView === "planner"} />
+        <ActionButton label="Field Notes" onClick={() => setGrowerView("notes")} active={growerView === "notes"} />
+        <ActionButton label="Seasonal Priorities" onClick={() => setGrowerView("season")} active={growerView === "season"} />
+      </div>
+    );
+
+    let content: React.ReactNode = null;
+    if (growerView === "weather") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Weather Use">
+            Weather should support actual decisions: transplant checks, irrigation timing, field movement, and protection needs.
+          </SoftBlock>
+          <SoftBlock>
+            This destination makes the weather panel feel operational rather than decorative.
+          </SoftBlock>
+        </div>
+      );
+    } else if (growerView === "planner") {
+      content = <CropPlannerPanel />;
+    } else if (growerView === "notes") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Field Notes">
+            Clay-heavy areas require careful moisture and access planning.
+          </SoftBlock>
+          <SoftBlock>
+            Notes should help a grower move from observation to action.
+          </SoftBlock>
+        </div>
+      );
+    } else {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Seasonal Priorities">
+            Transplant review, succession planting, irrigation planning, and market continuity all belong here.
+          </SoftBlock>
+          <SoftBlock>
+            This destination keeps the grower view tied to the rhythm of the season.
+          </SoftBlock>
+        </div>
+      );
+    }
+
+    const aside = (
+      <>
+        <WeatherPanel data={weatherByScreen.grower} />
+      </>
+    );
+
     return (
       <ScreenShell
         screen="grower"
@@ -1019,69 +1072,63 @@ export default function App() {
       >
         <div style={{ display: "grid", gap: 18 }}>
           {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.45fr) minmax(320px, 0.95fr)",
-              gap: 18,
-            }}
-          >
-            <div style={{ display: "grid", gap: 18 }}>
-              <Card title="Grower Destinations">
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-                  <ActionButton label="Weather" onClick={() => setGrowerView("weather")} active={growerView === "weather"} />
-                  <ActionButton label="Crop Planner" onClick={() => setGrowerView("planner")} active={growerView === "planner"} />
-                  <ActionButton label="Field Notes" onClick={() => setGrowerView("notes")} active={growerView === "notes"} />
-                  <ActionButton label="Seasonal Priorities" onClick={() => setGrowerView("season")} active={growerView === "season"} />
-                </div>
-
-                {growerView === "weather" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Weather Use">
-                      Weather should support actual decisions: transplant checks, irrigation timing, field movement, and protection needs.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This destination makes the weather panel feel operational rather than decorative.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {growerView === "planner" && <CropPlannerPanel />}
-
-                {growerView === "notes" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Field Notes">
-                      Clay-heavy areas require careful moisture and access planning.
-                    </SoftBlock>
-                    <SoftBlock>
-                      Notes should help a grower move from observation to action.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {growerView === "season" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Seasonal Priorities">
-                      Transplant review, succession planting, irrigation planning, and market continuity all belong here.
-                    </SoftBlock>
-                    <SoftBlock>
-                      This destination keeps the grower view tied to the rhythm of the season.
-                    </SoftBlock>
-                  </div>
-                )}
-              </Card>
-            </div>
-
-            <div style={{ display: "grid", gap: 18 }}>
-              <WeatherPanel data={weatherByScreen.grower} />
-            </div>
-          </div>
+          <DestinationLayout title="Grower Destinations" menu={menu} content={content} aside={aside} />
         </div>
       </ScreenShell>
     );
   }
 
   if (screen === "producer") {
+    const menu = (
+      <div style={{ display: "grid", gap: 10 }}>
+        <ActionButton label="Products" onClick={() => setProducerView("products")} active={producerView === "products"} />
+        <ActionButton label="Events" onClick={() => setProducerView("events")} active={producerView === "events"} />
+        <ActionButton label="Storytelling" onClick={() => setProducerView("storytelling")} active={producerView === "storytelling"} />
+        <ActionButton label="Collaboration" onClick={() => setProducerView("collaboration")} active={producerView === "collaboration"} />
+      </div>
+    );
+
+    let content: React.ReactNode = null;
+    if (producerView === "products") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Products">
+            Bubble Babies™, seedlings, educational kits, seasonal bundles, and event-ready offerings.
+          </SoftBlock>
+        </div>
+      );
+    } else if (producerView === "events") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Events">
+            Market days, demonstrations, booths, and public-facing experiences extend the value of what is produced.
+          </SoftBlock>
+        </div>
+      );
+    } else if (producerView === "storytelling") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Storytelling">
+            Products gain power when they carry place, purpose, and a visible community story.
+          </SoftBlock>
+        </div>
+      );
+    } else {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Collaboration">
+            This destination connects vendors, educators, events, and community partners into a wider value chain.
+          </SoftBlock>
+        </div>
+      );
+    }
+
+    const aside = (
+      <>
+        <WeatherPanel data={weatherByScreen.producer} />
+      </>
+    );
+
     return (
       <ScreenShell
         screen="producer"
@@ -1091,52 +1138,64 @@ export default function App() {
       >
         <div style={{ display: "grid", gap: 18 }}>
           {navBar}
-          <Card title="Producer Destinations">
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-              <ActionButton label="Products" onClick={() => setProducerView("products")} active={producerView === "products"} />
-              <ActionButton label="Events" onClick={() => setProducerView("events")} active={producerView === "events"} />
-              <ActionButton label="Storytelling" onClick={() => setProducerView("storytelling")} active={producerView === "storytelling"} />
-              <ActionButton label="Collaboration" onClick={() => setProducerView("collaboration")} active={producerView === "collaboration"} />
-            </div>
-
-            {producerView === "products" && (
-              <div style={{ display: "grid", gap: 12 }}>
-                <SoftBlock title="Products">
-                  Bubble Babies™, seedlings, educational kits, seasonal bundles, and event-ready offerings.
-                </SoftBlock>
-              </div>
-            )}
-
-            {producerView === "events" && (
-              <div style={{ display: "grid", gap: 12 }}>
-                <SoftBlock title="Events">
-                  Market days, demonstrations, booths, and public-facing experiences extend the value of what is produced.
-                </SoftBlock>
-              </div>
-            )}
-
-            {producerView === "storytelling" && (
-              <div style={{ display: "grid", gap: 12 }}>
-                <SoftBlock title="Storytelling">
-                  Products gain power when they carry place, purpose, and a visible community story.
-                </SoftBlock>
-              </div>
-            )}
-
-            {producerView === "collaboration" && (
-              <div style={{ display: "grid", gap: 12 }}>
-                <SoftBlock title="Collaboration">
-                  This destination connects vendors, educators, events, and community partners into a wider value chain.
-                </SoftBlock>
-              </div>
-            )}
-          </Card>
+          <DestinationLayout title="Producer Destinations" menu={menu} content={content} aside={aside} />
         </div>
       </ScreenShell>
     );
   }
 
   if (screen === "youth") {
+    const menu = (
+      <div style={{ display: "grid", gap: 10 }}>
+        <ActionButton label="Overview" onClick={() => setYouthView("overview")} active={youthView === "overview"} />
+        <ActionButton label="Parent Portal" onClick={() => setYouthView("parent")} active={youthView === "parent"} />
+        <ActionButton label="Supervisor View" onClick={() => setYouthView("supervisor")} active={youthView === "supervisor"} />
+        <ActionButton label="Daily Focus" onClick={() => setYouthView("daily")} active={youthView === "daily"} />
+      </div>
+    );
+
+    let content: React.ReactNode = null;
+    if (youthView === "overview") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Overview">
+            Hands-on work, visible contribution, confidence-building, responsibility, and exposure to real opportunity.
+          </SoftBlock>
+        </div>
+      );
+    } else if (youthView === "parent") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Parent Portal">
+            Family visibility into expectations, growth, communication, and the purpose of participation.
+          </SoftBlock>
+        </div>
+      );
+    } else if (youthView === "supervisor") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Supervisor View">
+            Daily oversight, progress awareness, intervention planning, and support coordination.
+          </SoftBlock>
+        </div>
+      );
+    } else {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Daily Focus">
+            Garden preparation, professional habits, teamwork, responsibility, and visible contribution.
+          </SoftBlock>
+        </div>
+      );
+    }
+
+    const aside = (
+      <>
+        <WeatherPanel data={weatherByScreen.youth} />
+        <CropPlannerPanel />
+      </>
+    );
+
     return (
       <ScreenShell
         screen="youth"
@@ -1146,67 +1205,63 @@ export default function App() {
       >
         <div style={{ display: "grid", gap: 18 }}>
           {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.45fr) minmax(320px, 0.95fr)",
-              gap: 18,
-            }}
-          >
-            <div style={{ display: "grid", gap: 18 }}>
-              <Card title="Youth Workforce Destinations">
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-                  <ActionButton label="Overview" onClick={() => setYouthView("overview")} active={youthView === "overview"} />
-                  <ActionButton label="Parent Portal" onClick={() => setYouthView("parent")} active={youthView === "parent"} />
-                  <ActionButton label="Supervisor View" onClick={() => setYouthView("supervisor")} active={youthView === "supervisor"} />
-                  <ActionButton label="Daily Focus" onClick={() => setYouthView("daily")} active={youthView === "daily"} />
-                </div>
-
-                {youthView === "overview" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Overview">
-                      Hands-on work, visible contribution, confidence-building, responsibility, and exposure to real opportunity.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {youthView === "parent" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Parent Portal">
-                      Family visibility into expectations, growth, communication, and the purpose of participation.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {youthView === "supervisor" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Supervisor View">
-                      Daily oversight, progress awareness, intervention planning, and support coordination.
-                    </SoftBlock>
-                  </div>
-                )}
-
-                {youthView === "daily" && (
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <SoftBlock title="Daily Focus">
-                      Garden preparation, professional habits, teamwork, responsibility, and visible contribution.
-                    </SoftBlock>
-                  </div>
-                )}
-              </Card>
-            </div>
-
-            <div style={{ display: "grid", gap: 18 }}>
-              <WeatherPanel data={weatherByScreen.youth} />
-              <CropPlannerPanel />
-            </div>
-          </div>
+          <DestinationLayout title="Youth Destinations" menu={menu} content={content} aside={aside} />
         </div>
       </ScreenShell>
     );
   }
 
   if (screen === "admin") {
+    const menu = (
+      <div style={{ display: "grid", gap: 10 }}>
+        <ActionButton label="Participation" onClick={() => setAdminView("participation")} active={adminView === "participation"} />
+        <ActionButton label="Operations" onClick={() => setAdminView("operations")} active={adminView === "operations"} />
+        <ActionButton label="Planning" onClick={() => setAdminView("planning")} active={adminView === "planning"} />
+        <ActionButton label="Growth" onClick={() => setAdminView("growth")} active={adminView === "growth"} />
+      </div>
+    );
+
+    let content: React.ReactNode = null;
+    if (adminView === "participation") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Participation">
+            Guests, customers, youth, growers, and partners all move through visible pathways that should be coordinated together.
+          </SoftBlock>
+        </div>
+      );
+    } else if (adminView === "operations") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Operations">
+            Crop timing, marketplace readiness, event coordination, and pathway continuity belong here.
+          </SoftBlock>
+        </div>
+      );
+    } else if (adminView === "planning") {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Planning">
+            This destination keeps leadership focused on what happens next, not just what is happening now.
+          </SoftBlock>
+        </div>
+      );
+    } else {
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <SoftBlock title="Growth">
+            High ecosystem interest, pathway expansion, and long-term place-based value building should remain visible.
+          </SoftBlock>
+        </div>
+      );
+    }
+
+    const aside = (
+      <>
+        <WeatherPanel data={weatherByScreen.admin} />
+      </>
+    );
+
     return (
       <ScreenShell
         screen="admin"
@@ -1216,50 +1271,61 @@ export default function App() {
       >
         <div style={{ display: "grid", gap: 18 }}>
           {navBar}
-          <Card title="Leadership Destinations">
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-              <ActionButton label="Participation" onClick={() => setAdminView("participation")} active={adminView === "participation"} />
-              <ActionButton label="Operations" onClick={() => setAdminView("operations")} active={adminView === "operations"} />
-              <ActionButton label="Planning" onClick={() => setAdminView("planning")} active={adminView === "planning"} />
-              <ActionButton label="Growth" onClick={() => setAdminView("growth")} active={adminView === "growth"} />
-            </div>
-
-            {adminView === "participation" && (
-              <div style={{ display: "grid", gap: 12 }}>
-                <SoftBlock title="Participation">
-                  Guests, customers, youth, growers, and partners all move through visible pathways that should be coordinated together.
-                </SoftBlock>
-              </div>
-            )}
-
-            {adminView === "operations" && (
-              <div style={{ display: "grid", gap: 12 }}>
-                <SoftBlock title="Operations">
-                  Crop timing, marketplace readiness, event coordination, and pathway continuity belong here.
-                </SoftBlock>
-              </div>
-            )}
-
-            {adminView === "planning" && (
-              <div style={{ display: "grid", gap: 12 }}>
-                <SoftBlock title="Planning">
-                  This destination keeps leadership focused on what happens next, not just what is happening now.
-                </SoftBlock>
-              </div>
-            )}
-
-            {adminView === "growth" && (
-              <div style={{ display: "grid", gap: 12 }}>
-                <SoftBlock title="Growth">
-                  High ecosystem interest, pathway expansion, and long-term place-based value building should remain visible.
-                </SoftBlock>
-              </div>
-            )}
-          </Card>
+          <DestinationLayout title="Leadership Destinations" menu={menu} content={content} aside={aside} />
         </div>
       </ScreenShell>
     );
   }
+
+  const marketMenu = (
+    <div style={{ display: "grid", gap: 10 }}>
+      <ActionButton label="Products" onClick={() => setMarketView("products")} active={marketView === "products"} />
+      <ActionButton label="Education" onClick={() => setMarketView("education")} active={marketView === "education"} />
+      <ActionButton label="Community" onClick={() => setMarketView("community")} active={marketView === "community"} />
+      <ActionButton label="Ordering Path" onClick={() => setMarketView("ordering")} active={marketView === "ordering"} />
+    </div>
+  );
+
+  let marketContent: React.ReactNode = null;
+  if (marketView === "products") {
+    marketContent = (
+      <div style={{ display: "grid", gap: 12 }}>
+        <SoftBlock title="Products">
+          Produce, seedlings, garden-focused offerings, and seasonal visibility belong here.
+        </SoftBlock>
+      </div>
+    );
+  } else if (marketView === "education") {
+    marketContent = (
+      <div style={{ display: "grid", gap: 12 }}>
+        <SoftBlock title="Education">
+          Recipes, nutrition support, healthier food habits, and practical family use should remain close to the products themselves.
+        </SoftBlock>
+      </div>
+    );
+  } else if (marketView === "community") {
+    marketContent = (
+      <div style={{ display: "grid", gap: 12 }}>
+        <SoftBlock title="Community">
+          Pickup days, demonstrations, and ecosystem participation extend the market beyond buying alone.
+        </SoftBlock>
+      </div>
+    );
+  } else {
+    marketContent = (
+      <div style={{ display: "grid", gap: 12 }}>
+        <SoftBlock title="Ordering Path">
+          This destination should become the clear route into actual product action and repeat engagement.
+        </SoftBlock>
+      </div>
+    );
+  }
+
+  const marketAside = (
+    <>
+      <WeatherPanel data={weatherByScreen.market} />
+    </>
+  );
 
   return (
     <ScreenShell
@@ -1270,46 +1336,7 @@ export default function App() {
     >
       <div style={{ display: "grid", gap: 18 }}>
         {navBar}
-        <Card title="Marketplace Destinations">
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-            <ActionButton label="Products" onClick={() => setMarketView("products")} active={marketView === "products"} />
-            <ActionButton label="Education" onClick={() => setMarketView("education")} active={marketView === "education"} />
-            <ActionButton label="Community" onClick={() => setMarketView("community")} active={marketView === "community"} />
-            <ActionButton label="Ordering Path" onClick={() => setMarketView("ordering")} active={marketView === "ordering"} />
-          </div>
-
-          {marketView === "products" && (
-            <div style={{ display: "grid", gap: 12 }}>
-              <SoftBlock title="Products">
-                Produce, seedlings, garden-focused offerings, and seasonal visibility belong here.
-              </SoftBlock>
-            </div>
-          )}
-
-          {marketView === "education" && (
-            <div style={{ display: "grid", gap: 12 }}>
-              <SoftBlock title="Education">
-                Recipes, nutrition support, healthier food habits, and practical family use should remain close to the products themselves.
-              </SoftBlock>
-            </div>
-          )}
-
-          {marketView === "community" && (
-            <div style={{ display: "grid", gap: 12 }}>
-              <SoftBlock title="Community">
-                Pickup days, demonstrations, and ecosystem participation extend the market beyond buying alone.
-              </SoftBlock>
-            </div>
-          )}
-
-          {marketView === "ordering" && (
-            <div style={{ display: "grid", gap: 12 }}>
-              <SoftBlock title="Ordering Path">
-                This destination should become the clear route into actual product action and repeat engagement.
-              </SoftBlock>
-            </div>
-          )}
-        </Card>
+        <DestinationLayout title="Marketplace Destinations" menu={marketMenu} content={marketContent} aside={marketAside} />
       </div>
     </ScreenShell>
   );
