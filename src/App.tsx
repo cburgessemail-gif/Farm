@@ -36,7 +36,7 @@ const IMAGES = {
   grower: "/Samerra4.jpg",
   valueAdded: "/Samerra5.jpg",
   youth: "/large (11).jpg",
-  supervisor: "/large (1).jpg",
+  volunteers: "/Samaeera1.jpg",
   community: "/WolfSpider.jpg",
   education: "/Samerra5.jpg",
   wellness: "/Samaeera2.jpg",
@@ -47,13 +47,11 @@ const IMAGES = {
   logistics: "/Samerra4.jpg",
   airport: "/GrowArea.jpg",
   produce: "/culinary_edibleflowers2.jpeg",
-  volunteers: "/Samaeera1.jpg",
   training: "/Samerra5.jpg",
   recipes: "/culinary_mushrooms.jpeg",
   nutrition: "/culinary_edibleflowers.jpeg",
   future: "/GrowArea2.jpg",
   legacy: "/Samerra4.jpg",
-  growArea: "/GrowArea.jpg",
 };
 
 type LanguageKey = "en" | "es" | "tl" | "it" | "patwa" | "he";
@@ -66,7 +64,7 @@ type ScreenKey =
   | "grower"
   | "valueAdded"
   | "youth"
-  | "supervisor"
+  | "volunteers"
   | "planner"
   | "events"
   | "wellness";
@@ -80,7 +78,7 @@ const SCREEN_ORDER: ScreenKey[] = [
   "grower",
   "valueAdded",
   "youth",
-  "supervisor",
+  "volunteers",
   "planner",
   "events",
   "wellness",
@@ -95,7 +93,7 @@ const SCREEN_IMAGES: Record<ScreenKey, string> = {
   grower: IMAGES.grower,
   valueAdded: IMAGES.valueAdded,
   youth: IMAGES.youth,
-  supervisor: IMAGES.supervisor,
+  volunteers: IMAGES.volunteers,
   planner: IMAGES.planning,
   events: IMAGES.events,
   wellness: IMAGES.wellness,
@@ -122,7 +120,7 @@ const T: Record<
       grower: "Grower pathway",
       valueAdded: "Value-Added Producer pathway",
       youth: "Youth Workforce pathway",
-      supervisor: "Supervisor pathway",
+      volunteers: "Volunteer pathway",
       planner: "Crop Planning Center",
       events: "Events and community experiences",
       wellness: "Health, nutrition, and food education",
@@ -135,8 +133,8 @@ const T: Record<
       marketplace: "The marketplace helps people move from interest to action by connecting food access, local purchasing, and the larger journey toward self-sufficiency and community resilience.",
       grower: "Growers use planning, timing, collaboration, and market access tools that support real production, stronger operations, and income generation.",
       valueAdded: "Value-added producers can turn raw products into stronger brands, packaged goods, demonstrations, and expanded local market opportunities.",
-      youth: "Youth workforce opens a living classroom where agriculture, technology, teamwork, and entrepreneurship prepare young people for future success.",
-      supervisor: "Supervisor supports youth development through structure, accountability, logistics, wellness guidance, and leadership.",
+      youth: "Enter a structured living classroom where agriculture, teamwork, responsibility, and entrepreneurship prepare young people for future success, with Parent Portal access and supervisor support built into the program.",
+      volunteers: "Volunteers enter a welcoming service pathway where community members can support food growing, events, hospitality, setup, and shared learning while contributing to something larger than themselves.",
       planner: "This planning center helps transform land, labor, seeds, weather, and timing into real food production, income opportunities, training experiences, and reliable community supply.",
       events: "Events bring people back for learning, shopping, demonstrations, relationship-building, and shared community experience.",
       wellness: "This pathway helps people connect fresh food with practical wellness, healthier choices, recipes, diabetes awareness, and everyday life.",
@@ -154,7 +152,7 @@ const T: Record<
       grower: "Ruta del productor",
       valueAdded: "Ruta del productor con valor agregado",
       youth: "Ruta de la fuerza laboral juvenil",
-      supervisor: "Ruta del supervisor",
+      volunteers: "Ruta de voluntariado",
       planner: "Centro de planificación de cultivos",
       events: "Eventos y experiencias comunitarias",
       wellness: "Salud, nutrición y educación alimentaria",
@@ -167,8 +165,8 @@ const T: Record<
       marketplace: "El mercado ayuda a las personas a pasar del interés a la acción conectando acceso a alimentos, compras locales y el camino hacia la autosuficiencia.",
       grower: "Los productores utilizan planificación, tiempos, colaboración y acceso al mercado para apoyar producción real, operaciones más fuertes e ingresos.",
       valueAdded: "Los productores con valor agregado pueden transformar productos crudos en marcas más fuertes, productos empacados, demostraciones y mayores oportunidades locales.",
-      youth: "La fuerza laboral juvenil abre un aula viva donde la agricultura, la tecnología, el trabajo en equipo y el emprendimiento preparan a los jóvenes para el éxito futuro.",
-      supervisor: "El supervisor apoya el desarrollo juvenil mediante estructura, responsabilidad, logística, orientación de bienestar y liderazgo.",
+      youth: "Entre en un aula viva y estructurada donde la agricultura, el trabajo en equipo, la responsabilidad y el emprendimiento preparan a los jóvenes para el futuro, con Portal para Padres y apoyo de supervisión integrados.",
+      volunteers: "Los voluntarios entran en una ruta acogedora de servicio donde pueden apoyar el cultivo, los eventos, la hospitalidad y el aprendizaje compartido.",
       planner: "Este centro de planificación ayuda a transformar tierra, trabajo, semillas, clima y tiempo en producción real de alimentos, oportunidades de ingresos y suministro comunitario confiable.",
       events: "Los eventos hacen que las personas regresen para aprender, comprar, ver demostraciones y vivir experiencias comunitarias compartidas.",
       wellness: "Esta ruta ayuda a las personas a conectar alimentos frescos con bienestar práctico, mejores decisiones, recetas, conciencia sobre la diabetes y la vida cotidiana.",
@@ -186,7 +184,7 @@ const T: Record<
       grower: "Landas ng grower",
       valueAdded: "Landas ng value-added producer",
       youth: "Landas ng youth workforce",
-      supervisor: "Landas ng supervisor",
+      volunteers: "Landas ng volunteer",
       planner: "Sentro ng crop planning",
       events: "Mga event at karanasang pangkomunidad",
       wellness: "Kalusugan, nutrisyon, at edukasyon sa pagkain",
@@ -199,8 +197,8 @@ const T: Record<
       marketplace: "Tinutulungan ng marketplace ang mga tao na kumilos mula sa interes tungo sa pagbili habang nakakabit pa rin sa mas malaking ecosystem.",
       grower: "Ginagamit ng mga grower ang planning, timing, collaboration, at market access para sa totoong production, mas matatag na operasyon, at income generation.",
       valueAdded: "Maaaring gawing mas malalakas na brand, packaged goods, demonstrations, at mas malaking local market opportunity ang mga raw product.",
-      youth: "Binubuksan ng youth workforce ang isang buhay na classroom kung saan ang agrikultura, teknolohiya, teamwork, at entrepreneurship ay naghahanda sa kabataan para sa tagumpay.",
-      supervisor: "Sinusuportahan ng supervisor ang youth development sa pamamagitan ng istruktura, accountability, logistics, wellness guidance, at leadership.",
+      youth: "Pumasok sa isang organisadong buhay na classroom kung saan ang agrikultura, teamwork, responsibilidad, at entrepreneurship ay naghahanda sa kabataan para sa kinabukasan, kasama ang Parent Portal at supervisor support.",
+      volunteers: "Ang mga volunteer ay pumapasok sa isang magiliw na service pathway kung saan makatutulong sila sa pagtatanim, events, hospitality, at shared learning.",
       planner: "Tinutulungan ng planning center na ito na gawing totoong food production, income opportunity, training experience, at maaasahang community supply ang lupa, paggawa, buto, panahon, at timing.",
       events: "Nagbabalik ang mga tao dahil sa mga event para sa pagkatuto, pamimili, demonstrations, relationship-building, at shared community experience.",
       wellness: "Tinutulungan ng pathway na ito ang mga tao na ikonekta ang sariwang pagkain sa praktikal na wellness, mas mabubuting pagpili, recipes, diabetes awareness, at araw-araw na buhay.",
@@ -218,7 +216,7 @@ const T: Record<
       grower: "Percorso coltivatore",
       valueAdded: "Percorso produttore a valore aggiunto",
       youth: "Percorso forza lavoro giovanile",
-      supervisor: "Percorso supervisore",
+      volunteers: "Percorso volontari",
       planner: "Centro di pianificazione delle colture",
       events: "Eventi ed esperienze della comunità",
       wellness: "Salute, nutrizione ed educazione alimentare",
@@ -231,8 +229,8 @@ const T: Record<
       marketplace: "Il marketplace aiuta le persone a passare dall'interesse all'azione collegando accesso al cibo, acquisti locali e il percorso verso l'autosufficienza.",
       grower: "I coltivatori usano pianificazione, tempi, collaborazione e accesso al mercato per sostenere produzione reale, operazioni più forti e generazione di reddito.",
       valueAdded: "I produttori a valore aggiunto possono trasformare prodotti grezzi in marchi più forti, prodotti confezionati, dimostrazioni e maggiori opportunità locali.",
-      youth: "La forza lavoro giovanile apre una classe viva dove agricoltura, tecnologia, lavoro di squadra e imprenditorialità preparano i giovani al successo futuro.",
-      supervisor: "Il supervisore sostiene lo sviluppo dei giovani attraverso struttura, responsabilità, logistica, orientamento al benessere e leadership.",
+      youth: "Entra in una classe viva e strutturata dove agricoltura, lavoro di squadra, responsabilità e imprenditorialità preparano i giovani al futuro, con Portale Genitori e supporto del supervisore integrati.",
+      volunteers: "I volontari entrano in un percorso accogliente di servizio dove possono sostenere coltivazione, eventi, ospitalità e apprendimento condiviso.",
       planner: "Questo centro di pianificazione aiuta a trasformare terra, lavoro, semi, meteo e tempi in vera produzione alimentare, opportunità di reddito, esperienze formative e fornitura affidabile alla comunità.",
       events: "Gli eventi riportano le persone per imparare, acquistare, vedere dimostrazioni, costruire relazioni e condividere esperienze comunitarie.",
       wellness: "Questo percorso aiuta le persone a collegare il cibo fresco al benessere pratico, a scelte migliori, ricette, consapevolezza del diabete e vita quotidiana.",
@@ -250,7 +248,7 @@ const T: Record<
       grower: "Grower pathway",
       valueAdded: "Value-added producer pathway",
       youth: "Youth workforce pathway",
-      supervisor: "Supervisor pathway",
+      volunteers: "Volunteer pathway",
       planner: "Crop planning center",
       events: "Events an community experiences",
       wellness: "Health, nutrition, an food education",
@@ -263,8 +261,8 @@ const T: Record<
       marketplace: "Di marketplace help people move from interest to action by connecting food access, local buying, an di bigger journey toward self-sufficiency.",
       grower: "Growers use planning, timing, collaboration, an market access fi support real production, stronger operation, an income generation.",
       valueAdded: "Value-added producers can turn raw product into stronger brand, packaged goods, demonstrations, an bigger local market opportunity.",
-      youth: "Youth workforce open up a living classroom weh agriculture, technology, teamwork, an entrepreneurship prepare young people fi future success.",
-      supervisor: "Supervisor support youth development through structure, accountability, logistics, wellness guidance, an leadership.",
+      youth: "Step into a structured living classroom weh agriculture, teamwork, responsibility, an entrepreneurship prepare young people fi future success, wid Parent Portal access an supervisor support built in.",
+      volunteers: "Volunteers step into a welcoming service pathway fi support growing, events, hospitality, setup, an shared learning.",
       planner: "Dis planning center help turn land, labor, seeds, weather, an timing into real food production, income opportunity, training experience, an reliable community supply.",
       events: "Events bring people back fi learning, shopping, demonstrations, relationship-building, an shared community experience.",
       wellness: "Dis pathway help people connect fresh food wid practical wellness, better choices, recipes, diabetes awareness, an everyday life.",
@@ -282,7 +280,7 @@ const T: Record<
       grower: "מסלול מגדל",
       valueAdded: "מסלול יצרן בעל ערך מוסף",
       youth: "מסלול כוח עבודה לנוער",
-      supervisor: "מסלול מפקח",
+      volunteers: "מסלול מתנדבים",
       planner: "מרכז תכנון גידולים",
       events: "אירועים וחוויות קהילתיות",
       wellness: "בריאות, תזונה וחינוך למזון",
@@ -295,8 +293,8 @@ const T: Record<
       marketplace: "השוק עוזר לאנשים לעבור מעניין לפעולה על ידי חיבור בין גישה למזון, רכישה מקומית והדרך לעצמאות.",
       grower: "מגדלים משתמשים בתכנון, תזמון, שיתוף פעולה וגישה לשוק כדי לתמוך בייצור אמיתי, בפעילות חזקה יותר ובהכנסה.",
       valueAdded: "יצרנים בעלי ערך מוסף יכולים להפוך מוצרים גולמיים למותגים חזקים יותר, מוצרים ארוזים, הדגמות והזדמנויות מקומיות רחבות יותר.",
-      youth: "כוח העבודה לנוער פותח כיתה חיה שבה חקלאות, טכנולוגיה, עבודת צוות ויזמות מכינות צעירים להצלחה עתידית.",
-      supervisor: "המפקח תומך בפיתוח הנוער באמצעות מבנה, אחריות, לוגיסטיקה, הכוונת רווחה ומנהיגות.",
+      youth: "היכנסו לכיתה חיה ומובנית שבה חקלאות, עבודת צוות, אחריות ויזמות מכינות צעירים לעתיד, עם גישת פורטל הורים ותמיכת מפקח מובנות בתוכנית.",
+      volunteers: "מתנדבים נכנסים למסלול שירות מזמין שבו הם יכולים לתמוך בגידול, באירועים, באירוח ובלמידה משותפת.",
       planner: "מרכז התכנון הזה מסייע להפוך אדמה, עבודה, זרעים, מזג אוויר ותזמון לייצור מזון אמיתי, להזדמנויות הכנסה, להכשרה ולאספקה קהילתית אמינה.",
       events: "אירועים מחזירים אנשים ללמידה, קניות, הדגמות, בניית קשרים וחוויה קהילתית משותפת.",
       wellness: "המסלול הזה עוזר לאנשים לחבר בין מזון טרי לרווחה מעשית, לבחירות טובות יותר, למתכונים, למודעות לסוכרת ולחיי היומיום.",
@@ -749,19 +747,55 @@ function App() {
   const prevScreen = () => goto(SCREEN_ORDER[(currentIndex - 1 + SCREEN_ORDER.length) % SCREEN_ORDER.length]);
 
   const roleTiles = [
-    { key: "guest" as ScreenKey, title: "Guest", text: "Discover the farm, the story, the land, events, and the airport-connected grow areas.", image: IMAGES.guest, next: ["Story", "Events", "Gallery"] },
-    { key: "customer" as ScreenKey, title: "Customer", text: "Move quickly to GrownBy, then return for recipes, nutrition, and food guidance.", image: IMAGES.customer, next: ["Marketplace", "Recipes", "Nutrition"] },
-    { key: "grower" as ScreenKey, title: "Grower", text: "Access planning, seasonal guidance, training, and ecosystem support.", image: IMAGES.grower, next: ["Planner", "Seasonal Guidance", "Coordination"] },
-    { key: "valueAdded" as ScreenKey, title: "Value-Added Producer", text: "Explore branding, packaging, demonstrations, and local market opportunity.", image: IMAGES.valueAdded, next: ["Branding", "Packaging", "Market Access"] },
-    { key: "youth" as ScreenKey, title: "Youth Workforce", text: "See the farm as a living classroom for agriculture, STEAM, teamwork, and entrepreneurship.", image: IMAGES.youth, next: ["Learning", "STEAM", "Responsibilities"] },
-    { key: "supervisor" as ScreenKey, title: "Supervisor", text: "Support youth workforce through scheduling, oversight, wellness support, and accountability.", image: IMAGES.supervisor, next: ["Scheduling", "Check-In", "Support"] },
+    {
+      key: "guest" as ScreenKey,
+      title: "Guest",
+      text: "Discover the farm, the story, the land, events, and the airport-connected grow areas.",
+      image: IMAGES.guest,
+      next: ["Story", "Events", "Gallery"],
+    },
+    {
+      key: "customer" as ScreenKey,
+      title: "Customer",
+      text: "Move quickly to GrownBy, then return for recipes, nutrition, and food guidance.",
+      image: IMAGES.customer,
+      next: ["Marketplace", "Recipes", "Nutrition"],
+    },
+    {
+      key: "grower" as ScreenKey,
+      title: "Grower",
+      text: "Access planning, seasonal guidance, training, and ecosystem support.",
+      image: IMAGES.grower,
+      next: ["Planner", "Seasonal Guidance", "Coordination"],
+    },
+    {
+      key: "valueAdded" as ScreenKey,
+      title: "Value-Added Producer",
+      text: "Explore branding, packaging, demonstrations, and local market opportunity.",
+      image: IMAGES.valueAdded,
+      next: ["Branding", "Packaging", "Market Access"],
+    },
+    {
+      key: "youth" as ScreenKey,
+      title: "Youth Workforce",
+      text: "Enter a structured living classroom where agriculture, teamwork, responsibility, and entrepreneurship prepare young people for future success, with Parent Portal access and supervisor support built into the program.",
+      image: IMAGES.youth,
+      next: ["Learning", "Parent Portal", "Support"],
+    },
+    {
+      key: "volunteers" as ScreenKey,
+      title: "Volunteers",
+      text: "Join the farm through service, support, events, hospitality, and meaningful community contribution.",
+      image: IMAGES.volunteers,
+      next: ["Service", "Events", "Community"],
+    },
   ];
 
   const detailBlocks: Record<ScreenKey, { title: string; text: string; icon: React.ReactNode }[]> = {
     home: [
       { title: "Families belong here", text: "This ecosystem is designed to feel welcoming, useful, and worth returning to.", icon: <Users size={20} /> },
       { title: "Marketplace through GrownBy", text: "Customers should feel that food access is close by, not hidden.", icon: <Store size={20} /> },
-      { title: "Living ecosystem", text: "Growers, youth, supervisors, guests, and producers each have a real pathway.", icon: <Leaf size={20} /> },
+      { title: "Living ecosystem", text: "Growers, youth, volunteers, guests, and producers each have a real pathway.", icon: <Leaf size={20} /> },
     ],
     story: [
       { title: "Family legacy", text: "The farm carries Bronson and Lorenzana legacy into a future-focused Youngstown vision.", icon: <Trees size={20} /> },
@@ -794,14 +828,14 @@ function App() {
       { title: "Shared network", text: "The goal is participation in a broader ecosystem of visibility and opportunity.", icon: <Users size={20} /> },
     ],
     youth: [
-      { title: "Living classroom", text: "Youth experience agriculture, STEAM, teamwork, and responsibility in real time.", icon: <GraduationCap size={20} /> },
-      { title: "Family confidence", text: "Parents and partners should feel that youth are entering a structured, meaningful environment.", icon: <Users size={20} /> },
-      { title: "Career-connected", text: "This pathway supports future roles in farming, media, logistics, business, and entrepreneurship.", icon: <BadgeCheck size={20} /> },
+      { title: "Living classroom", text: "Youth experience agriculture, STEAM, teamwork, responsibility, and entrepreneurship in a real-world setting.", icon: <GraduationCap size={20} /> },
+      { title: "Parent Portal included", text: "Families can stay connected to program structure, communication, participation, and progress through a parent-facing view inside Youth Workforce.", icon: <Users size={20} /> },
+      { title: "Built-in support", text: "Supervisor guidance, structure, logistics, accountability, and wellness support are part of the Youth Workforce pathway.", icon: <ShieldCheck size={20} /> },
     ],
-    supervisor: [
-      { title: "Inside youth workforce only", text: "Supervisor is not separate from youth workforce. It exists to support it.", icon: <ShieldCheck size={20} /> },
-      { title: "Support resources", text: "This can reflect staffing, wellness, and supportive oversight for youth participants.", icon: <HeartPulse size={20} /> },
-      { title: "Logistics and accountability", text: "Scheduling, check-ins, responsibilities, and day-of support belong here.", icon: <CheckCircle2 size={20} /> },
+    volunteers: [
+      { title: "Service pathway", text: "Volunteers help make the ecosystem visible, welcoming, and functional through shared work and presence.", icon: <Users size={20} /> },
+      { title: "Event and farm support", text: "This includes setup, hospitality, planting help, educational activities, and community participation.", icon: <CalendarDays size={20} /> },
+      { title: "Belonging and return", text: "The volunteer pathway should help people feel needed, appreciated, and connected enough to come back.", icon: <HeartPulse size={20} /> },
     ],
     planner: [
       { title: "Season status", text: "Warm season planning is active, with field prep, seedling movement, irrigation thinking, and event readiness underway.", icon: <CalendarDays size={20} /> },
@@ -968,7 +1002,7 @@ function App() {
                 Living ecosystem overview
               </div>
               <div style={{ lineHeight: 1.7, color: "rgba(245,250,245,0.9)", marginBottom: 18 }}>
-                This living farm ecosystem is designed to help guests, customers, growers, youth, partners, and families move toward food self-sufficiency, economic opportunity, practical wellness, and stronger community connection.
+                This living farm ecosystem is designed to help guests, customers, growers, youth, volunteers, partners, and families move toward food self-sufficiency, economic opportunity, practical wellness, and stronger community connection.
               </div>
               <div style={{ display: "grid", gap: 12 }}>
                 {detailBlocks[screen].map((item) => (
@@ -1103,6 +1137,7 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.community)}>Open Gallery</button>
                       </>
                     )}
+
                     {screen === "customer" && (
                       <>
                         <button style={{ ...styles.whiteBtn, justifyContent: "center" }} onClick={() => goto("marketplace")}>Go to Marketplace</button>
@@ -1134,6 +1169,7 @@ function App() {
                         </div>
                       </>
                     )}
+
                     {screen === "marketplace" && (
                       <>
                         <a href="https://grownby.com/farms/bronson-family-farm/shop" target="_blank" rel="noreferrer" style={{ ...styles.whiteBtn, justifyContent: "center" }}>
@@ -1143,6 +1179,7 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Food Guidance</button>
                       </>
                     )}
+
                     {screen === "grower" && (
                       <>
                         <button style={styles.whiteBtn} onClick={() => goto("planner")}>Open Crop Planner</button>
@@ -1150,6 +1187,7 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>Coordination View</button>
                       </>
                     )}
+
                     {screen === "valueAdded" && (
                       <>
                         <button style={styles.whiteBtn} onClick={() => goto("events")}>Demonstrations</button>
@@ -1157,20 +1195,39 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.produce)}>Product Presentation</button>
                       </>
                     )}
+
                     {screen === "youth" && (
                       <>
-                        <button style={styles.whiteBtn} onClick={() => goto("supervisor")}>Supervisor Support</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("planner")}>Learning Schedule</button>
+                        <button style={styles.whiteBtn} onClick={() => goto("planner")}>Learning Schedule</button>
                         <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>STEAM & Training</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Parent Portal & Support</button>
+                        <div style={styles.infoBox}>
+                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                            Youth Workforce includes family and supervisor support
+                          </div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                            Parent Portal access and supervisor support are built into the Youth Workforce program so families can stay informed and youth can move through the program with structure, accountability, wellness guidance, and encouragement.
+                          </div>
+                        </div>
                       </>
                     )}
-                    {screen === "supervisor" && (
+
+                    {screen === "volunteers" && (
                       <>
-                        <button style={styles.whiteBtn} onClick={() => goto("youth")}>Back to Youth Workforce</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("planner")}>Scheduling</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Support Resources</button>
+                        <button style={styles.whiteBtn} onClick={() => goto("events")}>Event Support</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("youth")}>Youth Connection</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Community Care</button>
+                        <div style={styles.infoBox}>
+                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                            Volunteer destination
+                          </div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                            Volunteers support the ecosystem through service, event help, setup, hospitality, and shared participation in the farm’s community mission.
+                          </div>
+                        </div>
                       </>
                     )}
+
                     {screen === "story" && (
                       <>
                         <button style={styles.whiteBtn} onClick={() => goto("guest")}>Enter as Guest</button>
@@ -1178,6 +1235,7 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.legacy)}>Legacy View</button>
                       </>
                     )}
+
                     {screen === "planner" && (
                       <>
                         <button style={styles.whiteBtn} onClick={() => goto("grower")}>Grower Path</button>
@@ -1185,6 +1243,7 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Inventory to Market</button>
                       </>
                     )}
+
                     {screen === "events" && (
                       <>
                         <button style={styles.whiteBtn} onClick={() => goto("guest")}>Guest Experiences</button>
@@ -1192,6 +1251,7 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Health Education</button>
                       </>
                     )}
+
                     {screen === "wellness" && (
                       <>
                         <button style={styles.whiteBtn} onClick={() => goto("customer")}>Customer Food Path</button>
@@ -1260,9 +1320,9 @@ function App() {
                   "Marketplace through GrownBy",
                   "Events and reservation pathways",
                   "Crop planning and seasonal guidance",
-                  "Youth workforce and supervisor support",
-                  "Nutrition, recipes, and wellness education",
-                  "Family legacy, agritourism, and community partnerships",
+                  "Youth workforce, family, and supervisor support",
+                  "Volunteer service and community participation",
+                  "Nutrition, recipes, wellness, and community partnerships",
                 ].map((item) => (
                   <div key={item} style={styles.moduleBox}>{item}</div>
                 ))}
@@ -1274,7 +1334,9 @@ function App() {
 
       {imageModal && (
         <div style={styles.modal}>
-          <button style={styles.closeBtn} onClick={() => setImageModal(null)}><X size={20} /></button>
+          <button style={styles.closeBtn} onClick={() => setImageModal(null)}>
+            <X size={20} />
+          </button>
           <img src={imageModal} alt="Expanded farm view" style={styles.modalImage} />
         </div>
       )}
