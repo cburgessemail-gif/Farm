@@ -1,637 +1,246 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
-type LangKey = "en" | "es" | "tl" | "it" | "he" | "pat";
+type RoleKey = "guest" | "customer" | "grower" | "volunteer" | "youth";
+type YouthViewKey =
+  | "youthHome"
+  | "parentPortal"
+  | "supervisor"
+  | "progress"
+  | "attendance"
+  | "support";
 
-type RoleKey =
-  | "guest"
-  | "customer"
-  | "grower"
-  | "volunteer"
-  | "youth"
-  | "supervisor";
+type WeatherState = {
+  loading: boolean;
+  city: string;
+  temp?: number;
+  high?: number;
+  low?: number;
+  wind?: number;
+  description?: string;
+  error?: string;
+};
 
-type TourStep = {
-  role: RoleKey;
-  moduleId: string;
+const brand = {
+  bg: "linear-gradient(180deg, #f5efe3 0%, #e8f2e9 100%)",
+  deep: "#1f4d36",
+  forest: "#2e6a4a",
+  moss: "#6d8b63",
+  text: "#173126",
+  card: "rgba(255,255,255,0.92)",
+  line: "rgba(31,77,54,0.10)",
+  soft: "#edf4ee",
+  gold: "#d9a441",
 };
 
 const images = {
   hero: "/GrowArea.jpg",
-  guest: "/GrowArea.jpg",
-  customer: "/GrowArea2.jpg",
-  grower: "/GrowArea3.jpg",
-  volunteer: "/GrowArea4.jpg",
-  youth: "/GrowArea5.jpg",
-  supervisor: "/GrowArea6.jpg",
   market: "/GrowArea2.jpg",
-  learning: "/GrowArea4.jpg",
-  workforce: "/GrowArea5.jpg",
-  operations: "/GrowArea6.jpg",
+  guest: "/SAM_0220.JPG",
+  customer: "/SAM_0221.JPG",
+  grower: "/SAM_0222.JPG",
+  volunteer: "/SAM_0223.JPG",
+  youth: "/SAM_0225.JPG",
+  learning: "/SAM_0222.JPG",
+  workforce: "/SAM_0225.JPG",
+  operations: "/SAM_0237.JPG",
 };
 
-const brand = {
-  bg: "#f5efe3",
-  card: "rgba(255,255,255,0.88)",
-  deep: "#1f4d36",
-  forest: "#2e6a4a",
-  moss: "#6d8b63",
-  sun: "#d9a441",
-  earth: "#8e684a",
-  text: "#173126",
-  soft: "#edf3ee",
-};
+const roles: RoleKey[] = ["guest", "customer", "grower", "volunteer", "youth"];
 
-const translations: Record<
-  LangKey,
-  {
-    appTitle: string;
-    tagline: string;
-    intro: string;
-    startDemo: string;
-    guidedTour: string;
-    stopTour: string;
-    chooseRole: string;
-    ecosystem: string;
-    weather: string;
-    calendar: string;
-    marketplace: string;
-    education: string;
-    workforce: string;
-    operations: string;
-    nutrition: string;
-    recipes: string;
-    roleLabel: string;
-    enterRole: string;
-    backHome: string;
-    guestTitle: string;
-    customerTitle: string;
-    growerTitle: string;
-    volunteerTitle: string;
-    youthTitle: string;
-    supervisorTitle: string;
-    guestIntro: string;
-    customerIntro: string;
-    growerIntro: string;
-    volunteerIntro: string;
-    youthIntro: string;
-    supervisorIntro: string;
-    marketCta: string;
-    learnMore: string;
-    viewCalendar: string;
-    voiceNarration: string;
-    next: string;
-    previous: string;
-    pause: string;
-    resume: string;
-    demoRestored: string;
-  }
-> = {
-  en: {
-    appTitle: "Bronson Family Farm Ecosystem Demo",
-    tagline:
-      "A welcoming grower ecosystem for learning, growing, buying, working, and returning.",
-    intro:
-      "This demo restores the platform vision as a living farm ecosystem — not a presentation. Each role enters the same world with a different purpose, pathway, and support system.",
-    startDemo: "Enter Live Demo",
-    guidedTour: "Start Guided Tour",
-    stopTour: "Stop Tour",
-    chooseRole: "Choose Your Role",
-    ecosystem: "Ecosystem",
-    weather: "Weather",
-    calendar: "Calendar",
-    marketplace: "Marketplace",
-    education: "Education",
-    workforce: "Youth Workforce",
-    operations: "Operations",
-    nutrition: "Nutrition",
-    recipes: "Recipes",
-    roleLabel: "Role",
-    enterRole: "Enter Experience",
-    backHome: "Back to Home",
-    guestTitle: "Guest",
-    customerTitle: "Customer",
-    growerTitle: "Grower",
-    volunteerTitle: "Volunteer",
-    youthTitle: "Youth Participant",
-    supervisorTitle: "Supervisor",
-    guestIntro:
-      "Guests discover the farm, events, seasonal learning, and the spirit of regenerative community.",
-    customerIntro:
-      "Customers move quickly into the marketplace, track buying habits, discover recipes, and receive nutrition guidance.",
-    growerIntro:
-      "Growers access crop planning, supply opportunities, seasonal tasks, workshops, and peer support.",
-    volunteerIntro:
-      "Volunteers find service pathways, event roles, sign-up needs, and meaningful ways to contribute.",
-    youthIntro:
-      "Youth participants see guided learning, practical tasks, wellness support, and career pathways.",
-    supervisorIntro:
-      "Supervisors coordinate youth support, workforce observation, wellness resources, safety, and progress.",
-    marketCta: "Go to Marketplace",
-    learnMore: "Explore Learning",
-    viewCalendar: "Open Calendar",
-    voiceNarration: "Voice Narration",
-    next: "Next",
-    previous: "Previous",
-    pause: "Pause",
-    resume: "Resume",
-    demoRestored: "Demo restored",
-  },
-  es: {
-    appTitle: "Demostración del Ecosistema de Bronson Family Farm",
-    tagline:
-      "Un ecosistema acogedor para aprender, cultivar, comprar, trabajar y regresar.",
-    intro:
-      "Esta demostración restaura la visión de la plataforma como un ecosistema agrícola vivo, no como una presentación. Cada rol entra al mismo mundo con un propósito y una ruta diferente.",
-    startDemo: "Entrar a la Demostración",
-    guidedTour: "Iniciar Recorrido Guiado",
-    stopTour: "Detener Recorrido",
-    chooseRole: "Elige Tu Rol",
-    ecosystem: "Ecosistema",
-    weather: "Clima",
-    calendar: "Calendario",
-    marketplace: "Mercado",
-    education: "Educación",
-    workforce: "Programa Juvenil",
-    operations: "Operaciones",
-    nutrition: "Nutrición",
-    recipes: "Recetas",
-    roleLabel: "Rol",
-    enterRole: "Entrar",
-    backHome: "Volver al Inicio",
-    guestTitle: "Invitado",
-    customerTitle: "Cliente",
-    growerTitle: "Productor",
-    volunteerTitle: "Voluntario",
-    youthTitle: "Joven Participante",
-    supervisorTitle: "Supervisor",
-    guestIntro:
-      "Los invitados descubren la granja, los eventos, el aprendizaje estacional y el espíritu de la comunidad regenerativa.",
-    customerIntro:
-      "Los clientes entran rápidamente al mercado, siguen sus hábitos de compra y reciben recetas y orientación nutricional.",
-    growerIntro:
-      "Los productores acceden a planificación de cultivos, oportunidades de suministros, tareas estacionales y talleres.",
-    volunteerIntro:
-      "Los voluntarios encuentran funciones de servicio, tareas de eventos y formas significativas de contribuir.",
-    youthIntro:
-      "Los jóvenes ven aprendizaje guiado, tareas prácticas, apoyo al bienestar y caminos profesionales.",
-    supervisorIntro:
-      "Los supervisores coordinan apoyo juvenil, observación laboral, seguridad y progreso.",
-    marketCta: "Ir al Mercado",
-    learnMore: "Explorar Aprendizaje",
-    viewCalendar: "Abrir Calendario",
-    voiceNarration: "Narración",
-    next: "Siguiente",
-    previous: "Anterior",
-    pause: "Pausar",
-    resume: "Continuar",
-    demoRestored: "Demostración restaurada",
-  },
-  tl: {
-    appTitle: "Bronson Family Farm Ecosystem Demo",
-    tagline:
-      "Isang magiliw na ecosystem para matuto, magtanim, mamili, magtrabaho, at bumalik.",
-    intro:
-      "Ibinabalik ng demo na ito ang platform bilang buhay na ecosystem ng bukid — hindi presentasyon. Ang bawat papel ay pumapasok sa iisang mundo na may iba’t ibang layunin at daan.",
-    startDemo: "Pumasok sa Demo",
-    guidedTour: "Simulan ang Guided Tour",
-    stopTour: "Itigil ang Tour",
-    chooseRole: "Piliin ang Iyong Papel",
-    ecosystem: "Ecosystem",
-    weather: "Panahon",
-    calendar: "Kalendaryo",
-    marketplace: "Pamilihan",
-    education: "Edukasyon",
-    workforce: "Kabataang Workforce",
-    operations: "Operasyon",
-    nutrition: "Nutrisyon",
-    recipes: "Mga Resipe",
-    roleLabel: "Papel",
-    enterRole: "Pumasok",
-    backHome: "Bumalik sa Home",
-    guestTitle: "Bisita",
-    customerTitle: "Mamimili",
-    growerTitle: "Magtatanim",
-    volunteerTitle: "Boluntaryo",
-    youthTitle: "Kabataang Kalahok",
-    supervisorTitle: "Supervisor",
-    guestIntro:
-      "Natutuklasan ng mga bisita ang bukid, mga kaganapan, pana-panahong pagkatuto, at diwa ng regenerative community.",
-    customerIntro:
-      "Madaling nakakarating ang mamimili sa marketplace, nakikita ang buying habits, at may gabay sa nutrisyon at resipe.",
-    growerIntro:
-      "Nakakakuha ang grower ng crop planning, supply opportunities, seasonal tasks, workshops, at support.",
-    volunteerIntro:
-      "Nakikita ng volunteer ang service pathways, event roles, at makabuluhang ambag.",
-    youthIntro:
-      "Nakikita ng kabataan ang guided learning, practical tasks, wellness support, at career pathways.",
-    supervisorIntro:
-      "Pinamamahalaan ng supervisor ang youth support, safety, wellness resources, at progress.",
-    marketCta: "Pumunta sa Marketplace",
-    learnMore: "Tingnan ang Learning",
-    viewCalendar: "Buksan ang Kalendaryo",
-    voiceNarration: "Boses na Gabay",
-    next: "Susunod",
-    previous: "Nakaraan",
-    pause: "Pause",
-    resume: "Magpatuloy",
-    demoRestored: "Naibalik ang demo",
-  },
-  it: {
-    appTitle: "Demo Ecosistema Bronson Family Farm",
-    tagline:
-      "Un ecosistema accogliente per imparare, coltivare, acquistare, lavorare e tornare.",
-    intro:
-      "Questa demo ripristina la visione della piattaforma come ecosistema agricolo vivo, non come presentazione.",
-    startDemo: "Entra nella Demo",
-    guidedTour: "Avvia Tour Guidato",
-    stopTour: "Ferma Tour",
-    chooseRole: "Scegli il Tuo Ruolo",
-    ecosystem: "Ecosistema",
-    weather: "Meteo",
-    calendar: "Calendario",
-    marketplace: "Mercato",
-    education: "Educazione",
-    workforce: "Programma Giovani",
-    operations: "Operazioni",
-    nutrition: "Nutrizione",
-    recipes: "Ricette",
-    roleLabel: "Ruolo",
-    enterRole: "Entra",
-    backHome: "Torna alla Home",
-    guestTitle: "Ospite",
-    customerTitle: "Cliente",
-    growerTitle: "Coltivatore",
-    volunteerTitle: "Volontario",
-    youthTitle: "Partecipante Giovane",
-    supervisorTitle: "Supervisore",
-    guestIntro:
-      "Gli ospiti scoprono la fattoria, gli eventi e lo spirito della comunità rigenerativa.",
-    customerIntro:
-      "I clienti entrano rapidamente nel mercato, seguono gli acquisti e ricevono ricette e guida nutrizionale.",
-    growerIntro:
-      "I coltivatori accedono a pianificazione delle colture, forniture, attività stagionali e laboratori.",
-    volunteerIntro:
-      "I volontari trovano ruoli di servizio, attività evento e modi significativi per contribuire.",
-    youthIntro:
-      "I giovani vedono apprendimento guidato, attività pratiche, supporto al benessere e percorsi professionali.",
-    supervisorIntro:
-      "I supervisori coordinano supporto ai giovani, sicurezza, benessere e progressi.",
-    marketCta: "Vai al Mercato",
-    learnMore: "Esplora Formazione",
-    viewCalendar: "Apri Calendario",
-    voiceNarration: "Narrazione",
-    next: "Avanti",
-    previous: "Indietro",
-    pause: "Pausa",
-    resume: "Riprendi",
-    demoRestored: "Demo ripristinata",
-  },
-  he: {
-    appTitle: "הדגמת המערכת של Bronson Family Farm",
-    tagline:
-      "מערכת מזמינה ללמידה, גידול, קנייה, עבודה וחזרה.",
-    intro:
-      "הדגמה זו מחזירה את חזון הפלטפורמה כמערכת חיה של חווה — לא מצגת.",
-    startDemo: "כניסה להדגמה",
-    guidedTour: "התחלת סיור מודרך",
-    stopTour: "עצירת סיור",
-    chooseRole: "בחרי/בחר תפקיד",
-    ecosystem: "מערכת",
-    weather: "מזג אוויר",
-    calendar: "לוח שנה",
-    marketplace: "שוק",
-    education: "חינוך",
-    workforce: "תכנית נוער",
-    operations: "תפעול",
-    nutrition: "תזונה",
-    recipes: "מתכונים",
-    roleLabel: "תפקיד",
-    enterRole: "כניסה",
-    backHome: "חזרה לדף הבית",
-    guestTitle: "אורח/ת",
-    customerTitle: "לקוח/ה",
-    growerTitle: "מגדל/ת",
-    volunteerTitle: "מתנדב/ת",
-    youthTitle: "משתתף/ת נוער",
-    supervisorTitle: "מפקח/ת",
-    guestIntro:
-      "האורחים מגלים את החווה, האירועים, הלמידה העונתית ורוח הקהילה המתחדשת.",
-    customerIntro:
-      "לקוחות נכנסים במהירות לשוק, עוקבים אחר הרגלי קנייה ומקבלים מתכונים והדרכה תזונתית.",
-    growerIntro:
-      "מגדלים מקבלים תכנון גידולים, הזדמנויות אספקה, משימות עונתיות וסדנאות.",
-    volunteerIntro:
-      "מתנדבים מוצאים מסלולי שירות, תפקידי אירועים ודרכים משמעותיות לתרום.",
-    youthIntro:
-      "בני נוער רואים למידה מודרכת, משימות מעשיות, תמיכה ברווחה ומסלולי קריירה.",
-    supervisorIntro:
-      "מפקחים מתאמים תמיכה לנוער, בטיחות, משאבי רווחה והתקדמות.",
-    marketCta: "לשוק",
-    learnMore: "ללמידה",
-    viewCalendar: "פתח לוח שנה",
-    voiceNarration: "קריינות",
-    next: "הבא",
-    previous: "הקודם",
-    pause: "השהיה",
-    resume: "המשך",
-    demoRestored: "ההדגמה שוחזרה",
-  },
-  pat: {
-    appTitle: "Bronson Family Farm Ecosystem Demo",
-    tagline:
-      "A warm, welcoming place fi learn, grow, buy, work, an come back.",
-    intro:
-      "Dis demo bring back di platform vision like a real living farm ecosystem — not no slideshow ting.",
-    startDemo: "Enter Di Demo",
-    guidedTour: "Start Guided Tour",
-    stopTour: "Stop Tour",
-    chooseRole: "Choose Yuh Role",
-    ecosystem: "Ecosystem",
-    weather: "Weather",
-    calendar: "Calendar",
-    marketplace: "Marketplace",
-    education: "Education",
-    workforce: "Youth Workforce",
-    operations: "Operations",
-    nutrition: "Nutrition",
-    recipes: "Recipes",
-    roleLabel: "Role",
-    enterRole: "Enter",
-    backHome: "Back Home",
-    guestTitle: "Guest",
-    customerTitle: "Customer",
-    growerTitle: "Grower",
-    volunteerTitle: "Volunteer",
-    youthTitle: "Youth",
-    supervisorTitle: "Supervisor",
-    guestIntro:
-      "Guest discover di farm, di events, di seasonal learning, an di spirit a regenerative community.",
-    customerIntro:
-      "Customer move quick into di marketplace, keep track a buying habits, an get recipe an nutrition guidance.",
-    growerIntro:
-      "Grower get crop planning, supply chances, seasonal tasks, workshop, an support.",
-    volunteerIntro:
-      "Volunteer find service pathways, event roles, an real ways fi help.",
-    youthIntro:
-      "Youth see guided learning, practical work, wellness support, an career pathways.",
-    supervisorIntro:
-      "Supervisor coordinate youth support, safety, wellness resources, an progress.",
-    marketCta: "Go A Marketplace",
-    learnMore: "Explore Learning",
-    viewCalendar: "Open Calendar",
-    voiceNarration: "Voice Guide",
-    next: "Next",
-    previous: "Previous",
-    pause: "Pause",
-    resume: "Resume",
-    demoRestored: "Demo come back",
-  },
-};
-
-const roleOrder: RoleKey[] = [
-  "guest",
-  "customer",
-  "grower",
-  "volunteer",
-  "youth",
-  "supervisor",
+const announcements = [
+  "Growers Supply Market preparation is active across the ecosystem.",
+  "Fresh food, learning, and workforce development are connected in one place.",
+  "Customers can move from marketplace to nutrition and recipes without leaving the platform.",
+  "Youth Workforce includes youth, parents, supervisors, attendance, and support visibility.",
 ];
 
-const roleModules: Record<RoleKey, string[]> = {
-  guest: ["ecosystem", "calendar", "education"],
-  customer: ["marketplace", "nutrition", "recipes"],
-  grower: ["ecosystem", "calendar", "operations"],
-  volunteer: ["calendar", "education", "operations"],
-  youth: ["workforce", "education", "calendar"],
-  supervisor: ["workforce", "operations", "calendar"],
-};
-
-const guidedTourSteps: TourStep[] = [
-  { role: "guest", moduleId: "ecosystem" },
-  { role: "customer", moduleId: "marketplace" },
-  { role: "grower", moduleId: "operations" },
-  { role: "volunteer", moduleId: "calendar" },
-  { role: "youth", moduleId: "workforce" },
-  { role: "supervisor", moduleId: "operations" },
+const buyingHistory = [
+  "Tomatoes",
+  "Collards",
+  "Peppers",
+  "Spinach",
+  "Cabbage",
 ];
 
-function useTypewriter(text: string, speed = 18) {
-  const [displayed, setDisplayed] = useState("");
-
-  useEffect(() => {
-    let i = 0;
-    setDisplayed("");
-    const id = window.setInterval(() => {
-      i += 1;
-      setDisplayed(text.slice(0, i));
-      if (i >= text.length) window.clearInterval(id);
-    }, speed);
-    return () => window.clearInterval(id);
-  }, [text, speed]);
-
-  return displayed;
-}
-
-function roleTitle(role: RoleKey, t: (typeof translations)["en"]) {
-  switch (role) {
-    case "guest":
-      return t.guestTitle;
-    case "customer":
-      return t.customerTitle;
-    case "grower":
-      return t.growerTitle;
-    case "volunteer":
-      return t.volunteerTitle;
-    case "youth":
-      return t.youthTitle;
-    case "supervisor":
-      return t.supervisorTitle;
-  }
-}
-
-function roleIntro(role: RoleKey, t: (typeof translations)["en"]) {
-  switch (role) {
-    case "guest":
-      return t.guestIntro;
-    case "customer":
-      return t.customerIntro;
-    case "grower":
-      return t.growerIntro;
-    case "volunteer":
-      return t.volunteerIntro;
-    case "youth":
-      return t.youthIntro;
-    case "supervisor":
-      return t.supervisorIntro;
-  }
-}
-
-function roleImage(role: RoleKey) {
-  switch (role) {
-    case "guest":
-      return images.guest;
-    case "customer":
-      return images.customer;
-    case "grower":
-      return images.grower;
-    case "volunteer":
-      return images.volunteer;
-    case "youth":
-      return images.youth;
-    case "supervisor":
-      return images.supervisor;
-  }
-}
-
-function moduleLabel(
-  moduleId: string,
-  t: (typeof translations)["en"]
-): string {
-  switch (moduleId) {
-    case "ecosystem":
-      return t.ecosystem;
-    case "weather":
-      return t.weather;
-    case "calendar":
-      return t.calendar;
-    case "marketplace":
-      return t.marketplace;
-    case "education":
-      return t.education;
-    case "workforce":
-      return t.workforce;
-    case "operations":
-      return t.operations;
-    case "nutrition":
-      return t.nutrition;
-    case "recipes":
-      return t.recipes;
-    default:
-      return moduleId;
-  }
-}
+const weatherDescriptions: Record<number, string> = {
+  0: "Clear",
+  1: "Mostly clear",
+  2: "Partly cloudy",
+  3: "Cloudy",
+  45: "Fog",
+  48: "Fog",
+  51: "Light drizzle",
+  53: "Drizzle",
+  55: "Heavy drizzle",
+  61: "Light rain",
+  63: "Rain",
+  65: "Heavy rain",
+  71: "Light snow",
+  73: "Snow",
+  75: "Heavy snow",
+  80: "Rain showers",
+  81: "Rain showers",
+  82: "Heavy showers",
+  95: "Thunderstorm",
+};
 
 function App() {
-  const [lang, setLang] = useState<LangKey>("en");
-  const [selectedRole, setSelectedRole] = useState<RoleKey>("guest");
-  const [tourRunning, setTourRunning] = useState(false);
-  const [tourIndex, setTourIndex] = useState(0);
-  const [voiceOn, setVoiceOn] = useState(true);
   const [homeMode, setHomeMode] = useState(true);
-  const [currentModule, setCurrentModule] = useState<string>("ecosystem");
-  const [buyingHistory] = useState([
-    "Tomatoes",
-    "Collards",
-    "Peppers",
-    "Spinach",
-    "Cabbage",
-  ]);
-  const [seasonalMessage, setSeasonalMessage] = useState("");
-  const narrationRef = useRef<HTMLDivElement | null>(null);
-
-  const t = translations[lang];
-  const rtl = lang === "he";
+  const [selectedRole, setSelectedRole] = useState<RoleKey>("guest");
+  const [currentModule, setCurrentModule] = useState<string>("overview");
+  const [youthView, setYouthView] = useState<YouthViewKey>("youthHome");
+  const [voiceOn, setVoiceOn] = useState(false);
+  const [now, setNow] = useState(new Date());
+  const [announcementIndex, setAnnouncementIndex] = useState(0);
+  const [weather, setWeather] = useState<WeatherState>({
+    loading: true,
+    city: "Youngstown, OH",
+  });
 
   useEffect(() => {
-    const month = new Date().getMonth();
-    if ([11, 0, 1].includes(month)) {
-      setSeasonalMessage(
-        "Winter planning, seed starting, greenhouse prep, and infrastructure strategy."
-      );
-    } else if ([2, 3, 4].includes(month)) {
-      setSeasonalMessage(
-        "Spring planting, seedling care, soil preparation, education, and market readiness."
-      );
-    } else if ([5, 6, 7].includes(month)) {
-      setSeasonalMessage(
-        "Summer growth, harvest prep, youth workforce activity, marketplace energy, and irrigation focus."
-      );
-    } else {
-      setSeasonalMessage(
-        "Fall harvest, preservation, soil renewal, community learning, and seasonal transition."
-      );
-    }
+    const timer = window.setInterval(() => setNow(new Date()), 1000);
+    return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
-    if (!tourRunning) return;
-    const step = guidedTourSteps[tourIndex];
-    setSelectedRole(step.role);
-    setHomeMode(false);
-    setCurrentModule(step.moduleId);
+    const timer = window.setInterval(() => {
+      setAnnouncementIndex((prev) => (prev + 1) % announcements.length);
+    }, 4500);
+    return () => window.clearInterval(timer);
+  }, []);
 
-    const id = window.setTimeout(() => {
-      setTourIndex((prev) => {
-        if (prev >= guidedTourSteps.length - 1) {
-          setTourRunning(false);
-          return prev;
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadWeather() {
+      try {
+        setWeather((prev) => ({ ...prev, loading: true, error: undefined }));
+
+        const geoRes = await fetch(
+          "https://geocoding-api.open-meteo.com/v1/search?name=Youngstown&count=1&language=en&format=json"
+        );
+        const geoJson = await geoRes.json();
+        const first = geoJson?.results?.[0];
+
+        if (!first) {
+          throw new Error("Could not find location");
         }
-        return prev + 1;
-      });
-    }, 5000);
 
-    return () => window.clearTimeout(id);
-  }, [tourRunning, tourIndex]);
+        const forecastRes = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${first.latitude}&longitude=${first.longitude}&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto`
+        );
+        const forecastJson = await forecastRes.json();
+
+        if (cancelled) return;
+
+        setWeather({
+          loading: false,
+          city: `${first.name}, ${first.admin1 ?? "OH"}`,
+          temp: Math.round(forecastJson?.current?.temperature_2m ?? 0),
+          wind: Math.round(forecastJson?.current?.wind_speed_10m ?? 0),
+          high: Math.round(forecastJson?.daily?.temperature_2m_max?.[0] ?? 0),
+          low: Math.round(forecastJson?.daily?.temperature_2m_min?.[0] ?? 0),
+          description:
+            weatherDescriptions[forecastJson?.current?.weather_code] ?? "Current conditions",
+        });
+      } catch (err) {
+        if (cancelled) return;
+        setWeather({
+          loading: false,
+          city: "Youngstown, OH",
+          error: "Weather unavailable right now",
+        });
+      }
+    }
+
+    loadWeather();
+    const timer = window.setInterval(loadWeather, 1000 * 60 * 15);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
 
   useEffect(() => {
     if (!voiceOn || !("speechSynthesis" in window)) return;
-
-    const text = getNarration(selectedRole, currentModule, t);
-    if (!text) return;
-
+    const text = getNarration(selectedRole, currentModule, youthView);
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = lang === "pat" ? 0.88 : 0.95;
+    utter.rate = 0.93;
     utter.pitch = 1;
-    utter.lang =
-      lang === "es"
-        ? "es-ES"
-        : lang === "tl"
-        ? "fil-PH"
-        : lang === "it"
-        ? "it-IT"
-        : lang === "he"
-        ? "he-IL"
-        : "en-US";
+    utter.lang = "en-US";
     window.speechSynthesis.speak(utter);
-
     return () => window.speechSynthesis.cancel();
-  }, [selectedRole, currentModule, voiceOn, lang, t]);
+  }, [voiceOn, selectedRole, currentModule, youthView]);
 
   const narration = useMemo(
-    () => getNarration(selectedRole, currentModule, t),
-    [selectedRole, currentModule, t]
+    () => getNarration(selectedRole, currentModule, youthView),
+    [selectedRole, currentModule, youthView]
   );
-
-  const typedNarration = useTypewriter(narration, 15);
 
   function openRole(role: RoleKey) {
     setSelectedRole(role);
-    setCurrentModule(roleModules[role][0]);
     setHomeMode(false);
-    setTourRunning(false);
-    setTourIndex(0);
+    if (role === "guest") setCurrentModule("overview");
+    if (role === "customer") setCurrentModule("market");
+    if (role === "grower") setCurrentModule("planning");
+    if (role === "volunteer") setCurrentModule("events");
+    if (role === "youth") {
+      setCurrentModule("youth");
+      setYouthView("youthHome");
+    }
   }
 
-  function startTour() {
-    setTourIndex(0);
-    setTourRunning(true);
-    setHomeMode(false);
+  function roleTitle(role: RoleKey) {
+    switch (role) {
+      case "guest":
+        return "Guest";
+      case "customer":
+        return "Customer";
+      case "grower":
+        return "Grower";
+      case "volunteer":
+        return "Volunteer";
+      case "youth":
+        return "Youth Workforce";
+    }
   }
 
-  function stopTour() {
-    setTourRunning(false);
-    setTourIndex(0);
-    window.speechSynthesis?.cancel();
+  function roleIntro(role: RoleKey) {
+    switch (role) {
+      case "guest":
+        return "Discover the farm, events, seasonal learning, and the spirit of regenerative community.";
+      case "customer":
+        return "Move quickly into marketplace pathways, nutrition guidance, and recipe support.";
+      case "grower":
+        return "Access crop planning, weather awareness, seasonal tasks, and operations visibility.";
+      case "volunteer":
+        return "See service pathways, events, support needs, and practical ways to contribute.";
+      case "youth":
+        return "Enter the Youth Workforce system with youth, parent, supervisor, attendance, and support views.";
+    }
+  }
+
+  function roleImage(role: RoleKey) {
+    switch (role) {
+      case "guest":
+        return images.guest;
+      case "customer":
+        return images.customer;
+      case "grower":
+        return images.grower;
+      case "volunteer":
+        return images.volunteer;
+      case "youth":
+        return images.youth;
+    }
   }
 
   return (
     <div
-      dir={rtl ? "rtl" : "ltr"}
       style={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(180deg, rgba(245,239,227,1) 0%, rgba(232,241,233,1) 100%)",
+        background: brand.bg,
         color: brand.text,
         fontFamily:
           "'Segoe UI', Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
@@ -644,79 +253,49 @@ function App() {
           zIndex: 20,
           backdropFilter: "blur(10px)",
           background: "rgba(245,239,227,0.86)",
-          borderBottom: "1px solid rgba(31,77,54,0.12)",
+          borderBottom: `1px solid ${brand.line}`,
         }}
       >
         <div
           style={{
-            maxWidth: 1320,
+            maxWidth: 1400,
             margin: "0 auto",
             padding: "16px 20px",
             display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
             justifyContent: "space-between",
+            alignItems: "center",
             gap: 14,
+            flexWrap: "wrap",
           }}
         >
           <div>
             <div
               style={{
-                fontSize: 26,
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
+                fontSize: 28,
+                fontWeight: 900,
+                letterSpacing: "-0.04em",
                 color: brand.deep,
               }}
             >
-              {t.appTitle}
+              Bronson Family Farm Ecosystem Demo
             </div>
-            <div style={{ fontSize: 13, opacity: 0.82 }}>{t.demoRestored}</div>
+            <div style={{ fontSize: 13, opacity: 0.76 }}>
+              Interactive live prototype
+            </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
-            {(["en", "es", "tl", "it", "he", "pat"] as LangKey[]).map((code) => (
-              <button
-                key={code}
-                onClick={() => setLang(code)}
-                style={{
-                  border: "none",
-                  borderRadius: 999,
-                  padding: "10px 14px",
-                  background: lang === code ? brand.deep : "white",
-                  color: lang === code ? "white" : brand.deep,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  boxShadow: "0 4px 14px rgba(0,0,0,0.07)",
-                }}
-              >
-                {code.toUpperCase()}
-              </button>
-            ))}
-
-            <button
-              onClick={() => setVoiceOn((v) => !v)}
-              style={pillButton(voiceOn)}
-            >
-              {t.voiceNarration}: {voiceOn ? "ON" : "OFF"}
+          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <LivePill label={formatDate(now)} />
+            <LivePill label={formatTime(now)} />
+            <button onClick={() => setVoiceOn((v) => !v)} style={pillButton(voiceOn)}>
+              Voice Narration: {voiceOn ? "ON" : "OFF"}
             </button>
-
             {!homeMode && (
               <button
-                onClick={() => {
-                  setHomeMode(true);
-                  setTourRunning(false);
-                  window.speechSynthesis?.cancel();
-                }}
+                onClick={() => setHomeMode(true)}
                 style={pillButton(false)}
               >
-                {t.backHome}
+                Back to Home
               </button>
             )}
           </div>
@@ -728,9 +307,7 @@ function App() {
           <section
             style={{
               position: "relative",
-              minHeight: 560,
-              display: "grid",
-              alignItems: "stretch",
+              minHeight: 620,
               overflow: "hidden",
             }}
           >
@@ -738,7 +315,7 @@ function App() {
               style={{
                 position: "absolute",
                 inset: 0,
-                backgroundImage: `linear-gradient(90deg, rgba(15,44,30,0.72), rgba(15,44,30,0.34)), url(${images.hero})`,
+                backgroundImage: `linear-gradient(90deg, rgba(15,44,30,0.76), rgba(15,44,30,0.38)), url(${images.hero})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -746,12 +323,11 @@ function App() {
             <div
               style={{
                 position: "relative",
-                maxWidth: 1320,
-                width: "100%",
+                maxWidth: 1400,
                 margin: "0 auto",
-                padding: "64px 20px 72px",
+                padding: "68px 20px 72px",
                 display: "grid",
-                gridTemplateColumns: "1.25fr 0.9fr",
+                gridTemplateColumns: "1.2fr 0.85fr",
                 gap: 24,
               }}
             >
@@ -769,40 +345,39 @@ function App() {
                 >
                   Bronson Family Farm • Farm & Family Alliance
                 </div>
+
                 <h1
                   style={{
-                    fontSize: "clamp(40px, 6vw, 72px)",
+                    margin: 0,
+                    fontSize: "clamp(42px, 6vw, 74px)",
                     lineHeight: 1.02,
-                    margin: "0 0 18px",
                     letterSpacing: "-0.05em",
+                    maxWidth: 900,
                   }}
                 >
-                  {t.tagline}
+                  A living ecosystem for growing, learning, buying, working, and returning.
                 </h1>
+
                 <p
                   style={{
                     fontSize: 20,
-                    lineHeight: 1.6,
-                    maxWidth: 800,
-                    color: "rgba(255,255,255,0.95)",
+                    lineHeight: 1.7,
+                    maxWidth: 820,
+                    color: "rgba(255,255,255,0.96)",
+                    marginTop: 18,
                   }}
                 >
-                  {t.intro}
+                  This version feels more like a platform: live weather, live time,
+                  rotating updates, role dashboards, and a dedicated Youth Workforce system
+                  with youth, parent, supervisor, attendance, and support layers.
                 </p>
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 14,
-                    marginTop: 26,
-                  }}
-                >
+                <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 26 }}>
                   <button onClick={() => openRole("guest")} style={heroButton()}>
-                    {t.startDemo}
+                    Enter Live Demo
                   </button>
-                  <button onClick={startTour} style={heroButton(true)}>
-                    {t.guidedTour}
+                  <button onClick={() => openRole("youth")} style={heroButton(true)}>
+                    Open Youth Workforce
                   </button>
                 </div>
               </div>
@@ -810,72 +385,82 @@ function App() {
               <div
                 style={{
                   alignSelf: "end",
-                  background: "rgba(255,255,255,0.14)",
-                  border: "1px solid rgba(255,255,255,0.22)",
-                  borderRadius: 28,
-                  padding: 22,
-                  color: "white",
-                  backdropFilter: "blur(8px)",
-                  boxShadow: "0 18px 48px rgba(0,0,0,0.18)",
+                  display: "grid",
+                  gap: 16,
                 }}
               >
-                <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 12 }}>
-                  Seasonal Focus
-                </div>
-                <div style={{ lineHeight: 1.7, opacity: 0.96 }}>
-                  {seasonalMessage}
-                </div>
-                <div
-                  style={{
-                    marginTop: 18,
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 12,
-                  }}
-                >
-                  <MiniStat title="Roles" value="6" />
-                  <MiniStat title="Modules" value="9" />
-                  <MiniStat title="Languages" value="6" />
-                  <MiniStat title="Mode" value="Live Demo" />
-                </div>
+                <GlassCard>
+                  <div style={eyebrowLight()}>LIVE UPDATES</div>
+                  <div style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.45 }}>
+                    {announcements[announcementIndex]}
+                  </div>
+                </GlassCard>
+
+                <GlassCard>
+                  <div style={eyebrowLight()}>YOUNGSTOWN WEATHER</div>
+                  {weather.loading ? (
+                    <div style={{ fontSize: 20, fontWeight: 700 }}>Loading weather…</div>
+                  ) : weather.error ? (
+                    <div style={{ fontSize: 18 }}>{weather.error}</div>
+                  ) : (
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 12,
+                        alignItems: "end",
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontSize: 18, opacity: 0.9 }}>{weather.city}</div>
+                        <div style={{ fontSize: 42, fontWeight: 900 }}>{weather.temp}°F</div>
+                        <div style={{ fontSize: 18 }}>{weather.description}</div>
+                      </div>
+                      <div style={{ fontSize: 16, lineHeight: 1.8 }}>
+                        <div>High: {weather.high}°F</div>
+                        <div>Low: {weather.low}°F</div>
+                        <div>Wind: {weather.wind} mph</div>
+                      </div>
+                    </div>
+                  )}
+                </GlassCard>
               </div>
             </div>
           </section>
 
           <section
             style={{
-              maxWidth: 1320,
+              maxWidth: 1400,
               margin: "0 auto",
               padding: "28px 20px 56px",
             }}
           >
             <div
               style={{
-                fontSize: 30,
-                fontWeight: 800,
+                fontSize: 32,
+                fontWeight: 900,
                 color: brand.deep,
                 marginBottom: 18,
-                letterSpacing: "-0.03em",
+                letterSpacing: "-0.04em",
               }}
             >
-              {t.chooseRole}
+              Choose Your Role
             </div>
 
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(270px, 1fr))",
                 gap: 20,
               }}
             >
-              {roleOrder.map((role) => (
+              {roles.map((role) => (
                 <RoleCard
                   key={role}
-                  title={roleTitle(role, t)}
-                  intro={roleIntro(role, t)}
+                  title={roleTitle(role)}
+                  intro={roleIntro(role)}
                   image={roleImage(role)}
                   onOpen={() => openRole(role)}
-                  buttonText={t.enterRole}
                 />
               ))}
             </div>
@@ -884,7 +469,7 @@ function App() {
       ) : (
         <main
           style={{
-            maxWidth: 1400,
+            maxWidth: 1440,
             margin: "0 auto",
             padding: "22px 20px 40px",
             display: "grid",
@@ -897,8 +482,8 @@ function App() {
               background: brand.card,
               borderRadius: 28,
               padding: 18,
+              border: `1px solid ${brand.line}`,
               boxShadow: "0 18px 42px rgba(22,37,29,0.08)",
-              border: "1px solid rgba(31,77,54,0.09)",
               height: "fit-content",
               position: "sticky",
               top: 94,
@@ -908,16 +493,15 @@ function App() {
               style={{
                 borderRadius: 22,
                 overflow: "hidden",
-                height: 180,
+                height: 188,
                 backgroundImage: `url(${roleImage(selectedRole)})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 marginBottom: 16,
               }}
             />
-            <div style={{ fontSize: 12, fontWeight: 800, opacity: 0.6 }}>
-              {t.roleLabel}
-            </div>
+
+            <div style={{ fontSize: 12, fontWeight: 800, opacity: 0.6 }}>ROLE</div>
             <div
               style={{
                 fontSize: 28,
@@ -927,51 +511,47 @@ function App() {
                 margin: "4px 0 10px",
               }}
             >
-              {roleTitle(selectedRole, t)}
+              {roleTitle(selectedRole)}
             </div>
             <div style={{ lineHeight: 1.7, marginBottom: 18 }}>
-              {roleIntro(selectedRole, t)}
+              {roleIntro(selectedRole)}
             </div>
 
             <div style={{ display: "grid", gap: 10 }}>
-              {roleOrder.map((role) => (
+              {roles.map((role) => (
                 <button
                   key={role}
                   onClick={() => openRole(role)}
                   style={{
-                    textAlign: rtl ? "right" : "left",
+                    textAlign: "left",
                     padding: "12px 14px",
                     borderRadius: 16,
-                    border: "1px solid rgba(31,77,54,0.1)",
-                    background:
-                      role === selectedRole ? "rgba(31,77,54,0.12)" : "white",
+                    border: `1px solid ${brand.line}`,
+                    background: role === selectedRole ? "rgba(31,77,54,0.12)" : "white",
                     color: brand.deep,
                     cursor: "pointer",
                     fontWeight: 700,
                   }}
                 >
-                  {roleTitle(role, t)}
+                  {roleTitle(role)}
                 </button>
               ))}
             </div>
 
-            <div
-              style={{
-                marginTop: 18,
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 10,
-              }}
-            >
-              {!tourRunning ? (
-                <button onClick={startTour} style={pillButton(true)}>
-                  {t.guidedTour}
-                </button>
-              ) : (
-                <button onClick={stopTour} style={pillButton(true)}>
-                  {t.stopTour}
-                </button>
-              )}
+            <div style={{ marginTop: 18 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, opacity: 0.6, marginBottom: 8 }}>
+                LIVE ANNOUNCEMENT
+              </div>
+              <div
+                style={{
+                  background: brand.soft,
+                  borderRadius: 16,
+                  padding: 14,
+                  lineHeight: 1.6,
+                }}
+              >
+                {announcements[announcementIndex]}
+              </div>
             </div>
           </aside>
 
@@ -980,17 +560,15 @@ function App() {
               style={{
                 position: "relative",
                 overflow: "hidden",
-                minHeight: 300,
+                minHeight: 320,
                 borderRadius: 30,
-                backgroundImage: `linear-gradient(90deg, rgba(16,40,28,0.78), rgba(16,40,28,0.28)), url(${roleImage(
-                  selectedRole
-                )})`,
+                backgroundImage: `linear-gradient(90deg, rgba(16,40,28,0.78), rgba(16,40,28,0.28)), url(${roleImage(selectedRole)})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 boxShadow: "0 18px 48px rgba(19,31,24,0.15)",
               }}
             >
-              <div style={{ padding: 30, color: "white", maxWidth: 860 }}>
+              <div style={{ padding: 30, color: "white", maxWidth: 930 }}>
                 <div
                   style={{
                     display: "inline-block",
@@ -1002,49 +580,42 @@ function App() {
                     marginBottom: 14,
                   }}
                 >
-                  {roleTitle(selectedRole, t)}
+                  {roleTitle(selectedRole)}
                 </div>
 
                 <h2
                   style={{
                     margin: 0,
-                    fontSize: "clamp(30px,4vw,52px)",
+                    fontSize: "clamp(30px,4vw,56px)",
                     lineHeight: 1.04,
                     letterSpacing: "-0.05em",
                   }}
                 >
-                  {roleIntro(selectedRole, t)}
+                  {roleIntro(selectedRole)}
                 </h2>
 
-                <div
-                  style={{
-                    marginTop: 22,
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 12,
-                  }}
-                >
-                  {roleModules[selectedRole].map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => setCurrentModule(m)}
-                      style={{
-                        border: "none",
-                        borderRadius: 999,
-                        padding: "12px 16px",
-                        cursor: "pointer",
-                        fontWeight: 800,
-                        background:
-                          currentModule === m
-                            ? "white"
-                            : "rgba(255,255,255,0.16)",
-                        color:
-                          currentModule === m ? brand.deep : "white",
-                      }}
-                    >
-                      {moduleLabel(m, t)}
-                    </button>
-                  ))}
+                <div style={{ marginTop: 22, display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  {selectedRole !== "youth" ? (
+                    getStandardTabs(selectedRole).map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => setCurrentModule(m.id)}
+                        style={heroTab(currentModule === m.id)}
+                      >
+                        {m.label}
+                      </button>
+                    ))
+                  ) : (
+                    getYouthTabs().map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => setYouthView(m.id)}
+                        style={heroTab(youthView === m.id)}
+                      >
+                        {m.label}
+                      </button>
+                    ))
+                  )}
                 </div>
               </div>
             </section>
@@ -1052,7 +623,7 @@ function App() {
             <section
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.25fr 0.85fr",
+                gridTemplateColumns: "1.28fr 0.82fr",
                 gap: 22,
               }}
             >
@@ -1061,33 +632,31 @@ function App() {
                   background: brand.card,
                   borderRadius: 28,
                   padding: 24,
+                  border: `1px solid ${brand.line}`,
                   boxShadow: "0 18px 42px rgba(22,37,29,0.08)",
-                  border: "1px solid rgba(31,77,54,0.09)",
                 }}
               >
                 <div
                   style={{
-                    fontSize: 28,
+                    fontSize: 30,
                     fontWeight: 900,
                     color: brand.deep,
                     letterSpacing: "-0.04em",
                     marginBottom: 16,
                   }}
                 >
-                  {moduleLabel(currentModule, t)}
+                  {selectedRole === "youth"
+                    ? getYouthTabs().find((x) => x.id === youthView)?.label
+                    : getStandardTabs(selectedRole).find((x) => x.id === currentModule)?.label}
                 </div>
-                {renderModule({
-                  role: selectedRole,
-                  moduleId: currentModule,
-                  t,
-                  buyingHistory,
-                  setCurrentModule,
-                })}
+
+                {selectedRole === "youth"
+                  ? renderYouthView(youthView)
+                  : renderStandardModule(selectedRole, currentModule)}
               </div>
 
               <div style={{ display: "grid", gap: 22 }}>
                 <div
-                  ref={narrationRef}
                   style={{
                     background: "#173126",
                     color: "white",
@@ -1110,46 +679,16 @@ function App() {
                   <div
                     style={{
                       marginTop: 12,
-                      minHeight: 120,
+                      minHeight: 126,
                       fontSize: 18,
                       lineHeight: 1.75,
                     }}
                   >
-                    {typedNarration}
+                    {narration}
                   </div>
-                  <div
-                    style={{
-                      marginTop: 18,
-                      display: "flex",
-                      gap: 10,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <button
-                      onClick={() => setVoiceOn((v) => !v)}
-                      style={smallDarkButton()}
-                    >
-                      {voiceOn ? t.pause : t.resume}
-                    </button>
-                    <button
-                      onClick={() =>
-                        setTourIndex((i) =>
-                          i > 0 ? i - 1 : 0
-                        )
-                      }
-                      style={smallDarkButton()}
-                    >
-                      {t.previous}
-                    </button>
-                    <button
-                      onClick={() =>
-                        setTourIndex((i) =>
-                          i < guidedTourSteps.length - 1 ? i + 1 : i
-                        )
-                      }
-                      style={smallDarkButton()}
-                    >
-                      {t.next}
+                  <div style={{ marginTop: 18 }}>
+                    <button onClick={() => setVoiceOn((v) => !v)} style={smallDarkButton()}>
+                      {voiceOn ? "Pause Voice" : "Resume Voice"}
                     </button>
                   </div>
                 </div>
@@ -1159,8 +698,8 @@ function App() {
                     background: brand.card,
                     borderRadius: 28,
                     padding: 22,
+                    border: `1px solid ${brand.line}`,
                     boxShadow: "0 18px 42px rgba(22,37,29,0.08)",
-                    border: "1px solid rgba(31,77,54,0.09)",
                   }}
                 >
                   <div
@@ -1171,30 +710,46 @@ function App() {
                       marginBottom: 12,
                     }}
                   >
-                    {t.weather}
+                    Live Conditions
                   </div>
-                  <div style={{ lineHeight: 1.75 }}>
-                    Youngstown seasonal outlook:
-                    <br />
-                    <strong>Farm-ready conditions dashboard</strong>
-                    <br />
-                    Soil attention, planting rhythm, hydration, event comfort,
-                    and learning readiness are surfaced here for growers,
-                    visitors, youth, and supervisors.
-                  </div>
+
+                  {weather.loading ? (
+                    <div style={{ lineHeight: 1.7 }}>Loading weather…</div>
+                  ) : weather.error ? (
+                    <div style={{ lineHeight: 1.7 }}>{weather.error}</div>
+                  ) : (
+                    <>
+                      <div style={{ lineHeight: 1.7 }}>
+                        <strong>{weather.city}</strong>
+                        <br />
+                        {weather.description}
+                      </div>
+
+                      <div
+                        style={{
+                          marginTop: 14,
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: 10,
+                        }}
+                      >
+                        <MetricCard label="Temp" value={`${weather.temp}°F`} />
+                        <MetricCard label="Wind" value={`${weather.wind} mph`} />
+                        <MetricCard label="High" value={`${weather.high}°F`} />
+                        <MetricCard label="Low" value={`${weather.low}°F`} />
+                      </div>
+                    </>
+                  )}
 
                   <div
                     style={{
-                      marginTop: 14,
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: 10,
+                      marginTop: 16,
+                      fontSize: 12,
+                      opacity: 0.68,
+                      lineHeight: 1.5,
                     }}
                   >
-                    <MetricCard label="Conditions" value="Active" />
-                    <MetricCard label="Farm Mode" value="Seasonal" />
-                    <MetricCard label="Visitor Readiness" value="Open" />
-                    <MetricCard label="Field Notes" value="Updated" />
+                    Weather data powered by Open-Meteo.
                   </div>
                 </div>
               </div>
@@ -1206,27 +761,55 @@ function App() {
   );
 }
 
-function renderModule({
-  role,
-  moduleId,
-  t,
-  buyingHistory,
-  setCurrentModule,
-}: {
-  role: RoleKey;
-  moduleId: string;
-  t: (typeof translations)["en"];
-  buyingHistory: string[];
-  setCurrentModule: (moduleId: string) => void;
-}) {
-  if (moduleId === "ecosystem") {
+function getStandardTabs(role: Exclude<RoleKey, "youth">) {
+  switch (role) {
+    case "guest":
+      return [
+        { id: "overview", label: "Overview" },
+        { id: "events", label: "Events" },
+        { id: "learn", label: "Learning" },
+      ];
+    case "customer":
+      return [
+        { id: "market", label: "Marketplace" },
+        { id: "nutrition", label: "Nutrition" },
+        { id: "recipes", label: "Recipes" },
+      ];
+    case "grower":
+      return [
+        { id: "planning", label: "Crop Planning" },
+        { id: "weather", label: "Weather" },
+        { id: "operations", label: "Operations" },
+      ];
+    case "volunteer":
+      return [
+        { id: "events", label: "Events" },
+        { id: "learn", label: "Learning" },
+        { id: "operations", label: "Operations" },
+      ];
+  }
+}
+
+function getYouthTabs() {
+  return [
+    { id: "youthHome" as YouthViewKey, label: "Youth Dashboard" },
+    { id: "parentPortal" as YouthViewKey, label: "Parent Portal" },
+    { id: "supervisor" as YouthViewKey, label: "Supervisor Dashboard" },
+    { id: "progress" as YouthViewKey, label: "Progress" },
+    { id: "attendance" as YouthViewKey, label: "Attendance" },
+    { id: "support" as YouthViewKey, label: "Support" },
+  ];
+}
+
+function renderStandardModule(role: RoleKey, moduleId: string) {
+  if (role === "guest" && moduleId === "overview") {
     return (
       <div style={{ display: "grid", gap: 16 }}>
         <LargeImageBanner image={images.learning} />
         <p style={bodyText()}>
-          The ecosystem connects farm life, education, agritourism, food access,
-          youth development, growers, and returning community participation. It
-          is meant to feel alive, warm, and useful.
+          The ecosystem connects farm life, food access, education, agritourism,
+          community participation, and workforce development. It should feel alive,
+          useful, and welcoming.
         </p>
         <ThreeColCards
           items={[
@@ -1236,11 +819,11 @@ function renderModule({
             },
             {
               title: "Community Pathways",
-              text: "Guests, growers, customers, volunteers, and youth enter the same ecosystem differently.",
+              text: "Guests, customers, growers, volunteers, and workforce participants all enter differently.",
             },
             {
               title: "Return Experience",
-              text: "The design encourages people to come back for learning, buying, events, and participation.",
+              text: "The design encourages people to come back for learning, events, buying, and participation.",
             },
           ]}
         />
@@ -1248,23 +831,62 @@ function renderModule({
     );
   }
 
-  if (moduleId === "marketplace") {
+  if ((role === "guest" || role === "volunteer") && moduleId === "events") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          The event layer connects community activity, demonstrations, volunteer pathways,
+          and seasonal visibility.
+        </p>
+        <ScheduleList
+          items={[
+            "Growers Supply Market preparation and event setup",
+            "Demonstrations, workshops, and family learning sessions",
+            "Volunteer check-in, support stations, and role assignments",
+            "Seasonal tours, community outreach, and event follow-up",
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if ((role === "guest" || role === "volunteer") && moduleId === "learn") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <LargeImageBanner image={images.learning} />
+        <p style={bodyText()}>
+          Learning is woven throughout the farm experience. It gives context, purpose,
+          and practical tools before people act.
+        </p>
+        <ThreeColCards
+          items={[
+            {
+              title: "Food & Health",
+              text: "Nutrition, processed food awareness, recipes, and practical wellness guidance.",
+            },
+            {
+              title: "Farm Learning",
+              text: "Growing systems, seasonal tasks, stewardship, and environmental awareness.",
+            },
+            {
+              title: "Life Skills",
+              text: "Responsibility, teamwork, confidence, and pathway awareness.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (role === "customer" && moduleId === "market") {
     return (
       <div style={{ display: "grid", gap: 16 }}>
         <LargeImageBanner image={images.market} />
         <p style={bodyText()}>
-          Customers can move quickly into the marketplace, see what is in
-          season, review buying history, and connect purchases to recipes and
-          nutrition guidance.
+          Customers move directly into marketplace pathways, discover what is available,
+          and connect purchases to nutrition and recipe support.
         </p>
-        <button
-          onClick={() => setCurrentModule("nutrition")}
-          style={primaryButton()}
-        >
-          {t.marketCta}
-        </button>
-
-        <div style={sectionTitle()}>Buying History</div>
+        <div style={sectionTitle()}>Recent Interest</div>
         <div style={chipWrap()}>
           {buyingHistory.map((item) => (
             <span key={item} style={chip()}>
@@ -1272,7 +894,6 @@ function renderModule({
             </span>
           ))}
         </div>
-
         <ThreeColCards
           items={[
             {
@@ -1281,11 +902,11 @@ function renderModule({
             },
             {
               title: "Smart Guidance",
-              text: "Shopping habits can connect to health goals, budget decisions, and family needs.",
+              text: "Shopping can connect to health goals, household priorities, and food education.",
             },
             {
               title: "Quick Movement",
-              text: "Marketplace access is intentionally fast because many customers come to buy first.",
+              text: "The customer pathway is intentionally fast because many people come to buy first.",
             },
           ]}
         />
@@ -1293,14 +914,12 @@ function renderModule({
     );
   }
 
-  if (moduleId === "nutrition") {
+  if (role === "customer" && moduleId === "nutrition") {
     return (
       <div style={{ display: "grid", gap: 16 }}>
         <p style={bodyText()}>
-          Nutrition education helps people compare natural food with heavily
-          processed food, understand how rising costs influence food choices,
-          and learn how healthier habits support work, play, rest, and Type II
-          diabetes management.
+          Nutrition guidance helps compare natural food with heavily processed food
+          and shows how rising costs can push families toward substitutes that slowly harm health.
         </p>
         <ThreeColCards
           items={[
@@ -1310,11 +929,11 @@ function renderModule({
             },
             {
               title: "Processed Food Reality",
-              text: "Rising food costs can push families toward overprocessed substitutes that slowly harm health.",
+              text: "Families often choose overprocessed substitutes under economic pressure.",
             },
             {
               title: "Practical Support",
-              text: "Guidance is built for real life, limited budgets, and household decision-making.",
+              text: "This guidance is framed for real life, limited budgets, and household decision-making.",
             },
           ]}
         />
@@ -1322,101 +941,65 @@ function renderModule({
     );
   }
 
-  if (moduleId === "recipes") {
+  if (role === "customer" && moduleId === "recipes") {
     return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <div style={sectionTitle()}>Recipe Pathways</div>
-        <ThreeColCards
-          items={[
-            {
-              title: "Tomato & Pepper Skillet",
-              text: "Simple fresh vegetables for a quick family meal.",
-            },
-            {
-              title: "Collard & Cabbage Bowl",
-              text: "A hearty meal that supports fiber, minerals, and fullness.",
-            },
-            {
-              title: "Spinach Add-In Guide",
-              text: "Easy ways to work greens into breakfast, lunch, and dinner.",
-            },
-          ]}
-        />
-      </div>
+      <ThreeColCards
+        items={[
+          {
+            title: "Tomato & Pepper Skillet",
+            text: "Simple fresh vegetables for a quick family meal.",
+          },
+          {
+            title: "Collard & Cabbage Bowl",
+            text: "A hearty meal that supports fiber, minerals, and fullness.",
+          },
+          {
+            title: "Spinach Add-In Guide",
+            text: "Easy ways to work greens into breakfast, lunch, and dinner.",
+          },
+        ]}
+      />
     );
   }
 
-  if (moduleId === "calendar") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <p style={bodyText()}>
-          The calendar connects seasonal activity, workshops, volunteer shifts,
-          youth workforce schedules, demonstrations, and marketplace readiness.
-        </p>
-        <ScheduleList
-          items={[
-            "Growers Supply Market preparation window",
-            "Seasonal planting and crop check blocks",
-            "Youth workforce training and support",
-            "Community learning sessions and demonstrations",
-            "Volunteer setup, check-in, and cleanup paths",
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (moduleId === "education") {
+  if (role === "grower" && moduleId === "planning") {
     return (
       <div style={{ display: "grid", gap: 16 }}>
         <LargeImageBanner image={images.learning} />
         <p style={bodyText()}>
-          Learning is woven throughout the platform. Guests can explore. Youth
-          can build skills. Customers can learn recipes and nutrition. Growers
-          can deepen knowledge. Volunteers can understand purpose before action.
+          Crop planning helps growers align timing, land readiness, weather, and work sequence.
         </p>
-        <ThreeColCards
+        <ScheduleList
           items={[
-            {
-              title: "Food & Health",
-              text: "Nutrition, processed food awareness, recipes, and practical guidance.",
-            },
-            {
-              title: "Farm Learning",
-              text: "Growing systems, seasonal tasks, stewardship, and environmental awareness.",
-            },
-            {
-              title: "Life Skills",
-              text: "Responsibility, teamwork, time management, confidence, and pathway awareness.",
-            },
+            "Seed starting and transplant timing",
+            "Field preparation and seasonal sequencing",
+            "Water, weather, and growth attention points",
+            "Harvest readiness and operations planning",
           ]}
         />
       </div>
     );
   }
 
-  if (moduleId === "workforce") {
+  if (role === "grower" && moduleId === "weather") {
     return (
       <div style={{ display: "grid", gap: 16 }}>
-        <LargeImageBanner image={images.workforce} />
         <p style={bodyText()}>
-          The youth workforce area is designed to feel guided, supportive, and
-          real. It includes responsibilities, safety, wellness support, skill
-          building, and clear next steps.
+          Weather visibility supports timing, watering, event comfort, and daily field decisions.
         </p>
         <ThreeColCards
           items={[
             {
-              title: "Guided Participation",
-              text: "Young people see where they are, what they do next, and why the work matters.",
+              title: "Field Rhythm",
+              text: "Use weather to shape timing and readiness across the site.",
             },
             {
-              title: "Wellness Support",
-              text: "Supervisor support includes observation, encouragement, and access to support resources.",
+              title: "Watering Awareness",
+              text: "Heat, wind, and temperature all influence irrigation attention.",
             },
             {
-              title: "Career Pathways",
-              text: "Farm work becomes a bridge to leadership, confidence, and broader workforce readiness.",
+              title: "Workday Comfort",
+              text: "Conditions affect youth, volunteers, visitors, and supervisors too.",
             },
           ]}
         />
@@ -1424,14 +1007,13 @@ function renderModule({
     );
   }
 
-  if (moduleId === "operations") {
+  if ((role === "grower" || role === "volunteer") && moduleId === "operations") {
     return (
       <div style={{ display: "grid", gap: 16 }}>
         <LargeImageBanner image={images.operations} />
         <p style={bodyText()}>
-          Operations brings together event flow, staff support, seasonal tasks,
-          supply movement, field readiness, youth oversight, and practical
-          coordination.
+          Operations brings together field readiness, daily movement, support needs,
+          and practical coordination across the farm.
         </p>
         <ThreeColCards
           items={[
@@ -1441,11 +1023,11 @@ function renderModule({
             },
             {
               title: "Role-Based Visibility",
-              text: "Different people see different things, but everything remains connected.",
+              text: "Different people see different layers, but everything remains connected.",
             },
             {
               title: "Supportive Oversight",
-              text: "Supervisors can coordinate people, progress, and support without making the platform feel cold.",
+              text: "The system is meant to guide people without feeling cold or corporate.",
             },
           ]}
         />
@@ -1453,43 +1035,213 @@ function renderModule({
     );
   }
 
+  return <div style={bodyText()}>Module loading…</div>;
+}
+
+function renderYouthView(view: YouthViewKey) {
+  if (view === "youthHome") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <LargeImageBanner image={images.workforce} />
+        <p style={bodyText()}>
+          The Youth Workforce dashboard gives participants a clear entry point into tasks,
+          learning, wellness, timing, and progress.
+        </p>
+        <ThreeColCards
+          items={[
+            {
+              title: "Today’s Focus",
+              text: "Orientation, field support, teamwork, and practical responsibility.",
+            },
+            {
+              title: "Learning Path",
+              text: "Youth can connect farm work to confidence, skill building, and future pathways.",
+            },
+            {
+              title: "Wellness Awareness",
+              text: "Support structures are visible so participation feels guided, not confusing.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (view === "parentPortal") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          The Parent Portal gives families visibility into participation, schedule,
+          attendance, progress, and support communication.
+        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 14,
+          }}
+        >
+          <MetricCard label="Youth Status" value="Active" />
+          <MetricCard label="Attendance" value="Present" />
+          <MetricCard label="Next Shift" value="Tue 8:00 AM" />
+          <MetricCard label="Support Flag" value="Stable" />
+        </div>
+        <ThreeColCards
+          items={[
+            {
+              title: "Family Visibility",
+              text: "Parents can see if youth are present, progressing, and supported.",
+            },
+            {
+              title: "Communication",
+              text: "A parent view should reduce confusion and strengthen trust.",
+            },
+            {
+              title: "Program Confidence",
+              text: "Families understand what the workforce experience is building over time.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (view === "supervisor") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          Supervisor belongs inside Youth Workforce as a support function for youth,
+          not as a separate ecosystem role.
+        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 14,
+          }}
+        >
+          <MetricCard label="Youth On Site" value="12" />
+          <MetricCard label="Needs Review" value="2" />
+          <MetricCard label="Wellness Checks" value="4" />
+          <MetricCard label="Task Groups" value="3" />
+        </div>
+        <ThreeColCards
+          items={[
+            {
+              title: "Observation",
+              text: "Track youth presence, engagement, and general support needs.",
+            },
+            {
+              title: "Structure",
+              text: "Supervisors coordinate timing, task groups, and safety awareness.",
+            },
+            {
+              title: "Support Resources",
+              text: "The dashboard should help support staff respond with clarity and consistency.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (view === "progress") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          Progress shows growth in responsibility, teamwork, practical skills,
+          consistency, and confidence.
+        </p>
+        <ProgressBars
+          items={[
+            { label: "Attendance Consistency", value: 82 },
+            { label: "Teamwork", value: 76 },
+            { label: "Task Completion", value: 84 },
+            { label: "Leadership Readiness", value: 63 },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (view === "attendance") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          Attendance helps youth, families, and supervisors stay aligned about presence,
+          timing, and reliability.
+        </p>
+        <ScheduleList
+          items={[
+            "Mon • Present • Orientation & planning",
+            "Tue • Present • Field activity and team tasks",
+            "Wed • Present • Learning and support check",
+            "Thu • Present • Production and cleanup",
+            "Fri • Scheduled • Workforce pathway session",
+          ]}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div style={bodyText()}>
-      {roleTitle(role, t)} • {moduleLabel(moduleId, t)}
+    <div style={{ display: "grid", gap: 16 }}>
+      <p style={bodyText()}>
+        Support keeps the Youth Workforce system humane. It includes wellness attention,
+        encouragement, resources, and practical response.
+      </p>
+      <ThreeColCards
+        items={[
+          {
+            title: "Wellness",
+            text: "Track visible support needs and appropriate response pathways.",
+          },
+          {
+            title: "Encouragement",
+            text: "The system should reinforce growth, not only problems or gaps.",
+          },
+          {
+            title: "Resource Visibility",
+            text: "Support staff resources can be surfaced where they are actually needed.",
+          },
+        ]}
+      />
     </div>
   );
 }
 
-function getNarration(
-  role: RoleKey,
-  moduleId: string,
-  t: (typeof translations)["en"]
-) {
-  const roleName = roleTitle(role, t);
-  const moduleName = moduleLabel(moduleId, t);
-
-  const map: Record<string, string> = {
-    "guest-ecosystem": `${roleName}: You are entering the living ecosystem of Bronson Family Farm. This is a place for discovery, restoration, and returning connection.`,
-    "guest-calendar": `${roleName}: The calendar shows events, seasonal rhythms, and ways to join the farm experience.`,
-    "guest-education": `${roleName}: Learning begins before work. Visitors can understand the land, the purpose, and the community vision.`,
-    "customer-marketplace": `${roleName}: Customers can move directly into the marketplace, review what is available, and make healthy buying decisions more easily.`,
-    "customer-nutrition": `${roleName}: Nutrition guidance helps families compare natural food with overprocessed substitutes and connect food choices to long-term health.`,
-    "customer-recipes": `${roleName}: Recipes help customers turn purchases into practical meals people can actually make and enjoy.`,
-    "grower-ecosystem": `${roleName}: Growers enter a connected system of land, learning, timing, and community support.`,
-    "grower-calendar": `${roleName}: Seasonal planning and timing matter. The calendar keeps growers aligned with activity and opportunity.`,
-    "grower-operations": `${roleName}: Operations supports field readiness, supply movement, and the practical pace of the growing cycle.`,
-    "volunteer-calendar": `${roleName}: Volunteers can quickly see where help is needed and how they fit into the movement of the day.`,
-    "volunteer-education": `${roleName}: Service is stronger when people understand the purpose behind the work.`,
-    "volunteer-operations": `${roleName}: Operational visibility gives volunteers clarity, confidence, and direction.`,
-    "youth-workforce": `${roleName}: Youth participants experience structured learning, responsibility, wellness support, and growth.`,
-    "youth-education": `${roleName}: Education connects farm work to confidence, identity, teamwork, and future opportunity.`,
-    "youth-calendar": `${roleName}: A visible calendar helps youth understand time, expectations, and momentum.`,
-    "supervisor-workforce": `${roleName}: Supervisors support youth progress, observe growth, and strengthen the learning environment.`,
-    "supervisor-operations": `${roleName}: Supervisors coordinate people, safety, tasks, support resources, and daily flow.`,
-    "supervisor-calendar": `${roleName}: The calendar helps align coverage, readiness, and structured support.`,
-  };
-
-  return map[`${role}-${moduleId}`] ?? `${roleName}: ${moduleName}`;
+function getNarration(role: RoleKey, currentModule: string, youthView: YouthViewKey) {
+  if (role === "guest" && currentModule === "overview") {
+    return "Welcome into the living ecosystem of Bronson Family Farm. This dashboard introduces the land, the mission, and the broader community pathway.";
+  }
+  if (role === "customer" && currentModule === "market") {
+    return "The customer pathway moves directly into the marketplace, then outward into nutrition and recipe guidance that supports healthier decision-making.";
+  }
+  if (role === "grower" && currentModule === "planning") {
+    return "The grower view emphasizes planning, field rhythm, weather awareness, and day-to-day readiness across the site.";
+  }
+  if (role === "volunteer" && currentModule === "events") {
+    return "The volunteer pathway helps people see where help is needed and how their contribution fits into the movement of the farm.";
+  }
+  if (role === "youth" && youthView === "youthHome") {
+    return "The Youth Workforce system begins with youth participation, then opens into parent visibility, supervisor support, attendance, progress, and wellness response.";
+  }
+  if (role === "youth" && youthView === "parentPortal") {
+    return "The Parent Portal gives families a window into attendance, schedule, progress, and support confidence.";
+  }
+  if (role === "youth" && youthView === "supervisor") {
+    return "Supervisor remains inside Youth Workforce only. It supports youth observation, coordination, and response rather than existing as a separate public role.";
+  }
+  if (role === "youth" && youthView === "progress") {
+    return "Progress is framed as growth in reliability, teamwork, confidence, and readiness over time.";
+  }
+  if (role === "youth" && youthView === "attendance") {
+    return "Attendance helps youth, parents, and supervisors stay aligned around consistency and participation.";
+  }
+  if (role === "youth" && youthView === "support") {
+    return "Support keeps the workforce system humane by surfacing wellness and practical resource needs.";
+  }
+  return "Explore the next part of the ecosystem.";
 }
 
 function RoleCard({
@@ -1497,13 +1249,11 @@ function RoleCard({
   intro,
   image,
   onOpen,
-  buttonText,
 }: {
   title: string;
   intro: string;
   image: string;
   onOpen: () => void;
-  buttonText: string;
 }) {
   return (
     <div
@@ -1512,7 +1262,7 @@ function RoleCard({
         borderRadius: 28,
         overflow: "hidden",
         boxShadow: "0 18px 42px rgba(22,37,29,0.08)",
-        border: "1px solid rgba(31,77,54,0.09)",
+        border: `1px solid ${brand.line}`,
       }}
     >
       <div
@@ -1537,50 +1287,44 @@ function RoleCard({
         </div>
         <div style={{ lineHeight: 1.7, minHeight: 92 }}>{intro}</div>
         <button onClick={onOpen} style={{ ...primaryButton(), marginTop: 16 }}>
-          {buttonText}
+          Enter Experience
         </button>
       </div>
     </div>
   );
 }
 
-function MiniStat({ title, value }: { title: string; value: string }) {
+function LivePill({ label }: { label: string }) {
   return (
     <div
       style={{
-        background: "rgba(255,255,255,0.12)",
-        borderRadius: 18,
-        padding: 14,
-        border: "1px solid rgba(255,255,255,0.16)",
+        borderRadius: 999,
+        padding: "10px 14px",
+        background: "white",
+        color: brand.deep,
+        fontWeight: 800,
+        boxShadow: "0 4px 14px rgba(0,0,0,0.07)",
       }}
     >
-      <div style={{ fontSize: 12, opacity: 0.75, fontWeight: 700 }}>{title}</div>
-      <div style={{ fontSize: 22, fontWeight: 900, marginTop: 6 }}>{value}</div>
+      {label}
     </div>
   );
 }
 
-function MetricCard({ label, value }: { label: string; value: string }) {
+function GlassCard({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
-        background: "white",
-        borderRadius: 18,
-        padding: 14,
-        border: "1px solid rgba(31,77,54,0.08)",
+        background: "rgba(255,255,255,0.14)",
+        border: "1px solid rgba(255,255,255,0.22)",
+        borderRadius: 28,
+        padding: 22,
+        color: "white",
+        backdropFilter: "blur(8px)",
+        boxShadow: "0 18px 48px rgba(0,0,0,0.18)",
       }}
     >
-      <div style={{ fontSize: 12, opacity: 0.68, fontWeight: 700 }}>{label}</div>
-      <div
-        style={{
-          marginTop: 6,
-          fontSize: 20,
-          fontWeight: 900,
-          color: brand.deep,
-        }}
-      >
-        {value}
-      </div>
+      {children}
     </div>
   );
 }
@@ -1599,23 +1343,27 @@ function LargeImageBanner({ image }: { image: string }) {
   );
 }
 
-function ScheduleList({ items }: { items: string[] }) {
+function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ display: "grid", gap: 12 }}>
-      {items.map((item) => (
-        <div
-          key={item}
-          style={{
-            background: "white",
-            borderRadius: 18,
-            padding: "14px 16px",
-            border: "1px solid rgba(31,77,54,0.08)",
-            lineHeight: 1.6,
-          }}
-        >
-          {item}
-        </div>
-      ))}
+    <div
+      style={{
+        background: "white",
+        borderRadius: 18,
+        padding: 14,
+        border: `1px solid ${brand.line}`,
+      }}
+    >
+      <div style={{ fontSize: 12, opacity: 0.68, fontWeight: 700 }}>{label}</div>
+      <div
+        style={{
+          marginTop: 6,
+          fontSize: 20,
+          fontWeight: 900,
+          color: brand.deep,
+        }}
+      >
+        {value}
+      </div>
     </div>
   );
 }
@@ -1640,7 +1388,7 @@ function ThreeColCards({
             background: "white",
             borderRadius: 20,
             padding: 18,
-            border: "1px solid rgba(31,77,54,0.08)",
+            border: `1px solid ${brand.line}`,
           }}
         >
           <div
@@ -1658,6 +1406,87 @@ function ThreeColCards({
       ))}
     </div>
   );
+}
+
+function ScheduleList({ items }: { items: string[] }) {
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      {items.map((item) => (
+        <div
+          key={item}
+          style={{
+            background: "white",
+            borderRadius: 18,
+            padding: "14px 16px",
+            border: `1px solid ${brand.line}`,
+            lineHeight: 1.6,
+          }}
+        >
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProgressBars({
+  items,
+}: {
+  items: { label: string; value: number }[];
+}) {
+  return (
+    <div style={{ display: "grid", gap: 14 }}>
+      {items.map((item) => (
+        <div key={item.label}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontWeight: 700,
+              marginBottom: 6,
+            }}
+          >
+            <span>{item.label}</span>
+            <span>{item.value}%</span>
+          </div>
+          <div
+            style={{
+              height: 12,
+              background: "#e4ede5",
+              borderRadius: 999,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${item.value}%`,
+                background: brand.deep,
+                borderRadius: 999,
+              }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function formatTime(date: Date) {
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 }
 
 function bodyText(): React.CSSProperties {
@@ -1722,6 +1551,18 @@ function heroButton(ghost = false): React.CSSProperties {
   };
 }
 
+function heroTab(active: boolean): React.CSSProperties {
+  return {
+    border: "none",
+    borderRadius: 999,
+    padding: "12px 16px",
+    cursor: "pointer",
+    fontWeight: 800,
+    background: active ? "white" : "rgba(255,255,255,0.16)",
+    color: active ? brand.deep : "white",
+  };
+}
+
 function pillButton(active: boolean): React.CSSProperties {
   return {
     border: "none",
@@ -1744,6 +1585,17 @@ function smallDarkButton(): React.CSSProperties {
     color: "white",
     fontWeight: 800,
     cursor: "pointer",
+  };
+}
+
+function eyebrowLight(): React.CSSProperties {
+  return {
+    fontSize: 12,
+    fontWeight: 800,
+    letterSpacing: "0.08em",
+    opacity: 0.75,
+    textTransform: "uppercase",
+    marginBottom: 10,
   };
 }
 
