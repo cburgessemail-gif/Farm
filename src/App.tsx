@@ -1,1836 +1,862 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CalendarDays,
+  CloudSun,
+  Globe,
+  Leaf,
+  MapPin,
+  Mic,
+  Play,
+  ShoppingBasket,
+  Sprout,
+  Store,
+  Users,
+  UserRound,
+  Trees,
+  HeartPulse,
+  GraduationCap,
+  Briefcase,
+  ShieldCheck,
+  Tractor,
+  BookOpen,
+  BadgeCheck,
+  CheckCircle2,
+  Languages,
+  Home,
+  Info,
+  X,
+} from "lucide-react";
 
-type Screen =
+const IMAGES = {
+  entrance: "/SAM_0220.JPG",
+  story: "/SAM_0221.JPG",
+  guest: "/SAM_0222.JPG",
+  customer: "/SAM_0223.JPG",
+  marketplace: "/SAM_0225.JPG",
+  grower: "/SAM_0237.JPG",
+  valueAdded: "/SAM_0238.JPG",
+  youth: "/SAM_0249.JPG",
+  supervisor: "/SAM_0266.JPG",
+  community: "/SAM_0274.JPG",
+  education: "/SAM_0275.JPG",
+  wellness: "/SAM_0281.JPG",
+  events: "/SAM_0282.JPG",
+  planning: "/SAM_0286.JPG",
+  weather: "/SAM_0288.JPG",
+  family: "/SAM_0289.JPG",
+  logistics: "/SAM_0290.JPG",
+  airport: "/SAM_0291.JPG",
+  produce: "/SAM_0293.JPG",
+  volunteers: "/SAM_0305.JPG",
+  training: "/SAM_0307.JPG",
+  recipes: "/SAM_0309.JPG",
+  nutrition: "/SAM_0310.JPG",
+  future: "/SAM_0311.JPG",
+  legacy: "/SAM_0313.JPG",
+  // Keep only ONE grow area image if you still want it anywhere:
+  growArea: "/GrowArea.jpg",
+};
+
+type LanguageKey = "en" | "es" | "tl" | "it" | "patwa" | "he";
+type RoleKey = "guest" | "customer" | "grower" | "valueAdded" | "youth" | "supervisor";
+type ScreenKey =
   | "home"
+  | "story"
   | "guest"
   | "customer"
+  | "marketplace"
   | "grower"
-  | "producer"
+  | "valueAdded"
   | "youth"
-  | "admin"
-  | "market";
+  | "supervisor"
+  | "planner"
+  | "events"
+  | "wellness";
 
-type GuestView = "story" | "mission" | "events" | "partners";
-type CustomerView = "produce" | "nutrition" | "recipes" | "ordering";
-type GrowerView = "weather" | "planner" | "notes" | "season";
-type ProducerView = "products" | "events" | "storytelling" | "collaboration";
-type YouthView = "overview" | "parent" | "supervisor" | "daily";
-type AdminView = "participation" | "operations" | "planning" | "growth";
-type MarketView = "products" | "grownby" | "education" | "community" | "ordering";
-
-type WeatherData = {
-  condition: string;
-  temp: string;
-  high: string;
-  low: string;
-  note: string;
-};
-
-const navItems: { key: Screen; label: string }[] = [
-  { key: "home", label: "Home" },
-  { key: "guest", label: "Guest" },
-  { key: "customer", label: "Customer" },
-  { key: "grower", label: "Grower" },
-  { key: "producer", label: "Value-Added Producer" },
-  { key: "youth", label: "Youth Workforce" },
-  { key: "admin", label: "Leadership" },
-  { key: "market", label: "Marketplace" },
-];
-
-const pathwaySummaries: Record<Screen, string> = {
-  home: "Enter the ecosystem and discover how land becomes food, food becomes wellness, and wellness becomes opportunity.",
-  guest: "Welcome, story, mission, events, and partnership pathways.",
-  customer: "Fresh food, healthier choices, recipes, and ordering access.",
-  grower: "Weather, crop planning, field awareness, and seasonal decision support.",
-  producer: "Products, events, storytelling, collaboration, and value-added visibility.",
-  youth: "Training, support, parent connection, supervisor structure, and daily growth.",
-  admin: "Whole-system visibility across participation, operations, planning, and growth.",
-  market: "Products, GrownBy, education, community, and ordering flow.",
-};
-
-const weatherByScreen: Record<Screen, WeatherData> = {
-  home: {
-    condition: "Partly Cloudy",
-    temp: "64°F",
-    high: "70°F",
-    low: "51°F",
-    note: "Strong conditions for welcoming visitors, tours, and light field activity.",
-  },
-  guest: {
-    condition: "Bright Intervals",
-    temp: "63°F",
-    high: "69°F",
-    low: "50°F",
-    note: "Good visibility for storytelling, site tours, and visitor engagement.",
-  },
-  customer: {
-    condition: "Mild Breeze",
-    temp: "65°F",
-    high: "71°F",
-    low: "52°F",
-    note: "Comfortable weather for market browsing, pickups, and food demonstrations.",
-  },
-  grower: {
-    condition: "Field-Friendly",
-    temp: "61°F",
-    high: "68°F",
-    low: "48°F",
-    note: "Suitable for transplant review, irrigation planning, and crop-timing decisions.",
-  },
-  producer: {
-    condition: "Clear Windows",
-    temp: "66°F",
-    high: "72°F",
-    low: "53°F",
-    note: "Good for vendor setup, product visibility, and event preparation.",
-  },
-  youth: {
-    condition: "Comfortable Outdoor Session",
-    temp: "62°F",
-    high: "68°F",
-    low: "49°F",
-    note: "Strong weather for hands-on learning, movement, and guided youth tasks.",
-  },
-  admin: {
-    condition: "Stable Outlook",
-    temp: "63°F",
-    high: "69°F",
-    low: "50°F",
-    note: "Favorable day for coordination, planning, and operations review.",
-  },
-  market: {
-    condition: "Visitor-Friendly",
-    temp: "67°F",
-    high: "73°F",
-    low: "54°F",
-    note: "Good foot-traffic conditions for selling, demonstrations, and community participation.",
-  },
-};
-
-const cropPlanner = [
-  {
-    crop: "Tomatoes",
-    stage: "Transplant monitoring",
-    timing: "Now",
-    note: "Check vigor, moisture balance, and wind exposure.",
-  },
-  {
-    crop: "Collards",
-    stage: "Strong growth window",
-    timing: "Current cycle",
-    note: "High visibility and strong demand for market education.",
-  },
-  {
-    crop: "Cabbage",
-    stage: "Field observation",
-    timing: "This week",
-    note: "Watch uniformity and pressure.",
-  },
-  {
-    crop: "Peppers",
-    stage: "Warmth-sensitive development",
-    timing: "Next several days",
-    note: "Protect if evening temperatures dip.",
-  },
-  {
-    crop: "Greens & Lettuce",
-    stage: "Succession planning",
-    timing: "Next wave",
-    note: "Keep continuity for food access and market flow.",
-  },
-  {
-    crop: "Melons",
-    stage: "Season preparation",
-    timing: "Upcoming phase",
-    note: "Align with spacing, heat, and irrigation needs.",
-  },
-];
-
-const todayItems = [
-  "Fresh produce visibility, education, and ordering pathways remain active.",
-  "Youth workforce structure supports confidence, responsibility, and growth.",
-  "Grower timing stays linked to weather, crop planning, and continuity.",
-  "Marketplace activity connects products, GrownBy, education, and community.",
-  "The ecosystem is designed so every visitor finds resources and a next step.",
-];
-
-const impactStats = [
-  { label: "118+ Acres Visioned", value: 118, suffix: "+" },
-  { label: "100+ Positive Community Responses", value: 100, suffix: "+" },
-  { label: "10+ Crop Families", value: 10, suffix: "+" },
-  { label: "Youth Workforce Pathway", value: 1, suffix: " Active" },
-];
-
-const resourceGroups = [
-  "Fresh food and healthier choices",
-  "Youth workforce and family support",
-  "Grower tools and crop planning",
-  "Value-added product pathways",
-  "Marketplace access through GrownBy",
-  "Leadership visibility and growth planning",
-];
-
-const partnerLabels = [
-  "Bronson Family Farm",
-  "Farm & Family Alliance",
-  "Parker Farms",
-  "GrownBy",
-  "City of Youngstown",
-  "Central State University",
-  "Home Depot",
-  "Petitti Garden Centers",
-];
-
-function backgroundFor(screen: Screen) {
-  switch (screen) {
-    case "home":
-      return "linear-gradient(135deg, #10261a 0%, #214a36 46%, #8f7d47 100%)";
-    case "guest":
-      return "linear-gradient(135deg, #173225 0%, #3e5c47 48%, #a28a57 100%)";
-    case "customer":
-      return "linear-gradient(135deg, #103429 0%, #1b6c55 48%, #cf9d43 100%)";
-    case "grower":
-      return "linear-gradient(135deg, #112a18 0%, #2f6c3e 48%, #7fae5a 100%)";
-    case "producer":
-      return "linear-gradient(135deg, #2a1e15 0%, #6b523a 50%, #c39867 100%)";
-    case "youth":
-      return "linear-gradient(135deg, #152639 0%, #2f667c 50%, #78aa6b 100%)";
-    case "admin":
-      return "linear-gradient(135deg, #211627 0%, #45406a 50%, #8778b8 100%)";
-    case "market":
-      return "linear-gradient(135deg, #22170f 0%, #684923 50%, #c49231 100%)";
-  }
-}
-
-function imageFor(screen: Screen) {
-  switch (screen) {
-    case "home":
-    case "guest":
-    case "grower":
-    case "youth":
-      return "/GrowArea.jpg";
-    case "customer":
-    case "producer":
-    case "admin":
-    case "market":
-      return "/GrowArea2.jpg";
-  }
-}
-
-function overlayFor(screen: Screen) {
-  switch (screen) {
-    case "home":
-      return "linear-gradient(135deg, rgba(10,18,14,0.18), rgba(10,18,14,0.44))";
-    case "guest":
-      return "linear-gradient(135deg, rgba(40,25,10,0.16), rgba(24,16,8,0.42))";
-    case "customer":
-      return "linear-gradient(135deg, rgba(4,34,24,0.14), rgba(22,20,8,0.40))";
-    case "grower":
-      return "linear-gradient(135deg, rgba(6,32,16,0.16), rgba(8,18,8,0.42))";
-    case "producer":
-      return "linear-gradient(135deg, rgba(50,24,10,0.14), rgba(18,14,10,0.40))";
-    case "youth":
-      return "linear-gradient(135deg, rgba(8,18,40,0.14), rgba(10,16,22,0.42))";
-    case "admin":
-      return "linear-gradient(135deg, rgba(26,18,42,0.18), rgba(12,12,22,0.42))";
-    case "market":
-      return "linear-gradient(135deg, rgba(40,24,10,0.14), rgba(18,14,8,0.42))";
-  }
-}
-
-function useClock() {
-  const [now, setNow] = useState(new Date());
-  useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(id);
-  }, []);
-  return now;
-}
-
-function useSpeech() {
-  const [enabled, setEnabled] = useState(false);
-
-  const stop = () => {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-    setEnabled(false);
-  };
-
-  const speak = (text: string, onComplete?: () => void) => {
-    if (!("speechSynthesis" in window)) {
-      onComplete?.();
-      return;
-    }
-
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
-    utterance.onend = () => onComplete?.();
-    utterance.onerror = () => onComplete?.();
-    window.speechSynthesis.speak(utterance);
-  };
-
-  return { enabled, setEnabled, stop, speak };
-}
-
-function seasonPulseForMonth(month: number) {
-  if ([12, 1, 2].includes(month)) return "Planning and protected growth";
-  if ([3, 4, 5].includes(month)) return "Seedtime and expansion";
-  if ([6, 7, 8].includes(month)) return "Peak growth and market activity";
-  return "Harvest, storage, and next-cycle planning";
-}
-
-function useAnimatedCount(target: number, duration = 1200) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let frame = 0;
-    const totalFrames = Math.max(30, Math.round(duration / 16));
-    const id = window.setInterval(() => {
-      frame += 1;
-      const progress = Math.min(1, frame / totalFrames);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.round(target * eased));
-      if (progress >= 1) {
-        window.clearInterval(id);
-      }
-    }, 16);
-    return () => window.clearInterval(id);
-  }, [target, duration]);
-
-  return count;
-}
-
-function Card({
-  title,
-  children,
-  minHeight,
-}: {
-  title?: string;
-  children: React.ReactNode;
-  minHeight?: number;
-}) {
-  return (
-    <div
-      style={{
-        background: "rgba(8, 12, 10, 0.52)",
-        border: "1px solid rgba(255,255,255,0.12)",
-        borderRadius: 26,
-        backdropFilter: "blur(14px)",
-        boxShadow: "0 18px 50px rgba(0,0,0,0.28)",
-        overflow: "hidden",
-        minHeight,
-      }}
-    >
-      {title ? (
-        <div
-          style={{
-            padding: "14px 18px",
-            borderBottom: "1px solid rgba(255,255,255,0.10)",
-            color: "rgba(255,255,255,0.82)",
-            fontSize: 12,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          {title}
-        </div>
-      ) : null}
-      <div style={{ padding: 18 }}>{children}</div>
-    </div>
-  );
-}
-
-function SoftBlock({
-  title,
-  children,
-}: {
-  title?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      style={{
-        background: "rgba(255,255,255,0.08)",
-        borderRadius: 18,
-        padding: 14,
-        lineHeight: 1.7,
-        color: "rgba(255,255,255,0.92)",
-      }}
-    >
-      {title ? (
-        <div style={{ fontWeight: 800, marginBottom: 8, fontSize: 16 }}>{title}</div>
-      ) : null}
-      {children}
-    </div>
-  );
-}
-
-function ActionButton({
-  label,
-  onClick,
-  primary = false,
-  active = false,
-}: {
-  label: string;
-  onClick: () => void;
-  primary?: boolean;
-  active?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: "12px 16px",
-        borderRadius: 14,
-        border: primary
-          ? "1px solid rgba(255,255,255,0)"
-          : active
-          ? "1px solid rgba(213,255,194,0.84)"
-          : "1px solid rgba(255,255,255,0.14)",
-        background: primary
-          ? "#dff3c7"
-          : active
-          ? "rgba(171,239,146,0.18)"
-          : "rgba(255,255,255,0.10)",
-        color: primary ? "#102012" : "#ffffff",
-        fontWeight: 700,
-        fontSize: 14,
-        cursor: "pointer",
-        textAlign: "left",
-        transition: "transform 160ms ease, box-shadow 160ms ease",
-        boxShadow: primary ? "0 8px 22px rgba(187,237,148,0.18)" : "none",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-1px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-      }}
-    >
-      {label}
-    </button>
-  );
-}
-
-function Pill({ text }: { text: string }) {
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        padding: "8px 12px",
-        borderRadius: 999,
-        border: "1px solid rgba(255,255,255,0.18)",
-        background: "rgba(255,255,255,0.08)",
-        color: "rgba(255,255,255,0.92)",
-        fontSize: 12,
-        fontWeight: 600,
-      }}
-    >
-      {text}
-    </span>
-  );
-}
-
-function PortalTile({
-  title,
-  subtitle,
-  image,
-  tint,
-  onClick,
-}: {
+type ScreenConfig = {
+  key: ScreenKey;
   title: string;
   subtitle: string;
   image: string;
-  tint: string;
-  onClick: () => void;
-}) {
-  const [imgError, setImgError] = useState(false);
+  overlay?: string;
+};
 
+const LANGUAGES: Record<LanguageKey, { label: string; voiceName: string }> = {
+  en: { label: "English", voiceName: "English Demo Voice" },
+  es: { label: "Español", voiceName: "Voz en Español" },
+  tl: { label: "Tagalog", voiceName: "Boses Tagalog" },
+  it: { label: "Italiano", voiceName: "Voce Italiana" },
+  patwa: { label: "Patwa", voiceName: "Patwa Guide" },
+  he: { label: "Hebrew", voiceName: "Hebrew Guide" },
+};
+
+const TRANSLATIONS: Record<LanguageKey, any> = {
+  en: {
+    brand: "Bronson Family Farm",
+    subbrand: "Farm & Family Alliance Ecosystem Demo",
+    tagline: "Step into a living farm ecosystem built for families, growers, learners, partners, and future generations.",
+    introTitle: "A place people want to return to",
+    introBody:
+      "This is more than a website. It is a guided farm experience designed to help each visitor find resources, relationships, opportunities, produce, education, and a clear path forward.",
+    enterDemo: "Enter Live Demo",
+    guidedTour: "Start Guided Tour",
+    stopTour: "Stop Tour",
+    chooseLanguage: "Choose language",
+    rolePathways: "Role pathways",
+    exploreModules: "Explore modules",
+    backHome: "Back to entrance",
+    next: "Next",
+    previous: "Previous",
+    marketplaceBtn: "Go to Marketplace",
+    plannerBtn: "Open Crop Planner",
+    eventsBtn: "View Events",
+    wellnessBtn: "Health & Nutrition",
+    storyBtn: "Our Story",
+    voiceOn: "Voice narration on",
+    voiceOff: "Voice narration off",
+    weatherLabel: "Seasonal conditions",
+    weatherValue: "Warm season planning active",
+    calendarLabel: "Farm calendar",
+    calendarValue: "Seedlings, events, education, and harvest pathways",
+    welcomeCards: [
+      {
+        title: "Families belong here",
+        text: "Guests discover the farm story, the land, the airport history, events, and community experiences.",
+      },
+      {
+        title: "Customers find food and guidance",
+        text: "Customers can move quickly to the marketplace, see produce and seedling offerings, and return for recipes, nutrition, and wellness support.",
+      },
+      {
+        title: "Growers and producers find tools",
+        text: "Growers access planning, training, collaboration, and the ecosystem needed to keep growing.",
+      },
+    ],
+    modules: [
+      "Marketplace through GrownBy",
+      "Events and reservation pathways",
+      "Crop planning and seasonal guidance",
+      "Youth workforce and supervisor support",
+      "Nutrition, recipes, and wellness education",
+      "Family legacy, agritourism, and community partnerships",
+    ],
+    screens: {
+      home: {
+        title: "Welcome to the ecosystem",
+        subtitle:
+          "A regenerative farm, agritourism destination, and community platform rooted in land, family legacy, and practical access to resources.",
+      },
+      story: {
+        title: "The story behind the farm",
+        subtitle:
+          "Inspired by family farming traditions, strengthened through Bronson and Lorenzana legacy, and shaped for Youngstown’s future.",
+      },
+      guest: {
+        title: "Guest pathway",
+        subtitle:
+          "Guests can discover the farm, the land, the mission, the airport story, available events, and the reasons this place matters.",
+      },
+      customer: {
+        title: "Customer pathway",
+        subtitle:
+          "Customers can shop seedlings and produce, learn about food quality, access recipes, and connect food choices to wellness.",
+      },
+      marketplace: {
+        title: "Marketplace pathway",
+        subtitle:
+          "The marketplace centers GrownBy so people can move from learning to purchasing without losing the ecosystem experience.",
+      },
+      grower: {
+        title: "Grower pathway",
+        subtitle:
+          "Growers return for crop planning, seasonal timing, production support, and connections to a broader grower ecosystem.",
+      },
+      valueAdded: {
+        title: "Value-added producer pathway",
+        subtitle:
+          "Producers can explore packaging, branding, preparation, events, and the pathway from raw product to meaningful local commerce.",
+      },
+      youth: {
+        title: "Youth workforce pathway",
+        subtitle:
+          "Young people experience agriculture, STEAM, entrepreneurship, responsibility, and career-connected learning in one place.",
+      },
+      supervisor: {
+        title: "Supervisor pathway",
+        subtitle:
+          "Supervisors support youth workforce operations with role-based guidance, logistics, check-ins, wellness support, and accountability.",
+      },
+      planner: {
+        title: "Crop planning center",
+        subtitle:
+          "The planning hub helps connect seasons, inventory, grower coordination, and event readiness across the ecosystem.",
+      },
+      events: {
+        title: "Events and community experiences",
+        subtitle:
+          "From growers supply days to farm visits, demonstrations, education, and family experiences, events bring people back again and again.",
+      },
+      wellness: {
+        title: "Health, nutrition, and food education",
+        subtitle:
+          "The ecosystem connects fresh food access with practical guidance on diet, movement, diabetes awareness, and healthier choices.",
+      },
+    },
+    roleCards: {
+      guest: {
+        title: "Guest",
+        text: "Discover the farm, the story, the land, the airport legacy, community events, and where to start.",
+      },
+      customer: {
+        title: "Customer",
+        text: "Shop through GrownBy, track interests, learn what is available, and return for recipes and nutrition support.",
+      },
+      grower: {
+        title: "Grower",
+        text: "Access planning, seasonal guidance, training, coordination, and collaborative opportunities.",
+      },
+      valueAdded: {
+        title: "Value-Added Producer",
+        text: "See how products, education, packaging, and local market opportunities can work together.",
+      },
+      youth: {
+        title: "Youth Workforce",
+        text: "Learn farming, teamwork, STEAM, responsibility, and entrepreneurship through guided participation.",
+      },
+      supervisor: {
+        title: "Supervisor",
+        text: "Support youth pathways with scheduling, check-in, oversight, wellness support, and staff resources.",
+      },
+    },
+    narration: {
+      home:
+        "Welcome to Bronson Family Farm. This experience is designed to feel alive, useful, and welcoming. Every role has a purpose here, and every pathway leads somewhere meaningful.",
+      story:
+        "Bronson Family Farm carries family history, farming heritage, and a commitment to restoring land while serving people. This is where legacy becomes future infrastructure.",
+      guest:
+        "The guest pathway helps visitors understand the place. They can explore the farm story, the FAA approved grow areas, the airport association relationship, events, and community opportunities.",
+      customer:
+        "The customer pathway moves people quickly toward food, seedlings, marketplace access, nutrition education, recipe ideas, and better understanding of natural food compared with processed food.",
+      marketplace:
+        "The marketplace is centered on GrownBy. Customers should always feel that shopping is close at hand, while still being connected to the larger story and resources of the ecosystem.",
+      grower:
+        "The grower pathway is designed for return visits. It includes planning, crop timing, collaboration, seasonal readiness, and the practical structure growers need to keep moving.",
+      valueAdded:
+        "The value-added producer pathway shows how local products can become stronger through branding, packaging, demonstrations, market access, and shared visibility.",
+      youth:
+        "The youth workforce pathway turns the farm into a living learning environment. Young people encounter agriculture, entrepreneurship, technology, and teamwork in one connected experience.",
+      supervisor:
+        "The supervisor pathway exists inside youth workforce. It supports staffing, accountability, emotional support resources, logistics, and clear role based guidance.",
+      planner:
+        "The crop planning center connects the seasons to real decisions. This is where the ecosystem becomes practical, coordinated, and ready for production and events.",
+      events:
+        "Events are not an extra feature. They are part of how the ecosystem welcomes new people, deepens relationships, and gives the community reasons to return.",
+      wellness:
+        "Health and nutrition are woven into this platform. The goal is not only to sell food, but to help people understand why better food choices matter.",
+    },
+  },
+  es: {
+    ...({} as any),
+  },
+  tl: {
+    ...({} as any),
+  },
+  it: {
+    ...({} as any),
+  },
+  patwa: {
+    ...({} as any),
+  },
+  he: {
+    ...({} as any),
+  },
+};
+
+// Fill non-English labels by reusing English UI while keeping language switching functional.
+for (const key of ["es", "tl", "it", "patwa", "he"] as LanguageKey[]) {
+  TRANSLATIONS[key] = {
+    ...TRANSLATIONS.en,
+    chooseLanguage: `${TRANSLATIONS.en.chooseLanguage}`,
+    narration: TRANSLATIONS.en.narration,
+  };
+}
+
+const SCREEN_ORDER: ScreenKey[] = [
+  "home",
+  "story",
+  "guest",
+  "customer",
+  "marketplace",
+  "grower",
+  "valueAdded",
+  "youth",
+  "supervisor",
+  "planner",
+  "events",
+  "wellness",
+];
+
+const SCREEN_CONFIG: Record<ScreenKey, ScreenConfig> = {
+  home: {
+    key: "home",
+    title: "Welcome",
+    subtitle: "Start here",
+    image: IMAGES.entrance,
+    overlay: "from-black/70 via-black/35 to-emerald-950/80",
+  },
+  story: {
+    key: "story",
+    title: "Story",
+    subtitle: "Legacy and land",
+    image: IMAGES.story,
+    overlay: "from-black/70 via-zinc-900/20 to-stone-950/80",
+  },
+  guest: {
+    key: "guest",
+    title: "Guest",
+    subtitle: "Discover the place",
+    image: IMAGES.guest,
+    overlay: "from-black/75 via-emerald-950/20 to-black/75",
+  },
+  customer: {
+    key: "customer",
+    title: "Customer",
+    subtitle: "Food and guidance",
+    image: IMAGES.customer,
+    overlay: "from-black/75 via-green-900/20 to-black/80",
+  },
+  marketplace: {
+    key: "marketplace",
+    title: "Marketplace",
+    subtitle: "GrownBy centered",
+    image: IMAGES.marketplace,
+    overlay: "from-black/75 via-lime-900/20 to-black/80",
+  },
+  grower: {
+    key: "grower",
+    title: "Grower",
+    subtitle: "Planning and production",
+    image: IMAGES.grower,
+    overlay: "from-black/75 via-emerald-900/20 to-black/80",
+  },
+  valueAdded: {
+    key: "valueAdded",
+    title: "Value-Added",
+    subtitle: "Products and branding",
+    image: IMAGES.valueAdded,
+    overlay: "from-black/75 via-amber-900/15 to-black/80",
+  },
+  youth: {
+    key: "youth",
+    title: "Youth Workforce",
+    subtitle: "Learning by doing",
+    image: IMAGES.youth,
+    overlay: "from-black/75 via-sky-900/20 to-black/80",
+  },
+  supervisor: {
+    key: "supervisor",
+    title: "Supervisor",
+    subtitle: "Support inside youth workforce",
+    image: IMAGES.supervisor,
+    overlay: "from-black/75 via-violet-900/20 to-black/80",
+  },
+  planner: {
+    key: "planner",
+    title: "Planner",
+    subtitle: "Calendar and crops",
+    image: IMAGES.planning,
+    overlay: "from-black/75 via-teal-900/20 to-black/80",
+  },
+  events: {
+    key: "events",
+    title: "Events",
+    subtitle: "Come back again and again",
+    image: IMAGES.events,
+    overlay: "from-black/75 via-orange-900/20 to-black/80",
+  },
+  wellness: {
+    key: "wellness",
+    title: "Wellness",
+    subtitle: "Nutrition and better choices",
+    image: IMAGES.wellness,
+    overlay: "from-black/75 via-rose-900/10 to-black/80",
+  },
+};
+
+function useSpeech() {
+  const synthRef = useRef<SpeechSynthesis | null>(typeof window !== "undefined" ? window.speechSynthesis : null);
+
+  const stop = () => {
+    synthRef.current?.cancel();
+  };
+
+  const speak = (text: string, lang: LanguageKey) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    const map: Record<LanguageKey, string> = {
+      en: "en-US",
+      es: "es-ES",
+      tl: "fil-PH",
+      it: "it-IT",
+      patwa: "en-JM",
+      he: "he-IL",
+    };
+    utter.lang = map[lang] || "en-US";
+    utter.rate = 0.95;
+    utter.pitch = 1;
+    synthRef.current?.cancel();
+    synthRef.current?.speak(utter);
+  };
+
+  return { speak, stop };
+}
+
+function SectionButton({ icon, label, onClick, active = false }: { icon: React.ReactNode; label: string; onClick: () => void; active?: boolean }) {
   return (
     <button
       onClick={onClick}
-      style={{
-        width: "100%",
-        border: "1px solid rgba(255,255,255,0.10)",
-        borderRadius: 24,
-        overflow: "hidden",
-        background: "rgba(255,255,255,0.05)",
-        cursor: "pointer",
-        textAlign: "left",
-        transition: "transform 180ms ease, box-shadow 180ms ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-3px)";
-        e.currentTarget.style.boxShadow = "0 14px 28px rgba(0,0,0,0.20)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = "none";
-      }}
+      className={`group flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
+        active
+          ? "border-white/40 bg-white/20 text-white"
+          : "border-white/15 bg-black/30 text-white/90 hover:border-white/30 hover:bg-white/10"
+      }`}
     >
-      <div style={{ position: "relative", height: 182 }}>
-        {!imgError ? (
-          <img
-            src={image}
-            alt={title}
-            onError={() => setImgError(true)}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-              opacity: 0.92,
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              background: tint,
-            }}
-          />
-        )}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: tint,
-            mixBlendMode: "multiply",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.84), rgba(0,0,0,0.30), rgba(0,0,0,0.08))",
-          }}
-        />
-        <div style={{ position: "absolute", left: 18, right: 18, bottom: 14 }}>
-          <div style={{ color: "#fff", fontSize: 20, fontWeight: 900 }}>{title}</div>
-          <div
-            style={{
-              marginTop: 6,
-              color: "rgba(255,255,255,0.88)",
-              fontSize: 13,
-              lineHeight: 1.45,
-            }}
-          >
-            {subtitle}
-          </div>
+      <span className="opacity-90">{icon}</span>
+      <span>{label}</span>
+    </button>
+  );
+}
+
+function InfoCard({ title, text, icon }: { title: string; text: string; icon: React.ReactNode }) {
+  return (
+    <div className="rounded-3xl border border-white/15 bg-white/10 p-5 shadow-2xl backdrop-blur-md">
+      <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 text-white">{icon}</div>
+      <h3 className="text-lg font-semibold text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-white/80">{text}</p>
+    </div>
+  );
+}
+
+function RoleTile({ title, text, image, onClick }: { title: string; text: string; image: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="group relative min-h-[250px] overflow-hidden rounded-[28px] border border-white/15 bg-white/10 text-left shadow-2xl transition hover:-translate-y-1 hover:border-white/30"
+    >
+      <img src={image} alt={title} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
+      <div className="relative flex h-full flex-col justify-end p-6">
+        <h3 className="text-2xl font-semibold text-white">{title}</h3>
+        <p className="mt-2 max-w-md text-sm leading-6 text-white/85">{text}</p>
+        <div className="mt-4 inline-flex items-center gap-2 text-sm text-white/90">
+          <span>Open pathway</span>
+          <ArrowRight className="h-4 w-4" />
         </div>
       </div>
     </button>
   );
 }
 
-function WeatherPanel({ data }: { data: WeatherData }) {
-  return (
-    <Card title="Weather">
-      <div style={{ display: "grid", gap: 12 }}>
-        <div style={{ fontSize: 28, fontWeight: 900 }}>{data.temp}</div>
-        <div style={{ fontSize: 18, color: "rgba(255,255,255,0.88)" }}>{data.condition}</div>
-        <div style={{ color: "rgba(255,255,255,0.72)" }}>
-          High {data.high} · Low {data.low}
-        </div>
-        <SoftBlock>{data.note}</SoftBlock>
-      </div>
-    </Card>
+function App() {
+  const [language, setLanguage] = useState<LanguageKey>("en");
+  const [screen, setScreen] = useState<ScreenKey>("home");
+  const [tourOn, setTourOn] = useState(false);
+  const [voiceOn, setVoiceOn] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [imageModal, setImageModal] = useState<string | null>(null);
+  const { speak, stop } = useSpeech();
+  const t = TRANSLATIONS[language];
+
+  const currentIndex = SCREEN_ORDER.indexOf(screen);
+  const currentScreen = SCREEN_CONFIG[screen];
+
+  const gallery = useMemo(
+    () => [
+      IMAGES.community,
+      IMAGES.education,
+      IMAGES.nutrition,
+      IMAGES.recipes,
+      IMAGES.volunteers,
+      IMAGES.training,
+      IMAGES.produce,
+      IMAGES.family,
+      IMAGES.airport,
+      IMAGES.future,
+      IMAGES.legacy,
+      IMAGES.logistics,
+    ],
+    []
   );
-}
-
-function CropPlannerPanel() {
-  return (
-    <Card title="Crop Planner">
-      <div style={{ display: "grid", gap: 12 }}>
-        {cropPlanner.map((item) => (
-          <SoftBlock key={item.crop} title={item.crop}>
-            <div>{item.stage}</div>
-            <div style={{ opacity: 0.8, fontSize: 14 }}>{item.timing}</div>
-            <div style={{ marginTop: 4 }}>{item.note}</div>
-          </SoftBlock>
-        ))}
-      </div>
-    </Card>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  suffix = "",
-}: {
-  label: string;
-  value: number;
-  suffix?: string;
-}) {
-  const count = useAnimatedCount(value);
-  return (
-    <SoftBlock title={label}>
-      <div style={{ fontSize: 32, fontWeight: 900, lineHeight: 1 }}>
-        {count}
-        {suffix}
-      </div>
-    </SoftBlock>
-  );
-}
-
-function DestinationFooter({
-  onBack,
-  onNext,
-  nextLabel = "Continue",
-}: {
-  onBack: () => void;
-  onNext: () => void;
-  nextLabel?: string;
-}) {
-  return (
-    <div style={{ display: "flex", gap: 12, marginTop: 18, flexWrap: "wrap" }}>
-      <ActionButton label="Back" onClick={onBack} />
-      <ActionButton label={nextLabel} onClick={onNext} primary />
-    </div>
-  );
-}
-
-function ScreenShell({
-  screen,
-  title,
-  subtitle,
-  topActions,
-  children,
-}: {
-  screen: Screen;
-  title: string;
-  subtitle: string;
-  topActions?: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  const [imgError, setImgError] = useState(false);
-
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: backgroundFor(screen),
-        color: "#ffffff",
-        fontFamily: 'Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      }}
-    >
-      <style>{`
-        @keyframes bffFloat {
-          0% { transform: translate3d(0,0,0) scale(1.04); }
-          50% { transform: translate3d(-10px,-6px,0) scale(1.06); }
-          100% { transform: translate3d(0,0,0) scale(1.04); }
-        }
-        @keyframes bffGlow {
-          0% { opacity: .22; }
-          50% { opacity: .36; }
-          100% { opacity: .22; }
-        }
-      `}</style>
-
-      <div style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden" }}>
-        {!imgError ? (
-          <img
-            src={imageFor(screen)}
-            alt={screen}
-            onError={() => setImgError(true)}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              opacity: 0.34,
-              transform: "scale(1.04)",
-              animation: "bffFloat 18s ease-in-out infinite",
-            }}
-          />
-        ) : null}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: overlayFor(screen),
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(circle at 18% 18%, rgba(189,239,154,0.12), transparent 32%), radial-gradient(circle at 82% 28%, rgba(255,210,120,0.10), transparent 30%)",
-            animation: "bffGlow 8s ease-in-out infinite",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to bottom, rgba(3,8,6,0.32), rgba(3,8,6,0.60), rgba(3,8,6,0.90))",
-          }}
-        />
-      </div>
-
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          maxWidth: 1450,
-          margin: "0 auto",
-          padding: "18px 18px 40px",
-        }}
-      >
-        <div
-          style={{
-            background: "rgba(6,10,8,0.42)",
-            border: "1px solid rgba(255,255,255,0.10)",
-            borderRadius: 26,
-            padding: 18,
-            backdropFilter: "blur(16px)",
-            boxShadow: "0 18px 50px rgba(0,0,0,0.25)",
-            marginBottom: 18,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 20,
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
-          >
-            <div style={{ flex: "1 1 680px", minWidth: 280 }}>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 14 }}>
-                <Pill text={screen.toUpperCase()} />
-              </div>
-              <div
-                style={{
-                  fontSize: 48,
-                  fontWeight: 900,
-                  lineHeight: 1.05,
-                  letterSpacing: "-0.03em",
-                  maxWidth: 940,
-                }}
-              >
-                {title}
-              </div>
-              <div
-                style={{
-                  marginTop: 10,
-                  fontSize: 19,
-                  lineHeight: 1.65,
-                  color: "rgba(255,255,255,0.86)",
-                  maxWidth: 920,
-                }}
-              >
-                {subtitle}
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>{topActions}</div>
-          </div>
-        </div>
-
-        {children}
-      </div>
-    </div>
-  );
-}
-
-export default function App() {
-  const [screen, setScreen] = useState<Screen>("home");
-  const [guestView, setGuestView] = useState<GuestView>("story");
-  const [customerView, setCustomerView] = useState<CustomerView>("produce");
-  const [growerView, setGrowerView] = useState<GrowerView>("weather");
-  const [producerView, setProducerView] = useState<ProducerView>("products");
-  const [youthView, setYouthView] = useState<YouthView>("overview");
-  const [adminView, setAdminView] = useState<AdminView>("participation");
-  const [marketView, setMarketView] = useState<MarketView>("products");
-  const [tourIndex, setTourIndex] = useState(0);
-  const [farmPulseIndex, setFarmPulseIndex] = useState(0);
-
-  const clock = useClock();
-  const speech = useSpeech();
-  const timeoutRef = useRef<number | null>(null);
-
-  const timeText = useMemo(
-    () =>
-      new Intl.DateTimeFormat("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      }).format(clock),
-    [clock]
-  );
-
-  const seasonPulse = seasonPulseForMonth(clock.getMonth() + 1);
 
   useEffect(() => {
-    const id = window.setInterval(() => {
-      setFarmPulseIndex((prev) => (prev + 1) % todayItems.length);
-    }, 3500);
-    return () => window.clearInterval(id);
-  }, []);
+    if (!voiceOn) {
+      stop();
+      return;
+    }
+    const text = t.narration[screen];
+    if (text) speak(text, language);
+    return () => stop();
+  }, [screen, language, voiceOn]);
 
-  const guidedTour = [
-    {
-      screen: "home" as Screen,
-      text:
-        "Welcome to Bronson Family Farm. This is a place-based ecosystem where land becomes food, food becomes wellness, and wellness becomes opportunity.",
-      setup: () => {},
-    },
-    {
-      screen: "guest" as Screen,
-      text:
-        "Guests begin with story, mission, events, and partnership pathways, so they understand why this place matters.",
-      setup: () => setGuestView("story"),
-    },
-    {
-      screen: "customer" as Screen,
-      text:
-        "Customers move from produce to nutrition to recipes to ordering, so discovery becomes action.",
-      setup: () => setCustomerView("produce"),
-    },
-    {
-      screen: "grower" as Screen,
-      text:
-        "Growers use weather, crop planning, field notes, and seasonal priorities to support real agricultural decisions.",
-      setup: () => setGrowerView("weather"),
-    },
-    {
-      screen: "youth" as Screen,
-      text:
-        "Youth workforce participants, families, and supervisors each have a clear destination with support and structure.",
-      setup: () => setYouthView("overview"),
-    },
-    {
-      screen: "market" as Screen,
-      text:
-        "The marketplace brings products, education, community, GrownBy, and ordering together in one place.",
-      setup: () => setMarketView("products"),
-    },
+  useEffect(() => {
+    if (!tourOn) return;
+    const id = setInterval(() => {
+      setScreen((prev) => {
+        const i = SCREEN_ORDER.indexOf(prev);
+        const next = SCREEN_ORDER[(i + 1) % SCREEN_ORDER.length];
+        return next;
+      });
+    }, 9000);
+    return () => clearInterval(id);
+  }, [tourOn]);
+
+  const goto = (next: ScreenKey) => {
+    setTourOn(false);
+    setScreen(next);
+    setMenuOpen(false);
+  };
+
+  const nextScreen = () => goto(SCREEN_ORDER[(currentIndex + 1) % SCREEN_ORDER.length]);
+  const prevScreen = () => goto(SCREEN_ORDER[(currentIndex - 1 + SCREEN_ORDER.length) % SCREEN_ORDER.length]);
+
+  const roleCards = [
+    { key: "guest" as RoleKey, image: IMAGES.guest, icon: <UserRound className="h-5 w-5" /> },
+    { key: "customer" as RoleKey, image: IMAGES.customer, icon: <ShoppingBasket className="h-5 w-5" /> },
+    { key: "grower" as RoleKey, image: IMAGES.grower, icon: <Sprout className="h-5 w-5" /> },
+    { key: "valueAdded" as RoleKey, image: IMAGES.valueAdded, icon: <Store className="h-5 w-5" /> },
+    { key: "youth" as RoleKey, image: IMAGES.youth, icon: <GraduationCap className="h-5 w-5" /> },
+    { key: "supervisor" as RoleKey, image: IMAGES.supervisor, icon: <ShieldCheck className="h-5 w-5" /> },
   ];
 
-  const navigate = (next: Screen) => {
-    setScreen(next);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  return (
+    <div className="min-h-screen bg-[#09130f] text-white">
+      <div className="relative min-h-screen overflow-hidden">
+        <img src={currentScreen.image} alt={currentScreen.title} className="absolute inset-0 h-full w-full object-cover" />
+        <div className={`absolute inset-0 bg-gradient-to-br ${currentScreen.overlay || "from-black/70 via-black/30 to-black/80"}`} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(120,255,176,0.15),transparent_25%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.07),transparent_18%)]" />
 
-  useEffect(() => {
-    if (!speech.enabled) return;
+        <header className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-5 md:px-8">
+          <button onClick={() => goto("home")} className="text-left">
+            <div className="text-xs uppercase tracking-[0.35em] text-white/60">{t.subbrand}</div>
+            <div className="mt-1 text-2xl font-semibold tracking-tight">{t.brand}</div>
+          </button>
 
-    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+          <div className="hidden items-center gap-2 lg:flex">
+            <SectionButton icon={<Home className="h-4 w-4" />} label="Entrance" onClick={() => goto("home")} active={screen === "home"} />
+            <SectionButton icon={<Info className="h-4 w-4" />} label={t.storyBtn} onClick={() => goto("story")} active={screen === "story"} />
+            <SectionButton icon={<Users className="h-4 w-4" />} label={t.rolePathways} onClick={() => goto("guest")} active={["guest", "customer", "grower", "valueAdded", "youth", "supervisor"].includes(screen)} />
+            <SectionButton icon={<CalendarDays className="h-4 w-4" />} label={t.eventsBtn} onClick={() => goto("events")} active={screen === "events"} />
+            <SectionButton icon={<HeartPulse className="h-4 w-4" />} label={t.wellnessBtn} onClick={() => goto("wellness")} active={screen === "wellness"} />
+            <SectionButton icon={<Store className="h-4 w-4" />} label={t.marketplaceBtn} onClick={() => goto("marketplace")} active={screen === "marketplace"} />
+          </div>
 
-    const step = guidedTour[tourIndex];
-    step.setup();
-    navigate(step.screen);
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setVoiceOn((v) => !v)}
+              className="rounded-full border border-white/15 bg-black/35 px-3 py-2 text-sm text-white/90 hover:bg-white/10"
+            >
+              <span className="inline-flex items-center gap-2"><Mic className="h-4 w-4" /> {voiceOn ? t.voiceOn : t.voiceOff}</span>
+            </button>
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              className="rounded-full border border-white/15 bg-black/35 px-3 py-2 text-sm text-white/90 hover:bg-white/10 lg:hidden"
+            >
+              Menu
+            </button>
+          </div>
+        </header>
 
-    speech.speak(step.text, () => {
-      timeoutRef.current = window.setTimeout(() => {
-        setTourIndex((prev) => (prev + 1) % guidedTour.length);
-      }, 1100);
-    });
+        {menuOpen && (
+          <div className="relative z-30 mx-4 rounded-3xl border border-white/15 bg-black/70 p-4 backdrop-blur-xl md:mx-8 lg:hidden">
+            <div className="grid gap-2 sm:grid-cols-2">
+              {SCREEN_ORDER.map((item) => (
+                <button
+                  key={item}
+                  onClick={() => goto(item)}
+                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-white/85 hover:bg-white/10"
+                >
+                  {t.screens[item].title}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
-    return () => {
-      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-    };
-  }, [speech.enabled, tourIndex]);
+        <main className="relative z-10 mx-auto max-w-7xl px-4 pb-14 pt-8 md:px-8 md:pt-14">
+          <div className="grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+            <div>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-white/75 backdrop-blur-md">
+                <Leaf className="h-4 w-4" />
+                {t.screens[screen].title}
+              </div>
 
-  useEffect(() => {
-    return () => {
-      speech.stop();
-      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-    };
-  }, []);
+              <h1 className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight text-white md:text-6xl">
+                {t.screens[screen].title}
+              </h1>
 
-  const startTour = () => {
-    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-    setTourIndex(0);
-    speech.setEnabled(true);
-  };
+              <p className="mt-5 max-w-3xl text-base leading-7 text-white/85 md:text-lg md:leading-8">
+                {t.screens[screen].subtitle}
+              </p>
 
-  const stopTour = () => {
-    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-    speech.stop();
-  };
+              <div className="mt-8 flex flex-wrap gap-3">
+                <button
+                  onClick={() => {
+                    setTourOn(true);
+                    goto(screen);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0c1a14] shadow-xl transition hover:scale-[1.02]"
+                >
+                  <Play className="h-4 w-4" /> {tourOn ? t.stopTour : t.guidedTour}
+                </button>
+                <button
+                  onClick={() => goto("marketplace")}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/25 px-5 py-3 text-sm font-medium text-white/95 hover:bg-white/10"
+                >
+                  <Store className="h-4 w-4" /> {t.marketplaceBtn}
+                </button>
+                <button
+                  onClick={() => goto("planner")}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/25 px-5 py-3 text-sm font-medium text-white/95 hover:bg-white/10"
+                >
+                  <CalendarDays className="h-4 w-4" /> {t.plannerBtn}
+                </button>
+              </div>
 
-  const commonTopActions = (
-    <>
-      <ActionButton label="Back Home" onClick={() => navigate("home")} />
-      <ActionButton label="Marketplace" onClick={() => navigate("market")} />
-      {!speech.enabled ? (
-        <ActionButton label="Start Guided Tour" onClick={startTour} primary />
-      ) : (
-        <ActionButton label="Stop Guided Tour" onClick={stopTour} primary />
+              <div className="mt-10 grid gap-4 md:grid-cols-3">
+                <InfoCard title={t.weatherLabel} text={t.weatherValue} icon={<CloudSun className="h-5 w-5" />} />
+                <InfoCard title={t.calendarLabel} text={t.calendarValue} icon={<CalendarDays className="h-5 w-5" />} />
+                <InfoCard
+                  title={t.chooseLanguage}
+                  text={LANGUAGES[language].label}
+                  icon={<Languages className="h-5 w-5" />}
+                />
+              </div>
+            </div>
+
+            <div className="rounded-[32px] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-xl md:p-5">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-sm uppercase tracking-[0.25em] text-white/55">{t.chooseLanguage}</div>
+                  <div className="mt-1 text-lg font-semibold text-white">{LANGUAGES[language].label}</div>
+                </div>
+                <Globe className="h-5 w-5 text-white/80" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {(Object.keys(LANGUAGES) as LanguageKey[]).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setLanguage(lang)}
+                    className={`rounded-2xl border px-3 py-3 text-sm transition ${
+                      language === lang
+                        ? "border-white/40 bg-white/20 text-white"
+                        : "border-white/10 bg-black/20 text-white/80 hover:bg-white/10"
+                    }`}
+                  >
+                    {LANGUAGES[lang].label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-5 rounded-[28px] border border-white/10 bg-black/20 p-4">
+                <div className="text-xs uppercase tracking-[0.25em] text-white/50">{t.introTitle}</div>
+                <p className="mt-3 text-sm leading-7 text-white/85">{t.introBody}</p>
+              </div>
+
+              <div className="mt-5 grid gap-3">
+                {t.welcomeCards.map((card: any) => (
+                  <div key={card.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div className="text-base font-semibold text-white">{card.title}</div>
+                    <p className="mt-2 text-sm leading-6 text-white/80">{card.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {screen === "home" && (
+            <section className="mt-12">
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-semibold text-white md:text-3xl">{t.rolePathways}</h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">
+                    Each role should feel welcomed, informed, and able to move forward. These pathways are designed to create return visits, not one-time clicks.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {roleCards.map((role) => (
+                  <RoleTile
+                    key={role.key}
+                    title={t.roleCards[role.key].title}
+                    text={t.roleCards[role.key].text}
+                    image={role.image}
+                    onClick={() => goto(role.key as ScreenKey)}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {(screen === "guest" ||
+            screen === "customer" ||
+            screen === "marketplace" ||
+            screen === "grower" ||
+            screen === "valueAdded" ||
+            screen === "youth" ||
+            screen === "supervisor" ||
+            screen === "story" ||
+            screen === "planner" ||
+            screen === "events" ||
+            screen === "wellness") && (
+            <section className="mt-12 grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+              <div className="rounded-[30px] border border-white/15 bg-white/10 p-5 backdrop-blur-xl">
+                <div className="mb-4 text-xs uppercase tracking-[0.25em] text-white/55">Pathway details</div>
+
+                {screen === "story" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Family legacy" text="The farm honors the Bronson and Lorenzana family legacies while building a future-facing food and agritourism platform in Youngstown." icon={<Trees className="h-5 w-5" />} />
+                    <InfoCard title="Land transformation" text="The grow areas are part of a wider restoration effort supported by vision, planning, community relationships, and FAA-approved use areas connected to the airport context." icon={<Tractor className="h-5 w-5" />} />
+                    <InfoCard title="Why this matters" text="The demo should help people understand that this is about food access, land use, wellness, workforce development, and legacy — all at once." icon={<BadgeCheck className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "guest" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Clear welcome" text="Guests need a graceful entrance into the ecosystem: what this place is, what is here, why it matters, and where they can go next." icon={<Users className="h-5 w-5" />} />
+                    <InfoCard title="Airport and land story" text="The farm exists within a larger airport and land-use story. Visitors should understand the transformation of approved grow areas and the support behind that vision." icon={<MapPin className="h-5 w-5" />} />
+                    <InfoCard title="Reasons to return" text="Events, demonstrations, tours, seasonal changes, and educational resources give guests reasons to return repeatedly." icon={<CheckCircle2 className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "customer" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Food access" text="Customers should see seedlings, produce, Bubble Babies, and pathways into healthier living — not just product listings." icon={<ShoppingBasket className="h-5 w-5" />} />
+                    <InfoCard title="Nutrition and recipes" text="Customers should be able to return for recipes, nutrition education, food comparison guidance, and practical support for healthier choices." icon={<BookOpen className="h-5 w-5" />} />
+                    <InfoCard title="Fast route to GrownBy" text="The marketplace should always feel close by, because many customers will want to move quickly from interest to purchase." icon={<Store className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "marketplace" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="GrownBy centered" text="This section should clearly communicate that the marketplace runs through GrownBy and should feel like a natural next step from the rest of the ecosystem." icon={<Store className="h-5 w-5" />} />
+                    <InfoCard title="Purchase pathways" text="Seedlings, produce, and future offerings can all be introduced here while maintaining the farm’s brand and educational tone." icon={<Leaf className="h-5 w-5" />} />
+                    <InfoCard title="Customer memory" text="Over time, this area can support repeat customers through favorite items, reminders, preorder pathways, and return behavior." icon={<HeartPulse className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "grower" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Planning tools" text="Growers need seasonal timing, production readiness, inventory thinking, and visibility into how the ecosystem fits together." icon={<CalendarDays className="h-5 w-5" />} />
+                    <InfoCard title="Ecosystem support" text="This pathway should feel collaborative, not isolated. It should invite growers back for tools, insights, and coordination." icon={<Sprout className="h-5 w-5" />} />
+                    <InfoCard title="Practical return value" text="The point is to make this platform useful enough that growers want to revisit it often." icon={<BadgeCheck className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "valueAdded" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="From product to presentation" text="This pathway helps people imagine how food and farm-based products become local offerings with stronger branding and visibility." icon={<Briefcase className="h-5 w-5" />} />
+                    <InfoCard title="Events and demonstrations" text="Demonstrations, market experiences, and visual merchandising create stronger value for producers and buyers." icon={<Store className="h-5 w-5" />} />
+                    <InfoCard title="Shared ecosystem" text="This is about being part of a larger network, not standing alone." icon={<Users className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "youth" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Living classroom" text="Youth workforce should feel real and active, connecting agriculture, STEAM, teamwork, responsibility, and job readiness." icon={<GraduationCap className="h-5 w-5" />} />
+                    <InfoCard title="Parent and program confidence" text="The pathway should reassure families and partners that youth are entering a structured, meaningful, and supported environment." icon={<Users className="h-5 w-5" />} />
+                    <InfoCard title="Career-connected learning" text="This section supports future career pathways in farming, business, culinary work, logistics, media, and entrepreneurship." icon={<BadgeCheck className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "supervisor" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Inside youth workforce only" text="Supervisor is not a separate public-facing track. It exists within youth workforce and supports management, safety, staffing, and guidance." icon={<ShieldCheck className="h-5 w-5" />} />
+                    <InfoCard title="Support resources" text="This pathway can reflect staff support resources, including wellness and support staffing tied to the youth program." icon={<HeartPulse className="h-5 w-5" />} />
+                    <InfoCard title="Logistics and accountability" text="Check-ins, scheduling, attendance, responsibilities, and day-of support all belong here." icon={<CheckCircle2 className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "planner" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Seasonal crop planning" text="This is where users can imagine crop planning, seed timing, events, inventory readiness, and production support working together." icon={<CalendarDays className="h-5 w-5" />} />
+                    <InfoCard title="Weather-aware thinking" text="Weather and seasonality matter because farming decisions are grounded in time, timing, and conditions." icon={<CloudSun className="h-5 w-5" />} />
+                    <InfoCard title="Operational readiness" text="The planner helps the ecosystem feel practical and real, not decorative." icon={<BadgeCheck className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "events" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Community return engine" text="Events create regular reasons for people to re-enter the ecosystem, whether for learning, shopping, wellness, or fellowship." icon={<Users className="h-5 w-5" />} />
+                    <InfoCard title="Reservations and check-in" text="This area can preview RSVP logic, role-based experiences, and organized arrival pathways for farm events." icon={<CalendarDays className="h-5 w-5" />} />
+                    <InfoCard title="Demonstrations and partners" text="Educational and sponsor-led activities help make the farm feel alive and useful." icon={<BadgeCheck className="h-5 w-5" />} />
+                  </div>
+                )}
+
+                {screen === "wellness" && (
+                  <div className="grid gap-4">
+                    <InfoCard title="Food and health connection" text="Fresh food is part of a larger conversation about health, energy, diabetes awareness, family habits, and quality of life." icon={<HeartPulse className="h-5 w-5" />} />
+                    <InfoCard title="Natural versus processed" text="This section helps explain why food choices matter and why rising food costs push families toward harmful substitutes." icon={<Leaf className="h-5 w-5" />} />
+                    <InfoCard title="Practical support" text="Nutrition education, healthier-at-home ideas, and simple recipe guidance should all feel close and usable." icon={<BookOpen className="h-5 w-5" />} />
+                  </div>
+                )}
+              </div>
+
+              <div className="rounded-[30px] border border-white/15 bg-white/10 p-5 backdrop-blur-xl">
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="text-xs uppercase tracking-[0.25em] text-white/55">Image gallery</div>
+                  <div className="text-sm text-white/70">Using the other farm images</div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {gallery.map((img, idx) => (
+                    <button
+                      key={`${img}-${idx}`}
+                      onClick={() => setImageModal(img)}
+                      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/20"
+                    >
+                      <img src={img} alt={`Farm gallery ${idx + 1}`} className="h-36 w-full object-cover transition duration-700 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          <section className="mt-12 rounded-[32px] border border-white/15 bg-white/10 p-6 backdrop-blur-xl">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <div className="text-xs uppercase tracking-[0.25em] text-white/55">{t.exploreModules}</div>
+                <h2 className="mt-2 text-2xl font-semibold text-white md:text-3xl">Designed to feel like a living destination</h2>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <button onClick={prevScreen} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/25 px-4 py-3 text-sm text-white/90 hover:bg-white/10"><ArrowLeft className="h-4 w-4" /> {t.previous}</button>
+                <button onClick={() => goto("home")} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/25 px-4 py-3 text-sm text-white/90 hover:bg-white/10"><Home className="h-4 w-4" /> {t.backHome}</button>
+                <button onClick={nextScreen} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-semibold text-[#0c1a14]"><ArrowRight className="h-4 w-4" /> {t.next}</button>
+              </div>
+            </div>
+            <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {t.modules.map((item: string) => (
+                <div key={item} className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-white/85">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </section>
+        </main>
+      </div>
+
+      {imageModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4">
+          <button onClick={() => setImageModal(null)} className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/30 p-2 text-white"><X className="h-5 w-5" /></button>
+          <img src={imageModal} alt="Expanded farm view" className="max-h-[90vh] max-w-[95vw] rounded-3xl border border-white/10 shadow-2xl" />
+        </div>
       )}
-    </>
-  );
-
-  const navBar = (
-    <Card>
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        {navItems.map((item) => (
-          <ActionButton
-            key={item.key}
-            label={item.label}
-            onClick={() => navigate(item.key)}
-            active={screen === item.key}
-          />
-        ))}
-      </div>
-    </Card>
-  );
-
-  const goNext = () => {
-    if (screen === "guest") {
-      if (guestView === "story") setGuestView("mission");
-      else if (guestView === "mission") setGuestView("events");
-      else if (guestView === "events") setGuestView("partners");
-      else navigate("customer");
-    }
-
-    if (screen === "customer") {
-      if (customerView === "produce") setCustomerView("nutrition");
-      else if (customerView === "nutrition") setCustomerView("recipes");
-      else if (customerView === "recipes") setCustomerView("ordering");
-      else navigate("market");
-    }
-
-    if (screen === "grower") {
-      if (growerView === "weather") setGrowerView("planner");
-      else if (growerView === "planner") setGrowerView("notes");
-      else if (growerView === "notes") setGrowerView("season");
-      else navigate("admin");
-    }
-
-    if (screen === "producer") {
-      if (producerView === "products") setProducerView("events");
-      else if (producerView === "events") setProducerView("storytelling");
-      else if (producerView === "storytelling") setProducerView("collaboration");
-      else navigate("market");
-    }
-
-    if (screen === "youth") {
-      if (youthView === "overview") setYouthView("parent");
-      else if (youthView === "parent") setYouthView("supervisor");
-      else if (youthView === "supervisor") setYouthView("daily");
-      else navigate("admin");
-    }
-
-    if (screen === "admin") {
-      if (adminView === "participation") setAdminView("operations");
-      else if (adminView === "operations") setAdminView("planning");
-      else if (adminView === "planning") setAdminView("growth");
-      else navigate("market");
-    }
-
-    if (screen === "market") {
-      if (marketView === "products") setMarketView("grownby");
-      else if (marketView === "grownby") setMarketView("education");
-      else if (marketView === "education") setMarketView("community");
-      else if (marketView === "community") setMarketView("ordering");
-      else navigate("home");
-    }
-  };
-
-  const goBack = () => {
-    if (screen === "guest") {
-      if (guestView === "partners") setGuestView("events");
-      else if (guestView === "events") setGuestView("mission");
-      else if (guestView === "mission") setGuestView("story");
-      else navigate("home");
-    }
-
-    if (screen === "customer") {
-      if (customerView === "ordering") setCustomerView("recipes");
-      else if (customerView === "recipes") setCustomerView("nutrition");
-      else if (customerView === "nutrition") setCustomerView("produce");
-      else navigate("guest");
-    }
-
-    if (screen === "grower") {
-      if (growerView === "season") setGrowerView("notes");
-      else if (growerView === "notes") setGrowerView("planner");
-      else if (growerView === "planner") setGrowerView("weather");
-      else navigate("customer");
-    }
-
-    if (screen === "producer") {
-      if (producerView === "collaboration") setProducerView("storytelling");
-      else if (producerView === "storytelling") setProducerView("events");
-      else if (producerView === "events") setProducerView("products");
-      else navigate("home");
-    }
-
-    if (screen === "youth") {
-      if (youthView === "daily") setYouthView("supervisor");
-      else if (youthView === "supervisor") setYouthView("parent");
-      else if (youthView === "parent") setYouthView("overview");
-      else navigate("home");
-    }
-
-    if (screen === "admin") {
-      if (adminView === "growth") setAdminView("planning");
-      else if (adminView === "planning") setAdminView("operations");
-      else if (adminView === "operations") setAdminView("participation");
-      else navigate("grower");
-    }
-
-    if (screen === "market") {
-      if (marketView === "ordering") setMarketView("community");
-      else if (marketView === "community") setMarketView("education");
-      else if (marketView === "education") setMarketView("grownby");
-      else if (marketView === "grownby") setMarketView("products");
-      else navigate("customer");
-    }
-  };
-
-  if (screen === "home") {
-    return (
-      <ScreenShell
-        screen="home"
-        title="Bronson Family Farm Ecosystem"
-        subtitle="A welcoming, place-based platform where visitors, customers, growers, youth, partners, and leaders all find resources, relationships, and opportunity."
-        topActions={
-          <>
-            <ActionButton label="Enter Platform" onClick={() => navigate("guest")} primary />
-            {!speech.enabled ? (
-              <ActionButton label="Start Guided Tour" onClick={startTour} />
-            ) : (
-              <ActionButton label="Stop Guided Tour" onClick={stopTour} />
-            )}
-          </>
-        }
-      >
-        <div style={{ display: "grid", gap: 18 }}>
-          {navBar}
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 2fr) minmax(320px, 1fr)",
-              gap: 18,
-            }}
-          >
-            <div style={{ display: "grid", gap: 18 }}>
-              <Card title="Welcome">
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
-                  <Pill text={timeText} />
-                  <Pill text={seasonPulse} />
-                  <Pill text="Come back again and again" />
-                </div>
-
-                <div
-                  style={{
-                    fontSize: 34,
-                    fontWeight: 900,
-                    lineHeight: 1.1,
-                    marginBottom: 14,
-                  }}
-                >
-                  Bronson Family Farm is a resource ecosystem people can return to again and again.
-                </div>
-
-                <div style={{ lineHeight: 1.8, color: "rgba(255,255,255,0.88)", fontSize: 17 }}>
-                  Every pathway should help someone find resources, take a next step, and see why this place matters.
-                </div>
-              </Card>
-
-              <Card title="What’s New Today">
-                <SoftBlock title="Live Pulse">{todayItems[farmPulseIndex]}</SoftBlock>
-              </Card>
-
-              <Card title="Enter a Pathway">
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-                    gap: 16,
-                  }}
-                >
-                  <PortalTile
-                    title="Guest"
-                    subtitle={pathwaySummaries.guest}
-                    image={imageFor("guest")}
-                    tint={overlayFor("guest")}
-                    onClick={() => navigate("guest")}
-                  />
-                  <PortalTile
-                    title="Customer"
-                    subtitle={pathwaySummaries.customer}
-                    image={imageFor("customer")}
-                    tint={overlayFor("customer")}
-                    onClick={() => navigate("customer")}
-                  />
-                  <PortalTile
-                    title="Grower"
-                    subtitle={pathwaySummaries.grower}
-                    image={imageFor("grower")}
-                    tint={overlayFor("grower")}
-                    onClick={() => navigate("grower")}
-                  />
-                  <PortalTile
-                    title="Value-Added Producer"
-                    subtitle={pathwaySummaries.producer}
-                    image={imageFor("producer")}
-                    tint={overlayFor("producer")}
-                    onClick={() => navigate("producer")}
-                  />
-                  <PortalTile
-                    title="Youth Workforce"
-                    subtitle={pathwaySummaries.youth}
-                    image={imageFor("youth")}
-                    tint={overlayFor("youth")}
-                    onClick={() => navigate("youth")}
-                  />
-                  <PortalTile
-                    title="Leadership"
-                    subtitle={pathwaySummaries.admin}
-                    image={imageFor("admin")}
-                    tint={overlayFor("admin")}
-                    onClick={() => navigate("admin")}
-                  />
-                </div>
-              </Card>
-
-              <Card title="Impact Snapshot">
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                    gap: 12,
-                  }}
-                >
-                  {impactStats.map((item) => (
-                    <StatCard key={item.label} label={item.label} value={item.value} suffix={item.suffix} />
-                  ))}
-                </div>
-              </Card>
-
-              <Card title="Resources Across the Ecosystem">
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                    gap: 12,
-                  }}
-                >
-                  {resourceGroups.map((group) => (
-                    <SoftBlock key={group}>{group}</SoftBlock>
-                  ))}
-                </div>
-              </Card>
-
-              <Card title="Partners and Platform Connections">
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                    gap: 12,
-                  }}
-                >
-                  {partnerLabels.map((logo) => (
-                    <SoftBlock key={logo}>{logo}</SoftBlock>
-                  ))}
-                </div>
-              </Card>
-            </div>
-
-            <div style={{ display: "grid", gap: 18 }}>
-              <WeatherPanel data={weatherByScreen.home} />
-              <CropPlannerPanel />
-            </div>
-          </div>
-        </div>
-      </ScreenShell>
-    );
-  }
-
-  if (screen === "guest") {
-    const menu = (
-      <div style={{ display: "grid", gap: 10 }}>
-        <ActionButton label="Story" onClick={() => setGuestView("story")} active={guestView === "story"} />
-        <ActionButton label="Mission" onClick={() => setGuestView("mission")} active={guestView === "mission"} />
-        <ActionButton label="Events" onClick={() => setGuestView("events")} active={guestView === "events"} />
-        <ActionButton label="Partners" onClick={() => setGuestView("partners")} active={guestView === "partners"} />
-      </div>
-    );
-
-    let content: React.ReactNode = null;
-    if (guestView === "story") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Story">
-            Bronson Family Farm is more than a growing site. It is a place where people can encounter food, family, learning, healing, and future possibility.
-          </SoftBlock>
-          <SoftBlock>
-            The guest pathway exists so a first-time visitor understands the heart of the ecosystem before moving deeper.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (guestView === "mission") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Mission">
-            The mission is to grow food, strengthen families, restore land, develop people, and create lasting community value.
-          </SoftBlock>
-          <SoftBlock>
-            Guests should leave this destination knowing that the farm carries both practical value and deeper purpose.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (guestView === "events") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Events">
-            Tours, demonstrations, growers gatherings, youth activity, and market participation help move people from curiosity into involvement.
-          </SoftBlock>
-          <SoftBlock>
-            Events are one of the main reasons people return again and again.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Partners">
-            Growers, educators, vendors, wellness supporters, youth partners, and mission-aligned collaborators all have a place in this ecosystem.
-          </SoftBlock>
-          <SoftBlock>
-            From here, continue into Customer to see how welcome becomes practical value.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Customer" />
-        </div>
-      );
-    }
-
-    const aside = (
-      <>
-        <WeatherPanel data={weatherByScreen.guest} />
-        <Card title="Pathway Support">
-          <div style={{ display: "grid", gap: 10 }}>
-            <SoftBlock>Welcoming entry point</SoftBlock>
-            <SoftBlock>Story and mission clarity</SoftBlock>
-            <SoftBlock>Events and participation paths</SoftBlock>
-          </div>
-        </Card>
-      </>
-    );
-
-    return (
-      <ScreenShell
-        screen="guest"
-        title="Guest Portal"
-        subtitle="A warm entry into story, mission, events, and partnership pathways."
-        topActions={commonTopActions}
-      >
-        <div style={{ display: "grid", gap: 18 }}>
-          {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "280px minmax(0, 1fr) 320px",
-              gap: 18,
-            }}
-          >
-            <Card title="Guest Destinations">{menu}</Card>
-            <Card title="Destination" minHeight={420}>{content}</Card>
-            <div style={{ display: "grid", gap: 18 }}>{aside}</div>
-          </div>
-        </div>
-      </ScreenShell>
-    );
-  }
-
-  if (screen === "customer") {
-    const menu = (
-      <div style={{ display: "grid", gap: 10 }}>
-        <ActionButton label="Produce" onClick={() => setCustomerView("produce")} active={customerView === "produce"} />
-        <ActionButton label="Nutrition" onClick={() => setCustomerView("nutrition")} active={customerView === "nutrition"} />
-        <ActionButton label="Recipes" onClick={() => setCustomerView("recipes")} active={customerView === "recipes"} />
-        <ActionButton label="Ordering" onClick={() => setCustomerView("ordering")} active={customerView === "ordering"} />
-      </div>
-    );
-
-    let content: React.ReactNode = null;
-    if (customerView === "produce") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Produce">
-            Fresh produce visibility should lead customers toward confidence, selection, and real family use.
-          </SoftBlock>
-          <SoftBlock>
-            Tomatoes, collards, cabbage, lettuce, broccoli, peppers, greens, and seedlings are all part of a practical food-access experience.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (customerView === "nutrition") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Nutrition">
-            Healthy food should be understandable, accessible, and tied to better daily choices for families.
-          </SoftBlock>
-          <SoftBlock>
-            This destination helps customers connect produce to wellness and not just to purchase.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (customerView === "recipes") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Recipes">
-            Garden greens bowls, fresh tomato salads, pepper and cabbage skillet ideas, and simple household meals help people imagine using what they buy.
-          </SoftBlock>
-          <SoftBlock>
-            Recipes are a return reason. They make the platform useful again tomorrow.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Ordering">
-            This destination turns discovery into action and guides the customer toward the marketplace and GrownBy.
-          </SoftBlock>
-          <SoftBlock>
-            The message here is simple: you can learn, choose, and then actually order.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Marketplace" />
-        </div>
-      );
-    }
-
-    const aside = (
-      <>
-        <WeatherPanel data={weatherByScreen.customer} />
-        <Card title="Customer Resources">
-          <div style={{ display: "grid", gap: 10 }}>
-            <SoftBlock>Food visibility</SoftBlock>
-            <SoftBlock>Nutrition guidance</SoftBlock>
-            <SoftBlock>Recipes and ordering path</SoftBlock>
-          </div>
-        </Card>
-      </>
-    );
-
-    return (
-      <ScreenShell
-        screen="customer"
-        title="Customer Portal"
-        subtitle="Fresh food, healthier choices, recipes, nutrition learning, and direct marketplace pathways."
-        topActions={commonTopActions}
-      >
-        <div style={{ display: "grid", gap: 18 }}>
-          {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "280px minmax(0, 1fr) 320px",
-              gap: 18,
-            }}
-          >
-            <Card title="Customer Destinations">{menu}</Card>
-            <Card title="Destination" minHeight={420}>{content}</Card>
-            <div style={{ display: "grid", gap: 18 }}>{aside}</div>
-          </div>
-        </div>
-      </ScreenShell>
-    );
-  }
-
-  if (screen === "grower") {
-    const menu = (
-      <div style={{ display: "grid", gap: 10 }}>
-        <ActionButton label="Weather" onClick={() => setGrowerView("weather")} active={growerView === "weather"} />
-        <ActionButton label="Crop Planner" onClick={() => setGrowerView("planner")} active={growerView === "planner"} />
-        <ActionButton label="Field Notes" onClick={() => setGrowerView("notes")} active={growerView === "notes"} />
-        <ActionButton label="Seasonal Priorities" onClick={() => setGrowerView("season")} active={growerView === "season"} />
-      </div>
-    );
-
-    let content: React.ReactNode = null;
-    if (growerView === "weather") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Weather Use">
-            Weather should support actual decisions: transplant checks, irrigation timing, field movement, and protection needs.
-          </SoftBlock>
-          <SoftBlock>
-            The grower pathway should feel practical and active, not decorative.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (growerView === "planner") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <CropPlannerPanel />
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (growerView === "notes") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Field Notes">
-            Clay-heavy areas require careful moisture management, access planning, and timing sensitivity.
-          </SoftBlock>
-          <SoftBlock>
-            Field notes help a grower move from observation to action.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Seasonal Priorities">
-            Transplant review, succession planting, irrigation planning, and market continuity belong here.
-          </SoftBlock>
-          <SoftBlock>
-            From here, continue into Leadership for the wider coordinating view.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Leadership" />
-        </div>
-      );
-    }
-
-    const aside = (
-      <>
-        <WeatherPanel data={weatherByScreen.grower} />
-        <Card title="Grower Resources">
-          <div style={{ display: "grid", gap: 10 }}>
-            <SoftBlock>Weather visibility</SoftBlock>
-            <SoftBlock>Crop timing support</SoftBlock>
-            <SoftBlock>Field-awareness decisions</SoftBlock>
-          </div>
-        </Card>
-      </>
-    );
-
-    return (
-      <ScreenShell
-        screen="grower"
-        title="Grower Operations"
-        subtitle="Weather, crop planner, production timing, and field awareness supporting real growing decisions."
-        topActions={commonTopActions}
-      >
-        <div style={{ display: "grid", gap: 18 }}>
-          {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "280px minmax(0, 1fr) 320px",
-              gap: 18,
-            }}
-          >
-            <Card title="Grower Destinations">{menu}</Card>
-            <Card title="Destination" minHeight={420}>{content}</Card>
-            <div style={{ display: "grid", gap: 18 }}>{aside}</div>
-          </div>
-        </div>
-      </ScreenShell>
-    );
-  }
-
-  if (screen === "producer") {
-    const menu = (
-      <div style={{ display: "grid", gap: 10 }}>
-        <ActionButton label="Products" onClick={() => setProducerView("products")} active={producerView === "products"} />
-        <ActionButton label="Events" onClick={() => setProducerView("events")} active={producerView === "events"} />
-        <ActionButton label="Storytelling" onClick={() => setProducerView("storytelling")} active={producerView === "storytelling"} />
-        <ActionButton label="Collaboration" onClick={() => setProducerView("collaboration")} active={producerView === "collaboration"} />
-      </div>
-    );
-
-    let content: React.ReactNode = null;
-    if (producerView === "products") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Products">
-            Bubble Babies™, seedlings, educational kits, seasonal bundles, and event-ready offerings create visible value.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (producerView === "events") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Events">
-            Markets, demonstrations, booths, and public experiences extend products into community presence.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (producerView === "storytelling") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Storytelling">
-            Products gain power when they carry place, identity, and a visible mission story.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Collaboration">
-            This destination connects vendors, educators, events, and partners into a wider value chain.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Marketplace" />
-        </div>
-      );
-    }
-
-    const aside = (
-      <>
-        <WeatherPanel data={weatherByScreen.producer} />
-        <Card title="Producer Resources">
-          <div style={{ display: "grid", gap: 10 }}>
-            <SoftBlock>Products</SoftBlock>
-            <SoftBlock>Visibility</SoftBlock>
-            <SoftBlock>Events and collaboration</SoftBlock>
-          </div>
-        </Card>
-      </>
-    );
-
-    return (
-      <ScreenShell
-        screen="producer"
-        title="Value-Added Producer Portal"
-        subtitle="Products, events, storytelling, and collaboration pathways creating broader community value."
-        topActions={commonTopActions}
-      >
-        <div style={{ display: "grid", gap: 18 }}>
-          {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "280px minmax(0, 1fr) 320px",
-              gap: 18,
-            }}
-          >
-            <Card title="Producer Destinations">{menu}</Card>
-            <Card title="Destination" minHeight={420}>{content}</Card>
-            <div style={{ display: "grid", gap: 18 }}>{aside}</div>
-          </div>
-        </div>
-      </ScreenShell>
-    );
-  }
-
-  if (screen === "youth") {
-    const menu = (
-      <div style={{ display: "grid", gap: 10 }}>
-        <ActionButton label="Overview" onClick={() => setYouthView("overview")} active={youthView === "overview"} />
-        <ActionButton label="Parent Portal" onClick={() => setYouthView("parent")} active={youthView === "parent"} />
-        <ActionButton label="Supervisor View" onClick={() => setYouthView("supervisor")} active={youthView === "supervisor"} />
-        <ActionButton label="Daily Focus" onClick={() => setYouthView("daily")} active={youthView === "daily"} />
-      </div>
-    );
-
-    let content: React.ReactNode = null;
-    if (youthView === "overview") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Overview">
-            Hands-on work, visible contribution, confidence-building, responsibility, and exposure to real opportunity belong here.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (youthView === "parent") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Parent Portal">
-            Family visibility into expectations, progress, communication, and the purpose of participation.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (youthView === "supervisor") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Supervisor View">
-            Daily oversight, progress awareness, intervention planning, and support coordination make the pathway stable.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Daily Focus">
-            Garden preparation, professional habits, teamwork, responsibility, and visible contribution define the day.
-          </SoftBlock>
-          <SoftBlock>
-            From here, continue into Leadership to see the wider coordinating view.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Leadership" />
-        </div>
-      );
-    }
-
-    const aside = (
-      <>
-        <WeatherPanel data={weatherByScreen.youth} />
-        <CropPlannerPanel />
-      </>
-    );
-
-    return (
-      <ScreenShell
-        screen="youth"
-        title="Youth Workforce Platform"
-        subtitle="Hands-on learning, responsibility, support, and family connection within a welcoming and structured farm environment."
-        topActions={commonTopActions}
-      >
-        <div style={{ display: "grid", gap: 18 }}>
-          {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "280px minmax(0, 1fr) 320px",
-              gap: 18,
-            }}
-          >
-            <Card title="Youth Destinations">{menu}</Card>
-            <Card title="Destination" minHeight={420}>{content}</Card>
-            <div style={{ display: "grid", gap: 18 }}>{aside}</div>
-          </div>
-        </div>
-      </ScreenShell>
-    );
-  }
-
-  if (screen === "admin") {
-    const menu = (
-      <div style={{ display: "grid", gap: 10 }}>
-        <ActionButton label="Participation" onClick={() => setAdminView("participation")} active={adminView === "participation"} />
-        <ActionButton label="Operations" onClick={() => setAdminView("operations")} active={adminView === "operations"} />
-        <ActionButton label="Planning" onClick={() => setAdminView("planning")} active={adminView === "planning"} />
-        <ActionButton label="Growth" onClick={() => setAdminView("growth")} active={adminView === "growth"} />
-      </div>
-    );
-
-    let content: React.ReactNode = null;
-    if (adminView === "participation") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Participation">
-            Guests, customers, youth, growers, partners, and marketplace users all move through visible pathways that should be coordinated together.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (adminView === "operations") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Operations">
-            Crop timing, marketplace readiness, event coordination, and pathway continuity belong here.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else if (adminView === "planning") {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Planning">
-            This destination keeps leadership focused on what happens next and how the ecosystem grows with purpose.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} />
-        </div>
-      );
-    } else {
-      content = (
-        <div style={{ display: "grid", gap: 12 }}>
-          <SoftBlock title="Growth">
-            High ecosystem interest, pathway expansion, and long-term place-based value building should remain visible.
-          </SoftBlock>
-          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Marketplace" />
-        </div>
-      );
-    }
-
-    const aside = (
-      <>
-        <WeatherPanel data={weatherByScreen.admin} />
-        <Card title="Leadership Resources">
-          <div style={{ display: "grid", gap: 10 }}>
-            <SoftBlock>System visibility</SoftBlock>
-            <SoftBlock>Operational awareness</SoftBlock>
-            <SoftBlock>Growth and planning</SoftBlock>
-          </div>
-        </Card>
-      </>
-    );
-
-    return (
-      <ScreenShell
-        screen="admin"
-        title="Leadership Dashboard"
-        subtitle="A whole-system view of participation, operations, planning, and long-term growth."
-        topActions={commonTopActions}
-      >
-        <div style={{ display: "grid", gap: 18 }}>
-          {navBar}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "280px minmax(0, 1fr) 320px",
-              gap: 18,
-            }}
-          >
-            <Card title="Leadership Destinations">{menu}</Card>
-            <Card title="Destination" minHeight={420}>{content}</Card>
-            <div style={{ display: "grid", gap: 18 }}>{aside}</div>
-          </div>
-        </div>
-      </ScreenShell>
-    );
-  }
-
-  const marketMenu = (
-    <div style={{ display: "grid", gap: 10 }}>
-      <ActionButton label="Products" onClick={() => setMarketView("products")} active={marketView === "products"} />
-      <ActionButton label="GrownBy" onClick={() => setMarketView("grownby")} active={marketView === "grownby"} />
-      <ActionButton label="Education" onClick={() => setMarketView("education")} active={marketView === "education"} />
-      <ActionButton label="Community" onClick={() => setMarketView("community")} active={marketView === "community"} />
-      <ActionButton label="Ordering Path" onClick={() => setMarketView("ordering")} active={marketView === "ordering"} />
     </div>
   );
-
-  let marketContent: React.ReactNode = null;
-  if (marketView === "products") {
-    marketContent = (
-      <div style={{ display: "grid", gap: 12 }}>
-        <SoftBlock title="Products">
-          Produce, seedlings, garden-focused offerings, and seasonal visibility belong here.
-        </SoftBlock>
-        <SoftBlock>
-          The marketplace should feel like a real bridge between what is grown and how people actually access it.
-        </SoftBlock>
-        <DestinationFooter onBack={goBack} onNext={goNext} />
-      </div>
-    );
-  } else if (marketView === "grownby") {
-    marketContent = (
-      <div style={{ display: "grid", gap: 12 }}>
-        <SoftBlock title="GrownBy">
-          GrownBy is the online bridge between ecosystem discovery and actual product ordering for Bronson Family Farm.
-        </SoftBlock>
-        <SoftBlock>
-          It supports visibility, shopping flow, product access, and repeat engagement without separating the marketplace from the rest of the platform.
-        </SoftBlock>
-        <SoftBlock title="Why It Matters">
-          Customers discover produce, nutrition, and recipes here, then move into GrownBy for practical action and pickup connection.
-        </SoftBlock>
-        <div>
-          <a
-            href="https://grownby.com/farms/bronson-family-farm/shop"
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              display: "inline-block",
-              padding: "12px 16px",
-              borderRadius: 14,
-              background: "#dff3c7",
-              color: "#102012",
-              textDecoration: "none",
-              fontWeight: 800,
-            }}
-          >
-            Open GrownBy Store
-          </a>
-        </div>
-        <DestinationFooter onBack={goBack} onNext={goNext} />
-      </div>
-    );
-  } else if (marketView === "education") {
-    marketContent = (
-      <div style={{ display: "grid", gap: 12 }}>
-        <SoftBlock title="Education">
-          Recipes, nutrition support, healthier food habits, and practical family use should remain close to the products themselves.
-        </SoftBlock>
-        <SoftBlock>
-          Marketplace education helps customers understand what to buy and how to use it.
-        </SoftBlock>
-        <DestinationFooter onBack={goBack} onNext={goNext} />
-      </div>
-    );
-  } else if (marketView === "community") {
-    marketContent = (
-      <div style={{ display: "grid", gap: 12 }}>
-        <SoftBlock title="Community">
-          Pickup days, demonstrations, and ecosystem participation extend the market beyond buying alone.
-        </SoftBlock>
-        <SoftBlock>
-          This destination connects the market to events, family learning, grower visibility, and return visits.
-        </SoftBlock>
-        <DestinationFooter onBack={goBack} onNext={goNext} />
-      </div>
-    );
-  } else {
-    marketContent = (
-      <div style={{ display: "grid", gap: 12 }}>
-        <SoftBlock title="Ordering Path">
-          This destination should become the clear route into actual product action and repeat engagement.
-        </SoftBlock>
-        <SoftBlock>
-          It should guide a user from ecosystem discovery to GrownBy ordering to pickup and return.
-        </SoftBlock>
-        <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Return Home" />
-      </div>
-    );
-  }
-
-  const marketAside = (
-    <>
-      <WeatherPanel data={weatherByScreen.market} />
-      <Card title="Marketplace Role">
-        <SoftBlock>
-          The marketplace is where products, education, community activity, and GrownBy ordering come together.
-        </SoftBlock>
-      </Card>
-    </>
-  );
-
-  return (
-    <ScreenShell
-      screen="market"
-      title="Marketplace"
-      subtitle="Where products, education, community participation, GrownBy, and ordering flow come together."
-      topActions={commonTopActions}
-    >
-      <div style={{ display: "grid", gap: 18 }}>
-        {navBar}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "280px minmax(0, 1fr) 320px",
-            gap: 18,
-          }}
-        >
-          <Card title="Marketplace Destinations">{marketMenu}</Card>
-          <Card title="Destination" minHeight={420}>{marketContent}</Card>
-          <div style={{ display: "grid", gap: 18 }}>{marketAside}</div>
-        </div>
-      </div>
-    </ScreenShell>
-  );
 }
+
+export default App;
