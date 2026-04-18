@@ -1,1511 +1,1866 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-type LanguageCode = "en" | "es" | "tl" | "it" | "pat" | "he";
+type LanguageKey = "en" | "es" | "tl" | "it" | "patwa" | "he";
+type ScreenKey = "entrance" | "role" | "marketplace" | "tour";
+type RoleKey = "guest" | "customer" | "grower" | "producer" | "youth" | "admin";
+type YouthView = "overview" | "parent" | "supervisor";
 
-type ViewMode =
-  | "entrance"
-  | "story"
-  | "ecosystem"
-  | "guest"
-  | "customer"
-  | "grower"
-  | "youth"
-  | "parent"
-  | "supervisor"
-  | "impact"
-  | "partnerships";
+type RoleCard = {
+  key: RoleKey;
+  image: string;
+  fallbackIcon: string;
+};
 
-const copy = {
+type LangPack = {
+  languageName: string;
+  dir: "ltr" | "rtl";
+  appTitle: string;
+  appSubtitle: string;
+  heroKicker: string;
+  enterDemo: string;
+  guidedDemo: string;
+  stopGuidedDemo: string;
+  exploreRoles: string;
+  backToEntrance: string;
+  openMarketplace: string;
+  returnToRoles: string;
+  localTime: string;
+  seasonPulse: string;
+  placeBased: string;
+  welcomeHeadline: string;
+  welcomeBody: string;
+  missionLabel: string;
+  missionText: string;
+  chooseLanguage: string;
+  choosePathway: string;
+  pathwayHint: string;
+  livePanelTitle: string;
+  livePanelText: string;
+  impactTitle: string;
+  impactCards: string[];
+  roleTitle: string;
+  roleIntroLabel: string;
+  roleActionsLabel: string;
+  roleOutcomesLabel: string;
+  customerMarketplaceHint: string;
+  youthModesLabel: string;
+  youthOverview: string;
+  youthParent: string;
+  youthSupervisor: string;
+  marketplaceTitle: string;
+  marketplaceSubtitle: string;
+  marketplaceBlocks: { title: string; body: string }[];
+  storyTitle: string;
+  storyBody: string;
+  footerLine: string;
+  guidedSteps: string[];
+  roleContent: Record<
+    RoleKey,
+    {
+      title: string;
+      intro: string;
+      actions: string[];
+      outcomes: string[];
+      cta: string;
+    }
+  >;
+  youthContent: {
+    overview: {
+      title: string;
+      body: string;
+      bullets: string[];
+    };
+    parent: {
+      title: string;
+      body: string;
+      bullets: string[];
+    };
+    supervisor: {
+      title: string;
+      body: string;
+      bullets: string[];
+    };
+  };
+};
+
+const roleCards: RoleCard[] = [
+  { key: "guest", image: "/FarmEntrance.jpg", fallbackIcon: "🌿" },
+  { key: "customer", image: "/FreshFood.jpg", fallbackIcon: "🥬" },
+  { key: "grower", image: "/GrowArea.jpg", fallbackIcon: "🌱" },
+  { key: "producer", image: "/CommunityGathering.jpg", fallbackIcon: "🧺" },
+  { key: "youth", image: "/YouthWorkforce.jpg", fallbackIcon: "🚜" },
+  { key: "admin", image: "/Marketplace.jpg", fallbackIcon: "📊" },
+];
+
+const fallbackGradients = [
+  "from-emerald-950 via-emerald-800 to-lime-700",
+  "from-slate-950 via-emerald-900 to-teal-700",
+  "from-zinc-950 via-stone-800 to-amber-700",
+  "from-green-950 via-green-800 to-emerald-600",
+  "from-sky-950 via-teal-900 to-green-700",
+  "from-neutral-950 via-emerald-900 to-yellow-700",
+];
+
+const translations: Record<LanguageKey, LangPack> = {
   en: {
-    location: "Bronson Family Farm, Youngstown, Ohio",
-    headline: "Bronson Family Farm creates conditions for growth.",
-    subtitle:
-      "Through food access, learning, family support, wellness, and opportunity.",
-    supportLine: "Built with community. Growing for generations.",
-    trustBar:
-      "Food Access • Youth Opportunity • Family Support • Wellness • Partnerships",
-    enter: "Enter the Ecosystem",
-    walkthrough: "Take the Guided Walkthrough",
-    impact: "See Community Impact",
-    story: "Why I Built This",
-    ecosystem: "How the Ecosystem Works",
-    continue: "Continue",
-    back: "Back",
-    backHome: "Back to Entrance",
-    backToEcosystem: "Back to Ecosystem",
-    language: "Language",
-    stopVoice: "Stop Voice",
-
-    storyIntroTitle: "Why I Built This",
-    storyIntroText:
-      "Bronson Family Farm is rooted in family, shaped by lived experience, and being implemented to serve real people in real ways.",
-
-    chapter1: "Roots",
-    chapter1Title: "My roots taught me how food sustains families.",
-    chapter1Text:
-      "My grandmother was Filipino and lived on a farm in Santa Rosa. She gardened, raised animals, and worked with the butcher to feed the household. She taught us that food systems begin long before the grocery shelf.",
-
-    chapter2: "Health Reality",
-    chapter2Title: "Food access became personal.",
-    chapter2Text:
-      "After being diagnosed with Type II Diabetes in 2006, I managed my health through food and exercise. After moving to Youngstown, limited access to affordable fresh produce and rising costs changed that reality. I need fresh produce.",
-
-    chapter3: "Youngstown",
-    chapter3Title: "My family is here. My work is here.",
-    chapter3Text:
-      "I am a grandmother of nine. Four of my grandchildren live here in Youngstown, along with their father, my son. This place matters to me because family is here, community is here, and this is where I have planted my life.",
-
-    chapter4: "Land & Legacy",
-    chapter4Title: "The land and airport history inspired me.",
-    chapter4Text:
-      "The history of the airport and surrounding land spoke to movement, possibility, and renewal. I saw land with a story and believed it could serve the community again in a new way.",
-
-    chapter5: "Systems",
-    chapter5Title: "I grew up learning how things are built.",
-    chapter5Text:
-      "Raised in East Palo Alto, part of the Silicon Valley region, I learned to value systems, innovation, and building solutions that solve real problems. When I came here, I saw a need for a system.",
-
-    chapter6: "Training & Action",
-    chapter6Title: "Training turned vision into structure.",
-    chapter6Text:
-      "In Central State University’s Fast Track Farming class, I got the vision for agritourism and wrote a business plan. That learning helped turn inspiration into strategy.",
-
-    chapter7: "Resilience",
-    chapter7Title: "I am still building.",
-    chapter7Text:
-      "I am 68 years old and building this after surviving two traumatic brain injuries. That is why I can get frustrated. I need help. But I have not stopped building.",
-
-    chapter8: "Mission",
-    chapter8Title: "A place where a seed starts the journey.",
-    chapter8Text:
-      "Bronson Family Farm creates conditions for growth—for food, people, families, skills, wellness, and future opportunity.",
-
-    ecosystemTitle: "Platform Access Points",
-    ecosystemText:
-      "These access points show how Bronson Family Farm works across public engagement, food access, youth workforce development, family connection, grower coordination, wellness education, and partnership-based community change.",
-
-    impactTitle: "Community Impact",
-    impactText:
-      "This ecosystem responds to real community needs with practical strategies designed to improve food access, opportunity, engagement, and healthier outcomes over time.",
-
-    partnershipsTitle: "Partnerships for Change",
-    partnershipsText:
-      "This work grows through collaboration with schools, growers, health educators, civic partners, businesses, and community organizations.",
-
-    guidedText:
-      "Welcome to Bronson Family Farm in Youngstown, Ohio. Bronson Family Farm creates conditions for growth through food access, learning, family support, wellness, and opportunity. This demo offers a guided view into a real ecosystem now being implemented for the community.",
-
-    roleGuest: "Guest Access",
-    roleGuestText:
-      "Public information, events, story, and partner-facing access.",
-    roleCustomer: "Customer Access",
-    roleCustomerText:
-      "Marketplace access, food education, nutrition guidance, and customer engagement tools.",
-    roleGrower: "Grower Access",
-    roleGrowerText:
-      "Crop planning, production coordination, seasonal timing, and grower support.",
-    roleYouth: "Youth Workforce",
-    roleYouthText:
-      "Hands-on learning, work readiness, mentoring, and supervised participation.",
-    roleParent: "Parent Portal",
-    roleParentText:
-      "Family connection, progress visibility, updates, support, and trust-building.",
-    roleSupervisor: "Supervisor Support",
-    roleSupervisorText:
-      "Oversight, coordination, progress visibility, and resource support for youth workforce participation.",
-
-    enterAccessPoint: "Enter Access Point",
-    viewStory: "View Founder Story",
-    viewImpact: "View Community Impact",
-    viewPartnerships: "View Partnerships",
-
-    guestTitle: "Guest Access Point",
-    guestLead:
-      "A welcoming public-facing space for story, events, place, and understanding what Bronson Family Farm is building in Youngstown.",
-    customerTitle: "Customer Access Point",
-    customerLead:
-      "A practical and educational space that connects people to fresh food, healthier choices, recipes, and marketplace participation.",
-    growerTitle: "Grower Access Point",
-    growerLead:
-      "An operational space for crop planning, coordination, timing, and practical support that connects growing to real community need.",
-    youthTitle: "Youth Workforce Access Point",
-    youthLead:
-      "A real learning and participation space where young people can build skills, confidence, work readiness, and future direction.",
-    parentTitle: "Parent Portal",
-    parentLead:
-      "A family-facing view that helps parents stay informed, see progress, receive updates, and support young people as they grow.",
-    supervisorTitle: "Supervisor Support",
-    supervisorLead:
-      "A support layer for youth workforce participation with visibility, coordination, scheduling, and resource awareness.",
-
-    overview: "Overview",
-    highlights: "Highlights",
-    actions: "Actions",
-
-    dataTitle: "What a healthier community means",
-    dataText:
-      "A healthier community means more than the absence of illness. It means better access to fresh food, stronger families, more youth opportunity, practical health education, local pride, and better daily conditions for people to live well.",
-    dataFood: "Fresh food access shapes health outcomes.",
-    dataYouth: "Young people need real opportunities to learn, work, and grow.",
-    dataFamily: "Families are stronger when they can see and support progress.",
-    dataLand: "Land can become a place of nourishment, learning, and belonging.",
-    dataWellness:
-      "Health advice means more when healthy food is actually within reach.",
-
-    partnerSchools: "Schools and youth development partners",
-    partnerHealth: "Health and wellness educators",
-    partnerGrowers: "Growers, producers, and local food partners",
-    partnerCivic: "Civic, business, and community organizations",
-
-    actionMarketplace: "Open Marketplace Access",
-    actionEvents: "View Events & Public Access",
-    actionPlanning: "Open Grower Planning Tools",
-    actionYouth: "Open Youth Workforce Hub",
-    actionParent: "Open Parent Portal",
-    actionSupervisor: "Open Supervisor Support",
-    actionImpact: "See Community Impact",
-    actionPartnerships: "See Partnerships",
+    languageName: "English",
+    dir: "ltr",
+    appTitle: "Bronson Family Farm",
+    appSubtitle: "A place-based family, food, wellness, and opportunity system",
+    heroKicker: "A living demo experience",
+    enterDemo: "Enter Live Demo",
+    guidedDemo: "Start Guided Tour",
+    stopGuidedDemo: "Stop Guided Tour",
+    exploreRoles: "Explore Pathways",
+    backToEntrance: "Back to Entrance",
+    openMarketplace: "Enter Marketplace",
+    returnToRoles: "Back to Roles",
+    localTime: "Local Time",
+    seasonPulse: "Season Pulse",
+    placeBased: "Place-Based System",
+    welcomeHeadline: "More than a farm. A living system rooted in land, family, food, and future.",
+    welcomeBody:
+      "Bronson Family Farm brings together visitors, customers, growers, youth, producers, and partners in one place where relationships create outcomes.",
+    missionLabel: "What this place does",
+    missionText:
+      "It grows food, develops people, strengthens families, restores land, creates opportunity, and shows how one location can activate an entire ecosystem.",
+    chooseLanguage: "Choose language",
+    choosePathway: "Choose a pathway",
+    pathwayHint: "Each pathway reveals a different experience inside the ecosystem.",
+    livePanelTitle: "Today on the Farm",
+    livePanelText:
+      "Explore role-based pathways, guided narration, seasonal planning, marketplace access, and youth workforce features in one continuous experience.",
+    impactTitle: "What Bronson Family Farm produces",
+    impactCards: [
+      "Fresh food and healthier choices",
+      "Youth workforce pathways",
+      "Family connection and wellness",
+      "Grower and vendor opportunity",
+    ],
+    roleTitle: "Role Experience",
+    roleIntroLabel: "Purpose",
+    roleActionsLabel: "What this role can do",
+    roleOutcomesLabel: "What this role gains",
+    customerMarketplaceHint: "Customers can move directly into the marketplace for produce, education, recipes, and purchasing pathways.",
+    youthModesLabel: "Youth Workforce Views",
+    youthOverview: "Youth Experience",
+    youthParent: "Parent Portal",
+    youthSupervisor: "Supervisor View",
+    marketplaceTitle: "Marketplace Experience",
+    marketplaceSubtitle: "Food access, education, discovery, and purchasing pathways meet here.",
+    marketplaceBlocks: [
+      {
+        title: "Shop & Reserve",
+        body: "Browse fresh produce, seedlings, and value-added goods with pathways for pickup, events, and future digital ordering.",
+      },
+      {
+        title: "Food Education",
+        body: "Move from buying food to understanding it through nutrition guidance, recipe ideas, and seasonal use inspiration.",
+      },
+      {
+        title: "Grow with Us",
+        body: "Customers can become volunteers, supporters, event participants, or future growers inside the wider ecosystem.",
+      },
+    ],
+    storyTitle: "Why this matters",
+    storyBody:
+      "The farm is the platform. The place itself creates food, belonging, visibility, skill-building, healing, and long-term community value.",
+    footerLine: "Bronson Family Farm is not simply growing crops. It is growing community.",
+    guidedSteps: [
+      "Welcome to Bronson Family Farm, a place-based system where land, relationships, food, and opportunity work together.",
+      "Guests experience the story, atmosphere, and mission of the farm as an entry point into the ecosystem.",
+      "Customers move from interest to access through fresh food, nutrition education, recipes, and marketplace pathways.",
+      "Growers use the ecosystem for planning, production, learning, and shared opportunity.",
+      "Youth workforce participants engage hands-on learning, skill-building, and support structures connected to real work.",
+      "The marketplace connects products, education, and community participation in one continuous experience.",
+    ],
+    roleContent: {
+      guest: {
+        title: "Guest Pathway",
+        intro:
+          "The guest pathway welcomes visitors into the story, place, and purpose of Bronson Family Farm.",
+        actions: [
+          "Discover the mission and legacy of the farm",
+          "Explore events, story points, and seasonal experiences",
+          "Move from curiosity into deeper engagement",
+        ],
+        outcomes: [
+          "A clear understanding of the farm’s purpose",
+          "Emotional connection to the land and vision",
+          "A simple next step into another pathway",
+        ],
+        cta: "Enter as Guest",
+      },
+      customer: {
+        title: "Customer Pathway",
+        intro:
+          "The customer pathway turns food access into a richer experience of nourishment, education, and ongoing participation.",
+        actions: [
+          "View produce, seedlings, and market offerings",
+          "Learn about food, recipes, and nutrition",
+          "Move directly into the marketplace",
+        ],
+        outcomes: [
+          "Healthier food choices",
+          "Stronger trust and buying habits",
+          "A clear route to repeat engagement",
+        ],
+        cta: "Open Customer Experience",
+      },
+      grower: {
+        title: "Grower Pathway",
+        intro:
+          "The grower pathway supports planning, production, learning, and connection inside a shared agricultural ecosystem.",
+        actions: [
+          "Review growing priorities and seasonal rhythm",
+          "Access role-based planning and production ideas",
+          "Connect with the wider farm ecosystem",
+        ],
+        outcomes: [
+          "Clearer growing direction",
+          "Stronger connection to opportunity",
+          "Shared knowledge and confidence",
+        ],
+        cta: "Open Grower Experience",
+      },
+      producer: {
+        title: "Value-Added Producer Pathway",
+        intro:
+          "This pathway supports makers, vendors, and processors who help turn farm products into broader community value.",
+        actions: [
+          "Explore event and market participation",
+          "Connect products to storytelling and visibility",
+          "Engage opportunities for collaboration",
+        ],
+        outcomes: [
+          "Expanded visibility",
+          "Market connection",
+          "A stronger role inside the ecosystem",
+        ],
+        cta: "Open Producer Experience",
+      },
+      youth: {
+        title: "Youth Workforce Pathway",
+        intro:
+          "This pathway connects young people to work, skill-building, mentorship, and support through hands-on farm experience.",
+        actions: [
+          "View youth learning experiences",
+          "See parent support features",
+          "See supervisor-only support structures",
+        ],
+        outcomes: [
+          "Confidence and work readiness",
+          "Family engagement",
+          "A supported pathway into responsibility",
+        ],
+        cta: "Open Youth Workforce",
+      },
+      admin: {
+        title: "Administrator Pathway",
+        intro:
+          "This pathway reflects the leadership view of operations, partnerships, engagement, and place-based impact.",
+        actions: [
+          "Track ecosystem activity and visibility",
+          "See pathways across roles and experiences",
+          "Support continuity, stewardship, and growth",
+        ],
+        outcomes: [
+          "Operational clarity",
+          "Stronger coordination",
+          "A clearer picture of whole-system impact",
+        ],
+        cta: "Open Leadership View",
+      },
+    },
+    youthContent: {
+      overview: {
+        title: "Youth Experience",
+        body:
+          "Young people experience structured, real-world learning in a setting that connects work, nature, discipline, creativity, and community.",
+        bullets: [
+          "Hands-on learning and farm responsibility",
+          "Confidence building through visible contribution",
+          "Exposure to teamwork, markets, and opportunity",
+        ],
+      },
+      parent: {
+        title: "Parent Portal",
+        body:
+          "Parents can understand the pathway, see the value of participation, and connect with support structures surrounding youth growth.",
+        bullets: [
+          "Clear communication about expectations",
+          "Family connection to progress and opportunity",
+          "A stronger bridge between home and program",
+        ],
+      },
+      supervisor: {
+        title: "Supervisor View",
+        body:
+          "The supervisor view exists only inside the youth workforce experience and supports staffing, accountability, and resource alignment.",
+        bullets: [
+          "Role-based oversight and support",
+          "Progress awareness and intervention planning",
+          "Coordination with support resources as needed",
+        ],
+      },
+    },
   },
-} as const;
+  es: {
+    languageName: "Español",
+    dir: "ltr",
+    appTitle: "Bronson Family Farm",
+    appSubtitle: "Un sistema basado en lugar para familia, alimentos, bienestar y oportunidad",
+    heroKicker: "Una experiencia demo viva",
+    enterDemo: "Entrar al Demo",
+    guidedDemo: "Iniciar Recorrido Guiado",
+    stopGuidedDemo: "Detener Recorrido Guiado",
+    exploreRoles: "Explorar Rutas",
+    backToEntrance: "Volver a la Entrada",
+    openMarketplace: "Entrar al Mercado",
+    returnToRoles: "Volver a Roles",
+    localTime: "Hora Local",
+    seasonPulse: "Pulso de la Temporada",
+    placeBased: "Sistema Basado en Lugar",
+    welcomeHeadline: "Más que una finca. Un sistema vivo arraigado en tierra, familia, comida y futuro.",
+    welcomeBody:
+      "Bronson Family Farm une visitantes, clientes, productores, jóvenes, elaboradores y aliados en un solo lugar donde las relaciones producen resultados.",
+    missionLabel: "Lo que hace este lugar",
+    missionText:
+      "Cultiva alimentos, desarrolla personas, fortalece familias, restaura tierra, crea oportunidad y demuestra cómo un solo lugar puede activar todo un ecosistema.",
+    chooseLanguage: "Elegir idioma",
+    choosePathway: "Elegir una ruta",
+    pathwayHint: "Cada ruta revela una experiencia diferente dentro del ecosistema.",
+    livePanelTitle: "Hoy en la Finca",
+    livePanelText:
+      "Explora rutas por rol, narración guiada, planificación estacional, acceso al mercado y funciones para la fuerza laboral juvenil.",
+    impactTitle: "Lo que produce Bronson Family Farm",
+    impactCards: [
+      "Alimentos frescos y opciones más sanas",
+      "Rutas laborales para jóvenes",
+      "Conexión familiar y bienestar",
+      "Oportunidad para productores y vendedores",
+    ],
+    roleTitle: "Experiencia por Rol",
+    roleIntroLabel: "Propósito",
+    roleActionsLabel: "Lo que este rol puede hacer",
+    roleOutcomesLabel: "Lo que este rol obtiene",
+    customerMarketplaceHint: "Los clientes pueden entrar directamente al mercado para productos, educación, recetas y compra.",
+    youthModesLabel: "Vistas de Fuerza Laboral Juvenil",
+    youthOverview: "Experiencia Juvenil",
+    youthParent: "Portal para Padres",
+    youthSupervisor: "Vista del Supervisor",
+    marketplaceTitle: "Experiencia del Mercado",
+    marketplaceSubtitle: "Acceso a alimentos, educación, descubrimiento y compra se unen aquí.",
+    marketplaceBlocks: [
+      {
+        title: "Comprar y Reservar",
+        body: "Explora productos frescos, plántulas y bienes elaborados con rutas para recoger, eventos y futuros pedidos digitales.",
+      },
+      {
+        title: "Educación Alimentaria",
+        body: "Pasa de comprar comida a comprenderla con guía nutricional, recetas e ideas de temporada.",
+      },
+      {
+        title: "Crece con Nosotros",
+        body: "Los clientes pueden convertirse en voluntarios, aliados, asistentes a eventos o futuros productores.",
+      },
+    ],
+    storyTitle: "Por qué importa",
+    storyBody:
+      "La finca es la plataforma. El lugar mismo crea alimento, pertenencia, visibilidad, desarrollo de habilidades, sanación y valor comunitario duradero.",
+    footerLine: "Bronson Family Farm no solo cultiva cosechas. Cultiva comunidad.",
+    guidedSteps: [
+      "Bienvenido a Bronson Family Farm, un sistema basado en lugar donde tierra, relaciones, alimentos y oportunidad trabajan juntos.",
+      "Los visitantes conocen la historia, el ambiente y la misión de la finca como puerta de entrada al ecosistema.",
+      "Los clientes pasan del interés al acceso mediante alimentos frescos, educación nutricional, recetas y rutas al mercado.",
+      "Los productores usan el ecosistema para planificación, producción, aprendizaje y oportunidad compartida.",
+      "La fuerza laboral juvenil participa en aprendizaje práctico, desarrollo de habilidades y apoyos conectados al trabajo real.",
+      "El mercado conecta productos, educación y participación comunitaria en una experiencia continua.",
+    ],
+    roleContent: {
+      guest: {
+        title: "Ruta del Visitante",
+        intro: "Da la bienvenida a los visitantes a la historia, el lugar y el propósito de Bronson Family Farm.",
+        actions: [
+          "Descubrir la misión y el legado de la finca",
+          "Explorar eventos y experiencias estacionales",
+          "Pasar de la curiosidad a una relación más profunda",
+        ],
+        outcomes: [
+          "Comprensión clara del propósito de la finca",
+          "Conexión emocional con la tierra y la visión",
+          "Un siguiente paso simple hacia otra ruta",
+        ],
+        cta: "Entrar como Visitante",
+      },
+      customer: {
+        title: "Ruta del Cliente",
+        intro: "Convierte el acceso a alimentos en una experiencia más rica de nutrición, educación y participación continua.",
+        actions: [
+          "Ver productos, plántulas y ofertas del mercado",
+          "Aprender sobre alimentos, recetas y nutrición",
+          "Entrar directamente al mercado",
+        ],
+        outcomes: [
+          "Opciones alimentarias más saludables",
+          "Más confianza y hábitos de compra",
+          "Ruta clara para regresar",
+        ],
+        cta: "Abrir Experiencia del Cliente",
+      },
+      grower: {
+        title: "Ruta del Productor Agrícola",
+        intro: "Apoya planificación, producción, aprendizaje y conexión dentro de un ecosistema agrícola compartido.",
+        actions: [
+          "Revisar prioridades de cultivo y ritmo estacional",
+          "Acceder a ideas por rol para producción",
+          "Conectarse con el ecosistema completo",
+        ],
+        outcomes: [
+          "Dirección de cultivo más clara",
+          "Conexión más fuerte con oportunidad",
+          "Conocimiento compartido y confianza",
+        ],
+        cta: "Abrir Experiencia del Productor",
+      },
+      producer: {
+        title: "Ruta del Productor de Valor Agregado",
+        intro: "Apoya a creadores, vendedores y procesadores que transforman productos agrícolas en valor comunitario.",
+        actions: [
+          "Explorar participación en eventos y mercado",
+          "Conectar productos con narrativa y visibilidad",
+          "Activar oportunidades de colaboración",
+        ],
+        outcomes: [
+          "Mayor visibilidad",
+          "Conexión con mercado",
+          "Papel más fuerte dentro del ecosistema",
+        ],
+        cta: "Abrir Experiencia de Valor Agregado",
+      },
+      youth: {
+        title: "Ruta de Fuerza Laboral Juvenil",
+        intro: "Conecta a jóvenes con trabajo, habilidades, mentoría y apoyo mediante experiencia práctica en la finca.",
+        actions: [
+          "Ver experiencias de aprendizaje juvenil",
+          "Ver funciones de apoyo para padres",
+          "Ver estructuras de apoyo solo para supervisores",
+        ],
+        outcomes: [
+          "Confianza y preparación laboral",
+          "Participación familiar",
+          "Ruta apoyada hacia la responsabilidad",
+        ],
+        cta: "Abrir Fuerza Laboral Juvenil",
+      },
+      admin: {
+        title: "Ruta Administrativa",
+        intro: "Refleja la visión de liderazgo sobre operaciones, alianzas, participación e impacto basado en lugar.",
+        actions: [
+          "Seguir actividad y visibilidad del ecosistema",
+          "Ver rutas entre roles y experiencias",
+          "Apoyar continuidad, administración y crecimiento",
+        ],
+        outcomes: [
+          "Claridad operativa",
+          "Coordinación más fuerte",
+          "Imagen más clara del impacto total",
+        ],
+        cta: "Abrir Vista de Liderazgo",
+      },
+    },
+    youthContent: {
+      overview: {
+        title: "Experiencia Juvenil",
+        body: "Los jóvenes viven aprendizaje estructurado y real conectado con trabajo, naturaleza, disciplina, creatividad y comunidad.",
+        bullets: [
+          "Aprendizaje práctico y responsabilidad en la finca",
+          "Confianza a través de contribución visible",
+          "Exposición a trabajo en equipo, mercados y oportunidad",
+        ],
+      },
+      parent: {
+        title: "Portal para Padres",
+        body: "Los padres pueden entender la ruta, ver el valor de la participación y conectarse con estructuras de apoyo.",
+        bullets: [
+          "Comunicación clara sobre expectativas",
+          "Conexión familiar con progreso y oportunidad",
+          "Puente más fuerte entre hogar y programa",
+        ],
+      },
+      supervisor: {
+        title: "Vista del Supervisor",
+        body: "Existe solo dentro de la experiencia juvenil y apoya personal, responsabilidad y alineación de recursos.",
+        bullets: [
+          "Supervisión y apoyo por rol",
+          "Conciencia del progreso y planificación de intervención",
+          "Coordinación con recursos de apoyo cuando sea necesario",
+        ],
+      },
+    },
+  },
+  tl: {
+    languageName: "Filipino",
+    dir: "ltr",
+    appTitle: "Bronson Family Farm",
+    appSubtitle: "Isang place-based system para sa pamilya, pagkain, kalusugan, at oportunidad",
+    heroKicker: "Isang buhay na demo",
+    enterDemo: "Pumasok sa Demo",
+    guidedDemo: "Simulan ang Guided Tour",
+    stopGuidedDemo: "Ihinto ang Guided Tour",
+    exploreRoles: "Tingnan ang Mga Pathway",
+    backToEntrance: "Bumalik sa Pasukan",
+    openMarketplace: "Pumasok sa Marketplace",
+    returnToRoles: "Bumalik sa Mga Role",
+    localTime: "Lokal na Oras",
+    seasonPulse: "Galaw ng Panahon",
+    placeBased: "Place-Based System",
+    welcomeHeadline: "Higit pa sa isang farm. Isang buhay na sistemang nakaugat sa lupa, pamilya, pagkain, at hinaharap.",
+    welcomeBody:
+      "Pinagsasama ng Bronson Family Farm ang bisita, customer, grower, kabataan, producer, at partner sa iisang lugar kung saan ang ugnayan ay lumilikha ng resulta.",
+    missionLabel: "Ano ang ginagawa ng lugar na ito",
+    missionText:
+      "Nagpapalago ito ng pagkain, tao, pamilya, lupa, oportunidad, at nagpapakita kung paano ang isang lugar ay makapagpapakilos ng isang buong ecosystem.",
+    chooseLanguage: "Pumili ng wika",
+    choosePathway: "Pumili ng pathway",
+    pathwayHint: "Bawat pathway ay nagpapakita ng ibang karanasan sa loob ng ecosystem.",
+    livePanelTitle: "Ngayong Araw sa Farm",
+    livePanelText:
+      "Tuklasin ang role-based pathways, guided narration, seasonal planning, marketplace access, at youth workforce features sa iisang karanasan.",
+    impactTitle: "Ano ang nalilikha ng Bronson Family Farm",
+    impactCards: [
+      "Sariwang pagkain at mas malusog na pagpili",
+      "Pathway sa trabaho para sa kabataan",
+      "Pagkakaugnay ng pamilya at wellness",
+      "Oportunidad para sa grower at vendor",
+    ],
+    roleTitle: "Karanasan ayon sa Role",
+    roleIntroLabel: "Layunin",
+    roleActionsLabel: "Ano ang magagawa ng role na ito",
+    roleOutcomesLabel: "Ano ang nakukuha ng role na ito",
+    customerMarketplaceHint: "Maaaring dumiretso ang customer sa marketplace para sa ani, edukasyon, recipes, at pagbili.",
+    youthModesLabel: "Youth Workforce Views",
+    youthOverview: "Karanasan ng Kabataan",
+    youthParent: "Portal ng Magulang",
+    youthSupervisor: "View ng Supervisor",
+    marketplaceTitle: "Karanasan sa Marketplace",
+    marketplaceSubtitle: "Dito nagtatagpo ang access sa pagkain, edukasyon, tuklas, at pagbili.",
+    marketplaceBlocks: [
+      {
+        title: "Mamili at Magpareserba",
+        body: "Tingnan ang sariwang ani, seedlings, at value-added goods para sa pickup, events, at susunod na digital ordering.",
+      },
+      {
+        title: "Edukasyon sa Pagkain",
+        body: "Mula sa pagbili ng pagkain tungo sa pag-unawa dito sa pamamagitan ng nutrition guidance, recipes, at seasonal ideas.",
+      },
+      {
+        title: "Lumago Kasama Namin",
+        body: "Ang customer ay maaaring maging volunteer, supporter, event participant, o future grower sa mas malawak na ecosystem.",
+      },
+    ],
+    storyTitle: "Bakit ito mahalaga",
+    storyBody:
+      "Ang farm ang platform. Ang mismong lugar ang lumilikha ng pagkain, pag-aari, visibility, skill-building, paghilom, at pangmatagalang halaga sa komunidad.",
+    footerLine: "Hindi lang pananim ang pinalalago ng Bronson Family Farm. Komunidad ang pinalalago nito.",
+    guidedSteps: [
+      "Maligayang pagdating sa Bronson Family Farm, isang place-based system kung saan magkasamang gumagana ang lupa, ugnayan, pagkain, at oportunidad.",
+      "Nararanasan ng mga bisita ang kuwento, kapaligiran, at layunin ng farm bilang pagpasok sa ecosystem.",
+      "Ang mga customer ay lumilipat mula interes tungo sa access sa pamamagitan ng sariwang pagkain, nutrition education, recipes, at marketplace pathways.",
+      "Ginagamit ng mga grower ang ecosystem para sa pagpaplano, produksyon, pagkatuto, at pinagsasaluhang oportunidad.",
+      "Ang youth workforce ay sumasali sa hands-on learning, skill-building, at support structures na konektado sa tunay na trabaho.",
+      "Pinagdurugtong ng marketplace ang produkto, edukasyon, at partisipasyon ng komunidad sa iisang tuloy-tuloy na karanasan.",
+    ],
+    roleContent: {
+      guest: {
+        title: "Pathway ng Bisita",
+        intro: "Inaanyayahan nito ang mga bisita sa kuwento, lugar, at layunin ng Bronson Family Farm.",
+        actions: [
+          "Tuklasin ang misyon at legacy ng farm",
+          "Tingnan ang events at seasonal experiences",
+          "Lumipat mula sa curiosity tungo sa mas malalim na engagement",
+        ],
+        outcomes: [
+          "Malinaw na pag-unawa sa layunin ng farm",
+          "Emosyonal na koneksyon sa lupa at vision",
+          "Simpleng susunod na hakbang tungo sa ibang pathway",
+        ],
+        cta: "Pumasok bilang Bisita",
+      },
+      customer: {
+        title: "Pathway ng Customer",
+        intro: "Ginagawang mas mayaman ang food access sa pamamagitan ng nourishment, education, at tuloy-tuloy na pakikilahok.",
+        actions: [
+          "Tingnan ang produce, seedlings, at market offerings",
+          "Matuto tungkol sa pagkain, recipes, at nutrition",
+          "Dumiretso sa marketplace",
+        ],
+        outcomes: [
+          "Mas malusog na food choices",
+          "Mas matibay na tiwala at buying habits",
+          "Malinaw na ruta para sa muling pakikilahok",
+        ],
+        cta: "Buksan ang Customer Experience",
+      },
+      grower: {
+        title: "Pathway ng Grower",
+        intro: "Sumusuporta sa planning, production, learning, at connection sa loob ng pinagsasaluhang agricultural ecosystem.",
+        actions: [
+          "Suriin ang growing priorities at seasonal rhythm",
+          "I-access ang role-based planning ideas",
+          "Kumonekta sa mas malawak na ecosystem ng farm",
+        ],
+        outcomes: [
+          "Mas malinaw na direksiyon sa pagtatanim",
+          "Mas matibay na koneksyon sa oportunidad",
+          "Pinagsasaluhang kaalaman at kumpiyansa",
+        ],
+        cta: "Buksan ang Grower Experience",
+      },
+      producer: {
+        title: "Pathway ng Value-Added Producer",
+        intro: "Sumusuporta sa makers, vendors, at processors na nagpapalawak ng halaga ng farm products para sa komunidad.",
+        actions: [
+          "Tuklasin ang event at market participation",
+          "Ikonekta ang produkto sa storytelling at visibility",
+          "Makilahok sa collaboration opportunities",
+        ],
+        outcomes: [
+          "Mas malawak na visibility",
+          "Koneksyon sa merkado",
+          "Mas matibay na papel sa loob ng ecosystem",
+        ],
+        cta: "Buksan ang Producer Experience",
+      },
+      youth: {
+        title: "Pathway ng Youth Workforce",
+        intro: "Ikinokonekta ang kabataan sa trabaho, skills, mentorship, at support sa pamamagitan ng hands-on farm experience.",
+        actions: [
+          "Tingnan ang youth learning experiences",
+          "Tingnan ang parent support features",
+          "Tingnan ang supervisor-only support structures",
+        ],
+        outcomes: [
+          "Kumpiyansa at kahandaan sa trabaho",
+          "Pakikilahok ng pamilya",
+          "Suportadong daan tungo sa responsibilidad",
+        ],
+        cta: "Buksan ang Youth Workforce",
+      },
+      admin: {
+        title: "Pathway ng Administrator",
+        intro: "Ipinapakita nito ang leadership view ng operations, partnerships, engagement, at place-based impact.",
+        actions: [
+          "Subaybayan ang activity at visibility ng ecosystem",
+          "Tingnan ang mga pathway sa iba’t ibang role",
+          "Suportahan ang continuity, stewardship, at growth",
+        ],
+        outcomes: [
+          "Operational clarity",
+          "Mas malakas na coordination",
+          "Mas malinaw na larawan ng whole-system impact",
+        ],
+        cta: "Buksan ang Leadership View",
+      },
+    },
+    youthContent: {
+      overview: {
+        title: "Karanasan ng Kabataan",
+        body: "Nakakaranas ang kabataan ng structured at real-world learning na nagdurugtong sa trabaho, kalikasan, disiplina, creativity, at komunidad.",
+        bullets: [
+          "Hands-on learning at responsibilidad sa farm",
+          "Pagbuo ng kumpiyansa sa pamamagitan ng visible contribution",
+          "Exposure sa teamwork, markets, at opportunity",
+        ],
+      },
+      parent: {
+        title: "Portal ng Magulang",
+        body: "Nauunawaan ng mga magulang ang pathway at nakakakonekta sila sa support structures sa paligid ng paglago ng kabataan.",
+        bullets: [
+          "Malinaw na komunikasyon tungkol sa expectations",
+          "Koneksyon ng pamilya sa progreso at oportunidad",
+          "Mas matibay na tulay sa pagitan ng tahanan at programa",
+        ],
+      },
+      supervisor: {
+        title: "View ng Supervisor",
+        body: "Ang supervisor view ay nasa loob lamang ng youth workforce experience at sumusuporta sa staffing, accountability, at resource alignment.",
+        bullets: [
+          "Role-based oversight at support",
+          "Awareness sa progreso at intervention planning",
+          "Coordination sa support resources kung kailangan",
+        ],
+      },
+    },
+  },
+  it: {
+    languageName: "Italiano",
+    dir: "ltr",
+    appTitle: "Bronson Family Farm",
+    appSubtitle: "Un sistema territoriale per famiglia, cibo, benessere e opportunità",
+    heroKicker: "Un’esperienza demo viva",
+    enterDemo: "Entra nel Demo",
+    guidedDemo: "Avvia Tour Guidato",
+    stopGuidedDemo: "Ferma Tour Guidato",
+    exploreRoles: "Esplora Percorsi",
+    backToEntrance: "Torna all’Ingresso",
+    openMarketplace: "Entra nel Marketplace",
+    returnToRoles: "Torna ai Ruoli",
+    localTime: "Ora Locale",
+    seasonPulse: "Ritmo Stagionale",
+    placeBased: "Sistema Territoriale",
+    welcomeHeadline: "Più di una fattoria. Un sistema vivo radicato nella terra, nella famiglia, nel cibo e nel futuro.",
+    welcomeBody:
+      "Bronson Family Farm riunisce visitatori, clienti, coltivatori, giovani, produttori e partner in un unico luogo dove le relazioni generano risultati.",
+    missionLabel: "Cosa fa questo luogo",
+    missionText:
+      "Coltiva cibo, sviluppa persone, rafforza famiglie, rigenera la terra, crea opportunità e dimostra come un solo luogo possa attivare un intero ecosistema.",
+    chooseLanguage: "Scegli lingua",
+    choosePathway: "Scegli un percorso",
+    pathwayHint: "Ogni percorso rivela un’esperienza diversa dentro l’ecosistema.",
+    livePanelTitle: "Oggi nella Fattoria",
+    livePanelText:
+      "Esplora percorsi per ruolo, narrazione guidata, pianificazione stagionale, accesso al marketplace e funzioni per la forza lavoro giovanile.",
+    impactTitle: "Cosa produce Bronson Family Farm",
+    impactCards: [
+      "Cibo fresco e scelte più sane",
+      "Percorsi di lavoro per i giovani",
+      "Connessione familiare e benessere",
+      "Opportunità per coltivatori e venditori",
+    ],
+    roleTitle: "Esperienza per Ruolo",
+    roleIntroLabel: "Scopo",
+    roleActionsLabel: "Cosa può fare questo ruolo",
+    roleOutcomesLabel: "Cosa ottiene questo ruolo",
+    customerMarketplaceHint: "I clienti possono entrare direttamente nel marketplace per prodotti, educazione, ricette e percorsi di acquisto.",
+    youthModesLabel: "Viste della Forza Lavoro Giovanile",
+    youthOverview: "Esperienza Giovani",
+    youthParent: "Portale Genitori",
+    youthSupervisor: "Vista Supervisore",
+    marketplaceTitle: "Esperienza Marketplace",
+    marketplaceSubtitle: "Accesso al cibo, educazione, scoperta e acquisto si incontrano qui.",
+    marketplaceBlocks: [
+      {
+        title: "Acquista e Prenota",
+        body: "Esplora prodotti freschi, piantine e beni trasformati con percorsi per ritiro, eventi e futuri ordini digitali.",
+      },
+      {
+        title: "Educazione Alimentare",
+        body: "Passa dall’acquisto del cibo alla sua comprensione con guida nutrizionale, idee ricette e ispirazione stagionale.",
+      },
+      {
+        title: "Cresci con Noi",
+        body: "I clienti possono diventare volontari, sostenitori, partecipanti agli eventi o futuri coltivatori nell’ecosistema.",
+      },
+    ],
+    storyTitle: "Perché conta",
+    storyBody:
+      "La fattoria è la piattaforma. Il luogo stesso crea cibo, appartenenza, visibilità, sviluppo di competenze, guarigione e valore comunitario duraturo.",
+    footerLine: "Bronson Family Farm non sta semplicemente coltivando raccolti. Sta coltivando comunità.",
+    guidedSteps: [
+      "Benvenuti a Bronson Family Farm, un sistema territoriale dove terra, relazioni, cibo e opportunità lavorano insieme.",
+      "Gli ospiti vivono la storia, l’atmosfera e la missione della fattoria come ingresso nell’ecosistema.",
+      "I clienti passano dall’interesse all’accesso attraverso cibo fresco, educazione nutrizionale, ricette e percorsi di mercato.",
+      "I coltivatori usano l’ecosistema per pianificazione, produzione, apprendimento e opportunità condivisa.",
+      "La forza lavoro giovanile partecipa ad apprendimento pratico, sviluppo di competenze e strutture di supporto collegate al lavoro reale.",
+      "Il marketplace collega prodotti, educazione e partecipazione della comunità in un’unica esperienza continua.",
+    ],
+    roleContent: {
+      guest: {
+        title: "Percorso Ospite",
+        intro: "Accoglie i visitatori nella storia, nel luogo e nello scopo di Bronson Family Farm.",
+        actions: [
+          "Scoprire missione e eredità della fattoria",
+          "Esplorare eventi ed esperienze stagionali",
+          "Passare dalla curiosità a un coinvolgimento più profondo",
+        ],
+        outcomes: [
+          "Comprensione chiara dello scopo della fattoria",
+          "Connessione emotiva con la terra e la visione",
+          "Un semplice passo successivo verso un altro percorso",
+        ],
+        cta: "Entra come Ospite",
+      },
+      customer: {
+        title: "Percorso Cliente",
+        intro: "Trasforma l’accesso al cibo in un’esperienza più ricca di nutrimento, educazione e partecipazione continua.",
+        actions: [
+          "Vedere prodotti, piantine e offerte di mercato",
+          "Imparare su cibo, ricette e nutrizione",
+          "Entrare direttamente nel marketplace",
+        ],
+        outcomes: [
+          "Scelte alimentari più sane",
+          "Maggiore fiducia e abitudini di acquisto",
+          "Un percorso chiaro per il ritorno",
+        ],
+        cta: "Apri Esperienza Cliente",
+      },
+      grower: {
+        title: "Percorso Coltivatore",
+        intro: "Supporta pianificazione, produzione, apprendimento e connessione dentro un ecosistema agricolo condiviso.",
+        actions: [
+          "Rivedere priorità di coltivazione e ritmo stagionale",
+          "Accedere a idee di pianificazione basate sul ruolo",
+          "Connettersi con l’intero ecosistema della fattoria",
+        ],
+        outcomes: [
+          "Direzione di coltivazione più chiara",
+          "Connessione più forte con l’opportunità",
+          "Conoscenza condivisa e fiducia",
+        ],
+        cta: "Apri Esperienza Coltivatore",
+      },
+      producer: {
+        title: "Percorso Produttore a Valore Aggiunto",
+        intro: "Supporta creatori, venditori e trasformatori che ampliano il valore dei prodotti agricoli per la comunità.",
+        actions: [
+          "Esplorare partecipazione a eventi e mercato",
+          "Collegare prodotti a narrazione e visibilità",
+          "Attivare opportunità di collaborazione",
+        ],
+        outcomes: [
+          "Maggiore visibilità",
+          "Connessione di mercato",
+          "Ruolo più forte nell’ecosistema",
+        ],
+        cta: "Apri Esperienza Produttore",
+      },
+      youth: {
+        title: "Percorso Forza Lavoro Giovanile",
+        intro: "Collega i giovani a lavoro, competenze, tutoraggio e supporto attraverso esperienza pratica in fattoria.",
+        actions: [
+          "Vedere esperienze di apprendimento giovanile",
+          "Vedere funzioni di supporto per i genitori",
+          "Vedere strutture di supporto solo supervisore",
+        ],
+        outcomes: [
+          "Fiducia e preparazione al lavoro",
+          "Coinvolgimento familiare",
+          "Percorso supportato verso la responsabilità",
+        ],
+        cta: "Apri Forza Lavoro Giovanile",
+      },
+      admin: {
+        title: "Percorso Amministratore",
+        intro: "Riflette la vista di leadership su operazioni, partnership, coinvolgimento e impatto territoriale.",
+        actions: [
+          "Monitorare attività e visibilità dell’ecosistema",
+          "Vedere i percorsi tra ruoli ed esperienze",
+          "Sostenere continuità, stewardship e crescita",
+        ],
+        outcomes: [
+          "Chiarezza operativa",
+          "Coordinamento più forte",
+          "Visione più chiara dell’impatto complessivo",
+        ],
+        cta: "Apri Vista Leadership",
+      },
+    },
+    youthContent: {
+      overview: {
+        title: "Esperienza Giovani",
+        body: "I giovani vivono un apprendimento strutturato e reale che collega lavoro, natura, disciplina, creatività e comunità.",
+        bullets: [
+          "Apprendimento pratico e responsabilità in fattoria",
+          "Costruzione della fiducia attraverso contributo visibile",
+          "Esposizione a teamwork, mercati e opportunità",
+        ],
+      },
+      parent: {
+        title: "Portale Genitori",
+        body: "I genitori possono capire il percorso, vedere il valore della partecipazione e connettersi alle strutture di supporto.",
+        bullets: [
+          "Comunicazione chiara sulle aspettative",
+          "Connessione familiare con progresso e opportunità",
+          "Ponte più forte tra casa e programma",
+        ],
+      },
+      supervisor: {
+        title: "Vista Supervisore",
+        body: "Esiste solo dentro l’esperienza giovanile e supporta personale, responsabilità e allineamento delle risorse.",
+        bullets: [
+          "Supervisione e supporto basati sul ruolo",
+          "Consapevolezza del progresso e pianificazione dell’intervento",
+          "Coordinamento con risorse di supporto quando necessario",
+        ],
+      },
+    },
+  },
+  patwa: {
+    languageName: "Patwa",
+    dir: "ltr",
+    appTitle: "Bronson Family Farm",
+    appSubtitle: "A one place system fi family, food, wellness, an opportunity",
+    heroKicker: "A live demo experience",
+    enterDemo: "Go Ina Di Demo",
+    guidedDemo: "Start Guided Tour",
+    stopGuidedDemo: "Stop Guided Tour",
+    exploreRoles: "Explore Di Pathways",
+    backToEntrance: "Back To Entrance",
+    openMarketplace: "Go Ina Marketplace",
+    returnToRoles: "Back To Roles",
+    localTime: "Local Time",
+    seasonPulse: "Season Pulse",
+    placeBased: "Place-Based System",
+    welcomeHeadline: "Dis more than farm. A living system weh root inna land, family, food, an future.",
+    welcomeBody:
+      "Bronson Family Farm bring together guest, customer, grower, youth, producer, an partner inna one place weh relationship create result.",
+    missionLabel: "Wah dis place do",
+    missionText:
+      "It grow food, build people, strengthen family, restore land, create opportunity, an show how one place can activate one whole ecosystem.",
+    chooseLanguage: "Choose language",
+    choosePathway: "Choose pathway",
+    pathwayHint: "Every pathway show yuh a different part a di ecosystem.",
+    livePanelTitle: "Pon Di Farm Today",
+    livePanelText:
+      "Explore role pathways, guided voice, seasonal planning, marketplace access, an youth workforce features inna one smooth experience.",
+    impactTitle: "Wah Bronson Family Farm produce",
+    impactCards: [
+      "Fresh food an healthier choice",
+      "Youth workforce pathways",
+      "Family connection an wellness",
+      "Grower an vendor opportunity",
+    ],
+    roleTitle: "Role Experience",
+    roleIntroLabel: "Purpose",
+    roleActionsLabel: "Wah dis role can do",
+    roleOutcomesLabel: "Wah dis role gain",
+    customerMarketplaceHint: "Customer can move straight ina di marketplace fi produce, education, recipe, an buying pathway.",
+    youthModesLabel: "Youth Workforce Views",
+    youthOverview: "Youth Experience",
+    youthParent: "Parent Portal",
+    youthSupervisor: "Supervisor View",
+    marketplaceTitle: "Marketplace Experience",
+    marketplaceSubtitle: "Food access, education, discovery, an buying pathway link up yah so.",
+    marketplaceBlocks: [
+      {
+        title: "Shop an Reserve",
+        body: "Browse fresh produce, seedlings, an value-added goods fi pickup, event, an future digital ordering.",
+      },
+      {
+        title: "Food Education",
+        body: "Move from buy food to understand food through nutrition guidance, recipe ideas, an seasonal inspiration.",
+      },
+      {
+        title: "Grow Wid We",
+        body: "Customer can become volunteer, supporter, event participant, or future grower ina di wider ecosystem.",
+      },
+    ],
+    storyTitle: "Why dis matter",
+    storyBody:
+      "Di farm a di platform. Di place itself create food, belonging, visibility, skills, healing, an long-term community value.",
+    footerLine: "Bronson Family Farm nah just grow crop. It a grow community.",
+    guidedSteps: [
+      "Welcome to Bronson Family Farm, a place-based system weh bring land, relationship, food, an opportunity together.",
+      "Guest get di story, di atmosphere, an di mission as di front door to di ecosystem.",
+      "Customer move from interest to access through fresh food, nutrition education, recipe, an marketplace pathway.",
+      "Grower use di ecosystem fi planning, production, learning, an shared opportunity.",
+      "Youth workforce participants get hands-on learning, skill-building, an support connected to real work.",
+      "Di marketplace connect product, education, an community participation inna one continuous experience.",
+    ],
+    roleContent: {
+      guest: {
+        title: "Guest Pathway",
+        intro: "Dis pathway welcome visitor into di story, place, an purpose a Bronson Family Farm.",
+        actions: [
+          "Discover di mission an legacy a di farm",
+          "Explore event an seasonal experience",
+          "Move from curiosity to deeper engagement",
+        ],
+        outcomes: [
+          "Clear understanding a di farm purpose",
+          "Emotional connection to di land an vision",
+          "Simple next step into another pathway",
+        ],
+        cta: "Enter As Guest",
+      },
+      customer: {
+        title: "Customer Pathway",
+        intro: "Dis pathway turn food access into a richer experience a nourishment, education, an ongoing participation.",
+        actions: [
+          "View produce, seedlings, an market offerings",
+          "Learn bout food, recipe, an nutrition",
+          "Move straight ina di marketplace",
+        ],
+        outcomes: [
+          "Healthier food choice",
+          "Stronger trust an buying habit",
+          "Clear route fi return engagement",
+        ],
+        cta: "Open Customer Experience",
+      },
+      grower: {
+        title: "Grower Pathway",
+        intro: "Dis pathway support planning, production, learning, an connection ina one shared agricultural ecosystem.",
+        actions: [
+          "Review growing priorities an seasonal rhythm",
+          "Access role-based planning ideas",
+          "Connect wid di wider farm ecosystem",
+        ],
+        outcomes: [
+          "Clearer growing direction",
+          "Stronger connection to opportunity",
+          "Shared knowledge an confidence",
+        ],
+        cta: "Open Grower Experience",
+      },
+      producer: {
+        title: "Value-Added Producer Pathway",
+        intro: "Dis pathway support maker, vendor, an processor weh help turn farm product into wider community value.",
+        actions: [
+          "Explore event an market participation",
+          "Connect product to storytelling an visibility",
+          "Engage collaboration opportunity",
+        ],
+        outcomes: [
+          "Expanded visibility",
+          "Market connection",
+          "Stronger role ina di ecosystem",
+        ],
+        cta: "Open Producer Experience",
+      },
+      youth: {
+        title: "Youth Workforce Pathway",
+        intro: "Dis pathway link young people to work, skills, mentorship, an support through hands-on farm experience.",
+        actions: [
+          "View youth learning experience",
+          "See parent support features",
+          "See supervisor-only structures",
+        ],
+        outcomes: [
+          "Confidence an work readiness",
+          "Family engagement",
+          "Supported path into responsibility",
+        ],
+        cta: "Open Youth Workforce",
+      },
+      admin: {
+        title: "Administrator Pathway",
+        intro: "Dis pathway show di leadership view a operations, partnership, engagement, an place-based impact.",
+        actions: [
+          "Track ecosystem activity an visibility",
+          "See pathways across roles an experiences",
+          "Support continuity, stewardship, an growth",
+        ],
+        outcomes: [
+          "Operational clarity",
+          "Stronger coordination",
+          "Clearer picture a whole-system impact",
+        ],
+        cta: "Open Leadership View",
+      },
+    },
+    youthContent: {
+      overview: {
+        title: "Youth Experience",
+        body: "Young people get structured real-world learning weh connect work, nature, discipline, creativity, an community.",
+        bullets: [
+          "Hands-on learning an farm responsibility",
+          "Confidence through visible contribution",
+          "Exposure to teamwork, market, an opportunity",
+        ],
+      },
+      parent: {
+        title: "Parent Portal",
+        body: "Parent can understand di pathway, see di value, an connect wid support around youth growth.",
+        bullets: [
+          "Clear communication bout expectation",
+          "Family connection to progress an opportunity",
+          "Stronger bridge between home an program",
+        ],
+      },
+      supervisor: {
+        title: "Supervisor View",
+        body: "Dis only live inside di youth workforce experience an support staffing, accountability, an resource alignment.",
+        bullets: [
+          "Role-based oversight an support",
+          "Progress awareness an intervention planning",
+          "Coordination wid support resources when needed",
+        ],
+      },
+    },
+  },
+  he: {
+    languageName: "עברית",
+    dir: "rtl",
+    appTitle: "Bronson Family Farm",
+    appSubtitle: "מערכת מבוססת מקום למשפחה, מזון, רווחה והזדמנות",
+    heroKicker: "חוויית דמו חיה",
+    enterDemo: "כניסה לדמו",
+    guidedDemo: "התחל סיור מודרך",
+    stopGuidedDemo: "עצור סיור מודרך",
+    exploreRoles: "חקור מסלולים",
+    backToEntrance: "חזרה לכניסה",
+    openMarketplace: "כניסה לשוק",
+    returnToRoles: "חזרה לתפקידים",
+    localTime: "שעה מקומית",
+    seasonPulse: "דופק עונתי",
+    placeBased: "מערכת מבוססת מקום",
+    welcomeHeadline: "יותר מחווה. מערכת חיה המושרשת באדמה, במשפחה, במזון ובעתיד.",
+    welcomeBody:
+      "Bronson Family Farm מחברת מבקרים, לקוחות, מגדלים, צעירים, יצרנים ושותפים במקום אחד שבו יחסים יוצרים תוצאות.",
+    missionLabel: "מה המקום הזה עושה",
+    missionText:
+      "הוא מגדל מזון, מפתח אנשים, מחזק משפחות, משקם אדמה, יוצר הזדמנות ומראה כיצד מקום אחד יכול להפעיל מערכת שלמה.",
+    chooseLanguage: "בחר שפה",
+    choosePathway: "בחר מסלול",
+    pathwayHint: "כל מסלול חושף חוויה אחרת בתוך המערכת.",
+    livePanelTitle: "היום בחווה",
+    livePanelText:
+      "גלה מסלולים לפי תפקיד, קריינות מודרכת, תכנון עונתי, גישה לשוק ותכונות של כוח עבודה לנוער.",
+    impactTitle: "מה Bronson Family Farm מייצרת",
+    impactCards: [
+      "מזון טרי ובחירות בריאות יותר",
+      "מסלולי עבודה לנוער",
+      "חיבור משפחתי ורווחה",
+      "הזדמנות למגדלים ולספקים",
+    ],
+    roleTitle: "חוויית תפקיד",
+    roleIntroLabel: "מטרה",
+    roleActionsLabel: "מה התפקיד הזה יכול לעשות",
+    roleOutcomesLabel: "מה התפקיד הזה מקבל",
+    customerMarketplaceHint: "לקוחות יכולים לעבור ישירות לשוק לתוצרת, חינוך, מתכונים ונתיבי רכישה.",
+    youthModesLabel: "תצוגות כוח עבודה לנוער",
+    youthOverview: "חוויית נוער",
+    youthParent: "פורטל הורים",
+    youthSupervisor: "תצוגת מפקח",
+    marketplaceTitle: "חוויית שוק",
+    marketplaceSubtitle: "גישה למזון, חינוך, גילוי ורכישה נפגשים כאן.",
+    marketplaceBlocks: [
+      {
+        title: "קנייה והזמנה",
+        body: "עיין בתוצרת טרייה, שתילים ומוצרים מעובדים למסלולי איסוף, אירועים והזמנות דיגיטליות בעתיד.",
+      },
+      {
+        title: "חינוך למזון",
+        body: "עבור מקניית מזון להבנתו דרך הנחיית תזונה, רעיונות למתכונים והשראה עונתית.",
+      },
+      {
+        title: "צמחו איתנו",
+        body: "לקוחות יכולים להפוך למתנדבים, תומכים, משתתפי אירועים או מגדלים עתידיים במערכת הרחבה יותר.",
+      },
+    ],
+    storyTitle: "למה זה חשוב",
+    storyBody:
+      "החווה היא הפלטפורמה. המקום עצמו יוצר מזון, שייכות, נראות, פיתוח מיומנויות, ריפוי וערך קהילתי ארוך טווח.",
+    footerLine: "Bronson Family Farm לא רק מגדלת יבולים. היא מגדלת קהילה.",
+    guidedSteps: [
+      "ברוכים הבאים לBronson Family Farm, מערכת מבוססת מקום שבה אדמה, יחסים, מזון והזדמנות פועלים יחד.",
+      "אורחים חווים את הסיפור, האווירה והשליחות של החווה ככניסה למערכת.",
+      "לקוחות עוברים מעניין לגישה דרך מזון טרי, חינוך תזונתי, מתכונים ונתיבי שוק.",
+      "מגדלים משתמשים במערכת לתכנון, ייצור, למידה והזדמנות משותפת.",
+      "משתתפי כוח העבודה לנוער מקבלים למידה מעשית, פיתוח מיומנויות ומבני תמיכה המחוברים לעבודה אמיתית.",
+      "השוק מחבר מוצרים, חינוך והשתתפות קהילתית לחוויה אחת רציפה.",
+    ],
+    roleContent: {
+      guest: {
+        title: "מסלול אורח",
+        intro: "מסלול זה מקבל את פני המבקרים לסיפור, למקום ולמטרה של Bronson Family Farm.",
+        actions: [
+          "לגלות את השליחות והמורשת של החווה",
+          "לחקור אירועים וחוויות עונתיות",
+          "לעבור מסקרנות למעורבות עמוקה יותר",
+        ],
+        outcomes: [
+          "הבנה ברורה של מטרת החווה",
+          "חיבור רגשי לאדמה ולחזון",
+          "צעד פשוט הבא למסלול אחר",
+        ],
+        cta: "כניסה כאורח",
+      },
+      customer: {
+        title: "מסלול לקוח",
+        intro: "מסלול זה הופך גישה למזון לחוויה עשירה יותר של הזנה, חינוך והשתתפות מתמשכת.",
+        actions: [
+          "לראות תוצרת, שתילים והיצע שוק",
+          "ללמוד על מזון, מתכונים ותזונה",
+          "לעבור ישירות לשוק",
+        ],
+        outcomes: [
+          "בחירות מזון בריאות יותר",
+          "אמון והרגלי רכישה חזקים יותר",
+          "מסלול ברור לחזרה",
+        ],
+        cta: "פתח חוויית לקוח",
+      },
+      grower: {
+        title: "מסלול מגדל",
+        intro: "מסלול זה תומך בתכנון, ייצור, למידה וחיבור בתוך מערכת חקלאית משותפת.",
+        actions: [
+          "לסקור עדיפויות גידול וקצב עונתי",
+          "לקבל רעיונות תכנון לפי תפקיד",
+          "להתחבר למערכת הרחבה של החווה",
+        ],
+        outcomes: [
+          "כיוון גידול ברור יותר",
+          "חיבור חזק יותר להזדמנות",
+          "ידע וביטחון משותפים",
+        ],
+        cta: "פתח חוויית מגדל",
+      },
+      producer: {
+        title: "מסלול יצרן בעל ערך מוסף",
+        intro: "מסלול זה תומך ביצרנים, ספקים ומעבדים שמרחיבים את ערך מוצרי החווה לקהילה.",
+        actions: [
+          "לחקור השתתפות באירועים ובשוק",
+          "לחבר מוצרים לסיפור ולנראות",
+          "להפעיל הזדמנויות לשיתוף פעולה",
+        ],
+        outcomes: [
+          "נראות מורחבת",
+          "חיבור לשוק",
+          "תפקיד חזק יותר בתוך המערכת",
+        ],
+        cta: "פתח חוויית יצרן",
+      },
+      youth: {
+        title: "מסלול כוח עבודה לנוער",
+        intro: "מסלול זה מחבר צעירים לעבודה, מיומנויות, חונכות ותמיכה דרך חוויית חווה מעשית.",
+        actions: [
+          "לראות חוויות למידה לנוער",
+          "לראות תכונות תמיכה להורים",
+          "לראות מבני תמיכה למפקח בלבד",
+        ],
+        outcomes: [
+          "ביטחון ומוכנות לעבודה",
+          "מעורבות משפחתית",
+          "מסלול נתמך לאחריות",
+        ],
+        cta: "פתח כוח עבודה לנוער",
+      },
+      admin: {
+        title: "מסלול מנהל",
+        intro: "מסלול זה משקף את מבט ההנהגה על תפעול, שותפויות, מעורבות והשפעה מבוססת מקום.",
+        actions: [
+          "לעקוב אחר פעילות ונראות המערכת",
+          "לראות מסלולים בין תפקידים וחוויות",
+          "לתמוך ברציפות, אחריות וצמיחה",
+        ],
+        outcomes: [
+          "בהירות תפעולית",
+          "תיאום חזק יותר",
+          "תמונה ברורה יותר של ההשפעה הכוללת",
+        ],
+        cta: "פתח תצוגת הנהגה",
+      },
+    },
+    youthContent: {
+      overview: {
+        title: "חוויית נוער",
+        body: "צעירים חווים למידה מובנית ומציאותית המחברת עבודה, טבע, משמעת, יצירתיות וקהילה.",
+        bullets: [
+          "למידה מעשית ואחריות בחווה",
+          "בניית ביטחון דרך תרומה נראית לעין",
+          "חשיפה לעבודת צוות, שווקים והזדמנות",
+        ],
+      },
+      parent: {
+        title: "פורטל הורים",
+        body: "הורים יכולים להבין את המסלול, לראות את ערך ההשתתפות ולהתחבר למבני התמיכה סביב צמיחת הנוער.",
+        bullets: [
+          "תקשורת ברורה לגבי ציפיות",
+          "חיבור משפחתי להתקדמות ולהזדמנות",
+          "גשר חזק יותר בין הבית לתוכנית",
+        ],
+      },
+      supervisor: {
+        title: "תצוגת מפקח",
+        body: "תצוגה זו קיימת רק בתוך חוויית כוח העבודה לנוער ותומכת בכוח אדם, אחריות ויישור משאבים.",
+        bullets: [
+          "פיקוח ותמיכה לפי תפקיד",
+          "מודעות להתקדמות ותכנון התערבות",
+          "תיאום עם משאבי תמיכה בעת הצורך",
+        ],
+      },
+    },
+  },
+};
 
-function InfoPanel({
-  labels,
-  title,
-  lead,
-  bullets,
-  actions,
+const roleOrder: RoleKey[] = ["guest", "customer", "grower", "producer", "youth", "admin"];
+
+function classNames(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function useLocalClock() {
+  const [time, setTime] = useState(new Date());
+  useEffect(() => {
+    const id = window.setInterval(() => setTime(new Date()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+  return time;
+}
+
+function getSeasonPulse(date: Date) {
+  const month = date.getMonth() + 1;
+  if ([12, 1, 2].includes(month)) return "Planning, visioning, protected growth";
+  if ([3, 4, 5].includes(month)) return "Seedtime, preparation, early expansion";
+  if ([6, 7, 8].includes(month)) return "Peak growth, learning, markets, activity";
+  return "Harvest rhythm, transition, storage, next-cycle design";
+}
+
+function useSpeech() {
+  const [enabled, setEnabled] = useState(false);
+  const speak = (text: string, lang: string) => {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang;
+    utterance.rate = 0.96;
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
+  };
+  const stop = () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    setEnabled(false);
+  };
+  return { enabled, setEnabled, speak, stop };
+}
+
+const speechCodes: Record<LanguageKey, string> = {
+  en: "en-US",
+  es: "es-US",
+  tl: "fil-PH",
+  it: "it-IT",
+  patwa: "en-JM",
+  he: "he-IL",
+};
+
+function BackgroundVisual({
+  src,
+  alt,
+  gradientClass,
+  icon,
 }: {
-  labels: { overview: string; highlights: string; actions: string };
-  title: string;
-  lead: string;
-  bullets: string[];
-  actions: string[];
+  src: string;
+  alt: string;
+  gradientClass: string;
+  icon: string;
 }) {
+  const [errored, setErrored] = useState(false);
+
   return (
-    <div className="detail-grid">
-      <div className="detail-main card-glass">
-        <div className="section-label">{labels.overview}</div>
-        <h2 className="detail-title">{title}</h2>
-        <p className="detail-lead">{lead}</p>
-      </div>
-
-      <div className="detail-side">
-        <div className="card-glass">
-          <div className="section-label">{labels.highlights}</div>
-          <div className="bullet-list">
-            {bullets.map((item) => (
-              <div className="bullet-item" key={item}>
-                <span className="bullet-dot" />
-                <span>{item}</span>
-              </div>
-            ))}
+    <div className="absolute inset-0 overflow-hidden">
+      {!errored ? (
+        <img
+          src={src}
+          alt={alt}
+          onError={() => setErrored(true)}
+          className="h-full w-full object-cover scale-[1.02] opacity-55"
+        />
+      ) : (
+        <div className={classNames("h-full w-full bg-gradient-to-br", gradientClass)}>
+          <div className="absolute inset-0 opacity-10 [background-image:radial-gradient(circle_at_center,white_1px,transparent_1px)] [background-size:28px_28px]" />
+          <div className="absolute inset-0 flex items-center justify-center text-[140px] md:text-[220px] opacity-20">
+            {icon}
           </div>
         </div>
-
-        <div className="card-glass">
-          <div className="section-label">{labels.actions}</div>
-          <div className="action-stack">
-            {actions.map((action) => (
-              <button className="ghost-action" type="button" key={action}>
-                {action}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
+      <div className="absolute inset-0 bg-black/45" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/10" />
     </div>
   );
 }
 
-function StoryChapter({
-  tag,
+function Pill({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs md:text-sm tracking-wide text-white/90 backdrop-blur">
+      {children}
+    </span>
+  );
+}
+
+function SectionCard({
   title,
-  text,
+  children,
+  className = "",
 }: {
-  tag: string;
   title: string;
-  text: string;
+  children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <section className="story-chapter card-glass">
-      <div className="chapter-tag">{tag}</div>
-      <h2 className="chapter-title">{title}</h2>
-      <p className="chapter-text">{text}</p>
-    </section>
+    <div className={classNames("rounded-3xl border border-white/10 bg-white/10 backdrop-blur-md shadow-2xl", className)}>
+      <div className="border-b border-white/10 px-5 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-white/80">
+        {title}
+      </div>
+      <div className="p-5">{children}</div>
+    </div>
   );
 }
 
 export default function App() {
-  const [language, setLanguage] = useState<LanguageCode>("en");
-  const [view, setView] = useState<ViewMode>("entrance");
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const t = useMemo(() => copy[language], [language]);
-  const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const [language, setLanguage] = useState<LanguageKey>("en");
+  const t = translations[language];
 
-  const heroImage = "/GrowArea.jpg";
-  const pathwayImage = "/GrowArea2.jpg";
+  const [screen, setScreen] = useState<ScreenKey>("entrance");
+  const [selectedRole, setSelectedRole] = useState<RoleKey>("guest");
+  const [youthView, setYouthView] = useState<YouthView>("overview");
+  const [tourIndex, setTourIndex] = useState(0);
+  const [roleGridOpen, setRoleGridOpen] = useState(true);
+
+  const clock = useLocalClock();
+  const { enabled, setEnabled, speak, stop } = useSpeech();
+  const tourTimer = useRef<number | null>(null);
+
+  const currentRoleContent = t.roleContent[selectedRole];
+  const roleCard = roleCards.find((r) => r.key === selectedRole) ?? roleCards[0];
+  const entranceVisual = roleCards[0];
+
+  const localTimeDisplay = useMemo(() => {
+    try {
+      return new Intl.DateTimeFormat(language === "he" ? "he-IL" : "en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        month: "long",
+        day: "numeric",
+        weekday: "long",
+      }).format(clock);
+    } catch {
+      return clock.toLocaleTimeString();
+    }
+  }, [clock, language]);
+
+  const seasonPulse = getSeasonPulse(clock);
 
   useEffect(() => {
+    if (!enabled) {
+      if (tourTimer.current) window.clearInterval(tourTimer.current);
+      return;
+    }
+
+    const steps = t.guidedSteps;
+    speak(steps[tourIndex], speechCodes[language]);
+
+    tourTimer.current = window.setInterval(() => {
+      setTourIndex((prev) => {
+        const next = (prev + 1) % steps.length;
+        return next;
+      });
+    }, 7000);
+
     return () => {
-      window.speechSynthesis.cancel();
+      if (tourTimer.current) window.clearInterval(tourTimer.current);
     };
+  }, [enabled, language]); // intentionally not including tourIndex here
+
+  useEffect(() => {
+    if (!enabled) return;
+    const steps = t.guidedSteps;
+    speak(steps[tourIndex], speechCodes[language]);
+
+    if (tourIndex === 0) {
+      setScreen("entrance");
+    } else if (tourIndex >= 1 && tourIndex <= 4) {
+      setScreen("role");
+      setSelectedRole(roleOrder[tourIndex - 1]);
+      if (roleOrder[tourIndex - 1] === "youth") setYouthView("overview");
+    } else {
+      setScreen("marketplace");
+    }
+  }, [tourIndex, enabled, language, t.guidedSteps]);
+
+  useEffect(() => {
+    return () => stop();
   }, []);
 
-  const startGuidedWalkthrough = () => {
-    const utterance = new SpeechSynthesisUtterance(t.guidedText);
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
-    utterance.lang = "en-US";
-
-    speechRef.current = utterance;
-    setIsSpeaking(true);
-
-    utterance.onend = () => {
-      setIsSpeaking(false);
-      setView("story");
-    };
-
-    utterance.onerror = () => {
-      setIsSpeaking(false);
-    };
-
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
+  const startGuidedTour = () => {
+    setEnabled(true);
+    setTourIndex(0);
+    setScreen("entrance");
   };
 
-  const stopGuidedWalkthrough = () => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
+  const stopGuidedTour = () => {
+    stop();
+    if (tourTimer.current) window.clearInterval(tourTimer.current);
   };
 
-  const labels = {
-    overview: t.overview,
-    highlights: t.highlights,
-    actions: t.actions,
+  const openRole = (role: RoleKey) => {
+    setScreen("role");
+    setSelectedRole(role);
+    if (role === "youth") setYouthView("overview");
+    setRoleGridOpen(false);
+    if (enabled) {
+      const idx = roleOrder.indexOf(role);
+      if (idx >= 0) setTourIndex(idx + 1);
+    }
   };
 
-  const renderRoleView = () => {
-    if (view === "guest") {
-      return (
-        <section
-          className="role-page"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(9,13,10,0.90), rgba(15,18,15,0.97)), url("${pathwayImage}")`,
-          }}
-        >
-          <div className="role-wrap">
-            <div className="role-header">
-              <div>
-                <div className="eyebrow">{t.location}</div>
-                <h1 className="role-page-title">{t.guestTitle}</h1>
-              </div>
-              <div className="controls">
-                <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.backToEcosystem}
-                </button>
-              </div>
-            </div>
-            <InfoPanel
-              labels={labels}
-              title={t.guestTitle}
-              lead={t.guestLead}
-              bullets={[
-                "Public welcome and first understanding",
-                "Story, identity, and place-based context",
-                "Events, updates, and partner-facing information",
-              ]}
-              actions={[t.actionEvents, t.actionImpact]}
-            />
-          </div>
-        </section>
-      );
-    }
-
-    if (view === "customer") {
-      return (
-        <section
-          className="role-page"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(16,11,7,0.88), rgba(14,16,11,0.96)), url("${heroImage}")`,
-          }}
-        >
-          <div className="role-wrap">
-            <div className="role-header">
-              <div>
-                <div className="eyebrow">{t.location}</div>
-                <h1 className="role-page-title">{t.customerTitle}</h1>
-              </div>
-              <div className="controls">
-                <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.backToEcosystem}
-                </button>
-              </div>
-            </div>
-            <InfoPanel
-              labels={labels}
-              title={t.customerTitle}
-              lead={t.customerLead}
-              bullets={[
-                "Fresh food access and marketplace connection",
-                "Nutrition guidance and healthier food choices",
-                "Recipes, education, and repeat engagement",
-              ]}
-              actions={[t.actionMarketplace, t.actionImpact]}
-            />
-          </div>
-        </section>
-      );
-    }
-
-    if (view === "grower") {
-      return (
-        <section
-          className="role-page"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(8,14,10,0.90), rgba(12,19,12,0.98)), url("${pathwayImage}")`,
-          }}
-        >
-          <div className="role-wrap">
-            <div className="role-header">
-              <div>
-                <div className="eyebrow">{t.location}</div>
-                <h1 className="role-page-title">{t.growerTitle}</h1>
-              </div>
-              <div className="controls">
-                <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.backToEcosystem}
-                </button>
-              </div>
-            </div>
-            <InfoPanel
-              labels={labels}
-              title={t.growerTitle}
-              lead={t.growerLead}
-              bullets={[
-                "Crop planning, seasonal timing, and coordination",
-                "Production tools that connect growing to community need",
-                "Support for practical decision-making and readiness",
-              ]}
-              actions={[t.actionPlanning, t.actionPartnerships]}
-            />
-          </div>
-        </section>
-      );
-    }
-
-    if (view === "youth") {
-      return (
-        <section
-          className="role-page"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(18,10,6,0.88), rgba(14,18,10,0.98)), url("${heroImage}")`,
-          }}
-        >
-          <div className="role-wrap">
-            <div className="role-header">
-              <div>
-                <div className="eyebrow">{t.location}</div>
-                <h1 className="role-page-title">{t.youthTitle}</h1>
-              </div>
-              <div className="controls">
-                <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.backToEcosystem}
-                </button>
-              </div>
-            </div>
-
-            <InfoPanel
-              labels={labels}
-              title={t.youthTitle}
-              lead={t.youthLead}
-              bullets={[
-                "Learn real skills and build confidence",
-                "Gain hands-on experience and work readiness",
-                "Grow with mentoring, structure, and support",
-              ]}
-              actions={[t.actionYouth, t.actionParent, t.actionSupervisor]}
-            />
-
-            <div className="nested-grid">
-              <div className="nested-panel card-glass youth-nested">
-                <div className="section-label">{t.roleParent}</div>
-                <h3 className="nested-title">{t.parentTitle}</h3>
-                <p className="nested-copy">{t.parentLead}</p>
-                <button className="primary nested-btn" onClick={() => setView("parent")}>
-                  {t.actionParent}
-                </button>
-              </div>
-
-              <div className="nested-panel card-glass youth-nested purple">
-                <div className="section-label">{t.roleSupervisor}</div>
-                <h3 className="nested-title">{t.supervisorTitle}</h3>
-                <p className="nested-copy">{t.supervisorLead}</p>
-                <button
-                  className="primary nested-btn"
-                  onClick={() => setView("supervisor")}
-                >
-                  {t.actionSupervisor}
-                </button>
-              </div>
-            </div>
-
-            <div className="story-actions">
-              <button className="secondary" onClick={() => setView("impact")}>
-                {t.continue}: {t.impactTitle}
-              </button>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    if (view === "parent") {
-      return (
-        <section
-          className="role-page"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(12,10,7,0.90), rgba(14,16,12,0.98)), url("${pathwayImage}")`,
-          }}
-        >
-          <div className="role-wrap">
-            <div className="role-header">
-              <div>
-                <div className="eyebrow">{t.location}</div>
-                <h1 className="role-page-title">{t.parentTitle}</h1>
-              </div>
-              <div className="controls">
-                <button className="ghost-btn" onClick={() => setView("youth")}>
-                  {t.back}
-                </button>
-              </div>
-            </div>
-            <InfoPanel
-              labels={labels}
-              title={t.parentTitle}
-              lead={t.parentLead}
-              bullets={[
-                "See participation and progress more clearly",
-                "Stay connected through updates and communication",
-                "Support growth through family awareness and trust",
-              ]}
-              actions={[t.actionYouth, t.actionImpact]}
-            />
-            <div className="story-actions">
-              <button className="secondary" onClick={() => setView("impact")}>
-                {t.continue}: {t.impactTitle}
-              </button>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    if (view === "supervisor") {
-      return (
-        <section
-          className="role-page"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(20,10,25,0.90), rgba(12,14,18,1)), url("${pathwayImage}")`,
-          }}
-        >
-          <div className="role-wrap">
-            <div className="role-header">
-              <div>
-                <div className="eyebrow">{t.location}</div>
-                <h1 className="role-page-title">{t.supervisorTitle}</h1>
-              </div>
-              <div className="controls">
-                <button className="ghost-btn" onClick={() => setView("youth")}>
-                  {t.back}
-                </button>
-              </div>
-            </div>
-            <InfoPanel
-              labels={labels}
-              title={t.supervisorTitle}
-              lead={t.supervisorLead}
-              bullets={[
-                "Support youth participation with structure and care",
-                "Coordinate schedules, progress, and practical needs",
-                "Strengthen consistency through visibility and support",
-              ]}
-              actions={[t.actionYouth, t.actionParent]}
-            />
-            <div className="story-actions">
-              <button className="secondary" onClick={() => setView("impact")}>
-                {t.continue}: {t.impactTitle}
-              </button>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    if (view === "impact") {
-      return (
-        <section
-          className="role-page"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(9,11,10,0.92), rgba(12,15,12,0.98)), url("${heroImage}")`,
-          }}
-        >
-          <div className="role-wrap">
-            <div className="role-header">
-              <div>
-                <div className="eyebrow">{t.location}</div>
-                <h1 className="role-page-title">{t.impactTitle}</h1>
-                <p className="ecosystem-copy">{t.impactText}</p>
-              </div>
-              <div className="controls">
-                <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.backToEcosystem}
-                </button>
-              </div>
-            </div>
-
-            <div className="impact-grid">
-              <div className="card-glass stat-card">
-                <div className="stat-number">01</div>
-                <div className="stat-title">{t.dataFood}</div>
-              </div>
-              <div className="card-glass stat-card">
-                <div className="stat-number">02</div>
-                <div className="stat-title">{t.dataYouth}</div>
-              </div>
-              <div className="card-glass stat-card">
-                <div className="stat-number">03</div>
-                <div className="stat-title">{t.dataFamily}</div>
-              </div>
-              <div className="card-glass stat-card">
-                <div className="stat-number">04</div>
-                <div className="stat-title">{t.dataLand}</div>
-              </div>
-              <div className="card-glass stat-card wide">
-                <div className="section-label">Healthier Community</div>
-                <div className="detail-lead">{t.dataText}</div>
-              </div>
-              <div className="card-glass stat-card wide">
-                <div className="section-label">Wellness Connection</div>
-                <div className="detail-lead">{t.dataWellness}</div>
-              </div>
-            </div>
-
-            <div className="story-actions">
-              <button className="primary" onClick={() => setView("partnerships")}>
-                {t.continue}: {t.partnershipsTitle}
-              </button>
-              <button className="secondary" onClick={() => setView("ecosystem")}>
-                {t.backToEcosystem}
-              </button>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    if (view === "partnerships") {
-      return (
-        <section
-          className="role-page"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(11,12,17,0.92), rgba(13,14,18,0.98)), url("${pathwayImage}")`,
-          }}
-        >
-          <div className="role-wrap">
-            <div className="role-header">
-              <div>
-                <div className="eyebrow">{t.location}</div>
-                <h1 className="role-page-title">{t.partnershipsTitle}</h1>
-                <p className="ecosystem-copy">{t.partnershipsText}</p>
-              </div>
-              <div className="controls">
-                <button className="ghost-btn" onClick={() => setView("ecosystem")}>
-                  {t.backToEcosystem}
-                </button>
-              </div>
-            </div>
-
-            <div className="partner-grid">
-              <div className="card-glass partner-card">
-                <h3>{t.partnerSchools}</h3>
-                <p>
-                  Youth access, educational pathways, supervised participation,
-                  and stronger future opportunity.
-                </p>
-              </div>
-              <div className="card-glass partner-card">
-                <h3>{t.partnerHealth}</h3>
-                <p>
-                  Nutrition learning, healthier choices, prevention education,
-                  and stronger daily habits.
-                </p>
-              </div>
-              <div className="card-glass partner-card">
-                <h3>{t.partnerGrowers}</h3>
-                <p>
-                  Production support, crop coordination, local food systems, and
-                  practical growing knowledge.
-                </p>
-              </div>
-              <div className="card-glass partner-card">
-                <h3>{t.partnerCivic}</h3>
-                <p>
-                  Community activation, land use, local investment, and systems
-                  that create better outcomes together.
-                </p>
-              </div>
-            </div>
-
-            <div className="story-actions">
-              <button className="primary" onClick={() => setView("entrance")}>
-                {t.backHome}
-              </button>
-              <button className="secondary" onClick={() => setView("ecosystem")}>
-                {t.backToEcosystem}
-              </button>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    return null;
+  const openMarketplace = () => {
+    setScreen("marketplace");
+    if (enabled) setTourIndex(5);
   };
+
+  const youthPanel = t.youthContent[youthView];
+
+  const navButtonBase =
+    "rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/20 active:scale-[0.99]";
 
   return (
-    <>
-      <style>{`
-        * { box-sizing: border-box; }
-
-        html, body, #root {
-          margin: 0;
-          padding: 0;
-          min-height: 100%;
-          width: 100%;
-          background: #0b0d0b;
-          font-family: Georgia, "Times New Roman", serif;
-        }
-
-        body { color: white; }
-
-        .page {
-          min-height: 100vh;
-          width: 100%;
-          background: #0b0d0b;
-        }
-
-        .entrance {
-          position: relative;
-          min-height: 100vh;
-          overflow: hidden;
-        }
-
-        .bg {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          animation: zoom 22s ease-in-out infinite alternate;
-          transform: scale(1.03);
-        }
-
-        .bg-path {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          opacity: 0.22;
-          mix-blend-mode: screen;
-          animation: drift 28s ease-in-out infinite alternate;
-        }
-
-        .forest-wash {
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(circle at 20% 18%, rgba(255, 246, 214, 0.16), transparent 24%),
-            radial-gradient(circle at 78% 22%, rgba(138, 92, 179, 0.16), transparent 28%),
-            radial-gradient(circle at 68% 76%, rgba(185, 73, 61, 0.14), transparent 24%),
-            radial-gradient(circle at 22% 80%, rgba(226, 159, 63, 0.14), transparent 22%),
-            radial-gradient(circle at 50% 55%, rgba(90, 123, 79, 0.16), transparent 30%);
-          animation: hueShift 20s ease-in-out infinite alternate;
-        }
-
-        .shade {
-          position: absolute;
-          inset: 0;
-          background:
-            linear-gradient(
-              135deg,
-              rgba(16, 31, 19, 0.70) 0%,
-              rgba(74, 56, 30, 0.46) 28%,
-              rgba(122, 63, 22, 0.34) 52%,
-              rgba(78, 42, 97, 0.30) 74%,
-              rgba(11, 15, 12, 0.72) 100%
-            ),
-            linear-gradient(
-              to bottom,
-              rgba(7, 10, 7, 0.30),
-              rgba(7, 10, 7, 0.56),
-              rgba(7, 10, 7, 0.88)
-            ),
-            radial-gradient(
-              circle at center,
-              rgba(255, 251, 239, 0.07),
-              rgba(0, 0, 0, 0.24) 52%,
-              rgba(0, 0, 0, 0.48) 100%
-            );
-        }
-
-        .topbar,
-        .story-head,
-        .ecosystem-head,
-        .role-header {
-          position: relative;
-          z-index: 3;
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 16px;
-          padding: 24px 28px;
-          flex-wrap: wrap;
-        }
-
-        .story-head,
-        .ecosystem-head,
-        .role-header {
-          padding: 0 0 26px 0;
-        }
-
-        .brand {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 10px 16px;
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,0.16);
-          background: rgba(255,255,255,0.08);
-          backdrop-filter: blur(12px);
-          letter-spacing: 0.08em;
-          font-size: 12px;
-          color: rgba(255,255,255,0.95);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.16);
-        }
-
-        .controls {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          flex-wrap: wrap;
-        }
-
-        .select,
-        .ghost-btn,
-        .ghost-action {
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,0.18);
-          background: rgba(10,10,10,0.28);
-          color: white;
-          padding: 10px 16px;
-          font-size: 14px;
-          backdrop-filter: blur(12px);
-        }
-
-        .ghost-btn,
-        .ghost-action {
-          cursor: pointer;
-        }
-
-        .content {
-          position: relative;
-          z-index: 2;
-          min-height: calc(100vh - 86px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          padding: 24px;
-        }
-
-        .inner {
-          width: 100%;
-          max-width: 980px;
-        }
-
-        .eyebrow {
-          display: inline-block;
-          margin-bottom: 18px;
-          padding: 10px 18px;
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,0.20);
-          background: rgba(255,255,255,0.10);
-          backdrop-filter: blur(10px);
-          font-size: 12px;
-          letter-spacing: 0.18em;
-          color: rgba(255,255,255,0.90);
-          box-shadow: 0 8px 28px rgba(0,0,0,0.18);
-        }
-
-        h1 {
-          margin: 0;
-          font-size: clamp(40px, 6.2vw, 82px);
-          line-height: 0.98;
-          letter-spacing: -0.025em;
-          font-weight: 600;
-          text-shadow: 0 5px 18px rgba(0,0,0,0.34);
-        }
-
-        .copy {
-          margin: 22px auto 0;
-          max-width: 860px;
-          font-size: clamp(19px, 2vw, 28px);
-          line-height: 1.7;
-          color: rgba(255,255,255,0.90);
-          text-shadow: 0 2px 10px rgba(0,0,0,0.24);
-        }
-
-        .support-line {
-          margin: 16px auto 0;
-          max-width: 860px;
-          font-size: 18px;
-          line-height: 1.6;
-          color: rgba(255,255,255,0.83);
-        }
-
-        .trust-bar {
-          margin: 24px auto 0;
-          max-width: 980px;
-          font-size: 14px;
-          line-height: 1.7;
-          letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.75);
-        }
-
-        .buttons,
-        .story-actions {
-          margin-top: 34px;
-          display: flex;
-          flex-wrap: wrap;
-          gap: 14px;
-          justify-content: center;
-        }
-
-        button {
-          border: none;
-          border-radius: 999px;
-          padding: 15px 24px;
-          font-size: 15px;
-          cursor: pointer;
-          transition:
-            transform 0.2s ease,
-            opacity 0.2s ease,
-            background 0.25s ease,
-            border-color 0.25s ease,
-            box-shadow 0.25s ease;
-        }
-
-        button:hover {
-          transform: translateY(-2px);
-        }
-
-        .primary {
-          background: linear-gradient(135deg, #fffaf0, #eeddb7);
-          color: #201f16;
-          font-weight: 700;
-          box-shadow: 0 12px 28px rgba(18,10,4,0.24);
-        }
-
-        .secondary {
-          background: rgba(255,255,255,0.10);
-          color: white;
-          border: 1px solid rgba(255,255,255,0.24);
-          backdrop-filter: blur(10px);
-        }
-
-        .story-page,
-        .ecosystem,
-        .role-page {
-          min-height: 100vh;
-          padding: 36px 24px 50px;
-          background-position: center;
-          background-size: cover;
-          background-repeat: no-repeat;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .story-page::before,
-        .ecosystem::before,
-        .role-page::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(circle at 15% 20%, rgba(255, 244, 210, 0.10), transparent 24%),
-            radial-gradient(circle at 78% 16%, rgba(132, 85, 176, 0.12), transparent 28%),
-            radial-gradient(circle at 70% 78%, rgba(190, 78, 58, 0.10), transparent 22%),
-            radial-gradient(circle at 20% 82%, rgba(221, 151, 57, 0.10), transparent 22%);
-          pointer-events: none;
-        }
-
-        .story-wrap,
-        .ecosystem-wrap,
-        .role-wrap {
-          max-width: 1220px;
-          margin: 0 auto;
-          position: relative;
-          z-index: 1;
-        }
-
-        .story-intro,
-        .ecosystem-copy {
-          max-width: 900px;
-          margin-top: 10px;
-          font-size: 19px;
-          line-height: 1.7;
-          color: rgba(255,255,255,0.84);
-        }
-
-        .story-layout {
-          display: grid;
-          grid-template-columns: 0.9fr 1.1fr;
-          gap: 22px;
-          margin-top: 24px;
-          align-items: start;
-        }
-
-        .story-nav {
-          position: sticky;
-          top: 24px;
-          display: grid;
-          gap: 12px;
-        }
-
-        .story-nav-card {
-          border: 1px solid rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.08);
-          backdrop-filter: blur(14px);
-          border-radius: 24px;
-          padding: 18px;
-          box-shadow: 0 16px 42px rgba(0,0,0,0.22);
-        }
-
-        .story-nav-title {
-          font-size: 18px;
-          margin: 0 0 8px;
-          color: rgba(255,255,255,0.95);
-        }
-
-        .story-nav-copy {
-          font-size: 15px;
-          line-height: 1.7;
-          margin: 0;
-          color: rgba(255,255,255,0.76);
-        }
-
-        .story-sequence {
-          display: grid;
-          gap: 18px;
-        }
-
-        .story-chapter,
-        .role-card,
-        .card-glass {
-          border: 1px solid rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.09);
-          backdrop-filter: blur(14px);
-          border-radius: 28px;
-          padding: 24px;
-          box-shadow: 0 16px 42px rgba(0,0,0,0.22);
-        }
-
-        .chapter-tag {
-          font-size: 12px;
-          letter-spacing: 0.18em;
-          color: rgba(255,255,255,0.62);
-          text-transform: uppercase;
-          margin-bottom: 14px;
-        }
-
-        .chapter-title,
-        .ecosystem-title,
-        .role-page-title {
-          font-size: clamp(30px, 4vw, 56px);
-          line-height: 1.04;
-          margin: 0 0 12px;
-        }
-
-        .chapter-text {
-          font-size: 19px;
-          line-height: 1.8;
-          color: rgba(255,255,255,0.86);
-          margin: 0;
-        }
-
-        .role-grid {
-          display: grid;
-          grid-template-columns: repeat(5, minmax(0, 1fr));
-          gap: 18px;
-          margin-top: 24px;
-        }
-
-        .role-card {
-          min-height: 290px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          transition:
-            transform 0.22s ease,
-            border-color 0.22s ease,
-            box-shadow 0.22s ease,
-            background 0.22s ease;
-        }
-
-        .role-card:hover {
-          transform: translateY(-4px);
-          background: rgba(255,255,255,0.12);
-        }
-
-        .role-name {
-          font-size: 24px;
-          margin: 0 0 12px;
-        }
-
-        .role-text {
-          font-size: 16px;
-          line-height: 1.7;
-          color: rgba(255,255,255,0.80);
-          margin: 0;
-        }
-
-        .role-link {
-          margin-top: 18px;
-          display: inline-block;
-          color: white;
-          text-decoration: none;
-          font-size: 14px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          opacity: 0.90;
-          cursor: pointer;
-        }
-
-        .detail-grid {
-          display: grid;
-          grid-template-columns: 1.25fr 0.75fr;
-          gap: 18px;
-        }
-
-        .detail-side {
-          display: grid;
-          gap: 18px;
-        }
-
-        .section-label {
-          text-transform: uppercase;
-          letter-spacing: 0.18em;
-          font-size: 11px;
-          color: rgba(255,255,255,0.64);
-          margin-bottom: 14px;
-        }
-
-        .detail-title {
-          font-size: clamp(28px, 4vw, 50px);
-          line-height: 1.05;
-          margin: 0 0 12px;
-        }
-
-        .detail-lead,
-        .nested-copy {
-          font-size: 18px;
-          line-height: 1.8;
-          color: rgba(255,255,255,0.84);
-          margin: 0;
-        }
-
-        .bullet-list {
-          display: grid;
-          gap: 14px;
-        }
-
-        .bullet-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          color: rgba(255,255,255,0.84);
-          line-height: 1.7;
-          font-size: 16px;
-        }
-
-        .bullet-dot {
-          width: 10px;
-          height: 10px;
-          margin-top: 9px;
-          border-radius: 999px;
-          background: linear-gradient(135deg, #fff7d7, #e1983a);
-          flex: 0 0 auto;
-        }
-
-        .action-stack {
-          display: grid;
-          gap: 12px;
-        }
-
-        .ghost-action {
-          text-align: left;
-          width: 100%;
-        }
-
-        .nested-grid {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 18px;
-          margin-top: 18px;
-        }
-
-        .nested-title {
-          margin: 0 0 10px;
-          font-size: 30px;
-        }
-
-        .nested-btn {
-          margin-top: 18px;
-        }
-
-        .youth-nested.purple {
-          border-color: rgba(138, 92, 179, 0.22);
-        }
-
-        .impact-grid,
-        .partner-grid {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 18px;
-          margin-top: 24px;
-        }
-
-        .stat-card {
-          min-height: 180px;
-        }
-
-        .stat-card.wide {
-          min-height: 220px;
-        }
-
-        .stat-number {
-          font-size: 14px;
-          letter-spacing: 0.18em;
-          color: rgba(255,255,255,0.60);
-          margin-bottom: 18px;
-        }
-
-        .stat-title {
-          font-size: 28px;
-          line-height: 1.35;
-          color: rgba(255,255,255,0.92);
-        }
-
-        .partner-card h3 {
-          margin: 0 0 10px;
-          font-size: 26px;
-        }
-
-        .partner-card p {
-          margin: 0;
-          font-size: 18px;
-          line-height: 1.75;
-          color: rgba(255,255,255,0.82);
-        }
-
-        @keyframes zoom {
-          0% { transform: scale(1.03); }
-          100% { transform: scale(1.09); }
-        }
-
-        @keyframes drift {
-          0% { transform: scale(1.05) translateY(0px); }
-          100% { transform: scale(1.11) translateY(-10px); }
-        }
-
-        @keyframes hueShift {
-          0% { opacity: 0.88; filter: saturate(100%); }
-          50% { opacity: 1; filter: saturate(112%); }
-          100% { opacity: 0.92; filter: saturate(104%); }
-        }
-
-        @media (max-width: 1180px) {
-          .role-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-
-          .detail-grid,
-          .story-layout {
-            grid-template-columns: 1fr;
-          }
-
-          .story-nav {
-            position: static;
-          }
-        }
-
-        @media (max-width: 900px) {
-          .impact-grid,
-          .partner-grid,
-          .nested-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        @media (max-width: 720px) {
-          .topbar,
-          .story-head,
-          .ecosystem-head,
-          .role-header {
-            flex-direction: column;
-            align-items: stretch;
-          }
-
-          .buttons,
-          .story-actions {
-            flex-direction: column;
-          }
-
-          button,
-          .select,
-          .ghost-btn {
-            width: 100%;
-          }
-
-          .role-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .content {
-            padding: 18px;
-          }
-        }
-      `}</style>
-
-      <div className="page">
-        {view === "entrance" && (
-          <section className="entrance">
-            <img src={heroImage} alt="Bronson Family Farm" className="bg" />
-            <img src={pathwayImage} alt="" className="bg-path" />
-            <div className="forest-wash" />
-            <div className="shade" />
-
-            <div className="topbar">
-              <div className="brand">{t.location}</div>
-              <div className="controls">
-                <select
-                  className="select"
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value as LanguageCode)}
-                  aria-label={t.language}
-                >
-                  <option value="en">English</option>
-                  <option value="es">Español</option>
-                  <option value="tl">Tagalog</option>
-                  <option value="it">Italiano</option>
-                  <option value="pat">Patwa</option>
-                  <option value="he">עברית</option>
-                </select>
-
-                {isSpeaking ? (
-                  <button className="ghost-btn" onClick={stopGuidedWalkthrough}>
-                    {t.stopVoice}
+    <div
+      dir={t.dir}
+      className="min-h-screen bg-black text-white selection:bg-emerald-300 selection:text-black"
+    >
+      <div className="relative min-h-screen">
+        <BackgroundVisual
+          src={screen === "entrance" ? entranceVisual.image : screen === "marketplace" ? "/Marketplace.jpg" : roleCard.image}
+          alt={screen === "entrance" ? "Bronson Family Farm entrance" : screen === "marketplace" ? "Marketplace" : currentRoleContent.title}
+          gradientClass={fallbackGradients[(screen === "entrance" ? 0 : screen === "marketplace" ? 5 : roleOrder.indexOf(selectedRole)) % fallbackGradients.length]}
+          icon={screen === "entrance" ? "🌲" : screen === "marketplace" ? "🧺" : roleCard.fallbackIcon}
+        />
+
+        <div className="relative z-10 min-h-screen px-4 py-4 md:px-8 md:py-6">
+          <header className="mx-auto mb-6 max-w-7xl rounded-[28px] border border-white/10 bg-black/25 px-4 py-4 backdrop-blur-xl md:px-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="min-w-0">
+                <div className="mb-2 flex flex-wrap gap-2">
+                  <Pill>{t.heroKicker}</Pill>
+                  <Pill>{t.placeBased}</Pill>
+                  <Pill>{t.seasonPulse}: {seasonPulse}</Pill>
+                </div>
+                <h1 className="text-2xl font-semibold tracking-tight md:text-4xl">{t.appTitle}</h1>
+                <p className="mt-1 max-w-3xl text-sm text-white/80 md:text-base">{t.appSubtitle}</p>
+              </div>
+
+              <div className="grid gap-2 sm:grid-cols-2 lg:flex lg:flex-wrap lg:justify-end">
+                <button className={navButtonBase} onClick={() => setScreen("entrance")}>
+                  {t.backToEntrance}
+                </button>
+                <button className={navButtonBase} onClick={() => setRoleGridOpen((v) => !v)}>
+                  {t.exploreRoles}
+                </button>
+                <button className={navButtonBase} onClick={openMarketplace}>
+                  {t.openMarketplace}
+                </button>
+                {!enabled ? (
+                  <button
+                    className="rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-emerald-400 active:scale-[0.99]"
+                    onClick={startGuidedTour}
+                  >
+                    {t.guidedDemo}
                   </button>
-                ) : null}
+                ) : (
+                  <button
+                    className="rounded-2xl bg-amber-300 px-4 py-3 text-sm font-semibold text-black transition hover:bg-amber-200 active:scale-[0.99]"
+                    onClick={stopGuidedTour}
+                  >
+                    {t.stopGuidedDemo}
+                  </button>
+                )}
               </div>
             </div>
+          </header>
 
-            <div className="content">
-              <div className="inner">
-                <div className="eyebrow">A place where a seed starts the journey.</div>
-                <h1>{t.headline}</h1>
-                <div className="copy">{t.subtitle}</div>
-                <div className="support-line">{t.supportLine}</div>
-                <div className="trust-bar">{t.trustBar}</div>
+          <main className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-12">
+            <section className="lg:col-span-8">
+              {screen === "entrance" && (
+                <div className="space-y-6">
+                  <div className="rounded-[32px] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur-xl md:p-8">
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      <Pill>{t.localTime}: {localTimeDisplay}</Pill>
+                      <Pill>{t.chooseLanguage}</Pill>
+                    </div>
 
-                <div className="buttons">
-                  <button className="primary" onClick={() => setView("story")}>
-                    {t.enter}
-                  </button>
-                  <button className="secondary" onClick={startGuidedWalkthrough}>
-                    {t.walkthrough}
-                  </button>
-                  <button className="secondary" onClick={() => setView("impact")}>
-                    {t.impact}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {view === "story" && (
-          <section
-            className="story-page"
-            style={{
-              backgroundImage: `linear-gradient(to bottom, rgba(10,12,9,0.88), rgba(12,15,12,0.96)), url("${pathwayImage}")`,
-            }}
-          >
-            <div className="story-wrap">
-              <div className="story-head">
-                <div>
-                  <div className="eyebrow">{t.location}</div>
-                  <h1 className="chapter-title">{t.storyIntroTitle}</h1>
-                  <p className="story-intro">{t.storyIntroText}</p>
-                </div>
-                <div className="controls">
-                  <button className="ghost-btn" onClick={() => setView("entrance")}>
-                    {t.backHome}
-                  </button>
-                </div>
-              </div>
-
-              <div className="story-layout">
-                <aside className="story-nav">
-                  <div className="story-nav-card">
-                    <h3 className="story-nav-title">{t.story}</h3>
-                    <p className="story-nav-copy">
-                      Roots. health reality. family. land. systems. training.
-                      resilience. mission.
+                    <h2 className="max-w-4xl text-3xl font-semibold leading-tight tracking-tight md:text-6xl">
+                      {t.welcomeHeadline}
+                    </h2>
+                    <p className="mt-4 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
+                      {t.welcomeBody}
                     </p>
+
+                    <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {(Object.keys(translations) as LanguageKey[]).map((lang) => (
+                        <button
+                          key={lang}
+                          onClick={() => setLanguage(lang)}
+                          className={classNames(
+                            "rounded-2xl border px-4 py-3 text-left transition",
+                            language === lang
+                              ? "border-emerald-300 bg-emerald-300 text-black"
+                              : "border-white/15 bg-white/10 text-white hover:bg-white/20"
+                          )}
+                        >
+                          <div className="text-sm font-semibold">{translations[lang].languageName}</div>
+                          <div className="text-xs opacity-80">{lang.toUpperCase()}</div>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="mt-8 flex flex-wrap gap-3">
+                      <button
+                        onClick={() => {
+                          setScreen("role");
+                          setSelectedRole("guest");
+                          setRoleGridOpen(false);
+                        }}
+                        className="rounded-2xl bg-white px-5 py-4 text-sm font-semibold text-black transition hover:bg-emerald-200"
+                      >
+                        {t.enterDemo}
+                      </button>
+                      <button
+                        onClick={startGuidedTour}
+                        className="rounded-2xl border border-white/15 bg-white/10 px-5 py-4 text-sm font-semibold text-white transition hover:bg-white/20"
+                      >
+                        {t.guidedDemo}
+                      </button>
+                    </div>
                   </div>
-                  <div className="story-nav-card">
-                    <h3 className="story-nav-title">{t.ecosystem}</h3>
-                    <p className="story-nav-copy">
-                      Continue into the working structure of the platform.
+
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <SectionCard title={t.missionLabel}>
+                      <p className="text-base leading-7 text-white/85">{t.missionText}</p>
+                    </SectionCard>
+
+                    <SectionCard title={t.livePanelTitle}>
+                      <p className="text-base leading-7 text-white/85">{t.livePanelText}</p>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-2xl bg-black/20 p-4">
+                          <div className="text-xs uppercase tracking-[0.16em] text-white/60">{t.localTime}</div>
+                          <div className="mt-2 text-lg font-semibold">{localTimeDisplay}</div>
+                        </div>
+                        <div className="rounded-2xl bg-black/20 p-4">
+                          <div className="text-xs uppercase tracking-[0.16em] text-white/60">{t.seasonPulse}</div>
+                          <div className="mt-2 text-lg font-semibold">{seasonPulse}</div>
+                        </div>
+                      </div>
+                    </SectionCard>
+                  </div>
+                </div>
+              )}
+
+              {screen === "role" && (
+                <div className="space-y-6">
+                  <div className="rounded-[32px] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur-xl md:p-8">
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      <Pill>{t.roleTitle}</Pill>
+                      <Pill>{currentRoleContent.title}</Pill>
+                    </div>
+
+                    <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+                      <div>
+                        <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
+                          {currentRoleContent.title}
+                        </h2>
+                        <p className="mt-4 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
+                          {currentRoleContent.intro}
+                        </p>
+
+                        <div className="mt-6 flex flex-wrap gap-3">
+                          <button
+                            onClick={() => setScreen("entrance")}
+                            className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/20"
+                          >
+                            {t.backToEntrance}
+                          </button>
+                          {selectedRole === "customer" && (
+                            <button
+                              onClick={openMarketplace}
+                              className="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-black transition hover:bg-emerald-300"
+                            >
+                              {t.openMarketplace}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur-md">
+                        <div className="text-xs uppercase tracking-[0.16em] text-white/60">
+                          {t.roleIntroLabel}
+                        </div>
+                        <p className="mt-3 text-base leading-7 text-white/85">{currentRoleContent.intro}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <SectionCard title={t.roleActionsLabel}>
+                      <ul className="space-y-3">
+                        {currentRoleContent.actions.map((item) => (
+                          <li key={item} className="rounded-2xl bg-black/20 p-4 text-white/90">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </SectionCard>
+
+                    <SectionCard title={t.roleOutcomesLabel}>
+                      <ul className="space-y-3">
+                        {currentRoleContent.outcomes.map((item) => (
+                          <li key={item} className="rounded-2xl bg-black/20 p-4 text-white/90">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                      {selectedRole === "customer" && (
+                        <p className="mt-4 rounded-2xl border border-emerald-300/30 bg-emerald-400/10 p-4 text-sm leading-6 text-emerald-100">
+                          {t.customerMarketplaceHint}
+                        </p>
+                      )}
+                    </SectionCard>
+                  </div>
+
+                  {selectedRole === "youth" && (
+                    <div className="rounded-[32px] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur-xl">
+                      <div className="mb-4 flex flex-wrap items-center gap-3">
+                        <div className="text-sm font-semibold uppercase tracking-[0.18em] text-white/75">
+                          {t.youthModesLabel}
+                        </div>
+                        <button
+                          onClick={() => setYouthView("overview")}
+                          className={classNames(
+                            "rounded-2xl px-4 py-2 text-sm transition",
+                            youthView === "overview"
+                              ? "bg-white text-black"
+                              : "border border-white/15 bg-white/10 text-white hover:bg-white/20"
+                          )}
+                        >
+                          {t.youthOverview}
+                        </button>
+                        <button
+                          onClick={() => setYouthView("parent")}
+                          className={classNames(
+                            "rounded-2xl px-4 py-2 text-sm transition",
+                            youthView === "parent"
+                              ? "bg-white text-black"
+                              : "border border-white/15 bg-white/10 text-white hover:bg-white/20"
+                          )}
+                        >
+                          {t.youthParent}
+                        </button>
+                        <button
+                          onClick={() => setYouthView("supervisor")}
+                          className={classNames(
+                            "rounded-2xl px-4 py-2 text-sm transition",
+                            youthView === "supervisor"
+                              ? "bg-amber-300 text-black"
+                              : "border border-white/15 bg-white/10 text-white hover:bg-white/20"
+                          )}
+                        >
+                          {t.youthSupervisor}
+                        </button>
+                      </div>
+
+                      <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+                        <div>
+                          <h3 className="text-2xl font-semibold tracking-tight md:text-3xl">
+                            {youthPanel.title}
+                          </h3>
+                          <p className="mt-4 text-base leading-7 text-white/85">{youthPanel.body}</p>
+                        </div>
+                        <div className="space-y-3">
+                          {youthPanel.bullets.map((item) => (
+                            <div key={item} className="rounded-2xl bg-white/10 p-4 text-white/90">
+                              {item}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {screen === "marketplace" && (
+                <div className="space-y-6">
+                  <div className="rounded-[32px] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur-xl md:p-8">
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      <Pill>{t.marketplaceTitle}</Pill>
+                      <Pill>{t.placeBased}</Pill>
+                    </div>
+                    <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">{t.marketplaceTitle}</h2>
+                    <p className="mt-4 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
+                      {t.marketplaceSubtitle}
                     </p>
-                  </div>
-                  <div className="story-nav-card">
-                    <h3 className="story-nav-title">{t.impactTitle}</h3>
-                    <p className="story-nav-copy">
-                      See how the ecosystem responds to community need.
-                    </p>
-                  </div>
-                </aside>
 
-                <div className="story-sequence">
-                  <StoryChapter tag={t.chapter1} title={t.chapter1Title} text={t.chapter1Text} />
-                  <StoryChapter tag={t.chapter2} title={t.chapter2Title} text={t.chapter2Text} />
-                  <StoryChapter tag={t.chapter3} title={t.chapter3Title} text={t.chapter3Text} />
-                  <StoryChapter tag={t.chapter4} title={t.chapter4Title} text={t.chapter4Text} />
-                  <StoryChapter tag={t.chapter5} title={t.chapter5Title} text={t.chapter5Text} />
-                  <StoryChapter tag={t.chapter6} title={t.chapter6Title} text={t.chapter6Text} />
-                  <StoryChapter tag={t.chapter7} title={t.chapter7Title} text={t.chapter7Text} />
-                  <StoryChapter tag={t.chapter8} title={t.chapter8Title} text={t.chapter8Text} />
+                    <div className="mt-6 flex flex-wrap gap-3">
+                      <button
+                        onClick={() => {
+                          setScreen("role");
+                          setSelectedRole("customer");
+                        }}
+                        className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/20"
+                      >
+                        {t.returnToRoles}
+                      </button>
+                      <button
+                        onClick={() => setScreen("entrance")}
+                        className="rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-black transition hover:bg-emerald-200"
+                      >
+                        {t.backToEntrance}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-6 md:grid-cols-3">
+                    {t.marketplaceBlocks.map((block) => (
+                      <SectionCard key={block.title} title={block.title}>
+                        <p className="text-base leading-7 text-white/85">{block.body}</p>
+                      </SectionCard>
+                    ))}
+                  </div>
+
+                  <SectionCard title={t.storyTitle}>
+                    <p className="text-base leading-7 text-white/85">{t.storyBody}</p>
+                  </SectionCard>
                 </div>
+              )}
+            </section>
+
+            <aside className="space-y-6 lg:col-span-4">
+              <SectionCard title={t.choosePathway} className="sticky top-4">
+                <p className="mb-4 text-sm leading-6 text-white/75">{t.pathwayHint}</p>
+                <div className={classNames("grid gap-3", roleGridOpen ? "grid-cols-1" : "grid-cols-1")}>
+                  {roleCards.map((role, index) => {
+                    const content = t.roleContent[role.key];
+                    const active = selectedRole === role.key && screen === "role";
+                    return (
+                      <button
+                        key={role.key}
+                        onClick={() => openRole(role.key)}
+                        className={classNames(
+                          "group relative overflow-hidden rounded-3xl border text-left transition",
+                          active
+                            ? "border-emerald-300 bg-emerald-300/10"
+                            : "border-white/10 bg-white/5 hover:bg-white/10"
+                        )}
+                      >
+                        <div className="relative h-28">
+                          <BackgroundVisual
+                            src={role.image}
+                            alt={content.title}
+                            gradientClass={fallbackGradients[index % fallbackGradients.length]}
+                            icon={role.fallbackIcon}
+                          />
+                          <div className="relative z-10 flex h-full flex-col justify-end p-4">
+                            <div className="text-lg font-semibold text-white">{content.title}</div>
+                            <div className="mt-1 line-clamp-2 text-xs text-white/75">{content.intro}</div>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </SectionCard>
+
+              <SectionCard title={t.impactTitle}>
+                <div className="grid gap-3">
+                  {t.impactCards.map((item) => (
+                    <div key={item} className="rounded-2xl bg-black/20 p-4 text-sm text-white/90">
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </SectionCard>
+
+              <div className="rounded-3xl border border-white/10 bg-black/25 p-5 text-sm leading-6 text-white/85 backdrop-blur-md shadow-2xl">
+                {t.footerLine}
               </div>
-
-              <div className="story-actions">
-                <button className="primary" onClick={() => setView("ecosystem")}>
-                  {t.continue}: {t.ecosystemTitle}
-                </button>
-                <button className="secondary" onClick={() => setView("impact")}>
-                  {t.viewImpact}
-                </button>
-                <button className="secondary" onClick={() => setView("partnerships")}>
-                  {t.viewPartnerships}
-                </button>
-                <button className="secondary" onClick={() => setView("entrance")}>
-                  {t.backHome}
-                </button>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {view === "ecosystem" && (
-          <section
-            className="ecosystem"
-            style={{
-              backgroundImage: `linear-gradient(to bottom, rgba(8,12,8,0.88), rgba(12,18,12,0.96)), url("${pathwayImage}")`,
-            }}
-          >
-            <div className="ecosystem-wrap">
-              <div className="ecosystem-head">
-                <div>
-                  <div className="eyebrow">{t.location}</div>
-                  <h2 className="chapter-title">{t.ecosystemTitle}</h2>
-                  <div className="ecosystem-copy">{t.ecosystemText}</div>
-                </div>
-
-                <div className="controls">
-                  <button className="ghost-btn" onClick={() => setView("story")}>
-                    {t.viewStory}
-                  </button>
-                  <button className="ghost-btn" onClick={() => setView("impact")}>
-                    {t.viewImpact}
-                  </button>
-                  <button className="ghost-btn" onClick={() => setView("entrance")}>
-                    {t.backHome}
-                  </button>
-                </div>
-              </div>
-
-              <div className="role-grid">
-                <div className="role-card">
-                  <div>
-                    <h3 className="role-name">{t.roleGuest}</h3>
-                    <p className="role-text">{t.roleGuestText}</p>
-                  </div>
-                  <a className="role-link" onClick={() => setView("guest")}>
-                    {t.enterAccessPoint}
-                  </a>
-                </div>
-                <div className="role-card">
-                  <div>
-                    <h3 className="role-name">{t.roleCustomer}</h3>
-                    <p className="role-text">{t.roleCustomerText}</p>
-                  </div>
-                  <a className="role-link" onClick={() => setView("customer")}>
-                    {t.enterAccessPoint}
-                  </a>
-                </div>
-                <div className="role-card">
-                  <div>
-                    <h3 className="role-name">{t.roleGrower}</h3>
-                    <p className="role-text">{t.roleGrowerText}</p>
-                  </div>
-                  <a className="role-link" onClick={() => setView("grower")}>
-                    {t.enterAccessPoint}
-                  </a>
-                </div>
-                <div className="role-card">
-                  <div>
-                    <h3 className="role-name">{t.roleYouth}</h3>
-                    <p className="role-text">{t.roleYouthText}</p>
-                  </div>
-                  <a className="role-link" onClick={() => setView("youth")}>
-                    {t.enterAccessPoint}
-                  </a>
-                </div>
-                <div className="role-card">
-                  <div>
-                    <h3 className="role-name">{t.roleParent}</h3>
-                    <p className="role-text">{t.roleParentText}</p>
-                  </div>
-                  <a className="role-link" onClick={() => setView("parent")}>
-                    {t.enterAccessPoint}
-                  </a>
-                </div>
-              </div>
-
-              <div className="story-actions">
-                <button className="primary" onClick={() => setView("impact")}>
-                  {t.continue}: {t.impactTitle}
-                </button>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {!["entrance", "story", "ecosystem"].includes(view) && renderRoleView()}
+            </aside>
+          </main>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
