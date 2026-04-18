@@ -6,7 +6,6 @@ import {
   CloudSun,
   Globe,
   Leaf,
-  MapPin,
   Mic,
   Play,
   ShoppingBasket,
@@ -55,12 +54,10 @@ const IMAGES = {
   nutrition: "/SAM_0310.JPG",
   future: "/SAM_0311.JPG",
   legacy: "/SAM_0313.JPG",
-  // Keep only ONE grow area image if you still want it anywhere:
   growArea: "/GrowArea.jpg",
 };
 
 type LanguageKey = "en" | "es" | "tl" | "it" | "patwa" | "he";
-type RoleKey = "guest" | "customer" | "grower" | "valueAdded" | "youth" | "supervisor";
 type ScreenKey =
   | "home"
   | "story"
@@ -74,214 +71,6 @@ type ScreenKey =
   | "planner"
   | "events"
   | "wellness";
-
-type ScreenConfig = {
-  key: ScreenKey;
-  title: string;
-  subtitle: string;
-  image: string;
-  overlay?: string;
-};
-
-const LANGUAGES: Record<LanguageKey, { label: string; voiceName: string }> = {
-  en: { label: "English", voiceName: "English Demo Voice" },
-  es: { label: "Español", voiceName: "Voz en Español" },
-  tl: { label: "Tagalog", voiceName: "Boses Tagalog" },
-  it: { label: "Italiano", voiceName: "Voce Italiana" },
-  patwa: { label: "Patwa", voiceName: "Patwa Guide" },
-  he: { label: "Hebrew", voiceName: "Hebrew Guide" },
-};
-
-const TRANSLATIONS: Record<LanguageKey, any> = {
-  en: {
-    brand: "Bronson Family Farm",
-    subbrand: "Farm & Family Alliance Ecosystem Demo",
-    tagline: "Step into a living farm ecosystem built for families, growers, learners, partners, and future generations.",
-    introTitle: "A place people want to return to",
-    introBody:
-      "This is more than a website. It is a guided farm experience designed to help each visitor find resources, relationships, opportunities, produce, education, and a clear path forward.",
-    enterDemo: "Enter Live Demo",
-    guidedTour: "Start Guided Tour",
-    stopTour: "Stop Tour",
-    chooseLanguage: "Choose language",
-    rolePathways: "Role pathways",
-    exploreModules: "Explore modules",
-    backHome: "Back to entrance",
-    next: "Next",
-    previous: "Previous",
-    marketplaceBtn: "Go to Marketplace",
-    plannerBtn: "Open Crop Planner",
-    eventsBtn: "View Events",
-    wellnessBtn: "Health & Nutrition",
-    storyBtn: "Our Story",
-    voiceOn: "Voice narration on",
-    voiceOff: "Voice narration off",
-    weatherLabel: "Seasonal conditions",
-    weatherValue: "Warm season planning active",
-    calendarLabel: "Farm calendar",
-    calendarValue: "Seedlings, events, education, and harvest pathways",
-    welcomeCards: [
-      {
-        title: "Families belong here",
-        text: "Guests discover the farm story, the land, the airport history, events, and community experiences.",
-      },
-      {
-        title: "Customers find food and guidance",
-        text: "Customers can move quickly to the marketplace, see produce and seedling offerings, and return for recipes, nutrition, and wellness support.",
-      },
-      {
-        title: "Growers and producers find tools",
-        text: "Growers access planning, training, collaboration, and the ecosystem needed to keep growing.",
-      },
-    ],
-    modules: [
-      "Marketplace through GrownBy",
-      "Events and reservation pathways",
-      "Crop planning and seasonal guidance",
-      "Youth workforce and supervisor support",
-      "Nutrition, recipes, and wellness education",
-      "Family legacy, agritourism, and community partnerships",
-    ],
-    screens: {
-      home: {
-        title: "Welcome to the ecosystem",
-        subtitle:
-          "A regenerative farm, agritourism destination, and community platform rooted in land, family legacy, and practical access to resources.",
-      },
-      story: {
-        title: "The story behind the farm",
-        subtitle:
-          "Inspired by family farming traditions, strengthened through Bronson and Lorenzana legacy, and shaped for Youngstown’s future.",
-      },
-      guest: {
-        title: "Guest pathway",
-        subtitle:
-          "Guests can discover the farm, the land, the mission, the airport story, available events, and the reasons this place matters.",
-      },
-      customer: {
-        title: "Customer pathway",
-        subtitle:
-          "Customers can shop seedlings and produce, learn about food quality, access recipes, and connect food choices to wellness.",
-      },
-      marketplace: {
-        title: "Marketplace pathway",
-        subtitle:
-          "The marketplace centers GrownBy so people can move from learning to purchasing without losing the ecosystem experience.",
-      },
-      grower: {
-        title: "Grower pathway",
-        subtitle:
-          "Growers return for crop planning, seasonal timing, production support, and connections to a broader grower ecosystem.",
-      },
-      valueAdded: {
-        title: "Value-added producer pathway",
-        subtitle:
-          "Producers can explore packaging, branding, preparation, events, and the pathway from raw product to meaningful local commerce.",
-      },
-      youth: {
-        title: "Youth workforce pathway",
-        subtitle:
-          "Young people experience agriculture, STEAM, entrepreneurship, responsibility, and career-connected learning in one place.",
-      },
-      supervisor: {
-        title: "Supervisor pathway",
-        subtitle:
-          "Supervisors support youth workforce operations with role-based guidance, logistics, check-ins, wellness support, and accountability.",
-      },
-      planner: {
-        title: "Crop planning center",
-        subtitle:
-          "The planning hub helps connect seasons, inventory, grower coordination, and event readiness across the ecosystem.",
-      },
-      events: {
-        title: "Events and community experiences",
-        subtitle:
-          "From growers supply days to farm visits, demonstrations, education, and family experiences, events bring people back again and again.",
-      },
-      wellness: {
-        title: "Health, nutrition, and food education",
-        subtitle:
-          "The ecosystem connects fresh food access with practical guidance on diet, movement, diabetes awareness, and healthier choices.",
-      },
-    },
-    roleCards: {
-      guest: {
-        title: "Guest",
-        text: "Discover the farm, the story, the land, the airport legacy, community events, and where to start.",
-      },
-      customer: {
-        title: "Customer",
-        text: "Shop through GrownBy, track interests, learn what is available, and return for recipes and nutrition support.",
-      },
-      grower: {
-        title: "Grower",
-        text: "Access planning, seasonal guidance, training, coordination, and collaborative opportunities.",
-      },
-      valueAdded: {
-        title: "Value-Added Producer",
-        text: "See how products, education, packaging, and local market opportunities can work together.",
-      },
-      youth: {
-        title: "Youth Workforce",
-        text: "Learn farming, teamwork, STEAM, responsibility, and entrepreneurship through guided participation.",
-      },
-      supervisor: {
-        title: "Supervisor",
-        text: "Support youth pathways with scheduling, check-in, oversight, wellness support, and staff resources.",
-      },
-    },
-    narration: {
-      home:
-        "Welcome to Bronson Family Farm. This experience is designed to feel alive, useful, and welcoming. Every role has a purpose here, and every pathway leads somewhere meaningful.",
-      story:
-        "Bronson Family Farm carries family history, farming heritage, and a commitment to restoring land while serving people. This is where legacy becomes future infrastructure.",
-      guest:
-        "The guest pathway helps visitors understand the place. They can explore the farm story, the FAA approved grow areas, the airport association relationship, events, and community opportunities.",
-      customer:
-        "The customer pathway moves people quickly toward food, seedlings, marketplace access, nutrition education, recipe ideas, and better understanding of natural food compared with processed food.",
-      marketplace:
-        "The marketplace is centered on GrownBy. Customers should always feel that shopping is close at hand, while still being connected to the larger story and resources of the ecosystem.",
-      grower:
-        "The grower pathway is designed for return visits. It includes planning, crop timing, collaboration, seasonal readiness, and the practical structure growers need to keep moving.",
-      valueAdded:
-        "The value-added producer pathway shows how local products can become stronger through branding, packaging, demonstrations, market access, and shared visibility.",
-      youth:
-        "The youth workforce pathway turns the farm into a living learning environment. Young people encounter agriculture, entrepreneurship, technology, and teamwork in one connected experience.",
-      supervisor:
-        "The supervisor pathway exists inside youth workforce. It supports staffing, accountability, emotional support resources, logistics, and clear role based guidance.",
-      planner:
-        "The crop planning center connects the seasons to real decisions. This is where the ecosystem becomes practical, coordinated, and ready for production and events.",
-      events:
-        "Events are not an extra feature. They are part of how the ecosystem welcomes new people, deepens relationships, and gives the community reasons to return.",
-      wellness:
-        "Health and nutrition are woven into this platform. The goal is not only to sell food, but to help people understand why better food choices matter.",
-    },
-  },
-  es: {
-    ...({} as any),
-  },
-  tl: {
-    ...({} as any),
-  },
-  it: {
-    ...({} as any),
-  },
-  patwa: {
-    ...({} as any),
-  },
-  he: {
-    ...({} as any),
-  },
-};
-
-// Fill non-English labels by reusing English UI while keeping language switching functional.
-for (const key of ["es", "tl", "it", "patwa", "he"] as LanguageKey[]) {
-  TRANSLATIONS[key] = {
-    ...TRANSLATIONS.en,
-    chooseLanguage: `${TRANSLATIONS.en.chooseLanguage}`,
-    narration: TRANSLATIONS.en.narration,
-  };
-}
 
 const SCREEN_ORDER: ScreenKey[] = [
   "home",
@@ -298,100 +87,58 @@ const SCREEN_ORDER: ScreenKey[] = [
   "wellness",
 ];
 
-const SCREEN_CONFIG: Record<ScreenKey, ScreenConfig> = {
-  home: {
-    key: "home",
-    title: "Welcome",
-    subtitle: "Start here",
-    image: IMAGES.entrance,
-    overlay: "from-black/70 via-black/35 to-emerald-950/80",
-  },
-  story: {
-    key: "story",
-    title: "Story",
-    subtitle: "Legacy and land",
-    image: IMAGES.story,
-    overlay: "from-black/70 via-zinc-900/20 to-stone-950/80",
-  },
-  guest: {
-    key: "guest",
-    title: "Guest",
-    subtitle: "Discover the place",
-    image: IMAGES.guest,
-    overlay: "from-black/75 via-emerald-950/20 to-black/75",
-  },
-  customer: {
-    key: "customer",
-    title: "Customer",
-    subtitle: "Food and guidance",
-    image: IMAGES.customer,
-    overlay: "from-black/75 via-green-900/20 to-black/80",
-  },
-  marketplace: {
-    key: "marketplace",
-    title: "Marketplace",
-    subtitle: "GrownBy centered",
-    image: IMAGES.marketplace,
-    overlay: "from-black/75 via-lime-900/20 to-black/80",
-  },
-  grower: {
-    key: "grower",
-    title: "Grower",
-    subtitle: "Planning and production",
-    image: IMAGES.grower,
-    overlay: "from-black/75 via-emerald-900/20 to-black/80",
-  },
-  valueAdded: {
-    key: "valueAdded",
-    title: "Value-Added",
-    subtitle: "Products and branding",
-    image: IMAGES.valueAdded,
-    overlay: "from-black/75 via-amber-900/15 to-black/80",
-  },
-  youth: {
-    key: "youth",
-    title: "Youth Workforce",
-    subtitle: "Learning by doing",
-    image: IMAGES.youth,
-    overlay: "from-black/75 via-sky-900/20 to-black/80",
-  },
-  supervisor: {
-    key: "supervisor",
-    title: "Supervisor",
-    subtitle: "Support inside youth workforce",
-    image: IMAGES.supervisor,
-    overlay: "from-black/75 via-violet-900/20 to-black/80",
-  },
-  planner: {
-    key: "planner",
-    title: "Planner",
-    subtitle: "Calendar and crops",
-    image: IMAGES.planning,
-    overlay: "from-black/75 via-teal-900/20 to-black/80",
-  },
-  events: {
-    key: "events",
-    title: "Events",
-    subtitle: "Come back again and again",
-    image: IMAGES.events,
-    overlay: "from-black/75 via-orange-900/20 to-black/80",
-  },
-  wellness: {
-    key: "wellness",
-    title: "Wellness",
-    subtitle: "Nutrition and better choices",
-    image: IMAGES.wellness,
-    overlay: "from-black/75 via-rose-900/10 to-black/80",
+const SCREEN_IMAGES: Record<ScreenKey, string> = {
+  home: IMAGES.entrance,
+  story: IMAGES.story,
+  guest: IMAGES.guest,
+  customer: IMAGES.customer,
+  marketplace: IMAGES.marketplace,
+  grower: IMAGES.grower,
+  valueAdded: IMAGES.valueAdded,
+  youth: IMAGES.youth,
+  supervisor: IMAGES.supervisor,
+  planner: IMAGES.planning,
+  events: IMAGES.events,
+  wellness: IMAGES.wellness,
+};
+
+const T = {
+  en: {
+    brand: "Bronson Family Farm",
+    subbrand: "Farm & Family Alliance Ecosystem Demo",
+    screenTitles: {
+      home: "Welcome to the ecosystem",
+      story: "The story behind the farm",
+      guest: "Guest pathway",
+      customer: "Customer pathway",
+      marketplace: "Marketplace pathway",
+      grower: "Grower pathway",
+      valueAdded: "Value-Added Producer pathway",
+      youth: "Youth Workforce pathway",
+      supervisor: "Supervisor pathway",
+      planner: "Crop Planning Center",
+      events: "Events and community experiences",
+      wellness: "Health, nutrition, and food education",
+    },
+    screenBodies: {
+      home: "A regenerative farm, agritourism destination, and community platform rooted in land, family legacy, and practical access to resources.",
+      story: "Inspired by family farming traditions and shaped for Youngstown's future, this farm joins legacy, food access, agritourism, and community infrastructure.",
+      guest: "Guests discover the farm story, the land, the airport relationship, events, and the resources that make this place worth returning to.",
+      customer: "Customers move quickly toward fresh food, seedlings, Bubble Babies, recipes, nutrition guidance, and better understanding of natural food compared with processed food.",
+      marketplace: "The marketplace centers GrownBy so people can move from learning to purchasing without losing connection to the farm ecosystem.",
+      grower: "Growers return for planning, timing, seasonal support, collaboration, and the structure needed to keep growing.",
+      valueAdded: "Value-added producers can explore branding, packaging, demonstrations, and local market opportunities.",
+      youth: "Youth workforce connects agriculture, STEAM, entrepreneurship, teamwork, and responsibility in one living environment.",
+      supervisor: "Supervisor exists inside youth workforce, supporting scheduling, accountability, logistics, wellness support, and staffing resources.",
+      planner: "This planning hub connects seasons, inventory, readiness, grower coordination, and event timing across the ecosystem.",
+      events: "Events create reasons for people to return again and again for learning, shopping, demonstrations, wellness, and community.",
+      wellness: "Health and nutrition are part of the mission. The platform helps people understand food quality, healthier choices, and practical wellness support.",
+    },
   },
 };
 
 function useSpeech() {
   const synthRef = useRef<SpeechSynthesis | null>(typeof window !== "undefined" ? window.speechSynthesis : null);
-
-  const stop = () => {
-    synthRef.current?.cancel();
-  };
-
   const speak = (text: string, lang: LanguageKey) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     const utter = new SpeechSynthesisUtterance(text);
@@ -403,75 +150,322 @@ function useSpeech() {
       patwa: "en-JM",
       he: "he-IL",
     };
-    utter.lang = map[lang] || "en-US";
+    utter.lang = map[lang];
     utter.rate = 0.95;
     utter.pitch = 1;
     synthRef.current?.cancel();
     synthRef.current?.speak(utter);
   };
-
+  const stop = () => synthRef.current?.cancel();
   return { speak, stop };
 }
 
-function SectionButton({ icon, label, onClick, active = false }: { icon: React.ReactNode; label: string; onClick: () => void; active?: boolean }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`group flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
-        active
-          ? "border-white/40 bg-white/20 text-white"
-          : "border-white/15 bg-black/30 text-white/90 hover:border-white/30 hover:bg-white/10"
-      }`}
-    >
-      <span className="opacity-90">{icon}</span>
-      <span>{label}</span>
-    </button>
-  );
-}
-
-function InfoCard({ title, text, icon }: { title: string; text: string; icon: React.ReactNode }) {
-  return (
-    <div className="rounded-3xl border border-white/15 bg-white/10 p-5 shadow-2xl backdrop-blur-md">
-      <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 text-white">{icon}</div>
-      <h3 className="text-lg font-semibold text-white">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-white/80">{text}</p>
-    </div>
-  );
-}
-
-function RoleTile({ title, text, image, onClick }: { title: string; text: string; image: string; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className="group relative min-h-[250px] overflow-hidden rounded-[28px] border border-white/15 bg-white/10 text-left shadow-2xl transition hover:-translate-y-1 hover:border-white/30"
-    >
-      <img src={image} alt={title} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
-      <div className="relative flex h-full flex-col justify-end p-6">
-        <h3 className="text-2xl font-semibold text-white">{title}</h3>
-        <p className="mt-2 max-w-md text-sm leading-6 text-white/85">{text}</p>
-        <div className="mt-4 inline-flex items-center gap-2 text-sm text-white/90">
-          <span>Open pathway</span>
-          <ArrowRight className="h-4 w-4" />
-        </div>
-      </div>
-    </button>
-  );
-}
+const styles: Record<string, React.CSSProperties> = {
+  app: {
+    minHeight: "100vh",
+    background: "#08110d",
+    color: "#fff",
+    fontFamily: "Inter, Arial, Helvetica, sans-serif",
+  },
+  hero: {
+    position: "relative",
+    minHeight: "100vh",
+    overflow: "hidden",
+  },
+  bgImage: {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+  },
+  bgOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(135deg, rgba(0,0,0,0.76), rgba(4,25,17,0.45), rgba(0,0,0,0.82))",
+  },
+  shell: {
+    position: "relative",
+    zIndex: 2,
+    maxWidth: 1320,
+    margin: "0 auto",
+    padding: "24px 24px 60px",
+  },
+  topbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 16,
+    flexWrap: "wrap",
+    marginBottom: 30,
+  },
+  brandBlock: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+  },
+  subbrand: {
+    fontSize: 12,
+    textTransform: "uppercase",
+    letterSpacing: "0.28em",
+    color: "rgba(255,255,255,0.68)",
+  },
+  brand: {
+    fontSize: 30,
+    fontWeight: 700,
+    lineHeight: 1.1,
+  },
+  nav: {
+    display: "flex",
+    gap: 10,
+    flexWrap: "wrap",
+    alignItems: "center",
+  },
+  pill: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    border: "1px solid rgba(255,255,255,0.18)",
+    background: "rgba(0,0,0,0.28)",
+    color: "#fff",
+    padding: "10px 15px",
+    borderRadius: 999,
+    cursor: "pointer",
+    fontSize: 14,
+    backdropFilter: "blur(8px)",
+  },
+  activePill: {
+    background: "rgba(255,255,255,0.16)",
+    border: "1px solid rgba(255,255,255,0.38)",
+  },
+  layout: {
+    display: "grid",
+    gridTemplateColumns: "1.25fr 0.75fr",
+    gap: 26,
+    alignItems: "start",
+  },
+  left: {
+    minWidth: 0,
+  },
+  badge: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    padding: "8px 14px",
+    borderRadius: 999,
+    background: "rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.15)",
+    fontSize: 12,
+    textTransform: "uppercase",
+    letterSpacing: "0.2em",
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 62,
+    fontWeight: 800,
+    lineHeight: 1.04,
+    margin: 0,
+    maxWidth: 840,
+    textShadow: "0 3px 18px rgba(0,0,0,0.25)",
+  },
+  body: {
+    marginTop: 20,
+    fontSize: 20,
+    lineHeight: 1.7,
+    color: "rgba(255,255,255,0.9)",
+    maxWidth: 860,
+  },
+  actions: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 26,
+  },
+  whiteBtn: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    background: "#fff",
+    color: "#0b1712",
+    border: "none",
+    padding: "14px 18px",
+    borderRadius: 999,
+    cursor: "pointer",
+    fontWeight: 700,
+    fontSize: 15,
+  },
+  ghostBtn: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    background: "rgba(0,0,0,0.25)",
+    color: "#fff",
+    border: "1px solid rgba(255,255,255,0.18)",
+    padding: "14px 18px",
+    borderRadius: 999,
+    cursor: "pointer",
+    fontWeight: 600,
+    fontSize: 15,
+  },
+  statGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 14,
+    marginTop: 28,
+  },
+  card: {
+    borderRadius: 28,
+    background: "rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.13)",
+    padding: 22,
+    backdropFilter: "blur(12px)",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+  },
+  sideCard: {
+    borderRadius: 32,
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.13)",
+    padding: 20,
+    backdropFilter: "blur(14px)",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+  },
+  miniLabel: {
+    fontSize: 11,
+    textTransform: "uppercase",
+    letterSpacing: "0.22em",
+    color: "rgba(255,255,255,0.62)",
+    marginBottom: 10,
+  },
+  roleGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 18,
+    marginTop: 20,
+  },
+  roleTile: {
+    position: "relative",
+    minHeight: 260,
+    borderRadius: 30,
+    overflow: "hidden",
+    cursor: "pointer",
+    border: "1px solid rgba(255,255,255,0.16)",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+    background: "#0f1714",
+  },
+  roleImage: {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+  },
+  roleOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(to top, rgba(0,0,0,0.86), rgba(0,0,0,0.24))",
+  },
+  roleContent: {
+    position: "relative",
+    zIndex: 2,
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    padding: 20,
+  },
+  section: {
+    marginTop: 34,
+  },
+  twoCol: {
+    display: "grid",
+    gridTemplateColumns: "0.95fr 1.05fr",
+    gap: 18,
+    marginTop: 20,
+  },
+  detailGrid: {
+    display: "grid",
+    gap: 14,
+  },
+  infoBox: {
+    borderRadius: 22,
+    background: "rgba(255,255,255,0.07)",
+    border: "1px solid rgba(255,255,255,0.09)",
+    padding: 18,
+  },
+  galleryGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 12,
+  },
+  galleryItem: {
+    borderRadius: 22,
+    overflow: "hidden",
+    border: "1px solid rgba(255,255,255,0.1)",
+    cursor: "pointer",
+    background: "#101815",
+  },
+  galleryImage: {
+    width: "100%",
+    height: 155,
+    objectFit: "cover",
+    display: "block",
+  },
+  footerModuleGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 12,
+    marginTop: 16,
+  },
+  moduleBox: {
+    borderRadius: 18,
+    background: "rgba(0,0,0,0.22)",
+    border: "1px solid rgba(255,255,255,0.09)",
+    padding: 16,
+    lineHeight: 1.55,
+  },
+  modal: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.88)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 100,
+    padding: 24,
+  },
+  modalImage: {
+    maxWidth: "95vw",
+    maxHeight: "90vh",
+    borderRadius: 24,
+    border: "1px solid rgba(255,255,255,0.12)",
+    boxShadow: "0 20px 80px rgba(0,0,0,0.3)",
+  },
+  closeBtn: {
+    position: "fixed",
+    top: 18,
+    right: 18,
+    width: 44,
+    height: 44,
+    borderRadius: 999,
+    background: "rgba(0,0,0,0.4)",
+    border: "1px solid rgba(255,255,255,0.18)",
+    color: "#fff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+  },
+};
 
 function App() {
   const [language, setLanguage] = useState<LanguageKey>("en");
   const [screen, setScreen] = useState<ScreenKey>("home");
-  const [tourOn, setTourOn] = useState(false);
   const [voiceOn, setVoiceOn] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [tourOn, setTourOn] = useState(false);
   const [imageModal, setImageModal] = useState<string | null>(null);
   const { speak, stop } = useSpeech();
-  const t = TRANSLATIONS[language];
 
   const currentIndex = SCREEN_ORDER.indexOf(screen);
-  const currentScreen = SCREEN_CONFIG[screen];
-
   const gallery = useMemo(
     () => [
       IMAGES.community,
@@ -495,8 +489,7 @@ function App() {
       stop();
       return;
     }
-    const text = t.narration[screen];
-    if (text) speak(text, language);
+    speak(T.en.screenBodies[screen], language);
     return () => stop();
   }, [screen, language, voiceOn]);
 
@@ -505,8 +498,7 @@ function App() {
     const id = setInterval(() => {
       setScreen((prev) => {
         const i = SCREEN_ORDER.indexOf(prev);
-        const next = SCREEN_ORDER[(i + 1) % SCREEN_ORDER.length];
-        return next;
+        return SCREEN_ORDER[(i + 1) % SCREEN_ORDER.length];
       });
     }, 9000);
     return () => clearInterval(id);
@@ -515,161 +507,189 @@ function App() {
   const goto = (next: ScreenKey) => {
     setTourOn(false);
     setScreen(next);
-    setMenuOpen(false);
   };
 
   const nextScreen = () => goto(SCREEN_ORDER[(currentIndex + 1) % SCREEN_ORDER.length]);
   const prevScreen = () => goto(SCREEN_ORDER[(currentIndex - 1 + SCREEN_ORDER.length) % SCREEN_ORDER.length]);
 
-  const roleCards = [
-    { key: "guest" as RoleKey, image: IMAGES.guest, icon: <UserRound className="h-5 w-5" /> },
-    { key: "customer" as RoleKey, image: IMAGES.customer, icon: <ShoppingBasket className="h-5 w-5" /> },
-    { key: "grower" as RoleKey, image: IMAGES.grower, icon: <Sprout className="h-5 w-5" /> },
-    { key: "valueAdded" as RoleKey, image: IMAGES.valueAdded, icon: <Store className="h-5 w-5" /> },
-    { key: "youth" as RoleKey, image: IMAGES.youth, icon: <GraduationCap className="h-5 w-5" /> },
-    { key: "supervisor" as RoleKey, image: IMAGES.supervisor, icon: <ShieldCheck className="h-5 w-5" /> },
+  const roleTiles = [
+    { key: "guest" as ScreenKey, title: "Guest", text: "Discover the farm, the story, the land, events, and the airport-connected grow areas.", image: IMAGES.guest },
+    { key: "customer" as ScreenKey, title: "Customer", text: "Move quickly to GrownBy, then return for recipes, nutrition, and food guidance.", image: IMAGES.customer },
+    { key: "grower" as ScreenKey, title: "Grower", text: "Access planning, seasonal guidance, training, and ecosystem support.", image: IMAGES.grower },
+    { key: "valueAdded" as ScreenKey, title: "Value-Added Producer", text: "Explore branding, packaging, demonstrations, and local market opportunity.", image: IMAGES.valueAdded },
+    { key: "youth" as ScreenKey, title: "Youth Workforce", text: "See the farm as a living classroom for agriculture, STEAM, teamwork, and entrepreneurship.", image: IMAGES.youth },
+    { key: "supervisor" as ScreenKey, title: "Supervisor", text: "Support youth workforce through scheduling, oversight, wellness support, and accountability.", image: IMAGES.supervisor },
   ];
 
+  const detailBlocks: Record<ScreenKey, { title: string; text: string; icon: React.ReactNode }[]> = {
+    home: [
+      { title: "Families belong here", text: "This platform is designed to feel welcoming, useful, and worth returning to.", icon: <Users size={20} /> },
+      { title: "Marketplace through GrownBy", text: "Customers should feel that food access is close by, not hidden.", icon: <Store size={20} /> },
+      { title: "Living ecosystem", text: "Growers, youth, supervisors, guests, and producers each have a real pathway.", icon: <Leaf size={20} /> },
+    ],
+    story: [
+      { title: "Family legacy", text: "The farm carries Bronson and Lorenzana legacy into a future-focused Youngstown vision.", icon: <Trees size={20} /> },
+      { title: "Land restoration", text: "The project restores land while creating food, education, and agritourism opportunity.", icon: <Tractor size={20} /> },
+      { title: "Community future", text: "This is about more than a site. It is an ecosystem for long-term return and growth.", icon: <BadgeCheck size={20} /> },
+    ],
+    guest: [
+      { title: "Clear welcome", text: "Guests learn what this place is, why it matters, and where they can go next.", icon: <UserRound size={20} /> },
+      { title: "Airport relationship", text: "Visitors should understand the story of the FAA-approved grow areas and support for the vision.", icon: <Info size={20} /> },
+      { title: "Return value", text: "Events, demonstrations, and seasonal change keep people coming back.", icon: <CheckCircle2 size={20} /> },
+    ],
+    customer: [
+      { title: "Food access", text: "Customers should see produce, seedlings, and Bubble Babies with clarity and purpose.", icon: <ShoppingBasket size={20} /> },
+      { title: "Recipes and nutrition", text: "Food guidance and healthy living support help customers return for more than shopping.", icon: <BookOpen size={20} /> },
+      { title: "Fast route to GrownBy", text: "Many users will want a direct move from interest to marketplace.", icon: <Store size={20} /> },
+    ],
+    marketplace: [
+      { title: "GrownBy centered", text: "The marketplace is a core part of the ecosystem and should feel close at hand.", icon: <Store size={20} /> },
+      { title: "Product pathways", text: "Seedlings, produce, and future offerings can be surfaced with strong visual clarity.", icon: <Leaf size={20} /> },
+      { title: "Return behavior", text: "This area can grow into reminders, favorites, and preorder patterns over time.", icon: <HeartPulse size={20} /> },
+    ],
+    grower: [
+      { title: "Planning tools", text: "Growers need seasonal timing, inventory awareness, and readiness support.", icon: <CalendarDays size={20} /> },
+      { title: "Collaboration", text: "The grower pathway should feel connected to a broader ecosystem, not isolated.", icon: <Sprout size={20} /> },
+      { title: "Practical value", text: "This platform should be useful enough that growers want to revisit it regularly.", icon: <BadgeCheck size={20} /> },
+    ],
+    valueAdded: [
+      { title: "From product to presentation", text: "This pathway supports stronger local product visibility through branding and experience.", icon: <Briefcase size={20} /> },
+      { title: "Demonstrations", text: "Events and market experiences can increase value and customer connection.", icon: <Store size={20} /> },
+      { title: "Shared network", text: "The goal is participation in a broader ecosystem of visibility and opportunity.", icon: <Users size={20} /> },
+    ],
+    youth: [
+      { title: "Living classroom", text: "Youth experience agriculture, STEAM, teamwork, and responsibility in real time.", icon: <GraduationCap size={20} /> },
+      { title: "Family confidence", text: "Parents and partners should feel that youth are entering a structured, meaningful environment.", icon: <Users size={20} /> },
+      { title: "Career-connected", text: "This pathway supports future roles in farming, media, logistics, business, and entrepreneurship.", icon: <BadgeCheck size={20} /> },
+    ],
+    supervisor: [
+      { title: "Inside youth workforce only", text: "Supervisor is not separate from youth workforce. It exists to support it.", icon: <ShieldCheck size={20} /> },
+      { title: "Support resources", text: "This can reflect staffing, wellness, and supportive oversight for youth participants.", icon: <HeartPulse size={20} /> },
+      { title: "Logistics and accountability", text: "Scheduling, check-ins, responsibilities, and day-of support belong here.", icon: <CheckCircle2 size={20} /> },
+    ],
+    planner: [
+      { title: "Seasonal planning", text: "This area connects crop timing, events, inventory readiness, and coordination.", icon: <CalendarDays size={20} /> },
+      { title: "Weather-aware thinking", text: "Real farming decisions depend on seasonality and conditions.", icon: <CloudSun size={20} /> },
+      { title: "Operational readiness", text: "The planner helps the ecosystem feel practical and real, not decorative.", icon: <BadgeCheck size={20} /> },
+    ],
+    events: [
+      { title: "Return engine", text: "Events create repeated entry into the ecosystem for learning, shopping, and connection.", icon: <Users size={20} /> },
+      { title: "Reservations and check-in", text: "This space can preview RSVP and role-based arrival experiences.", icon: <CalendarDays size={20} /> },
+      { title: "Partners and demos", text: "Educational and sponsor-led activities help make the farm feel alive.", icon: <BadgeCheck size={20} /> },
+    ],
+    wellness: [
+      { title: "Food and health connection", text: "Fresh food connects to energy, family habits, diabetes awareness, and quality of life.", icon: <HeartPulse size={20} /> },
+      { title: "Natural vs processed", text: "The platform helps explain why food choices matter, especially when rising costs push families toward harmful substitutes.", icon: <Leaf size={20} /> },
+      { title: "Practical support", text: "Nutrition education, recipe ideas, and healthier-at-home guidance belong here.", icon: <BookOpen size={20} /> },
+    ],
+  };
+
   return (
-    <div className="min-h-screen bg-[#09130f] text-white">
-      <div className="relative min-h-screen overflow-hidden">
-        <img src={currentScreen.image} alt={currentScreen.title} className="absolute inset-0 h-full w-full object-cover" />
-        <div className={`absolute inset-0 bg-gradient-to-br ${currentScreen.overlay || "from-black/70 via-black/30 to-black/80"}`} />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(120,255,176,0.15),transparent_25%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.07),transparent_18%)]" />
+    <div style={styles.app}>
+      <div style={styles.hero}>
+        <img src={SCREEN_IMAGES[screen]} alt={T.en.screenTitles[screen]} style={styles.bgImage} />
+        <div style={styles.bgOverlay} />
 
-        <header className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-5 md:px-8">
-          <button onClick={() => goto("home")} className="text-left">
-            <div className="text-xs uppercase tracking-[0.35em] text-white/60">{t.subbrand}</div>
-            <div className="mt-1 text-2xl font-semibold tracking-tight">{t.brand}</div>
-          </button>
+        <div style={styles.shell}>
+          <div style={styles.topbar}>
+            <div style={styles.brandBlock}>
+              <div style={styles.subbrand}>{T.en.subbrand}</div>
+              <div style={styles.brand}>{T.en.brand}</div>
+            </div>
 
-          <div className="hidden items-center gap-2 lg:flex">
-            <SectionButton icon={<Home className="h-4 w-4" />} label="Entrance" onClick={() => goto("home")} active={screen === "home"} />
-            <SectionButton icon={<Info className="h-4 w-4" />} label={t.storyBtn} onClick={() => goto("story")} active={screen === "story"} />
-            <SectionButton icon={<Users className="h-4 w-4" />} label={t.rolePathways} onClick={() => goto("guest")} active={["guest", "customer", "grower", "valueAdded", "youth", "supervisor"].includes(screen)} />
-            <SectionButton icon={<CalendarDays className="h-4 w-4" />} label={t.eventsBtn} onClick={() => goto("events")} active={screen === "events"} />
-            <SectionButton icon={<HeartPulse className="h-4 w-4" />} label={t.wellnessBtn} onClick={() => goto("wellness")} active={screen === "wellness"} />
-            <SectionButton icon={<Store className="h-4 w-4" />} label={t.marketplaceBtn} onClick={() => goto("marketplace")} active={screen === "marketplace"} />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setVoiceOn((v) => !v)}
-              className="rounded-full border border-white/15 bg-black/35 px-3 py-2 text-sm text-white/90 hover:bg-white/10"
-            >
-              <span className="inline-flex items-center gap-2"><Mic className="h-4 w-4" /> {voiceOn ? t.voiceOn : t.voiceOff}</span>
-            </button>
-            <button
-              onClick={() => setMenuOpen((v) => !v)}
-              className="rounded-full border border-white/15 bg-black/35 px-3 py-2 text-sm text-white/90 hover:bg-white/10 lg:hidden"
-            >
-              Menu
-            </button>
-          </div>
-        </header>
-
-        {menuOpen && (
-          <div className="relative z-30 mx-4 rounded-3xl border border-white/15 bg-black/70 p-4 backdrop-blur-xl md:mx-8 lg:hidden">
-            <div className="grid gap-2 sm:grid-cols-2">
-              {SCREEN_ORDER.map((item) => (
+            <div style={styles.nav}>
+              {[
+                ["home", <Home size={16} />, "Entrance"],
+                ["story", <Info size={16} />, "Our Story"],
+                ["guest", <Users size={16} />, "Role pathways"],
+                ["events", <CalendarDays size={16} />, "View Events"],
+                ["wellness", <HeartPulse size={16} />, "Health & Nutrition"],
+                ["marketplace", <Store size={16} />, "Go to Marketplace"],
+              ].map(([key, icon, label]) => (
                 <button
-                  key={item}
-                  onClick={() => goto(item)}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-white/85 hover:bg-white/10"
+                  key={String(key)}
+                  onClick={() => goto(key as ScreenKey)}
+                  style={{ ...styles.pill, ...(screen === key ? styles.activePill : {}) }}
                 >
-                  {t.screens[item].title}
+                  {icon}
+                  {label}
                 </button>
               ))}
+
+              <button onClick={() => setVoiceOn((v) => !v)} style={styles.pill}>
+                <Mic size={16} /> {voiceOn ? "Voice narration on" : "Voice narration off"}
+              </button>
             </div>
           </div>
-        )}
 
-        <main className="relative z-10 mx-auto max-w-7xl px-4 pb-14 pt-8 md:px-8 md:pt-14">
-          <div className="grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-            <div>
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-white/75 backdrop-blur-md">
-                <Leaf className="h-4 w-4" />
-                {t.screens[screen].title}
+          <div style={styles.layout}>
+            <div style={styles.left}>
+              <div style={styles.badge}>
+                <Leaf size={16} /> {T.en.screenTitles[screen]}
               </div>
+              <h1 style={styles.title}>{T.en.screenTitles[screen]}</h1>
+              <div style={styles.body}>{T.en.screenBodies[screen]}</div>
 
-              <h1 className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight text-white md:text-6xl">
-                {t.screens[screen].title}
-              </h1>
-
-              <p className="mt-5 max-w-3xl text-base leading-7 text-white/85 md:text-lg md:leading-8">
-                {t.screens[screen].subtitle}
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button
-                  onClick={() => {
-                    setTourOn(true);
-                    goto(screen);
-                  }}
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0c1a14] shadow-xl transition hover:scale-[1.02]"
-                >
-                  <Play className="h-4 w-4" /> {tourOn ? t.stopTour : t.guidedTour}
+              <div style={styles.actions}>
+                <button style={styles.whiteBtn} onClick={() => setTourOn((v) => !v)}>
+                  <Play size={16} /> {tourOn ? "Stop Guided Tour" : "Start Guided Tour"}
                 </button>
-                <button
-                  onClick={() => goto("marketplace")}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/25 px-5 py-3 text-sm font-medium text-white/95 hover:bg-white/10"
-                >
-                  <Store className="h-4 w-4" /> {t.marketplaceBtn}
+                <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>
+                  <Store size={16} /> Go to Marketplace
                 </button>
-                <button
-                  onClick={() => goto("planner")}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/25 px-5 py-3 text-sm font-medium text-white/95 hover:bg-white/10"
-                >
-                  <CalendarDays className="h-4 w-4" /> {t.plannerBtn}
+                <button style={styles.ghostBtn} onClick={() => goto("planner")}>
+                  <CalendarDays size={16} /> Open Crop Planner
                 </button>
               </div>
 
-              <div className="mt-10 grid gap-4 md:grid-cols-3">
-                <InfoCard title={t.weatherLabel} text={t.weatherValue} icon={<CloudSun className="h-5 w-5" />} />
-                <InfoCard title={t.calendarLabel} text={t.calendarValue} icon={<CalendarDays className="h-5 w-5" />} />
-                <InfoCard
-                  title={t.chooseLanguage}
-                  text={LANGUAGES[language].label}
-                  icon={<Languages className="h-5 w-5" />}
-                />
+              <div style={styles.statGrid}>
+                <div style={styles.card}>
+                  <div style={styles.miniLabel}>Seasonal conditions</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}><CloudSun size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />Warm season planning active</div>
+                  <div style={{ color: "rgba(255,255,255,0.82)", lineHeight: 1.6 }}>Field prep, seedling movement, event readiness, and seasonal coordination are active.</div>
+                </div>
+                <div style={styles.card}>
+                  <div style={styles.miniLabel}>Farm calendar</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}><CalendarDays size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />Living schedule</div>
+                  <div style={{ color: "rgba(255,255,255,0.82)", lineHeight: 1.6 }}>Seedlings, events, education, youth activities, and harvest pathways connect here.</div>
+                </div>
+                <div style={styles.card}>
+                  <div style={styles.miniLabel}>Choose language</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}><Languages size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />{language === "en" ? "English" : language}</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {(["en", "es", "tl", "it", "patwa", "he"] as LanguageKey[]).map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => setLanguage(lang)}
+                        style={{
+                          ...styles.pill,
+                          padding: "8px 12px",
+                          fontSize: 13,
+                          ...(language === lang ? styles.activePill : {}),
+                        }}
+                      >
+                        {lang === "en" ? "English" : lang === "es" ? "Español" : lang === "tl" ? "Tagalog" : lang === "it" ? "Italiano" : lang === "patwa" ? "Patwa" : "Hebrew"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="rounded-[32px] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-xl md:p-5">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <div>
-                  <div className="text-sm uppercase tracking-[0.25em] text-white/55">{t.chooseLanguage}</div>
-                  <div className="mt-1 text-lg font-semibold text-white">{LANGUAGES[language].label}</div>
-                </div>
-                <Globe className="h-5 w-5 text-white/80" />
+            <div style={styles.sideCard}>
+              <div style={styles.miniLabel}>A place people want to return to</div>
+              <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>Living ecosystem overview</div>
+              <div style={{ lineHeight: 1.7, color: "rgba(255,255,255,0.88)", marginBottom: 18 }}>
+                This is more than a website. It is a farm-centered experience designed to help guests, customers, growers, youth, partners, and families find resources, food, learning, and a clear path forward.
               </div>
-
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {(Object.keys(LANGUAGES) as LanguageKey[]).map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setLanguage(lang)}
-                    className={`rounded-2xl border px-3 py-3 text-sm transition ${
-                      language === lang
-                        ? "border-white/40 bg-white/20 text-white"
-                        : "border-white/10 bg-black/20 text-white/80 hover:bg-white/10"
-                    }`}
-                  >
-                    {LANGUAGES[lang].label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="mt-5 rounded-[28px] border border-white/10 bg-black/20 p-4">
-                <div className="text-xs uppercase tracking-[0.25em] text-white/50">{t.introTitle}</div>
-                <p className="mt-3 text-sm leading-7 text-white/85">{t.introBody}</p>
-              </div>
-
-              <div className="mt-5 grid gap-3">
-                {t.welcomeCards.map((card: any) => (
-                  <div key={card.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div className="text-base font-semibold text-white">{card.title}</div>
-                    <p className="mt-2 text-sm leading-6 text-white/80">{card.text}</p>
+              <div style={{ display: "grid", gap: 12 }}>
+                {detailBlocks[screen].map((item) => (
+                  <div key={item.title} style={styles.infoBox}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                      {item.icon}
+                      {item.title}
+                    </div>
+                    <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)" }}>{item.text}</div>
                   </div>
                 ))}
               </div>
@@ -677,182 +697,93 @@ function App() {
           </div>
 
           {screen === "home" && (
-            <section className="mt-12">
-              <div className="mb-5 flex items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-2xl font-semibold text-white md:text-3xl">{t.rolePathways}</h2>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">
-                    Each role should feel welcomed, informed, and able to move forward. These pathways are designed to create return visits, not one-time clicks.
-                  </p>
-                </div>
+            <div style={styles.section}>
+              <div style={{ fontSize: 30, fontWeight: 800, marginBottom: 8 }}>Role pathways</div>
+              <div style={{ color: "rgba(255,255,255,0.82)", lineHeight: 1.7, maxWidth: 900, marginBottom: 18 }}>
+                Each role should feel welcomed, informed, and able to move forward. These pathways are built to create return visits, not one-time clicks.
               </div>
-
-              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {roleCards.map((role) => (
-                  <RoleTile
-                    key={role.key}
-                    title={t.roleCards[role.key].title}
-                    text={t.roleCards[role.key].text}
-                    image={role.image}
-                    onClick={() => goto(role.key as ScreenKey)}
-                  />
+              <div style={styles.roleGrid}>
+                {roleTiles.map((role) => (
+                  <button key={role.title} onClick={() => goto(role.key)} style={styles.roleTile}>
+                    <img src={role.image} alt={role.title} style={styles.roleImage} />
+                    <div style={styles.roleOverlay} />
+                    <div style={styles.roleContent}>
+                      <div style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>{role.title}</div>
+                      <div style={{ lineHeight: 1.7, color: "rgba(255,255,255,0.9)" }}>{role.text}</div>
+                    </div>
+                  </button>
                 ))}
               </div>
-            </section>
+            </div>
           )}
 
-          {(screen === "guest" ||
-            screen === "customer" ||
-            screen === "marketplace" ||
-            screen === "grower" ||
-            screen === "valueAdded" ||
-            screen === "youth" ||
-            screen === "supervisor" ||
-            screen === "story" ||
-            screen === "planner" ||
-            screen === "events" ||
-            screen === "wellness") && (
-            <section className="mt-12 grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-              <div className="rounded-[30px] border border-white/15 bg-white/10 p-5 backdrop-blur-xl">
-                <div className="mb-4 text-xs uppercase tracking-[0.25em] text-white/55">Pathway details</div>
-
-                {screen === "story" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Family legacy" text="The farm honors the Bronson and Lorenzana family legacies while building a future-facing food and agritourism platform in Youngstown." icon={<Trees className="h-5 w-5" />} />
-                    <InfoCard title="Land transformation" text="The grow areas are part of a wider restoration effort supported by vision, planning, community relationships, and FAA-approved use areas connected to the airport context." icon={<Tractor className="h-5 w-5" />} />
-                    <InfoCard title="Why this matters" text="The demo should help people understand that this is about food access, land use, wellness, workforce development, and legacy — all at once." icon={<BadgeCheck className="h-5 w-5" />} />
+          {screen !== "home" && (
+            <div style={styles.section}>
+              <div style={styles.twoCol}>
+                <div style={styles.sideCard}>
+                  <div style={styles.miniLabel}>Pathway details</div>
+                  <div style={styles.detailGrid}>
+                    {detailBlocks[screen].map((item) => (
+                      <div key={item.title} style={styles.infoBox}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                          {item.icon}
+                          {item.title}
+                        </div>
+                        <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)" }}>{item.text}</div>
+                      </div>
+                    ))}
                   </div>
-                )}
-
-                {screen === "guest" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Clear welcome" text="Guests need a graceful entrance into the ecosystem: what this place is, what is here, why it matters, and where they can go next." icon={<Users className="h-5 w-5" />} />
-                    <InfoCard title="Airport and land story" text="The farm exists within a larger airport and land-use story. Visitors should understand the transformation of approved grow areas and the support behind that vision." icon={<MapPin className="h-5 w-5" />} />
-                    <InfoCard title="Reasons to return" text="Events, demonstrations, tours, seasonal changes, and educational resources give guests reasons to return repeatedly." icon={<CheckCircle2 className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "customer" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Food access" text="Customers should see seedlings, produce, Bubble Babies, and pathways into healthier living — not just product listings." icon={<ShoppingBasket className="h-5 w-5" />} />
-                    <InfoCard title="Nutrition and recipes" text="Customers should be able to return for recipes, nutrition education, food comparison guidance, and practical support for healthier choices." icon={<BookOpen className="h-5 w-5" />} />
-                    <InfoCard title="Fast route to GrownBy" text="The marketplace should always feel close by, because many customers will want to move quickly from interest to purchase." icon={<Store className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "marketplace" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="GrownBy centered" text="This section should clearly communicate that the marketplace runs through GrownBy and should feel like a natural next step from the rest of the ecosystem." icon={<Store className="h-5 w-5" />} />
-                    <InfoCard title="Purchase pathways" text="Seedlings, produce, and future offerings can all be introduced here while maintaining the farm’s brand and educational tone." icon={<Leaf className="h-5 w-5" />} />
-                    <InfoCard title="Customer memory" text="Over time, this area can support repeat customers through favorite items, reminders, preorder pathways, and return behavior." icon={<HeartPulse className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "grower" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Planning tools" text="Growers need seasonal timing, production readiness, inventory thinking, and visibility into how the ecosystem fits together." icon={<CalendarDays className="h-5 w-5" />} />
-                    <InfoCard title="Ecosystem support" text="This pathway should feel collaborative, not isolated. It should invite growers back for tools, insights, and coordination." icon={<Sprout className="h-5 w-5" />} />
-                    <InfoCard title="Practical return value" text="The point is to make this platform useful enough that growers want to revisit it often." icon={<BadgeCheck className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "valueAdded" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="From product to presentation" text="This pathway helps people imagine how food and farm-based products become local offerings with stronger branding and visibility." icon={<Briefcase className="h-5 w-5" />} />
-                    <InfoCard title="Events and demonstrations" text="Demonstrations, market experiences, and visual merchandising create stronger value for producers and buyers." icon={<Store className="h-5 w-5" />} />
-                    <InfoCard title="Shared ecosystem" text="This is about being part of a larger network, not standing alone." icon={<Users className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "youth" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Living classroom" text="Youth workforce should feel real and active, connecting agriculture, STEAM, teamwork, responsibility, and job readiness." icon={<GraduationCap className="h-5 w-5" />} />
-                    <InfoCard title="Parent and program confidence" text="The pathway should reassure families and partners that youth are entering a structured, meaningful, and supported environment." icon={<Users className="h-5 w-5" />} />
-                    <InfoCard title="Career-connected learning" text="This section supports future career pathways in farming, business, culinary work, logistics, media, and entrepreneurship." icon={<BadgeCheck className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "supervisor" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Inside youth workforce only" text="Supervisor is not a separate public-facing track. It exists within youth workforce and supports management, safety, staffing, and guidance." icon={<ShieldCheck className="h-5 w-5" />} />
-                    <InfoCard title="Support resources" text="This pathway can reflect staff support resources, including wellness and support staffing tied to the youth program." icon={<HeartPulse className="h-5 w-5" />} />
-                    <InfoCard title="Logistics and accountability" text="Check-ins, scheduling, attendance, responsibilities, and day-of support all belong here." icon={<CheckCircle2 className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "planner" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Seasonal crop planning" text="This is where users can imagine crop planning, seed timing, events, inventory readiness, and production support working together." icon={<CalendarDays className="h-5 w-5" />} />
-                    <InfoCard title="Weather-aware thinking" text="Weather and seasonality matter because farming decisions are grounded in time, timing, and conditions." icon={<CloudSun className="h-5 w-5" />} />
-                    <InfoCard title="Operational readiness" text="The planner helps the ecosystem feel practical and real, not decorative." icon={<BadgeCheck className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "events" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Community return engine" text="Events create regular reasons for people to re-enter the ecosystem, whether for learning, shopping, wellness, or fellowship." icon={<Users className="h-5 w-5" />} />
-                    <InfoCard title="Reservations and check-in" text="This area can preview RSVP logic, role-based experiences, and organized arrival pathways for farm events." icon={<CalendarDays className="h-5 w-5" />} />
-                    <InfoCard title="Demonstrations and partners" text="Educational and sponsor-led activities help make the farm feel alive and useful." icon={<BadgeCheck className="h-5 w-5" />} />
-                  </div>
-                )}
-
-                {screen === "wellness" && (
-                  <div className="grid gap-4">
-                    <InfoCard title="Food and health connection" text="Fresh food is part of a larger conversation about health, energy, diabetes awareness, family habits, and quality of life." icon={<HeartPulse className="h-5 w-5" />} />
-                    <InfoCard title="Natural versus processed" text="This section helps explain why food choices matter and why rising food costs push families toward harmful substitutes." icon={<Leaf className="h-5 w-5" />} />
-                    <InfoCard title="Practical support" text="Nutrition education, healthier-at-home ideas, and simple recipe guidance should all feel close and usable." icon={<BookOpen className="h-5 w-5" />} />
-                  </div>
-                )}
-              </div>
-
-              <div className="rounded-[30px] border border-white/15 bg-white/10 p-5 backdrop-blur-xl">
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="text-xs uppercase tracking-[0.25em] text-white/55">Image gallery</div>
-                  <div className="text-sm text-white/70">Using the other farm images</div>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  {gallery.map((img, idx) => (
-                    <button
-                      key={`${img}-${idx}`}
-                      onClick={() => setImageModal(img)}
-                      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/20"
-                    >
-                      <img src={img} alt={`Farm gallery ${idx + 1}`} className="h-36 w-full object-cover transition duration-700 group-hover:scale-105" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80" />
-                    </button>
-                  ))}
+
+                <div style={styles.sideCard}>
+                  <div style={styles.miniLabel}>Image gallery</div>
+                  <div style={{ marginBottom: 14, color: "rgba(255,255,255,0.82)" }}>Using the other farm photos instead of repeating the same two images.</div>
+                  <div style={styles.galleryGrid}>
+                    {gallery.map((img, idx) => (
+                      <button key={`${img}-${idx}`} style={styles.galleryItem} onClick={() => setImageModal(img)}>
+                        <img src={img} alt={`Farm ${idx + 1}`} style={styles.galleryImage} />
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </section>
+            </div>
           )}
 
-          <section className="mt-12 rounded-[32px] border border-white/15 bg-white/10 p-6 backdrop-blur-xl">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <div className="text-xs uppercase tracking-[0.25em] text-white/55">{t.exploreModules}</div>
-                <h2 className="mt-2 text-2xl font-semibold text-white md:text-3xl">Designed to feel like a living destination</h2>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <button onClick={prevScreen} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/25 px-4 py-3 text-sm text-white/90 hover:bg-white/10"><ArrowLeft className="h-4 w-4" /> {t.previous}</button>
-                <button onClick={() => goto("home")} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/25 px-4 py-3 text-sm text-white/90 hover:bg-white/10"><Home className="h-4 w-4" /> {t.backHome}</button>
-                <button onClick={nextScreen} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-semibold text-[#0c1a14]"><ArrowRight className="h-4 w-4" /> {t.next}</button>
-              </div>
-            </div>
-            <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {t.modules.map((item: string) => (
-                <div key={item} className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-white/85">
-                  {item}
+          <div style={styles.section}>
+            <div style={styles.sideCard}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                <div>
+                  <div style={styles.miniLabel}>Explore modules</div>
+                  <div style={{ fontSize: 28, fontWeight: 800 }}>Designed to feel like a living destination</div>
                 </div>
-              ))}
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <button style={styles.ghostBtn} onClick={prevScreen}><ArrowLeft size={16} /> Previous</button>
+                  <button style={styles.ghostBtn} onClick={() => goto("home")}><Home size={16} /> Back to entrance</button>
+                  <button style={styles.whiteBtn} onClick={nextScreen}><ArrowRight size={16} /> Next</button>
+                </div>
+              </div>
+              <div style={styles.footerModuleGrid}>
+                {[
+                  "Marketplace through GrownBy",
+                  "Events and reservation pathways",
+                  "Crop planning and seasonal guidance",
+                  "Youth workforce and supervisor support",
+                  "Nutrition, recipes, and wellness education",
+                  "Family legacy, agritourism, and community partnerships",
+                ].map((item) => (
+                  <div key={item} style={styles.moduleBox}>{item}</div>
+                ))}
+              </div>
             </div>
-          </section>
-        </main>
+          </div>
+        </div>
       </div>
 
       {imageModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4">
-          <button onClick={() => setImageModal(null)} className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/30 p-2 text-white"><X className="h-5 w-5" /></button>
-          <img src={imageModal} alt="Expanded farm view" className="max-h-[90vh] max-w-[95vw] rounded-3xl border border-white/10 shadow-2xl" />
+        <div style={styles.modal}>
+          <button style={styles.closeBtn} onClick={() => setImageModal(null)}><X size={20} /></button>
+          <img src={imageModal} alt="Expanded farm view" style={styles.modalImage} />
         </div>
       )}
     </div>
