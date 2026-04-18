@@ -573,11 +573,37 @@ function StatCard({
   suffix?: string;
 }) {
   const count = useAnimatedCount(value);
-
   return (
     <SoftBlock title={label}>
-      <div style={{ fontSize: 32, fontWeight: 900, lineHeight: 1 }}>{count}{suffix}</div>
+      <div style={{ fontSize: 32, fontWeight: 900, lineHeight: 1 }}>
+        {count}
+        {suffix}
+      </div>
     </SoftBlock>
+  );
+}
+
+function DestinationFooter({
+  onBack,
+  onNext,
+  nextLabel = "Continue",
+  backDisabled = false,
+}: {
+  onBack: () => void;
+  onNext: () => void;
+  nextLabel?: string;
+  backDisabled?: boolean;
+}) {
+  return (
+    <div style={{ display: "flex", gap: 12, marginTop: 18, flexWrap: "wrap" }}>
+      <ActionButton
+        label="Back"
+        onClick={onBack}
+        active={!backDisabled}
+        primary={false}
+      />
+      <ActionButton label={nextLabel} onClick={onNext} primary />
+    </div>
   );
 }
 
@@ -725,7 +751,7 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>("home");
   const [guestView, setGuestView] = useState<GuestView>("story");
   const [customerView, setCustomerView] = useState<CustomerView>("produce");
-  const [growerView, setGrowerView] = useState<GrowerView>("planner");
+  const [growerView, setGrowerView] = useState<GrowerView>("weather");
   const [producerView, setProducerView] = useState<ProducerView>("products");
   const [youthView, setYouthView] = useState<YouthView>("overview");
   const [adminView, setAdminView] = useState<AdminView>("participation");
@@ -840,6 +866,110 @@ export default function App() {
       </div>
     </Card>
   );
+
+  const goNext = () => {
+    if (screen === "guest") {
+      if (guestView === "story") setGuestView("mission");
+      else if (guestView === "mission") setGuestView("events");
+      else if (guestView === "events") setGuestView("partners");
+      else navigate("customer");
+    }
+
+    if (screen === "customer") {
+      if (customerView === "produce") setCustomerView("nutrition");
+      else if (customerView === "nutrition") setCustomerView("recipes");
+      else if (customerView === "recipes") setCustomerView("market");
+      else navigate("market");
+    }
+
+    if (screen === "grower") {
+      if (growerView === "weather") setGrowerView("planner");
+      else if (growerView === "planner") setGrowerView("notes");
+      else if (growerView === "notes") setGrowerView("season");
+      else navigate("admin");
+    }
+
+    if (screen === "producer") {
+      if (producerView === "products") setProducerView("events");
+      else if (producerView === "events") setProducerView("storytelling");
+      else if (producerView === "storytelling") setProducerView("collaboration");
+      else navigate("market");
+    }
+
+    if (screen === "youth") {
+      if (youthView === "overview") setYouthView("parent");
+      else if (youthView === "parent") setYouthView("supervisor");
+      else if (youthView === "supervisor") setYouthView("daily");
+      else navigate("admin");
+    }
+
+    if (screen === "admin") {
+      if (adminView === "participation") setAdminView("operations");
+      else if (adminView === "operations") setAdminView("planning");
+      else if (adminView === "planning") setAdminView("growth");
+      else navigate("market");
+    }
+
+    if (screen === "market") {
+      if (marketView === "products") setMarketView("grownby");
+      else if (marketView === "grownby") setMarketView("education");
+      else if (marketView === "education") setMarketView("community");
+      else if (marketView === "community") setMarketView("ordering");
+      else navigate("home");
+    }
+  };
+
+  const goBack = () => {
+    if (screen === "guest") {
+      if (guestView === "partners") setGuestView("events");
+      else if (guestView === "events") setGuestView("mission");
+      else if (guestView === "mission") setGuestView("story");
+      else navigate("home");
+    }
+
+    if (screen === "customer") {
+      if (customerView === "market") setCustomerView("recipes");
+      else if (customerView === "recipes") setCustomerView("nutrition");
+      else if (customerView === "nutrition") setCustomerView("produce");
+      else navigate("guest");
+    }
+
+    if (screen === "grower") {
+      if (growerView === "season") setGrowerView("notes");
+      else if (growerView === "notes") setGrowerView("planner");
+      else if (growerView === "planner") setGrowerView("weather");
+      else navigate("customer");
+    }
+
+    if (screen === "producer") {
+      if (producerView === "collaboration") setProducerView("storytelling");
+      else if (producerView === "storytelling") setProducerView("events");
+      else if (producerView === "events") setProducerView("products");
+      else navigate("home");
+    }
+
+    if (screen === "youth") {
+      if (youthView === "daily") setYouthView("supervisor");
+      else if (youthView === "supervisor") setYouthView("parent");
+      else if (youthView === "parent") setYouthView("overview");
+      else navigate("home");
+    }
+
+    if (screen === "admin") {
+      if (adminView === "growth") setAdminView("planning");
+      else if (adminView === "planning") setAdminView("operations");
+      else if (adminView === "operations") setAdminView("participation");
+      else navigate("grower");
+    }
+
+    if (screen === "market") {
+      if (marketView === "ordering") setMarketView("community");
+      else if (marketView === "community") setMarketView("education");
+      else if (marketView === "education") setMarketView("grownby");
+      else if (marketView === "grownby") setMarketView("products");
+      else navigate("customer");
+    }
+  };
 
   if (screen === "home") {
     return (
@@ -1006,6 +1136,7 @@ export default function App() {
           <SoftBlock>
             This destination helps people feel welcomed before they move deeper into the platform.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (guestView === "mission") {
@@ -1017,6 +1148,7 @@ export default function App() {
           <SoftBlock>
             This destination shows why the farm matters beyond agriculture alone.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (guestView === "events") {
@@ -1028,6 +1160,7 @@ export default function App() {
           <SoftBlock>
             Events serve as real entry points into the ecosystem.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else {
@@ -1037,8 +1170,9 @@ export default function App() {
             Growers, educators, vendors, community supporters, youth partners, wellness collaborators, and mission-aligned allies all have a place here.
           </SoftBlock>
           <SoftBlock>
-            Bronson Family Farm is built for connection, not isolation.
+            From here, continue into Customer to see how discovery moves into action.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Customer" />
         </div>
       );
     }
@@ -1092,6 +1226,7 @@ export default function App() {
           <SoftBlock>
             This destination should make food feel present, useful, and close at hand.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (customerView === "nutrition") {
@@ -1103,6 +1238,7 @@ export default function App() {
           <SoftBlock>
             This destination connects fresh food to daily family wellness.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (customerView === "recipes") {
@@ -1114,6 +1250,7 @@ export default function App() {
           <SoftBlock>
             This destination helps customers imagine the food already in use.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else {
@@ -1125,9 +1262,7 @@ export default function App() {
           <SoftBlock>
             Customers can move directly into products, education, community activity, GrownBy, and ordering flow.
           </SoftBlock>
-          <div>
-            <ActionButton label="Open Marketplace" onClick={() => navigate("market")} primary />
-          </div>
+          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Marketplace" />
         </div>
       );
     }
@@ -1179,10 +1314,16 @@ export default function App() {
           <SoftBlock>
             This destination makes the weather panel feel operational rather than decorative.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (growerView === "planner") {
-      content = <CropPlannerPanel />;
+      content = (
+        <div style={{ display: "grid", gap: 12 }}>
+          <CropPlannerPanel />
+          <DestinationFooter onBack={goBack} onNext={goNext} />
+        </div>
+      );
     } else if (growerView === "notes") {
       content = (
         <div style={{ display: "grid", gap: 12 }}>
@@ -1192,6 +1333,7 @@ export default function App() {
           <SoftBlock>
             Notes should help a grower move from observation to action.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else {
@@ -1201,8 +1343,9 @@ export default function App() {
             Transplant review, succession planting, irrigation planning, and market continuity all belong here.
           </SoftBlock>
           <SoftBlock>
-            This destination keeps the grower view tied to the rhythm of the season.
+            From here, continue into Leadership to see the whole-system view.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Leadership" />
         </div>
       );
     }
@@ -1245,6 +1388,7 @@ export default function App() {
           <SoftBlock title="Products">
             Bubble Babies™, seedlings, educational kits, seasonal bundles, and event-ready offerings.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (producerView === "events") {
@@ -1253,6 +1397,7 @@ export default function App() {
           <SoftBlock title="Events">
             Market days, demonstrations, booths, and public-facing experiences extend the value of what is produced.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (producerView === "storytelling") {
@@ -1261,6 +1406,7 @@ export default function App() {
           <SoftBlock title="Storytelling">
             Products gain power when they carry place, purpose, and a visible community story.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else {
@@ -1269,6 +1415,7 @@ export default function App() {
           <SoftBlock title="Collaboration">
             This destination connects vendors, educators, events, and community partners into a wider value chain.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Marketplace" />
         </div>
       );
     }
@@ -1311,6 +1458,7 @@ export default function App() {
           <SoftBlock title="Overview">
             Hands-on work, visible contribution, confidence-building, responsibility, and exposure to real opportunity.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (youthView === "parent") {
@@ -1319,6 +1467,7 @@ export default function App() {
           <SoftBlock title="Parent Portal">
             Family visibility into expectations, growth, communication, and the purpose of participation.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (youthView === "supervisor") {
@@ -1327,6 +1476,7 @@ export default function App() {
           <SoftBlock title="Supervisor View">
             Daily oversight, progress awareness, intervention planning, and support coordination.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else {
@@ -1335,6 +1485,10 @@ export default function App() {
           <SoftBlock title="Daily Focus">
             Garden preparation, professional habits, teamwork, responsibility, and visible contribution.
           </SoftBlock>
+          <SoftBlock>
+            From here, continue into Leadership to see the wider coordinating view.
+          </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Leadership" />
         </div>
       );
     }
@@ -1378,6 +1532,7 @@ export default function App() {
           <SoftBlock title="Participation">
             Guests, customers, youth, growers, and partners all move through visible pathways that should be coordinated together.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (adminView === "operations") {
@@ -1386,6 +1541,7 @@ export default function App() {
           <SoftBlock title="Operations">
             Crop timing, marketplace readiness, event coordination, and pathway continuity belong here.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else if (adminView === "planning") {
@@ -1394,6 +1550,7 @@ export default function App() {
           <SoftBlock title="Planning">
             This destination keeps leadership focused on what happens next, not just what is happening now.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} />
         </div>
       );
     } else {
@@ -1402,6 +1559,7 @@ export default function App() {
           <SoftBlock title="Growth">
             High ecosystem interest, pathway expansion, and long-term place-based value building should remain visible.
           </SoftBlock>
+          <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Continue to Marketplace" />
         </div>
       );
     }
@@ -1447,6 +1605,7 @@ export default function App() {
         <SoftBlock>
           The marketplace should feel like a real bridge between what is grown and how people actually access it.
         </SoftBlock>
+        <DestinationFooter onBack={goBack} onNext={goNext} />
       </div>
     );
   } else if (marketView === "grownby") {
@@ -1479,6 +1638,7 @@ export default function App() {
             Open GrownBy Store
           </a>
         </div>
+        <DestinationFooter onBack={goBack} onNext={goNext} />
       </div>
     );
   } else if (marketView === "education") {
@@ -1490,6 +1650,7 @@ export default function App() {
         <SoftBlock>
           Marketplace education helps customers understand what to buy and how to use it.
         </SoftBlock>
+        <DestinationFooter onBack={goBack} onNext={goNext} />
       </div>
     );
   } else if (marketView === "community") {
@@ -1501,6 +1662,7 @@ export default function App() {
         <SoftBlock>
           This destination connects the market to events, family learning, grower visibility, and shared experience.
         </SoftBlock>
+        <DestinationFooter onBack={goBack} onNext={goNext} />
       </div>
     );
   } else {
@@ -1512,6 +1674,7 @@ export default function App() {
         <SoftBlock>
           It should guide a user from ecosystem discovery to GrownBy ordering to pickup and return.
         </SoftBlock>
+        <DestinationFooter onBack={goBack} onNext={goNext} nextLabel="Return Home" />
       </div>
     );
   }
