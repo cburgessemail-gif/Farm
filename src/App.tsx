@@ -4,7 +4,6 @@ import {
   ArrowRight,
   CalendarDays,
   CloudSun,
-  Globe,
   Leaf,
   Mic,
   Play,
@@ -29,31 +28,31 @@ import {
 } from "lucide-react";
 
 const IMAGES = {
-  entrance: "/SAM_0220.JPG",
-  story: "/SAM_0221.JPG",
-  guest: "/SAM_0222.JPG",
-  customer: "/SAM_0223.JPG",
-  marketplace: "/SAM_0225.JPG",
-  grower: "/SAM_0237.JPG",
-  valueAdded: "/SAM_0238.JPG",
-  youth: "/SAM_0249.JPG",
-  supervisor: "/SAM_0266.JPG",
-  community: "/SAM_0274.JPG",
-  education: "/SAM_0275.JPG",
-  wellness: "/SAM_0281.JPG",
-  events: "/SAM_0282.JPG",
-  planning: "/SAM_0286.JPG",
-  weather: "/SAM_0288.JPG",
-  family: "/SAM_0289.JPG",
-  logistics: "/SAM_0290.JPG",
-  airport: "/SAM_0291.JPG",
-  produce: "/SAM_0293.JPG",
-  volunteers: "/SAM_0305.JPG",
-  training: "/SAM_0307.JPG",
-  recipes: "/SAM_0309.JPG",
-  nutrition: "/SAM_0310.JPG",
-  future: "/SAM_0311.JPG",
-  legacy: "/SAM_0313.JPG",
+  entrance: "/GrowArea.jpg",
+  story: "/large (10).jpg",
+  guest: "/Samaeera1.jpg",
+  customer: "/culinary_edibleflowers.jpeg",
+  marketplace: "/culinary_edibleflowers2.jpeg",
+  grower: "/Samerra4.jpg",
+  valueAdded: "/culinary_mushrooms.jpeg",
+  youth: "/large (11).jpg",
+  supervisor: "/large (1).jpg",
+  community: "/WolfSpider.jpg",
+  education: "/Samerra5.jpg",
+  wellness: "/Samaeera2.jpg",
+  events: "/Samaeera3.jpg",
+  planning: "/GrowArea2.jpg",
+  weather: "/large (1).jpg",
+  family: "/large (10).jpg",
+  logistics: "/Samerra4.jpg",
+  airport: "/GrowArea.jpg",
+  produce: "/culinary_edibleflowers2.jpeg",
+  volunteers: "/Samaeera1.jpg",
+  training: "/Samerra5.jpg",
+  recipes: "/culinary_mushrooms.jpeg",
+  nutrition: "/culinary_edibleflowers.jpeg",
+  future: "/GrowArea2.jpg",
+  legacy: "/Samerra4.jpg",
   growArea: "/GrowArea.jpg",
 };
 
@@ -102,7 +101,15 @@ const SCREEN_IMAGES: Record<ScreenKey, string> = {
   wellness: IMAGES.wellness,
 };
 
-const T: Record<LanguageKey, { brand: string; subbrand: string; screenTitles: Record<ScreenKey, string>; screenBodies: Record<ScreenKey, string> }> = {
+const T: Record<
+  LanguageKey,
+  {
+    brand: string;
+    subbrand: string;
+    screenTitles: Record<ScreenKey, string>;
+    screenBodies: Record<ScreenKey, string>;
+  }
+> = {
   en: {
     brand: "Bronson Family Farm",
     subbrand: "Farm & Family Alliance Ecosystem Demo",
@@ -300,6 +307,7 @@ const T: Record<LanguageKey, { brand: string; subbrand: string; screenTitles: Re
 function useSpeech() {
   const synthRef = useRef<SpeechSynthesis | null>(typeof window !== "undefined" ? window.speechSynthesis : null);
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+  const timeoutRef = useRef<number | null>(null);
 
   const loadVoices = () => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return [];
@@ -316,6 +324,7 @@ function useSpeech() {
     };
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
     };
   }, []);
 
@@ -341,9 +350,19 @@ function useSpeech() {
     return voices.find((v) => v.lang?.toLowerCase().startsWith("en")) || voices[0] || null;
   };
 
+  const stop = () => {
+    if (timeoutRef.current) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
   const speak = (text: string, lang: LanguageKey) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
+    stop();
     const utter = new SpeechSynthesisUtterance(text);
     const map: Record<LanguageKey, string> = {
       en: "en-US",
@@ -358,16 +377,11 @@ function useSpeech() {
     utter.pitch = 1;
     const voice = pickVoice(lang);
     if (voice) utter.voice = voice;
-    window.setTimeout(() => {
+
+    timeoutRef.current = window.setTimeout(() => {
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utter);
-    }, 120);
-  };
-
-  const stop = () => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
+    }, 180);
   };
 
   return { speak, stop };
@@ -565,7 +579,7 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     border: "1px solid rgba(255,255,255,0.16)",
     boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
-    background: "#0f1714",
+    background: "#102018",
   },
   roleImage: {
     position: "absolute",
@@ -617,7 +631,7 @@ const styles: Record<string, React.CSSProperties> = {
     overflow: "hidden",
     border: "1px solid rgba(255,255,255,0.1)",
     cursor: "pointer",
-    background: "#101815",
+    background: "#112018",
   },
   galleryImage: {
     width: "100%",
@@ -629,7 +643,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
     gap: 12,
-    marginTop: 16,
+    marginTop: 18,
   },
   moduleBox: {
     borderRadius: 18,
@@ -673,13 +687,13 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 function App() {
-  const copy = T[language] || T.en;
   const [language, setLanguage] = useState<LanguageKey>("en");
   const [screen, setScreen] = useState<ScreenKey>("home");
   const [voiceOn, setVoiceOn] = useState(true);
   const [tourOn, setTourOn] = useState(false);
   const [imageModal, setImageModal] = useState<string | null>(null);
   const { speak, stop } = useSpeech();
+  const copy = T[language] || T.en;
 
   const currentIndex = SCREEN_ORDER.indexOf(screen);
   const gallery = useMemo(
@@ -688,14 +702,14 @@ function App() {
       IMAGES.education,
       IMAGES.nutrition,
       IMAGES.recipes,
-      IMAGES.volunteers,
-      IMAGES.training,
       IMAGES.produce,
       IMAGES.family,
+      IMAGES.training,
+      IMAGES.events,
+      IMAGES.wellness,
+      IMAGES.logistics,
       IMAGES.airport,
       IMAGES.future,
-      IMAGES.legacy,
-      IMAGES.logistics,
     ],
     []
   );
@@ -742,7 +756,7 @@ function App() {
 
   const detailBlocks: Record<ScreenKey, { title: string; text: string; icon: React.ReactNode }[]> = {
     home: [
-      { title: "Families belong here", text: "This platform is designed to feel welcoming, useful, and worth returning to.", icon: <Users size={20} /> },
+      { title: "Families belong here", text: "This ecosystem is designed to feel welcoming, useful, and worth returning to.", icon: <Users size={20} /> },
       { title: "Marketplace through GrownBy", text: "Customers should feel that food access is close by, not hidden.", icon: <Store size={20} /> },
       { title: "Living ecosystem", text: "Growers, youth, supervisors, guests, and producers each have a real pathway.", icon: <Leaf size={20} /> },
     ],
@@ -820,7 +834,7 @@ function App() {
               {[
                 ["home", <Home size={16} />, "Entrance"],
                 ["story", <Info size={16} />, "Our Story"],
-                ["guest", <Users size={16} />, "Role pathways"],
+                ["guest", <Users size={16} />, "Role Pathways"],
                 ["events", <CalendarDays size={16} />, "View Events"],
                 ["wellness", <HeartPulse size={16} />, "Health & Nutrition"],
                 ["marketplace", <Store size={16} />, "Go to Marketplace"],
@@ -835,7 +849,13 @@ function App() {
                 </button>
               ))}
 
-              <button onClick={() => setVoiceOn((v) => !v)} style={styles.pill}>
+              <button
+                onClick={() => {
+                  stop();
+                  setVoiceOn((v) => !v);
+                }}
+                style={styles.pill}
+              >
                 <Mic size={16} /> {voiceOn ? "Voice narration on" : "Voice narration off"}
               </button>
             </div>
@@ -850,7 +870,13 @@ function App() {
               <div style={styles.body}>{copy.screenBodies[screen]}</div>
 
               <div style={styles.actions}>
-                <button style={styles.whiteBtn} onClick={() => setTourOn((v) => !v)}>
+                <button
+                  style={styles.whiteBtn}
+                  onClick={() => {
+                    stop();
+                    setTourOn((v) => !v);
+                  }}
+                >
                   <Play size={16} /> {tourOn ? "Stop Guided Tour" : "Start Guided Tour"}
                 </button>
                 <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>
@@ -864,17 +890,42 @@ function App() {
               <div style={styles.statGrid}>
                 <div style={styles.card}>
                   <div style={styles.miniLabel}>Seasonal conditions</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}><CloudSun size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />Warm season planning active</div>
-                  <div style={{ color: "rgba(255,255,255,0.82)", lineHeight: 1.6 }}>Field prep, seedling movement, event readiness, and seasonal coordination are active.</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                    <CloudSun size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />
+                    Warm season planning active
+                  </div>
+                  <div style={{ color: "rgba(239,247,239,0.88)", lineHeight: 1.6 }}>
+                    Field prep, seedling movement, event readiness, and seasonal coordination are active.
+                  </div>
                 </div>
+
                 <div style={styles.card}>
                   <div style={styles.miniLabel}>Farm calendar</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}><CalendarDays size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />Living schedule</div>
-                  <div style={{ color: "rgba(255,255,255,0.82)", lineHeight: 1.6 }}>Seedlings, events, education, youth activities, and harvest pathways connect here.</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                    <CalendarDays size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />
+                    Living schedule
+                  </div>
+                  <div style={{ color: "rgba(239,247,239,0.88)", lineHeight: 1.6 }}>
+                    Seedlings, events, education, youth activities, and harvest pathways connect here.
+                  </div>
                 </div>
+
                 <div style={styles.card}>
                   <div style={styles.miniLabel}>Choose language</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}><Languages size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />{language === "en" ? "English" : language}</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}>
+                    <Languages size={18} style={{ verticalAlign: "middle", marginRight: 8 }} />
+                    {language === "en"
+                      ? "English"
+                      : language === "es"
+                      ? "Español"
+                      : language === "tl"
+                      ? "Tagalog"
+                      : language === "it"
+                      ? "Italiano"
+                      : language === "patwa"
+                      ? "Patwa"
+                      : "Hebrew"}
+                  </div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                     {(["en", "es", "tl", "it", "patwa", "he"] as LanguageKey[]).map((lang) => (
                       <button
@@ -890,7 +941,17 @@ function App() {
                           ...(language === lang ? styles.activePill : {}),
                         }}
                       >
-                        {lang === "en" ? "English" : lang === "es" ? "Español" : lang === "tl" ? "Tagalog" : lang === "it" ? "Italiano" : lang === "patwa" ? "Patwa" : "Hebrew"}
+                        {lang === "en"
+                          ? "English"
+                          : lang === "es"
+                          ? "Español"
+                          : lang === "tl"
+                          ? "Tagalog"
+                          : lang === "it"
+                          ? "Italiano"
+                          : lang === "patwa"
+                          ? "Patwa"
+                          : "Hebrew"}
                       </button>
                     ))}
                   </div>
@@ -900,9 +961,11 @@ function App() {
 
             <div style={styles.sideCard}>
               <div style={styles.miniLabel}>A place people want to return to</div>
-              <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>Living ecosystem overview</div>
-              <div style={{ lineHeight: 1.7, color: "rgba(255,255,255,0.88)", marginBottom: 18 }}>
-                This is more than a website. It is a farm-centered experience designed to help guests, customers, growers, youth, partners, and families find resources, food, learning, and a clear path forward.
+              <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>
+                Living ecosystem overview
+              </div>
+              <div style={{ lineHeight: 1.7, color: "rgba(245,250,245,0.9)", marginBottom: 18 }}>
+                This living farm ecosystem is designed to help guests, customers, growers, youth, partners, and families move toward food self-sufficiency, economic opportunity, practical wellness, and stronger community connection.
               </div>
               <div style={{ display: "grid", gap: 12 }}>
                 {detailBlocks[screen].map((item) => (
@@ -911,7 +974,7 @@ function App() {
                       {item.icon}
                       {item.title}
                     </div>
-                    <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)" }}>{item.text}</div>
+                    <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>{item.text}</div>
                   </div>
                 ))}
               </div>
@@ -921,7 +984,7 @@ function App() {
           {screen === "home" && (
             <div style={styles.section}>
               <div style={{ fontSize: 30, fontWeight: 800, marginBottom: 8 }}>Role pathways</div>
-              <div style={{ color: "rgba(255,255,255,0.82)", lineHeight: 1.7, maxWidth: 900, marginBottom: 18 }}>
+              <div style={{ color: "rgba(239,247,239,0.88)", lineHeight: 1.7, maxWidth: 900, marginBottom: 18 }}>
                 Each role should feel welcomed, informed, and able to move forward. These pathways are built to create return visits, not one-time clicks.
               </div>
               <div style={styles.roleGrid}>
@@ -941,7 +1004,7 @@ function App() {
                               alignItems: "center",
                               padding: "7px 11px",
                               borderRadius: 999,
-                              background: "rgba(255,255,255,0.14)",
+                              background: "rgba(141,185,137,0.18)",
                               border: "1px solid rgba(255,255,255,0.16)",
                               fontSize: 12,
                               letterSpacing: "0.04em",
@@ -970,7 +1033,7 @@ function App() {
                           {item.icon}
                           {item.title}
                         </div>
-                        <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)" }}>{item.text}</div>
+                        <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>{item.text}</div>
                       </div>
                     ))}
                   </div>
@@ -992,7 +1055,9 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Recipes & Nutrition</button>
                         <div style={styles.infoBox}>
                           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Customer path priority</div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)", marginBottom: 10 }}>This pathway is designed to move people quickly toward GrownBy, then bring them back for fresh food guidance, healthier choices, and repeat visits.</div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)", marginBottom: 10 }}>
+                            This pathway is designed to move people quickly toward GrownBy, then bring them back for fresh food guidance, healthier choices, and repeat visits.
+                          </div>
                           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                             {["Fresh Food", "Seedlings", "Bubble Babies", "Recipes", "Nutrition"].map((item) => (
                               <span
@@ -1002,7 +1067,7 @@ function App() {
                                   alignItems: "center",
                                   padding: "7px 11px",
                                   borderRadius: 999,
-                                  background: "rgba(255,255,255,0.14)",
+                                  background: "rgba(141,185,137,0.18)",
                                   border: "1px solid rgba(255,255,255,0.16)",
                                   fontSize: 12,
                                   letterSpacing: "0.04em",
@@ -1017,7 +1082,9 @@ function App() {
                     )}
                     {screen === "marketplace" && (
                       <>
-                        <a href="https://grownby.com/farms/bronson-family-farm/shop" target="_blank" rel="noreferrer" style={{ ...styles.whiteBtn, justifyContent: "center", textDecoration: "none" }}>Open GrownBy Store</a>
+                        <a href="https://grownby.com/farms/bronson-family-farm/shop" target="_blank" rel="noreferrer" style={{ ...styles.whiteBtn, justifyContent: "center" }}>
+                          Open GrownBy Store
+                        </a>
                         <button style={styles.ghostBtn} onClick={() => goto("customer")}>Back to Customer Path</button>
                         <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Food Guidance</button>
                       </>
@@ -1078,7 +1145,9 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.nutrition)}>Nutrition View</button>
                         <div style={styles.infoBox}>
                           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Wellness cluster</div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)", marginBottom: 10 }}>This area should help people connect food access with simple recipes, diabetes awareness, better choices, and everyday wellness.</div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)", marginBottom: 10 }}>
+                            This area should help people connect food access with simple recipes, diabetes awareness, better choices, and everyday wellness.
+                          </div>
                           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                             {["Fresh Choices", "Recipes", "Nutrition", "Diabetes Awareness", "Healthier at Home"].map((item) => (
                               <span
@@ -1088,7 +1157,7 @@ function App() {
                                   alignItems: "center",
                                   padding: "7px 11px",
                                   borderRadius: 999,
-                                  background: "rgba(255,255,255,0.14)",
+                                  background: "rgba(141,185,137,0.18)",
                                   border: "1px solid rgba(255,255,255,0.16)",
                                   fontSize: 12,
                                   letterSpacing: "0.04em",
@@ -1104,7 +1173,9 @@ function App() {
                   </div>
 
                   <div style={styles.miniLabel}>Image gallery</div>
-                  <div style={{ marginBottom: 14, color: "rgba(255,255,255,0.82)" }}>Using the other farm photos instead of repeating the same two images.</div>
+                  <div style={{ marginBottom: 14, color: "rgba(239,247,239,0.88)" }}>
+                    Using the other farm photos instead of repeating the same two images.
+                  </div>
                   <div style={styles.galleryGrid}>
                     {gallery.map((img, idx) => (
                       <button key={`${img}-${idx}`} style={styles.galleryItem} onClick={() => setImageModal(img)}>
