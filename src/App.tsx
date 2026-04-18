@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type LanguageKey = "en" | "es" | "tl" | "it" | "patwa" | "he";
-type ScreenKey = "entrance" | "role" | "marketplace" | "tour";
+type ScreenKey = "entrance" | "role" | "marketplace";
 type RoleKey = "guest" | "customer" | "grower" | "producer" | "youth" | "admin";
 type YouthView = "overview" | "parent" | "supervisor";
 
 type RoleCard = {
   key: RoleKey;
   image: string;
-  fallbackIcon: string;
+  icon: string;
 };
 
 type LangPack = {
@@ -65,40 +65,19 @@ type LangPack = {
     }
   >;
   youthContent: {
-    overview: {
-      title: string;
-      body: string;
-      bullets: string[];
-    };
-    parent: {
-      title: string;
-      body: string;
-      bullets: string[];
-    };
-    supervisor: {
-      title: string;
-      body: string;
-      bullets: string[];
-    };
+    overview: { title: string; body: string; bullets: string[] };
+    parent: { title: string; body: string; bullets: string[] };
+    supervisor: { title: string; body: string; bullets: string[] };
   };
 };
 
 const roleCards: RoleCard[] = [
-  { key: "guest", image: "/FarmEntrance.jpg", fallbackIcon: "🌿" },
-  { key: "customer", image: "/FreshFood.jpg", fallbackIcon: "🥬" },
-  { key: "grower", image: "/GrowArea.jpg", fallbackIcon: "🌱" },
-  { key: "producer", image: "/CommunityGathering.jpg", fallbackIcon: "🧺" },
-  { key: "youth", image: "/YouthWorkforce.jpg", fallbackIcon: "🚜" },
-  { key: "admin", image: "/Marketplace.jpg", fallbackIcon: "📊" },
-];
-
-const fallbackGradients = [
-  "from-emerald-950 via-emerald-800 to-lime-700",
-  "from-slate-950 via-emerald-900 to-teal-700",
-  "from-zinc-950 via-stone-800 to-amber-700",
-  "from-green-950 via-green-800 to-emerald-600",
-  "from-sky-950 via-teal-900 to-green-700",
-  "from-neutral-950 via-emerald-900 to-yellow-700",
+  { key: "guest", image: "/FarmEntrance.jpg", icon: "🌿" },
+  { key: "customer", image: "/FreshFood.jpg", icon: "🥬" },
+  { key: "grower", image: "/GrowArea.jpg", icon: "🌱" },
+  { key: "producer", image: "/CommunityGathering.jpg", icon: "🧺" },
+  { key: "youth", image: "/YouthWorkforce.jpg", icon: "🚜" },
+  { key: "admin", image: "/Marketplace.jpg", icon: "📊" },
 ];
 
 const translations: Record<LanguageKey, LangPack> = {
@@ -141,13 +120,15 @@ const translations: Record<LanguageKey, LangPack> = {
     roleIntroLabel: "Purpose",
     roleActionsLabel: "What this role can do",
     roleOutcomesLabel: "What this role gains",
-    customerMarketplaceHint: "Customers can move directly into the marketplace for produce, education, recipes, and purchasing pathways.",
+    customerMarketplaceHint:
+      "Customers can move directly into the marketplace for produce, education, recipes, and purchasing pathways.",
     youthModesLabel: "Youth Workforce Views",
     youthOverview: "Youth Experience",
     youthParent: "Parent Portal",
     youthSupervisor: "Supervisor View",
     marketplaceTitle: "Marketplace Experience",
-    marketplaceSubtitle: "Food access, education, discovery, and purchasing pathways meet here.",
+    marketplaceSubtitle:
+      "Food access, education, discovery, and purchasing pathways meet here.",
     marketplaceBlocks: [
       {
         title: "Shop & Reserve",
@@ -165,7 +146,8 @@ const translations: Record<LanguageKey, LangPack> = {
     storyTitle: "Why this matters",
     storyBody:
       "The farm is the platform. The place itself creates food, belonging, visibility, skill-building, healing, and long-term community value.",
-    footerLine: "Bronson Family Farm is not simply growing crops. It is growing community.",
+    footerLine:
+      "Bronson Family Farm is not simply growing crops. It is growing community.",
     guidedSteps: [
       "Welcome to Bronson Family Farm, a place-based system where land, relationships, food, and opportunity work together.",
       "Guests experience the story, atmosphere, and mission of the farm as an entry point into the ecosystem.",
@@ -305,11 +287,13 @@ const translations: Record<LanguageKey, LangPack> = {
       },
     },
   },
+
   es: {
     languageName: "Español",
     dir: "ltr",
     appTitle: "Bronson Family Farm",
-    appSubtitle: "Un sistema basado en lugar para familia, alimentos, bienestar y oportunidad",
+    appSubtitle:
+      "Un sistema basado en lugar para familia, alimentos, bienestar y oportunidad",
     heroKicker: "Una experiencia demo viva",
     enterDemo: "Entrar al Demo",
     guidedDemo: "Iniciar Recorrido Guiado",
@@ -321,7 +305,8 @@ const translations: Record<LanguageKey, LangPack> = {
     localTime: "Hora Local",
     seasonPulse: "Pulso de la Temporada",
     placeBased: "Sistema Basado en Lugar",
-    welcomeHeadline: "Más que una finca. Un sistema vivo arraigado en tierra, familia, comida y futuro.",
+    welcomeHeadline:
+      "Más que una finca. Un sistema vivo arraigado en tierra, familia, comida y futuro.",
     welcomeBody:
       "Bronson Family Farm une visitantes, clientes, productores, jóvenes, elaboradores y aliados en un solo lugar donde las relaciones producen resultados.",
     missionLabel: "Lo que hace este lugar",
@@ -329,7 +314,8 @@ const translations: Record<LanguageKey, LangPack> = {
       "Cultiva alimentos, desarrolla personas, fortalece familias, restaura tierra, crea oportunidad y demuestra cómo un solo lugar puede activar todo un ecosistema.",
     chooseLanguage: "Elegir idioma",
     choosePathway: "Elegir una ruta",
-    pathwayHint: "Cada ruta revela una experiencia diferente dentro del ecosistema.",
+    pathwayHint:
+      "Cada ruta revela una experiencia diferente dentro del ecosistema.",
     livePanelTitle: "Hoy en la Finca",
     livePanelText:
       "Explora rutas por rol, narración guiada, planificación estacional, acceso al mercado y funciones para la fuerza laboral juvenil.",
@@ -344,13 +330,15 @@ const translations: Record<LanguageKey, LangPack> = {
     roleIntroLabel: "Propósito",
     roleActionsLabel: "Lo que este rol puede hacer",
     roleOutcomesLabel: "Lo que este rol obtiene",
-    customerMarketplaceHint: "Los clientes pueden entrar directamente al mercado para productos, educación, recetas y compra.",
+    customerMarketplaceHint:
+      "Los clientes pueden entrar directamente al mercado para productos, educación, recetas y compra.",
     youthModesLabel: "Vistas de Fuerza Laboral Juvenil",
     youthOverview: "Experiencia Juvenil",
     youthParent: "Portal para Padres",
     youthSupervisor: "Vista del Supervisor",
     marketplaceTitle: "Experiencia del Mercado",
-    marketplaceSubtitle: "Acceso a alimentos, educación, descubrimiento y compra se unen aquí.",
+    marketplaceSubtitle:
+      "Acceso a alimentos, educación, descubrimiento y compra se unen aquí.",
     marketplaceBlocks: [
       {
         title: "Comprar y Reservar",
@@ -368,7 +356,8 @@ const translations: Record<LanguageKey, LangPack> = {
     storyTitle: "Por qué importa",
     storyBody:
       "La finca es la plataforma. El lugar mismo crea alimento, pertenencia, visibilidad, desarrollo de habilidades, sanación y valor comunitario duradero.",
-    footerLine: "Bronson Family Farm no solo cultiva cosechas. Cultiva comunidad.",
+    footerLine:
+      "Bronson Family Farm no solo cultiva cosechas. Cultiva comunidad.",
     guidedSteps: [
       "Bienvenido a Bronson Family Farm, un sistema basado en lugar donde tierra, relaciones, alimentos y oportunidad trabajan juntos.",
       "Los visitantes conocen la historia, el ambiente y la misión de la finca como puerta de entrada al ecosistema.",
@@ -380,7 +369,8 @@ const translations: Record<LanguageKey, LangPack> = {
     roleContent: {
       guest: {
         title: "Ruta del Visitante",
-        intro: "Da la bienvenida a los visitantes a la historia, el lugar y el propósito de Bronson Family Farm.",
+        intro:
+          "Da la bienvenida a los visitantes a la historia, el lugar y el propósito de Bronson Family Farm.",
         actions: [
           "Descubrir la misión y el legado de la finca",
           "Explorar eventos y experiencias estacionales",
@@ -395,7 +385,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       customer: {
         title: "Ruta del Cliente",
-        intro: "Convierte el acceso a alimentos en una experiencia más rica de nutrición, educación y participación continua.",
+        intro:
+          "Convierte el acceso a alimentos en una experiencia más rica de nutrición, educación y participación continua.",
         actions: [
           "Ver productos, plántulas y ofertas del mercado",
           "Aprender sobre alimentos, recetas y nutrición",
@@ -410,7 +401,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       grower: {
         title: "Ruta del Productor Agrícola",
-        intro: "Apoya planificación, producción, aprendizaje y conexión dentro de un ecosistema agrícola compartido.",
+        intro:
+          "Apoya planificación, producción, aprendizaje y conexión dentro de un ecosistema agrícola compartido.",
         actions: [
           "Revisar prioridades de cultivo y ritmo estacional",
           "Acceder a ideas por rol para producción",
@@ -425,7 +417,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       producer: {
         title: "Ruta del Productor de Valor Agregado",
-        intro: "Apoya a creadores, vendedores y procesadores que transforman productos agrícolas en valor comunitario.",
+        intro:
+          "Apoya a creadores, vendedores y procesadores que transforman productos agrícolas en valor comunitario.",
         actions: [
           "Explorar participación en eventos y mercado",
           "Conectar productos con narrativa y visibilidad",
@@ -440,7 +433,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       youth: {
         title: "Ruta de Fuerza Laboral Juvenil",
-        intro: "Conecta a jóvenes con trabajo, habilidades, mentoría y apoyo mediante experiencia práctica en la finca.",
+        intro:
+          "Conecta a jóvenes con trabajo, habilidades, mentoría y apoyo mediante experiencia práctica en la finca.",
         actions: [
           "Ver experiencias de aprendizaje juvenil",
           "Ver funciones de apoyo para padres",
@@ -455,7 +449,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       admin: {
         title: "Ruta Administrativa",
-        intro: "Refleja la visión de liderazgo sobre operaciones, alianzas, participación e impacto basado en lugar.",
+        intro:
+          "Refleja la visión de liderazgo sobre operaciones, alianzas, participación e impacto basado en lugar.",
         actions: [
           "Seguir actividad y visibilidad del ecosistema",
           "Ver rutas entre roles y experiencias",
@@ -472,7 +467,8 @@ const translations: Record<LanguageKey, LangPack> = {
     youthContent: {
       overview: {
         title: "Experiencia Juvenil",
-        body: "Los jóvenes viven aprendizaje estructurado y real conectado con trabajo, naturaleza, disciplina, creatividad y comunidad.",
+        body:
+          "Los jóvenes viven aprendizaje estructurado y real conectado con trabajo, naturaleza, disciplina, creatividad y comunidad.",
         bullets: [
           "Aprendizaje práctico y responsabilidad en la finca",
           "Confianza a través de contribución visible",
@@ -481,7 +477,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       parent: {
         title: "Portal para Padres",
-        body: "Los padres pueden entender la ruta, ver el valor de la participación y conectarse con estructuras de apoyo.",
+        body:
+          "Los padres pueden entender la ruta, ver el valor de la participación y conectarse con estructuras de apoyo.",
         bullets: [
           "Comunicación clara sobre expectativas",
           "Conexión familiar con progreso y oportunidad",
@@ -490,7 +487,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       supervisor: {
         title: "Vista del Supervisor",
-        body: "Existe solo dentro de la experiencia juvenil y apoya personal, responsabilidad y alineación de recursos.",
+        body:
+          "Existe solo dentro de la experiencia juvenil y apoya personal, responsabilidad y alineación de recursos.",
         bullets: [
           "Supervisión y apoyo por rol",
           "Conciencia del progreso y planificación de intervención",
@@ -499,11 +497,13 @@ const translations: Record<LanguageKey, LangPack> = {
       },
     },
   },
+
   tl: {
     languageName: "Filipino",
     dir: "ltr",
     appTitle: "Bronson Family Farm",
-    appSubtitle: "Isang place-based system para sa pamilya, pagkain, kalusugan, at oportunidad",
+    appSubtitle:
+      "Isang place-based system para sa pamilya, pagkain, kalusugan, at oportunidad",
     heroKicker: "Isang buhay na demo",
     enterDemo: "Pumasok sa Demo",
     guidedDemo: "Simulan ang Guided Tour",
@@ -515,7 +515,8 @@ const translations: Record<LanguageKey, LangPack> = {
     localTime: "Lokal na Oras",
     seasonPulse: "Galaw ng Panahon",
     placeBased: "Place-Based System",
-    welcomeHeadline: "Higit pa sa isang farm. Isang buhay na sistemang nakaugat sa lupa, pamilya, pagkain, at hinaharap.",
+    welcomeHeadline:
+      "Higit pa sa isang farm. Isang buhay na sistemang nakaugat sa lupa, pamilya, pagkain, at hinaharap.",
     welcomeBody:
       "Pinagsasama ng Bronson Family Farm ang bisita, customer, grower, kabataan, producer, at partner sa iisang lugar kung saan ang ugnayan ay lumilikha ng resulta.",
     missionLabel: "Ano ang ginagawa ng lugar na ito",
@@ -523,7 +524,8 @@ const translations: Record<LanguageKey, LangPack> = {
       "Nagpapalago ito ng pagkain, tao, pamilya, lupa, oportunidad, at nagpapakita kung paano ang isang lugar ay makapagpapakilos ng isang buong ecosystem.",
     chooseLanguage: "Pumili ng wika",
     choosePathway: "Pumili ng pathway",
-    pathwayHint: "Bawat pathway ay nagpapakita ng ibang karanasan sa loob ng ecosystem.",
+    pathwayHint:
+      "Bawat pathway ay nagpapakita ng ibang karanasan sa loob ng ecosystem.",
     livePanelTitle: "Ngayong Araw sa Farm",
     livePanelText:
       "Tuklasin ang role-based pathways, guided narration, seasonal planning, marketplace access, at youth workforce features sa iisang karanasan.",
@@ -538,13 +540,15 @@ const translations: Record<LanguageKey, LangPack> = {
     roleIntroLabel: "Layunin",
     roleActionsLabel: "Ano ang magagawa ng role na ito",
     roleOutcomesLabel: "Ano ang nakukuha ng role na ito",
-    customerMarketplaceHint: "Maaaring dumiretso ang customer sa marketplace para sa ani, edukasyon, recipes, at pagbili.",
+    customerMarketplaceHint:
+      "Maaaring dumiretso ang customer sa marketplace para sa ani, edukasyon, recipes, at pagbili.",
     youthModesLabel: "Youth Workforce Views",
     youthOverview: "Karanasan ng Kabataan",
     youthParent: "Portal ng Magulang",
     youthSupervisor: "View ng Supervisor",
     marketplaceTitle: "Karanasan sa Marketplace",
-    marketplaceSubtitle: "Dito nagtatagpo ang access sa pagkain, edukasyon, tuklas, at pagbili.",
+    marketplaceSubtitle:
+      "Dito nagtatagpo ang access sa pagkain, edukasyon, tuklas, at pagbili.",
     marketplaceBlocks: [
       {
         title: "Mamili at Magpareserba",
@@ -562,7 +566,8 @@ const translations: Record<LanguageKey, LangPack> = {
     storyTitle: "Bakit ito mahalaga",
     storyBody:
       "Ang farm ang platform. Ang mismong lugar ang lumilikha ng pagkain, pag-aari, visibility, skill-building, paghilom, at pangmatagalang halaga sa komunidad.",
-    footerLine: "Hindi lang pananim ang pinalalago ng Bronson Family Farm. Komunidad ang pinalalago nito.",
+    footerLine:
+      "Hindi lang pananim ang pinalalago ng Bronson Family Farm. Komunidad ang pinalalago nito.",
     guidedSteps: [
       "Maligayang pagdating sa Bronson Family Farm, isang place-based system kung saan magkasamang gumagana ang lupa, ugnayan, pagkain, at oportunidad.",
       "Nararanasan ng mga bisita ang kuwento, kapaligiran, at layunin ng farm bilang pagpasok sa ecosystem.",
@@ -574,7 +579,8 @@ const translations: Record<LanguageKey, LangPack> = {
     roleContent: {
       guest: {
         title: "Pathway ng Bisita",
-        intro: "Inaanyayahan nito ang mga bisita sa kuwento, lugar, at layunin ng Bronson Family Farm.",
+        intro:
+          "Inaanyayahan nito ang mga bisita sa kuwento, lugar, at layunin ng Bronson Family Farm.",
         actions: [
           "Tuklasin ang misyon at legacy ng farm",
           "Tingnan ang events at seasonal experiences",
@@ -589,7 +595,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       customer: {
         title: "Pathway ng Customer",
-        intro: "Ginagawang mas mayaman ang food access sa pamamagitan ng nourishment, education, at tuloy-tuloy na pakikilahok.",
+        intro:
+          "Ginagawang mas mayaman ang food access sa pamamagitan ng nourishment, education, at tuloy-tuloy na pakikilahok.",
         actions: [
           "Tingnan ang produce, seedlings, at market offerings",
           "Matuto tungkol sa pagkain, recipes, at nutrition",
@@ -604,7 +611,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       grower: {
         title: "Pathway ng Grower",
-        intro: "Sumusuporta sa planning, production, learning, at connection sa loob ng pinagsasaluhang agricultural ecosystem.",
+        intro:
+          "Sumusuporta sa planning, production, learning, at connection sa loob ng pinagsasaluhang agricultural ecosystem.",
         actions: [
           "Suriin ang growing priorities at seasonal rhythm",
           "I-access ang role-based planning ideas",
@@ -619,7 +627,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       producer: {
         title: "Pathway ng Value-Added Producer",
-        intro: "Sumusuporta sa makers, vendors, at processors na nagpapalawak ng halaga ng farm products para sa komunidad.",
+        intro:
+          "Sumusuporta sa makers, vendors, at processors na nagpapalawak ng halaga ng farm products para sa komunidad.",
         actions: [
           "Tuklasin ang event at market participation",
           "Ikonekta ang produkto sa storytelling at visibility",
@@ -634,7 +643,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       youth: {
         title: "Pathway ng Youth Workforce",
-        intro: "Ikinokonekta ang kabataan sa trabaho, skills, mentorship, at support sa pamamagitan ng hands-on farm experience.",
+        intro:
+          "Ikinokonekta ang kabataan sa trabaho, skills, mentorship, at support sa pamamagitan ng hands-on farm experience.",
         actions: [
           "Tingnan ang youth learning experiences",
           "Tingnan ang parent support features",
@@ -649,7 +659,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       admin: {
         title: "Pathway ng Administrator",
-        intro: "Ipinapakita nito ang leadership view ng operations, partnerships, engagement, at place-based impact.",
+        intro:
+          "Ipinapakita nito ang leadership view ng operations, partnerships, engagement, at place-based impact.",
         actions: [
           "Subaybayan ang activity at visibility ng ecosystem",
           "Tingnan ang mga pathway sa iba’t ibang role",
@@ -666,7 +677,8 @@ const translations: Record<LanguageKey, LangPack> = {
     youthContent: {
       overview: {
         title: "Karanasan ng Kabataan",
-        body: "Nakakaranas ang kabataan ng structured at real-world learning na nagdurugtong sa trabaho, kalikasan, disiplina, creativity, at komunidad.",
+        body:
+          "Nakakaranas ang kabataan ng structured at real-world learning na nagdurugtong sa trabaho, kalikasan, disiplina, creativity, at komunidad.",
         bullets: [
           "Hands-on learning at responsibilidad sa farm",
           "Pagbuo ng kumpiyansa sa pamamagitan ng visible contribution",
@@ -675,7 +687,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       parent: {
         title: "Portal ng Magulang",
-        body: "Nauunawaan ng mga magulang ang pathway at nakakakonekta sila sa support structures sa paligid ng paglago ng kabataan.",
+        body:
+          "Nauunawaan ng mga magulang ang pathway at nakakakonekta sila sa support structures sa paligid ng paglago ng kabataan.",
         bullets: [
           "Malinaw na komunikasyon tungkol sa expectations",
           "Koneksyon ng pamilya sa progreso at oportunidad",
@@ -684,7 +697,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       supervisor: {
         title: "View ng Supervisor",
-        body: "Ang supervisor view ay nasa loob lamang ng youth workforce experience at sumusuporta sa staffing, accountability, at resource alignment.",
+        body:
+          "Ang supervisor view ay nasa loob lamang ng youth workforce experience at sumusuporta sa staffing, accountability, at resource alignment.",
         bullets: [
           "Role-based oversight at support",
           "Awareness sa progreso at intervention planning",
@@ -693,11 +707,13 @@ const translations: Record<LanguageKey, LangPack> = {
       },
     },
   },
+
   it: {
     languageName: "Italiano",
     dir: "ltr",
     appTitle: "Bronson Family Farm",
-    appSubtitle: "Un sistema territoriale per famiglia, cibo, benessere e opportunità",
+    appSubtitle:
+      "Un sistema territoriale per famiglia, cibo, benessere e opportunità",
     heroKicker: "Un’esperienza demo viva",
     enterDemo: "Entra nel Demo",
     guidedDemo: "Avvia Tour Guidato",
@@ -709,7 +725,8 @@ const translations: Record<LanguageKey, LangPack> = {
     localTime: "Ora Locale",
     seasonPulse: "Ritmo Stagionale",
     placeBased: "Sistema Territoriale",
-    welcomeHeadline: "Più di una fattoria. Un sistema vivo radicato nella terra, nella famiglia, nel cibo e nel futuro.",
+    welcomeHeadline:
+      "Più di una fattoria. Un sistema vivo radicato nella terra, nella famiglia, nel cibo e nel futuro.",
     welcomeBody:
       "Bronson Family Farm riunisce visitatori, clienti, coltivatori, giovani, produttori e partner in un unico luogo dove le relazioni generano risultati.",
     missionLabel: "Cosa fa questo luogo",
@@ -717,7 +734,8 @@ const translations: Record<LanguageKey, LangPack> = {
       "Coltiva cibo, sviluppa persone, rafforza famiglie, rigenera la terra, crea opportunità e dimostra come un solo luogo possa attivare un intero ecosistema.",
     chooseLanguage: "Scegli lingua",
     choosePathway: "Scegli un percorso",
-    pathwayHint: "Ogni percorso rivela un’esperienza diversa dentro l’ecosistema.",
+    pathwayHint:
+      "Ogni percorso rivela un’esperienza diversa dentro l’ecosistema.",
     livePanelTitle: "Oggi nella Fattoria",
     livePanelText:
       "Esplora percorsi per ruolo, narrazione guidata, pianificazione stagionale, accesso al marketplace e funzioni per la forza lavoro giovanile.",
@@ -732,13 +750,15 @@ const translations: Record<LanguageKey, LangPack> = {
     roleIntroLabel: "Scopo",
     roleActionsLabel: "Cosa può fare questo ruolo",
     roleOutcomesLabel: "Cosa ottiene questo ruolo",
-    customerMarketplaceHint: "I clienti possono entrare direttamente nel marketplace per prodotti, educazione, ricette e percorsi di acquisto.",
+    customerMarketplaceHint:
+      "I clienti possono entrare direttamente nel marketplace per prodotti, educazione, ricette e percorsi di acquisto.",
     youthModesLabel: "Viste della Forza Lavoro Giovanile",
     youthOverview: "Esperienza Giovani",
     youthParent: "Portale Genitori",
     youthSupervisor: "Vista Supervisore",
     marketplaceTitle: "Esperienza Marketplace",
-    marketplaceSubtitle: "Accesso al cibo, educazione, scoperta e acquisto si incontrano qui.",
+    marketplaceSubtitle:
+      "Accesso al cibo, educazione, scoperta e acquisto si incontrano qui.",
     marketplaceBlocks: [
       {
         title: "Acquista e Prenota",
@@ -756,7 +776,8 @@ const translations: Record<LanguageKey, LangPack> = {
     storyTitle: "Perché conta",
     storyBody:
       "La fattoria è la piattaforma. Il luogo stesso crea cibo, appartenenza, visibilità, sviluppo di competenze, guarigione e valore comunitario duraturo.",
-    footerLine: "Bronson Family Farm non sta semplicemente coltivando raccolti. Sta coltivando comunità.",
+    footerLine:
+      "Bronson Family Farm non sta semplicemente coltivando raccolti. Sta coltivando comunità.",
     guidedSteps: [
       "Benvenuti a Bronson Family Farm, un sistema territoriale dove terra, relazioni, cibo e opportunità lavorano insieme.",
       "Gli ospiti vivono la storia, l’atmosfera e la missione della fattoria come ingresso nell’ecosistema.",
@@ -768,7 +789,8 @@ const translations: Record<LanguageKey, LangPack> = {
     roleContent: {
       guest: {
         title: "Percorso Ospite",
-        intro: "Accoglie i visitatori nella storia, nel luogo e nello scopo di Bronson Family Farm.",
+        intro:
+          "Accoglie i visitatori nella storia, nel luogo e nello scopo di Bronson Family Farm.",
         actions: [
           "Scoprire missione e eredità della fattoria",
           "Esplorare eventi ed esperienze stagionali",
@@ -783,7 +805,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       customer: {
         title: "Percorso Cliente",
-        intro: "Trasforma l’accesso al cibo in un’esperienza più ricca di nutrimento, educazione e partecipazione continua.",
+        intro:
+          "Trasforma l’accesso al cibo in un’esperienza più ricca di nutrimento, educazione e partecipazione continua.",
         actions: [
           "Vedere prodotti, piantine e offerte di mercato",
           "Imparare su cibo, ricette e nutrizione",
@@ -798,7 +821,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       grower: {
         title: "Percorso Coltivatore",
-        intro: "Supporta pianificazione, produzione, apprendimento e connessione dentro un ecosistema agricolo condiviso.",
+        intro:
+          "Supporta pianificazione, produzione, apprendimento e connessione dentro un ecosistema agricolo condiviso.",
         actions: [
           "Rivedere priorità di coltivazione e ritmo stagionale",
           "Accedere a idee di pianificazione basate sul ruolo",
@@ -813,7 +837,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       producer: {
         title: "Percorso Produttore a Valore Aggiunto",
-        intro: "Supporta creatori, venditori e trasformatori che ampliano il valore dei prodotti agricoli per la comunità.",
+        intro:
+          "Supporta creatori, venditori e trasformatori che ampliano il valore dei prodotti agricoli per la comunità.",
         actions: [
           "Esplorare partecipazione a eventi e mercato",
           "Collegare prodotti a narrazione e visibilità",
@@ -828,7 +853,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       youth: {
         title: "Percorso Forza Lavoro Giovanile",
-        intro: "Collega i giovani a lavoro, competenze, tutoraggio e supporto attraverso esperienza pratica in fattoria.",
+        intro:
+          "Collega i giovani a lavoro, competenze, tutoraggio e supporto attraverso esperienza pratica in fattoria.",
         actions: [
           "Vedere esperienze di apprendimento giovanile",
           "Vedere funzioni di supporto per i genitori",
@@ -843,7 +869,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       admin: {
         title: "Percorso Amministratore",
-        intro: "Riflette la vista di leadership su operazioni, partnership, coinvolgimento e impatto territoriale.",
+        intro:
+          "Riflette la vista di leadership su operazioni, partnership, coinvolgimento e impatto territoriale.",
         actions: [
           "Monitorare attività e visibilità dell’ecosistema",
           "Vedere i percorsi tra ruoli ed esperienze",
@@ -860,7 +887,8 @@ const translations: Record<LanguageKey, LangPack> = {
     youthContent: {
       overview: {
         title: "Esperienza Giovani",
-        body: "I giovani vivono un apprendimento strutturato e reale che collega lavoro, natura, disciplina, creatività e comunità.",
+        body:
+          "I giovani vivono un apprendimento strutturato e reale che collega lavoro, natura, disciplina, creatività e comunità.",
         bullets: [
           "Apprendimento pratico e responsabilità in fattoria",
           "Costruzione della fiducia attraverso contributo visibile",
@@ -869,7 +897,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       parent: {
         title: "Portale Genitori",
-        body: "I genitori possono capire il percorso, vedere il valore della partecipazione e connettersi alle strutture di supporto.",
+        body:
+          "I genitori possono capire il percorso, vedere il valore della partecipazione e connettersi alle strutture di supporto.",
         bullets: [
           "Comunicazione chiara sulle aspettative",
           "Connessione familiare con progresso e opportunità",
@@ -878,7 +907,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       supervisor: {
         title: "Vista Supervisore",
-        body: "Esiste solo dentro l’esperienza giovanile e supporta personale, responsabilità e allineamento delle risorse.",
+        body:
+          "Esiste solo dentro l’esperienza giovanile e supporta personale, responsabilità e allineamento delle risorse.",
         bullets: [
           "Supervisione e supporto basati sul ruolo",
           "Consapevolezza del progresso e pianificazione dell’intervento",
@@ -887,11 +917,13 @@ const translations: Record<LanguageKey, LangPack> = {
       },
     },
   },
+
   patwa: {
     languageName: "Patwa",
     dir: "ltr",
     appTitle: "Bronson Family Farm",
-    appSubtitle: "A one place system fi family, food, wellness, an opportunity",
+    appSubtitle:
+      "A one place system fi family, food, wellness, an opportunity",
     heroKicker: "A live demo experience",
     enterDemo: "Go Ina Di Demo",
     guidedDemo: "Start Guided Tour",
@@ -903,7 +935,8 @@ const translations: Record<LanguageKey, LangPack> = {
     localTime: "Local Time",
     seasonPulse: "Season Pulse",
     placeBased: "Place-Based System",
-    welcomeHeadline: "Dis more than farm. A living system weh root inna land, family, food, an future.",
+    welcomeHeadline:
+      "Dis more than farm. A living system weh root inna land, family, food, an future.",
     welcomeBody:
       "Bronson Family Farm bring together guest, customer, grower, youth, producer, an partner inna one place weh relationship create result.",
     missionLabel: "Wah dis place do",
@@ -911,7 +944,8 @@ const translations: Record<LanguageKey, LangPack> = {
       "It grow food, build people, strengthen family, restore land, create opportunity, an show how one place can activate one whole ecosystem.",
     chooseLanguage: "Choose language",
     choosePathway: "Choose pathway",
-    pathwayHint: "Every pathway show yuh a different part a di ecosystem.",
+    pathwayHint:
+      "Every pathway show yuh a different part a di ecosystem.",
     livePanelTitle: "Pon Di Farm Today",
     livePanelText:
       "Explore role pathways, guided voice, seasonal planning, marketplace access, an youth workforce features inna one smooth experience.",
@@ -926,13 +960,15 @@ const translations: Record<LanguageKey, LangPack> = {
     roleIntroLabel: "Purpose",
     roleActionsLabel: "Wah dis role can do",
     roleOutcomesLabel: "Wah dis role gain",
-    customerMarketplaceHint: "Customer can move straight ina di marketplace fi produce, education, recipe, an buying pathway.",
+    customerMarketplaceHint:
+      "Customer can move straight ina di marketplace fi produce, education, recipe, an buying pathway.",
     youthModesLabel: "Youth Workforce Views",
     youthOverview: "Youth Experience",
     youthParent: "Parent Portal",
     youthSupervisor: "Supervisor View",
     marketplaceTitle: "Marketplace Experience",
-    marketplaceSubtitle: "Food access, education, discovery, an buying pathway link up yah so.",
+    marketplaceSubtitle:
+      "Food access, education, discovery, an buying pathway link up yah so.",
     marketplaceBlocks: [
       {
         title: "Shop an Reserve",
@@ -950,7 +986,8 @@ const translations: Record<LanguageKey, LangPack> = {
     storyTitle: "Why dis matter",
     storyBody:
       "Di farm a di platform. Di place itself create food, belonging, visibility, skills, healing, an long-term community value.",
-    footerLine: "Bronson Family Farm nah just grow crop. It a grow community.",
+    footerLine:
+      "Bronson Family Farm nah just grow crop. It a grow community.",
     guidedSteps: [
       "Welcome to Bronson Family Farm, a place-based system weh bring land, relationship, food, an opportunity together.",
       "Guest get di story, di atmosphere, an di mission as di front door to di ecosystem.",
@@ -962,7 +999,8 @@ const translations: Record<LanguageKey, LangPack> = {
     roleContent: {
       guest: {
         title: "Guest Pathway",
-        intro: "Dis pathway welcome visitor into di story, place, an purpose a Bronson Family Farm.",
+        intro:
+          "Dis pathway welcome visitor into di story, place, an purpose a Bronson Family Farm.",
         actions: [
           "Discover di mission an legacy a di farm",
           "Explore event an seasonal experience",
@@ -977,7 +1015,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       customer: {
         title: "Customer Pathway",
-        intro: "Dis pathway turn food access into a richer experience a nourishment, education, an ongoing participation.",
+        intro:
+          "Dis pathway turn food access into a richer experience a nourishment, education, an ongoing participation.",
         actions: [
           "View produce, seedlings, an market offerings",
           "Learn bout food, recipe, an nutrition",
@@ -992,7 +1031,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       grower: {
         title: "Grower Pathway",
-        intro: "Dis pathway support planning, production, learning, an connection ina one shared agricultural ecosystem.",
+        intro:
+          "Dis pathway support planning, production, learning, an connection ina one shared agricultural ecosystem.",
         actions: [
           "Review growing priorities an seasonal rhythm",
           "Access role-based planning ideas",
@@ -1007,7 +1047,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       producer: {
         title: "Value-Added Producer Pathway",
-        intro: "Dis pathway support maker, vendor, an processor weh help turn farm product into wider community value.",
+        intro:
+          "Dis pathway support maker, vendor, an processor weh help turn farm product into wider community value.",
         actions: [
           "Explore event an market participation",
           "Connect product to storytelling an visibility",
@@ -1022,7 +1063,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       youth: {
         title: "Youth Workforce Pathway",
-        intro: "Dis pathway link young people to work, skills, mentorship, an support through hands-on farm experience.",
+        intro:
+          "Dis pathway link young people to work, skills, mentorship, an support through hands-on farm experience.",
         actions: [
           "View youth learning experience",
           "See parent support features",
@@ -1037,7 +1079,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       admin: {
         title: "Administrator Pathway",
-        intro: "Dis pathway show di leadership view a operations, partnership, engagement, an place-based impact.",
+        intro:
+          "Dis pathway show di leadership view a operations, partnership, engagement, an place-based impact.",
         actions: [
           "Track ecosystem activity an visibility",
           "See pathways across roles an experiences",
@@ -1054,7 +1097,8 @@ const translations: Record<LanguageKey, LangPack> = {
     youthContent: {
       overview: {
         title: "Youth Experience",
-        body: "Young people get structured real-world learning weh connect work, nature, discipline, creativity, an community.",
+        body:
+          "Young people get structured real-world learning weh connect work, nature, discipline, creativity, an community.",
         bullets: [
           "Hands-on learning an farm responsibility",
           "Confidence through visible contribution",
@@ -1063,7 +1107,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       parent: {
         title: "Parent Portal",
-        body: "Parent can understand di pathway, see di value, an connect wid support around youth growth.",
+        body:
+          "Parent can understand di pathway, see di value, an connect wid support around youth growth.",
         bullets: [
           "Clear communication bout expectation",
           "Family connection to progress an opportunity",
@@ -1072,7 +1117,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       supervisor: {
         title: "Supervisor View",
-        body: "Dis only live inside di youth workforce experience an support staffing, accountability, an resource alignment.",
+        body:
+          "Dis only live inside di youth workforce experience an support staffing, accountability, an resource alignment.",
         bullets: [
           "Role-based oversight an support",
           "Progress awareness an intervention planning",
@@ -1081,11 +1127,13 @@ const translations: Record<LanguageKey, LangPack> = {
       },
     },
   },
+
   he: {
     languageName: "עברית",
     dir: "rtl",
     appTitle: "Bronson Family Farm",
-    appSubtitle: "מערכת מבוססת מקום למשפחה, מזון, רווחה והזדמנות",
+    appSubtitle:
+      "מערכת מבוססת מקום למשפחה, מזון, רווחה והזדמנות",
     heroKicker: "חוויית דמו חיה",
     enterDemo: "כניסה לדמו",
     guidedDemo: "התחל סיור מודרך",
@@ -1097,7 +1145,8 @@ const translations: Record<LanguageKey, LangPack> = {
     localTime: "שעה מקומית",
     seasonPulse: "דופק עונתי",
     placeBased: "מערכת מבוססת מקום",
-    welcomeHeadline: "יותר מחווה. מערכת חיה המושרשת באדמה, במשפחה, במזון ובעתיד.",
+    welcomeHeadline:
+      "יותר מחווה. מערכת חיה המושרשת באדמה, במשפחה, במזון ובעתיד.",
     welcomeBody:
       "Bronson Family Farm מחברת מבקרים, לקוחות, מגדלים, צעירים, יצרנים ושותפים במקום אחד שבו יחסים יוצרים תוצאות.",
     missionLabel: "מה המקום הזה עושה",
@@ -1120,13 +1169,15 @@ const translations: Record<LanguageKey, LangPack> = {
     roleIntroLabel: "מטרה",
     roleActionsLabel: "מה התפקיד הזה יכול לעשות",
     roleOutcomesLabel: "מה התפקיד הזה מקבל",
-    customerMarketplaceHint: "לקוחות יכולים לעבור ישירות לשוק לתוצרת, חינוך, מתכונים ונתיבי רכישה.",
+    customerMarketplaceHint:
+      "לקוחות יכולים לעבור ישירות לשוק לתוצרת, חינוך, מתכונים ונתיבי רכישה.",
     youthModesLabel: "תצוגות כוח עבודה לנוער",
     youthOverview: "חוויית נוער",
     youthParent: "פורטל הורים",
     youthSupervisor: "תצוגת מפקח",
     marketplaceTitle: "חוויית שוק",
-    marketplaceSubtitle: "גישה למזון, חינוך, גילוי ורכישה נפגשים כאן.",
+    marketplaceSubtitle:
+      "גישה למזון, חינוך, גילוי ורכישה נפגשים כאן.",
     marketplaceBlocks: [
       {
         title: "קנייה והזמנה",
@@ -1144,7 +1195,8 @@ const translations: Record<LanguageKey, LangPack> = {
     storyTitle: "למה זה חשוב",
     storyBody:
       "החווה היא הפלטפורמה. המקום עצמו יוצר מזון, שייכות, נראות, פיתוח מיומנויות, ריפוי וערך קהילתי ארוך טווח.",
-    footerLine: "Bronson Family Farm לא רק מגדלת יבולים. היא מגדלת קהילה.",
+    footerLine:
+      "Bronson Family Farm לא רק מגדלת יבולים. היא מגדלת קהילה.",
     guidedSteps: [
       "ברוכים הבאים לBronson Family Farm, מערכת מבוססת מקום שבה אדמה, יחסים, מזון והזדמנות פועלים יחד.",
       "אורחים חווים את הסיפור, האווירה והשליחות של החווה ככניסה למערכת.",
@@ -1156,7 +1208,8 @@ const translations: Record<LanguageKey, LangPack> = {
     roleContent: {
       guest: {
         title: "מסלול אורח",
-        intro: "מסלול זה מקבל את פני המבקרים לסיפור, למקום ולמטרה של Bronson Family Farm.",
+        intro:
+          "מסלול זה מקבל את פני המבקרים לסיפור, למקום ולמטרה של Bronson Family Farm.",
         actions: [
           "לגלות את השליחות והמורשת של החווה",
           "לחקור אירועים וחוויות עונתיות",
@@ -1171,7 +1224,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       customer: {
         title: "מסלול לקוח",
-        intro: "מסלול זה הופך גישה למזון לחוויה עשירה יותר של הזנה, חינוך והשתתפות מתמשכת.",
+        intro:
+          "מסלול זה הופך גישה למזון לחוויה עשירה יותר של הזנה, חינוך והשתתפות מתמשכת.",
         actions: [
           "לראות תוצרת, שתילים והיצע שוק",
           "ללמוד על מזון, מתכונים ותזונה",
@@ -1186,7 +1240,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       grower: {
         title: "מסלול מגדל",
-        intro: "מסלול זה תומך בתכנון, ייצור, למידה וחיבור בתוך מערכת חקלאית משותפת.",
+        intro:
+          "מסלול זה תומך בתכנון, ייצור, למידה וחיבור בתוך מערכת חקלאית משותפת.",
         actions: [
           "לסקור עדיפויות גידול וקצב עונתי",
           "לקבל רעיונות תכנון לפי תפקיד",
@@ -1201,7 +1256,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       producer: {
         title: "מסלול יצרן בעל ערך מוסף",
-        intro: "מסלול זה תומך ביצרנים, ספקים ומעבדים שמרחיבים את ערך מוצרי החווה לקהילה.",
+        intro:
+          "מסלול זה תומך ביצרנים, ספקים ומעבדים שמרחיבים את ערך מוצרי החווה לקהילה.",
         actions: [
           "לחקור השתתפות באירועים ובשוק",
           "לחבר מוצרים לסיפור ולנראות",
@@ -1216,7 +1272,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       youth: {
         title: "מסלול כוח עבודה לנוער",
-        intro: "מסלול זה מחבר צעירים לעבודה, מיומנויות, חונכות ותמיכה דרך חוויית חווה מעשית.",
+        intro:
+          "מסלול זה מחבר צעירים לעבודה, מיומנויות, חונכות ותמיכה דרך חוויית חווה מעשית.",
         actions: [
           "לראות חוויות למידה לנוער",
           "לראות תכונות תמיכה להורים",
@@ -1231,7 +1288,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       admin: {
         title: "מסלול מנהל",
-        intro: "מסלול זה משקף את מבט ההנהגה על תפעול, שותפויות, מעורבות והשפעה מבוססת מקום.",
+        intro:
+          "מסלול זה משקף את מבט ההנהגה על תפעול, שותפויות, מעורבות והשפעה מבוססת מקום.",
         actions: [
           "לעקוב אחר פעילות ונראות המערכת",
           "לראות מסלולים בין תפקידים וחוויות",
@@ -1248,7 +1306,8 @@ const translations: Record<LanguageKey, LangPack> = {
     youthContent: {
       overview: {
         title: "חוויית נוער",
-        body: "צעירים חווים למידה מובנית ומציאותית המחברת עבודה, טבע, משמעת, יצירתיות וקהילה.",
+        body:
+          "צעירים חווים למידה מובנית ומציאותית המחברת עבודה, טבע, משמעת, יצירתיות וקהילה.",
         bullets: [
           "למידה מעשית ואחריות בחווה",
           "בניית ביטחון דרך תרומה נראית לעין",
@@ -1257,7 +1316,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       parent: {
         title: "פורטל הורים",
-        body: "הורים יכולים להבין את המסלול, לראות את ערך ההשתתפות ולהתחבר למבני התמיכה סביב צמיחת הנוער.",
+        body:
+          "הורים יכולים להבין את המסלול, לראות את ערך ההשתתפות ולהתחבר למבני התמיכה סביב צמיחת הנוער.",
         bullets: [
           "תקשורת ברורה לגבי ציפיות",
           "חיבור משפחתי להתקדמות ולהזדמנות",
@@ -1266,7 +1326,8 @@ const translations: Record<LanguageKey, LangPack> = {
       },
       supervisor: {
         title: "תצוגת מפקח",
-        body: "תצוגה זו קיימת רק בתוך חוויית כוח העבודה לנוער ותומכת בכוח אדם, אחריות ויישור משאבים.",
+        body:
+          "תצוגה זו קיימת רק בתוך חוויית כוח העבודה לנוער ותומכת בכוח אדם, אחריות ויישור משאבים.",
         bullets: [
           "פיקוח ותמיכה לפי תפקיד",
           "מודעות להתקדמות ותכנון התערבות",
@@ -1277,12 +1338,6 @@ const translations: Record<LanguageKey, LangPack> = {
   },
 };
 
-const roleOrder: RoleKey[] = ["guest", "customer", "grower", "producer", "youth", "admin"];
-
-function classNames(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
-
 function useLocalClock() {
   const [time, setTime] = useState(new Date());
   useEffect(() => {
@@ -1292,16 +1347,9 @@ function useLocalClock() {
   return time;
 }
 
-function getSeasonPulse(date: Date) {
-  const month = date.getMonth() + 1;
-  if ([12, 1, 2].includes(month)) return "Planning, visioning, protected growth";
-  if ([3, 4, 5].includes(month)) return "Seedtime, preparation, early expansion";
-  if ([6, 7, 8].includes(month)) return "Peak growth, learning, markets, activity";
-  return "Harvest rhythm, transition, storage, next-cycle design";
-}
-
 function useSpeech() {
   const [enabled, setEnabled] = useState(false);
+
   const speak = (text: string, lang: string) => {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
@@ -1311,10 +1359,12 @@ function useSpeech() {
     utterance.pitch = 1;
     window.speechSynthesis.speak(utterance);
   };
+
   const stop = () => {
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     setEnabled(false);
   };
+
   return { enabled, setEnabled, speak, stop };
 }
 
@@ -1327,538 +1377,974 @@ const speechCodes: Record<LanguageKey, string> = {
   he: "he-IL",
 };
 
-function BackgroundVisual({
-  src,
-  alt,
-  gradientClass,
-  icon,
-}: {
-  src: string;
-  alt: string;
-  gradientClass: string;
-  icon: string;
-}) {
-  const [errored, setErrored] = useState(false);
+function getSeasonPulse(date: Date) {
+  const month = date.getMonth() + 1;
+  if ([12, 1, 2].includes(month)) return "Planning, visioning, protected growth";
+  if ([3, 4, 5].includes(month)) return "Seedtime, preparation, early expansion";
+  if ([6, 7, 8].includes(month)) return "Peak growth, learning, markets, activity";
+  return "Harvest rhythm, transition, storage, next-cycle design";
+}
 
+function formatLocalTime(date: Date, language: LanguageKey) {
+  try {
+    return new Intl.DateTimeFormat(language === "he" ? "he-IL" : "en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+    }).format(date);
+  } catch {
+    return date.toLocaleString();
+  }
+}
+
+function gradientForRole(role: RoleKey | "entrance" | "marketplace") {
+  switch (role) {
+    case "entrance":
+      return "linear-gradient(135deg, #0b1f16 0%, #224d37 45%, #8e7d42 100%)";
+    case "guest":
+      return "linear-gradient(135deg, #1e2d1f 0%, #35563d 50%, #9e8c58 100%)";
+    case "customer":
+      return "linear-gradient(135deg, #14322a 0%, #26704e 50%, #d6a84c 100%)";
+    case "grower":
+      return "linear-gradient(135deg, #102615 0%, #2f6d3a 55%, #9cb85f 100%)";
+    case "producer":
+      return "linear-gradient(135deg, #2c1b12 0%, #70523a 50%, #c49b64 100%)";
+    case "youth":
+      return "linear-gradient(135deg, #142033 0%, #285f74 50%, #79a96d 100%)";
+    case "admin":
+      return "linear-gradient(135deg, #201625 0%, #3f3d64 50%, #8073a9 100%)";
+    case "marketplace":
+      return "linear-gradient(135deg, #201710 0%, #5f4625 50%, #b98a38 100%)";
+  }
+}
+
+function getImageForScreen(screen: ScreenKey, role: RoleKey) {
+  if (screen === "entrance") return "/FarmEntrance.jpg";
+  if (screen === "marketplace") return "/Marketplace.jpg";
+  return roleCards.find((r) => r.key === role)?.image || "/FarmEntrance.jpg";
+}
+
+function GlassCard({
+  title,
+  children,
+}: {
+  title?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      {!errored ? (
-        <img
-          src={src}
-          alt={alt}
-          onError={() => setErrored(true)}
-          className="h-full w-full object-cover scale-[1.02] opacity-55"
-        />
-      ) : (
-        <div className={classNames("h-full w-full bg-gradient-to-br", gradientClass)}>
-          <div className="absolute inset-0 opacity-10 [background-image:radial-gradient(circle_at_center,white_1px,transparent_1px)] [background-size:28px_28px]" />
-          <div className="absolute inset-0 flex items-center justify-center text-[140px] md:text-[220px] opacity-20">
-            {icon}
-          </div>
+    <div
+      style={{
+        background: "rgba(8, 12, 10, 0.50)",
+        border: "1px solid rgba(255,255,255,0.12)",
+        borderRadius: 28,
+        backdropFilter: "blur(14px)",
+        boxShadow: "0 18px 50px rgba(0,0,0,0.28)",
+        overflow: "hidden",
+      }}
+    >
+      {title ? (
+        <div
+          style={{
+            padding: "16px 20px",
+            borderBottom: "1px solid rgba(255,255,255,0.10)",
+            color: "rgba(255,255,255,0.82)",
+            fontSize: 12,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            fontWeight: 700,
+          }}
+        >
+          {title}
         </div>
-      )}
-      <div className="absolute inset-0 bg-black/45" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/10" />
+      ) : null}
+      <div style={{ padding: 20 }}>{children}</div>
     </div>
   );
 }
 
-function Pill({ children }: { children: React.ReactNode }) {
+function ActionButton({
+  label,
+  onClick,
+  active = false,
+  primary = false,
+}: {
+  label: string;
+  onClick: () => void;
+  active?: boolean;
+  primary?: boolean;
+}) {
   return (
-    <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs md:text-sm tracking-wide text-white/90 backdrop-blur">
-      {children}
+    <button
+      onClick={onClick}
+      style={{
+        padding: "13px 18px",
+        borderRadius: 16,
+        border: primary
+          ? "1px solid rgba(255,255,255,0.0)"
+          : active
+          ? "1px solid rgba(199, 255, 190, 0.8)"
+          : "1px solid rgba(255,255,255,0.14)",
+        background: primary
+          ? "#dff3c7"
+          : active
+          ? "rgba(171, 239, 146, 0.18)"
+          : "rgba(255,255,255,0.10)",
+        color: primary ? "#102012" : "#ffffff",
+        fontWeight: 700,
+        fontSize: 14,
+        cursor: "pointer",
+        boxShadow: primary ? "0 10px 22px rgba(171, 239, 146, 0.25)" : "none",
+      }}
+    >
+      {label}
+    </button>
+  );
+}
+
+function Pill({ text }: { text: string }) {
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        padding: "8px 12px",
+        borderRadius: 999,
+        border: "1px solid rgba(255,255,255,0.18)",
+        background: "rgba(255,255,255,0.08)",
+        color: "rgba(255,255,255,0.92)",
+        fontSize: 12,
+        fontWeight: 600,
+        backdropFilter: "blur(10px)",
+      }}
+    >
+      {text}
     </span>
   );
 }
 
-function SectionCard({
+function InfoBlock({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        background: "rgba(255,255,255,0.08)",
+        borderRadius: 20,
+        padding: 16,
+        color: "rgba(255,255,255,0.92)",
+        lineHeight: 1.6,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function RoleTile({
   title,
-  children,
-  className = "",
+  intro,
+  image,
+  icon,
+  active,
+  onClick,
 }: {
   title: string;
-  children: React.ReactNode;
-  className?: string;
+  intro: string;
+  image: string;
+  icon: string;
+  active: boolean;
+  onClick: () => void;
 }) {
+  const [imgError, setImgError] = useState(false);
+
   return (
-    <div className={classNames("rounded-3xl border border-white/10 bg-white/10 backdrop-blur-md shadow-2xl", className)}>
-      <div className="border-b border-white/10 px-5 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-white/80">
-        {title}
+    <button
+      onClick={onClick}
+      style={{
+        width: "100%",
+        border: active
+          ? "1px solid rgba(201,255,185,0.75)"
+          : "1px solid rgba(255,255,255,0.10)",
+        borderRadius: 24,
+        overflow: "hidden",
+        background: "rgba(255,255,255,0.06)",
+        cursor: "pointer",
+        textAlign: "left",
+        boxShadow: active ? "0 0 0 1px rgba(201,255,185,0.18)" : "none",
+      }}
+    >
+      <div style={{ position: "relative", height: 150, overflow: "hidden" }}>
+        {!imgError ? (
+          <img
+            src={image}
+            alt={title}
+            onError={() => setImgError(true)}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+              opacity: 0.65,
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              background: "linear-gradient(135deg, #19341f 0%, #3c6f4e 55%, #9e8c58 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 64,
+              opacity: 0.85,
+            }}
+          >
+            {icon}
+          </div>
+        )}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.35), rgba(0,0,0,0.20))",
+          }}
+        />
+        <div style={{ position: "absolute", left: 16, right: 16, bottom: 14 }}>
+          <div style={{ color: "#fff", fontWeight: 800, fontSize: 19 }}>{title}</div>
+          <div
+            style={{
+              marginTop: 6,
+              color: "rgba(255,255,255,0.78)",
+              fontSize: 13,
+              lineHeight: 1.45,
+            }}
+          >
+            {intro}
+          </div>
+        </div>
       </div>
-      <div className="p-5">{children}</div>
-    </div>
+    </button>
   );
 }
 
 export default function App() {
   const [language, setLanguage] = useState<LanguageKey>("en");
-  const t = translations[language];
-
   const [screen, setScreen] = useState<ScreenKey>("entrance");
   const [selectedRole, setSelectedRole] = useState<RoleKey>("guest");
   const [youthView, setYouthView] = useState<YouthView>("overview");
   const [tourIndex, setTourIndex] = useState(0);
-  const [roleGridOpen, setRoleGridOpen] = useState(true);
 
+  const t = translations[language];
   const clock = useLocalClock();
-  const { enabled, setEnabled, speak, stop } = useSpeech();
-  const tourTimer = useRef<number | null>(null);
+  const speech = useSpeech();
+  const timerRef = useRef<number | null>(null);
 
-  const currentRoleContent = t.roleContent[selectedRole];
-  const roleCard = roleCards.find((r) => r.key === selectedRole) ?? roleCards[0];
-  const entranceVisual = roleCards[0];
+  const roleContent = t.roleContent[selectedRole];
+  const youthContent = t.youthContent[youthView];
+  const currentImage = getImageForScreen(screen, selectedRole);
+  const currentRoleCard = roleCards.find((r) => r.key === selectedRole)!;
 
-  const localTimeDisplay = useMemo(() => {
-    try {
-      return new Intl.DateTimeFormat(language === "he" ? "he-IL" : "en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        month: "long",
-        day: "numeric",
-        weekday: "long",
-      }).format(clock);
-    } catch {
-      return clock.toLocaleTimeString();
-    }
-  }, [clock, language]);
-
-  const seasonPulse = getSeasonPulse(clock);
+  const timeText = useMemo(() => formatLocalTime(clock, language), [clock, language]);
+  const seasonText = getSeasonPulse(clock);
 
   useEffect(() => {
-    if (!enabled) {
-      if (tourTimer.current) window.clearInterval(tourTimer.current);
+    if (!speech.enabled) {
+      if (timerRef.current) window.clearInterval(timerRef.current);
       return;
     }
 
-    const steps = t.guidedSteps;
-    speak(steps[tourIndex], speechCodes[language]);
+    speech.speak(t.guidedSteps[tourIndex], speechCodes[language]);
 
-    tourTimer.current = window.setInterval(() => {
-      setTourIndex((prev) => {
-        const next = (prev + 1) % steps.length;
-        return next;
-      });
+    if (timerRef.current) window.clearInterval(timerRef.current);
+    timerRef.current = window.setInterval(() => {
+      setTourIndex((prev) => (prev + 1) % t.guidedSteps.length);
     }, 7000);
 
     return () => {
-      if (tourTimer.current) window.clearInterval(tourTimer.current);
+      if (timerRef.current) window.clearInterval(timerRef.current);
     };
-  }, [enabled, language]); // intentionally not including tourIndex here
+  }, [speech.enabled, tourIndex, language, t.guidedSteps]);
 
   useEffect(() => {
-    if (!enabled) return;
-    const steps = t.guidedSteps;
-    speak(steps[tourIndex], speechCodes[language]);
+    if (!speech.enabled) return;
 
     if (tourIndex === 0) {
       setScreen("entrance");
-    } else if (tourIndex >= 1 && tourIndex <= 4) {
+    } else if (tourIndex === 1) {
       setScreen("role");
-      setSelectedRole(roleOrder[tourIndex - 1]);
-      if (roleOrder[tourIndex - 1] === "youth") setYouthView("overview");
+      setSelectedRole("guest");
+    } else if (tourIndex === 2) {
+      setScreen("role");
+      setSelectedRole("customer");
+    } else if (tourIndex === 3) {
+      setScreen("role");
+      setSelectedRole("grower");
+    } else if (tourIndex === 4) {
+      setScreen("role");
+      setSelectedRole("youth");
+      setYouthView("overview");
     } else {
       setScreen("marketplace");
     }
-  }, [tourIndex, enabled, language, t.guidedSteps]);
+  }, [tourIndex, speech.enabled]);
 
   useEffect(() => {
-    return () => stop();
+    return () => speech.stop();
   }, []);
 
-  const startGuidedTour = () => {
-    setEnabled(true);
+  const startTour = () => {
     setTourIndex(0);
+    speech.setEnabled(true);
     setScreen("entrance");
   };
 
-  const stopGuidedTour = () => {
-    stop();
-    if (tourTimer.current) window.clearInterval(tourTimer.current);
+  const stopTour = () => {
+    speech.stop();
+    if (timerRef.current) window.clearInterval(timerRef.current);
   };
 
   const openRole = (role: RoleKey) => {
-    setScreen("role");
     setSelectedRole(role);
+    setScreen("role");
     if (role === "youth") setYouthView("overview");
-    setRoleGridOpen(false);
-    if (enabled) {
-      const idx = roleOrder.indexOf(role);
-      if (idx >= 0) setTourIndex(idx + 1);
-    }
   };
 
-  const openMarketplace = () => {
-    setScreen("marketplace");
-    if (enabled) setTourIndex(5);
-  };
+  const pageBg = gradientForRole(
+    screen === "entrance" ? "entrance" : screen === "marketplace" ? "marketplace" : selectedRole
+  );
 
-  const youthPanel = t.youthContent[youthView];
-
-  const navButtonBase =
-    "rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/20 active:scale-[0.99]";
+  const [imgError, setImgError] = useState(false);
 
   return (
     <div
       dir={t.dir}
-      className="min-h-screen bg-black text-white selection:bg-emerald-300 selection:text-black"
+      style={{
+        minHeight: "100vh",
+        fontFamily:
+          'Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+        color: "#ffffff",
+        background: pageBg,
+      }}
     >
-      <div className="relative min-h-screen">
-        <BackgroundVisual
-          src={screen === "entrance" ? entranceVisual.image : screen === "marketplace" ? "/Marketplace.jpg" : roleCard.image}
-          alt={screen === "entrance" ? "Bronson Family Farm entrance" : screen === "marketplace" ? "Marketplace" : currentRoleContent.title}
-          gradientClass={fallbackGradients[(screen === "entrance" ? 0 : screen === "marketplace" ? 5 : roleOrder.indexOf(selectedRole)) % fallbackGradients.length]}
-          icon={screen === "entrance" ? "🌲" : screen === "marketplace" ? "🧺" : roleCard.fallbackIcon}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          overflow: "hidden",
+          zIndex: 0,
+        }}
+      >
+        {!imgError ? (
+          <img
+            src={currentImage}
+            alt="background"
+            onError={() => setImgError(true)}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.38,
+              transform: "scale(1.03)",
+            }}
+          />
+        ) : null}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, rgba(3,8,6,0.40), rgba(3,8,6,0.62), rgba(3,8,6,0.84))",
+          }}
         />
+      </div>
 
-        <div className="relative z-10 min-h-screen px-4 py-4 md:px-8 md:py-6">
-          <header className="mx-auto mb-6 max-w-7xl rounded-[28px] border border-white/10 bg-black/25 px-4 py-4 backdrop-blur-xl md:px-6">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="min-w-0">
-                <div className="mb-2 flex flex-wrap gap-2">
-                  <Pill>{t.heroKicker}</Pill>
-                  <Pill>{t.placeBased}</Pill>
-                  <Pill>{t.seasonPulse}: {seasonPulse}</Pill>
-                </div>
-                <h1 className="text-2xl font-semibold tracking-tight md:text-4xl">{t.appTitle}</h1>
-                <p className="mt-1 max-w-3xl text-sm text-white/80 md:text-base">{t.appSubtitle}</p>
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          maxWidth: 1360,
+          margin: "0 auto",
+          padding: "22px 18px 40px",
+        }}
+      >
+        <div
+          style={{
+            background: "rgba(6, 10, 8, 0.40)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            borderRadius: 28,
+            padding: 22,
+            backdropFilter: "blur(16px)",
+            boxShadow: "0 18px 50px rgba(0,0,0,0.25)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 20,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ minWidth: 280, flex: "1 1 520px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 10,
+                  flexWrap: "wrap",
+                  marginBottom: 14,
+                }}
+              >
+                <Pill text={t.heroKicker} />
+                <Pill text={t.placeBased} />
+                <Pill text={`${t.seasonPulse}: ${seasonText}`} />
               </div>
 
-              <div className="grid gap-2 sm:grid-cols-2 lg:flex lg:flex-wrap lg:justify-end">
-                <button className={navButtonBase} onClick={() => setScreen("entrance")}>
-                  {t.backToEntrance}
-                </button>
-                <button className={navButtonBase} onClick={() => setRoleGridOpen((v) => !v)}>
-                  {t.exploreRoles}
-                </button>
-                <button className={navButtonBase} onClick={openMarketplace}>
-                  {t.openMarketplace}
-                </button>
-                {!enabled ? (
-                  <button
-                    className="rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-emerald-400 active:scale-[0.99]"
-                    onClick={startGuidedTour}
-                  >
-                    {t.guidedDemo}
-                  </button>
-                ) : (
-                  <button
-                    className="rounded-2xl bg-amber-300 px-4 py-3 text-sm font-semibold text-black transition hover:bg-amber-200 active:scale-[0.99]"
-                    onClick={stopGuidedTour}
-                  >
-                    {t.stopGuidedDemo}
-                  </button>
-                )}
+              <div
+                style={{
+                  fontSize: 46,
+                  fontWeight: 900,
+                  lineHeight: 1.05,
+                  letterSpacing: "-0.03em",
+                }}
+              >
+                {t.appTitle}
+              </div>
+
+              <div
+                style={{
+                  marginTop: 8,
+                  fontSize: 18,
+                  lineHeight: 1.5,
+                  color: "rgba(255,255,255,0.82)",
+                  maxWidth: 760,
+                }}
+              >
+                {t.appSubtitle}
               </div>
             </div>
-          </header>
 
-          <main className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-12">
-            <section className="lg:col-span-8">
-              {screen === "entrance" && (
-                <div className="space-y-6">
-                  <div className="rounded-[32px] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur-xl md:p-8">
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      <Pill>{t.localTime}: {localTimeDisplay}</Pill>
-                      <Pill>{t.chooseLanguage}</Pill>
-                    </div>
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+                alignItems: "center",
+              }}
+            >
+              <ActionButton label={t.backToEntrance} onClick={() => setScreen("entrance")} />
+              <ActionButton label={t.exploreRoles} onClick={() => setScreen("role")} />
+              <ActionButton label={t.openMarketplace} onClick={() => setScreen("marketplace")} />
+              {!speech.enabled ? (
+                <ActionButton label={t.guidedDemo} onClick={startTour} primary />
+              ) : (
+                <ActionButton label={t.stopGuidedDemo} onClick={stopTour} primary />
+              )}
+            </div>
+          </div>
+        </div>
 
-                    <h2 className="max-w-4xl text-3xl font-semibold leading-tight tracking-tight md:text-6xl">
-                      {t.welcomeHeadline}
-                    </h2>
-                    <p className="mt-4 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
-                      {t.welcomeBody}
-                    </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 2fr) minmax(320px, 1fr)",
+            gap: 22,
+            marginTop: 22,
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            {screen === "entrance" && (
+              <>
+                <GlassCard>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                      flexWrap: "wrap",
+                      marginBottom: 16,
+                    }}
+                  >
+                    <Pill text={`${t.localTime}: ${timeText}`} />
+                    <Pill text={t.chooseLanguage} />
+                  </div>
 
-                    <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                      {(Object.keys(translations) as LanguageKey[]).map((lang) => (
-                        <button
-                          key={lang}
-                          onClick={() => setLanguage(lang)}
-                          className={classNames(
-                            "rounded-2xl border px-4 py-3 text-left transition",
+                  <div
+                    style={{
+                      fontSize: 58,
+                      fontWeight: 900,
+                      lineHeight: 1.02,
+                      letterSpacing: "-0.04em",
+                      maxWidth: 940,
+                    }}
+                  >
+                    {t.welcomeHeadline}
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: 18,
+                      maxWidth: 920,
+                      fontSize: 20,
+                      lineHeight: 1.7,
+                      color: "rgba(255,255,255,0.86)",
+                    }}
+                  >
+                    {t.welcomeBody}
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: 28,
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                      gap: 12,
+                    }}
+                  >
+                    {(Object.keys(translations) as LanguageKey[]).map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => setLanguage(lang)}
+                        style={{
+                          padding: "14px 14px",
+                          borderRadius: 18,
+                          border:
                             language === lang
-                              ? "border-emerald-300 bg-emerald-300 text-black"
-                              : "border-white/15 bg-white/10 text-white hover:bg-white/20"
-                          )}
-                        >
-                          <div className="text-sm font-semibold">{translations[lang].languageName}</div>
-                          <div className="text-xs opacity-80">{lang.toUpperCase()}</div>
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="mt-8 flex flex-wrap gap-3">
-                      <button
-                        onClick={() => {
-                          setScreen("role");
-                          setSelectedRole("guest");
-                          setRoleGridOpen(false);
+                              ? "1px solid rgba(219,255,201,0.9)"
+                              : "1px solid rgba(255,255,255,0.14)",
+                          background:
+                            language === lang
+                              ? "#dff3c7"
+                              : "rgba(255,255,255,0.10)",
+                          color: language === lang ? "#112114" : "#ffffff",
+                          cursor: "pointer",
+                          fontWeight: 800,
+                          textAlign: "center",
                         }}
-                        className="rounded-2xl bg-white px-5 py-4 text-sm font-semibold text-black transition hover:bg-emerald-200"
                       >
-                        {t.enterDemo}
-                      </button>
-                      <button
-                        onClick={startGuidedTour}
-                        className="rounded-2xl border border-white/15 bg-white/10 px-5 py-4 text-sm font-semibold text-white transition hover:bg-white/20"
-                      >
-                        {t.guidedDemo}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-6 lg:grid-cols-2">
-                    <SectionCard title={t.missionLabel}>
-                      <p className="text-base leading-7 text-white/85">{t.missionText}</p>
-                    </SectionCard>
-
-                    <SectionCard title={t.livePanelTitle}>
-                      <p className="text-base leading-7 text-white/85">{t.livePanelText}</p>
-                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl bg-black/20 p-4">
-                          <div className="text-xs uppercase tracking-[0.16em] text-white/60">{t.localTime}</div>
-                          <div className="mt-2 text-lg font-semibold">{localTimeDisplay}</div>
-                        </div>
-                        <div className="rounded-2xl bg-black/20 p-4">
-                          <div className="text-xs uppercase tracking-[0.16em] text-white/60">{t.seasonPulse}</div>
-                          <div className="mt-2 text-lg font-semibold">{seasonPulse}</div>
-                        </div>
-                      </div>
-                    </SectionCard>
-                  </div>
-                </div>
-              )}
-
-              {screen === "role" && (
-                <div className="space-y-6">
-                  <div className="rounded-[32px] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur-xl md:p-8">
-                    <div className="mb-3 flex flex-wrap gap-2">
-                      <Pill>{t.roleTitle}</Pill>
-                      <Pill>{currentRoleContent.title}</Pill>
-                    </div>
-
-                    <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-                      <div>
-                        <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
-                          {currentRoleContent.title}
-                        </h2>
-                        <p className="mt-4 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
-                          {currentRoleContent.intro}
-                        </p>
-
-                        <div className="mt-6 flex flex-wrap gap-3">
-                          <button
-                            onClick={() => setScreen("entrance")}
-                            className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/20"
-                          >
-                            {t.backToEntrance}
-                          </button>
-                          {selectedRole === "customer" && (
-                            <button
-                              onClick={openMarketplace}
-                              className="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-black transition hover:bg-emerald-300"
-                            >
-                              {t.openMarketplace}
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur-md">
-                        <div className="text-xs uppercase tracking-[0.16em] text-white/60">
-                          {t.roleIntroLabel}
-                        </div>
-                        <p className="mt-3 text-base leading-7 text-white/85">{currentRoleContent.intro}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-6 lg:grid-cols-2">
-                    <SectionCard title={t.roleActionsLabel}>
-                      <ul className="space-y-3">
-                        {currentRoleContent.actions.map((item) => (
-                          <li key={item} className="rounded-2xl bg-black/20 p-4 text-white/90">
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </SectionCard>
-
-                    <SectionCard title={t.roleOutcomesLabel}>
-                      <ul className="space-y-3">
-                        {currentRoleContent.outcomes.map((item) => (
-                          <li key={item} className="rounded-2xl bg-black/20 p-4 text-white/90">
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                      {selectedRole === "customer" && (
-                        <p className="mt-4 rounded-2xl border border-emerald-300/30 bg-emerald-400/10 p-4 text-sm leading-6 text-emerald-100">
-                          {t.customerMarketplaceHint}
-                        </p>
-                      )}
-                    </SectionCard>
-                  </div>
-
-                  {selectedRole === "youth" && (
-                    <div className="rounded-[32px] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur-xl">
-                      <div className="mb-4 flex flex-wrap items-center gap-3">
-                        <div className="text-sm font-semibold uppercase tracking-[0.18em] text-white/75">
-                          {t.youthModesLabel}
-                        </div>
-                        <button
-                          onClick={() => setYouthView("overview")}
-                          className={classNames(
-                            "rounded-2xl px-4 py-2 text-sm transition",
-                            youthView === "overview"
-                              ? "bg-white text-black"
-                              : "border border-white/15 bg-white/10 text-white hover:bg-white/20"
-                          )}
+                        <div style={{ fontSize: 15 }}>{translations[lang].languageName}</div>
+                        <div
+                          style={{
+                            marginTop: 4,
+                            fontSize: 12,
+                            opacity: 0.8,
+                            letterSpacing: "0.08em",
+                          }}
                         >
-                          {t.youthOverview}
-                        </button>
-                        <button
-                          onClick={() => setYouthView("parent")}
-                          className={classNames(
-                            "rounded-2xl px-4 py-2 text-sm transition",
-                            youthView === "parent"
-                              ? "bg-white text-black"
-                              : "border border-white/15 bg-white/10 text-white hover:bg-white/20"
-                          )}
-                        >
-                          {t.youthParent}
-                        </button>
-                        <button
-                          onClick={() => setYouthView("supervisor")}
-                          className={classNames(
-                            "rounded-2xl px-4 py-2 text-sm transition",
-                            youthView === "supervisor"
-                              ? "bg-amber-300 text-black"
-                              : "border border-white/15 bg-white/10 text-white hover:bg-white/20"
-                          )}
-                        >
-                          {t.youthSupervisor}
-                        </button>
-                      </div>
-
-                      <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-                        <div>
-                          <h3 className="text-2xl font-semibold tracking-tight md:text-3xl">
-                            {youthPanel.title}
-                          </h3>
-                          <p className="mt-4 text-base leading-7 text-white/85">{youthPanel.body}</p>
+                          {lang.toUpperCase()}
                         </div>
-                        <div className="space-y-3">
-                          {youthPanel.bullets.map((item) => (
-                            <div key={item} className="rounded-2xl bg-white/10 p-4 text-white/90">
-                              {item}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {screen === "marketplace" && (
-                <div className="space-y-6">
-                  <div className="rounded-[32px] border border-white/10 bg-black/25 p-6 shadow-2xl backdrop-blur-xl md:p-8">
-                    <div className="mb-3 flex flex-wrap gap-2">
-                      <Pill>{t.marketplaceTitle}</Pill>
-                      <Pill>{t.placeBased}</Pill>
-                    </div>
-                    <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">{t.marketplaceTitle}</h2>
-                    <p className="mt-4 max-w-3xl text-base leading-7 text-white/85 md:text-lg">
-                      {t.marketplaceSubtitle}
-                    </p>
-
-                    <div className="mt-6 flex flex-wrap gap-3">
-                      <button
-                        onClick={() => {
-                          setScreen("role");
-                          setSelectedRole("customer");
-                        }}
-                        className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/20"
-                      >
-                        {t.returnToRoles}
                       </button>
-                      <button
-                        onClick={() => setScreen("entrance")}
-                        className="rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-black transition hover:bg-emerald-200"
-                      >
-                        {t.backToEntrance}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-6 md:grid-cols-3">
-                    {t.marketplaceBlocks.map((block) => (
-                      <SectionCard key={block.title} title={block.title}>
-                        <p className="text-base leading-7 text-white/85">{block.body}</p>
-                      </SectionCard>
                     ))}
                   </div>
 
-                  <SectionCard title={t.storyTitle}>
-                    <p className="text-base leading-7 text-white/85">{t.storyBody}</p>
-                  </SectionCard>
-                </div>
-              )}
-            </section>
+                  <div
+                    style={{
+                      marginTop: 28,
+                      display: "flex",
+                      gap: 12,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <ActionButton
+                      label={t.enterDemo}
+                      onClick={() => {
+                        setScreen("role");
+                        setSelectedRole("guest");
+                      }}
+                      primary
+                    />
+                    <ActionButton label={t.guidedDemo} onClick={startTour} />
+                  </div>
+                </GlassCard>
 
-            <aside className="space-y-6 lg:col-span-4">
-              <SectionCard title={t.choosePathway} className="sticky top-4">
-                <p className="mb-4 text-sm leading-6 text-white/75">{t.pathwayHint}</p>
-                <div className={classNames("grid gap-3", roleGridOpen ? "grid-cols-1" : "grid-cols-1")}>
-                  {roleCards.map((role, index) => {
-                    const content = t.roleContent[role.key];
-                    const active = selectedRole === role.key && screen === "role";
-                    return (
-                      <button
-                        key={role.key}
-                        onClick={() => openRole(role.key)}
-                        className={classNames(
-                          "group relative overflow-hidden rounded-3xl border text-left transition",
-                          active
-                            ? "border-emerald-300 bg-emerald-300/10"
-                            : "border-white/10 bg-white/5 hover:bg-white/10"
-                        )}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                    gap: 22,
+                    marginTop: 22,
+                  }}
+                >
+                  <GlassCard title={t.missionLabel}>
+                    <div style={{ fontSize: 18, lineHeight: 1.8, color: "rgba(255,255,255,0.88)" }}>
+                      {t.missionText}
+                    </div>
+                  </GlassCard>
+
+                  <GlassCard title={t.livePanelTitle}>
+                    <div style={{ fontSize: 18, lineHeight: 1.8, color: "rgba(255,255,255,0.88)" }}>
+                      {t.livePanelText}
+                    </div>
+
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 12,
+                        marginTop: 18,
+                      }}
+                    >
+                      <InfoBlock>
+                        <div
+                          style={{
+                            fontSize: 12,
+                            letterSpacing: "0.16em",
+                            textTransform: "uppercase",
+                            color: "rgba(255,255,255,0.62)",
+                            marginBottom: 8,
+                          }}
+                        >
+                          {t.localTime}
+                        </div>
+                        <div style={{ fontSize: 18, fontWeight: 800 }}>{timeText}</div>
+                      </InfoBlock>
+
+                      <InfoBlock>
+                        <div
+                          style={{
+                            fontSize: 12,
+                            letterSpacing: "0.16em",
+                            textTransform: "uppercase",
+                            color: "rgba(255,255,255,0.62)",
+                            marginBottom: 8,
+                          }}
+                        >
+                          {t.seasonPulse}
+                        </div>
+                        <div style={{ fontSize: 18, fontWeight: 800 }}>{seasonText}</div>
+                      </InfoBlock>
+                    </div>
+                  </GlassCard>
+                </div>
+              </>
+            )}
+
+            {screen === "role" && (
+              <>
+                <GlassCard>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+                    <Pill text={t.roleTitle} />
+                    <Pill text={roleContent.title} />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1.3fr) minmax(280px, 0.8fr)",
+                      gap: 22,
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          fontSize: 52,
+                          fontWeight: 900,
+                          lineHeight: 1.05,
+                          letterSpacing: "-0.03em",
+                        }}
                       >
-                        <div className="relative h-28">
-                          <BackgroundVisual
-                            src={role.image}
-                            alt={content.title}
-                            gradientClass={fallbackGradients[index % fallbackGradients.length]}
-                            icon={role.fallbackIcon}
-                          />
-                          <div className="relative z-10 flex h-full flex-col justify-end p-4">
-                            <div className="text-lg font-semibold text-white">{content.title}</div>
-                            <div className="mt-1 line-clamp-2 text-xs text-white/75">{content.intro}</div>
+                        {roleContent.title}
+                      </div>
+
+                      <div
+                        style={{
+                          marginTop: 18,
+                          fontSize: 20,
+                          lineHeight: 1.7,
+                          color: "rgba(255,255,255,0.86)",
+                          maxWidth: 800,
+                        }}
+                      >
+                        {roleContent.intro}
+                      </div>
+
+                      <div
+                        style={{
+                          marginTop: 24,
+                          display: "flex",
+                          gap: 12,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <ActionButton label={t.backToEntrance} onClick={() => setScreen("entrance")} />
+                        {selectedRole === "customer" ? (
+                          <ActionButton label={t.openMarketplace} onClick={() => setScreen("marketplace")} primary />
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <InfoBlock>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          letterSpacing: "0.16em",
+                          textTransform: "uppercase",
+                          color: "rgba(255,255,255,0.62)",
+                          marginBottom: 10,
+                        }}
+                      >
+                        {t.roleIntroLabel}
+                      </div>
+                      <div style={{ fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.88)" }}>
+                        {roleContent.intro}
+                      </div>
+                    </InfoBlock>
+                  </div>
+                </GlassCard>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                    gap: 22,
+                    marginTop: 22,
+                  }}
+                >
+                  <GlassCard title={t.roleActionsLabel}>
+                    <div style={{ display: "grid", gap: 12 }}>
+                      {roleContent.actions.map((item) => (
+                        <InfoBlock key={item}>{item}</InfoBlock>
+                      ))}
+                    </div>
+                  </GlassCard>
+
+                  <GlassCard title={t.roleOutcomesLabel}>
+                    <div style={{ display: "grid", gap: 12 }}>
+                      {roleContent.outcomes.map((item) => (
+                        <InfoBlock key={item}>{item}</InfoBlock>
+                      ))}
+                    </div>
+
+                    {selectedRole === "customer" ? (
+                      <div
+                        style={{
+                          marginTop: 16,
+                          padding: 16,
+                          borderRadius: 20,
+                          background: "rgba(184, 231, 143, 0.12)",
+                          border: "1px solid rgba(212,255,185,0.28)",
+                          color: "#edfbe0",
+                          lineHeight: 1.7,
+                        }}
+                      >
+                        {t.customerMarketplaceHint}
+                      </div>
+                    ) : null}
+                  </GlassCard>
+                </div>
+
+                {selectedRole === "youth" ? (
+                  <div style={{ marginTop: 22 }}>
+                    <GlassCard title={t.youthModesLabel}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 12,
+                          flexWrap: "wrap",
+                          marginBottom: 18,
+                        }}
+                      >
+                        <ActionButton
+                          label={t.youthOverview}
+                          onClick={() => setYouthView("overview")}
+                          active={youthView === "overview"}
+                        />
+                        <ActionButton
+                          label={t.youthParent}
+                          onClick={() => setYouthView("parent")}
+                          active={youthView === "parent"}
+                        />
+                        <ActionButton
+                          label={t.youthSupervisor}
+                          onClick={() => setYouthView("supervisor")}
+                          active={youthView === "supervisor"}
+                        />
+                      </div>
+
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "minmax(0, 1fr) minmax(300px, 0.9fr)",
+                          gap: 20,
+                        }}
+                      >
+                        <div>
+                          <div
+                            style={{
+                              fontSize: 34,
+                              fontWeight: 900,
+                              lineHeight: 1.1,
+                              letterSpacing: "-0.02em",
+                            }}
+                          >
+                            {youthContent.title}
+                          </div>
+                          <div
+                            style={{
+                              marginTop: 14,
+                              fontSize: 18,
+                              lineHeight: 1.8,
+                              color: "rgba(255,255,255,0.86)",
+                            }}
+                          >
+                            {youthContent.body}
                           </div>
                         </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </SectionCard>
 
-              <SectionCard title={t.impactTitle}>
-                <div className="grid gap-3">
-                  {t.impactCards.map((item) => (
-                    <div key={item} className="rounded-2xl bg-black/20 p-4 text-sm text-white/90">
-                      {item}
-                    </div>
+                        <div style={{ display: "grid", gap: 12 }}>
+                          {youthContent.bullets.map((item) => (
+                            <InfoBlock key={item}>{item}</InfoBlock>
+                          ))}
+                        </div>
+                      </div>
+                    </GlassCard>
+                  </div>
+                ) : null}
+              </>
+            )}
+
+            {screen === "marketplace" && (
+              <>
+                <GlassCard>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+                    <Pill text={t.marketplaceTitle} />
+                    <Pill text={t.placeBased} />
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: 52,
+                      fontWeight: 900,
+                      lineHeight: 1.05,
+                      letterSpacing: "-0.03em",
+                    }}
+                  >
+                    {t.marketplaceTitle}
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: 18,
+                      maxWidth: 880,
+                      fontSize: 20,
+                      lineHeight: 1.75,
+                      color: "rgba(255,255,255,0.86)",
+                    }}
+                  >
+                    {t.marketplaceSubtitle}
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: 24,
+                      display: "flex",
+                      gap: 12,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <ActionButton
+                      label={t.returnToRoles}
+                      onClick={() => {
+                        setScreen("role");
+                        setSelectedRole("customer");
+                      }}
+                    />
+                    <ActionButton
+                      label={t.backToEntrance}
+                      onClick={() => setScreen("entrance")}
+                      primary
+                    />
+                  </div>
+                </GlassCard>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                    gap: 22,
+                    marginTop: 22,
+                  }}
+                >
+                  {t.marketplaceBlocks.map((block) => (
+                    <GlassCard key={block.title} title={block.title}>
+                      <div style={{ fontSize: 18, lineHeight: 1.8, color: "rgba(255,255,255,0.88)" }}>
+                        {block.body}
+                      </div>
+                    </GlassCard>
                   ))}
                 </div>
-              </SectionCard>
 
-              <div className="rounded-3xl border border-white/10 bg-black/25 p-5 text-sm leading-6 text-white/85 backdrop-blur-md shadow-2xl">
-                {t.footerLine}
+                <div style={{ marginTop: 22 }}>
+                  <GlassCard title={t.storyTitle}>
+                    <div style={{ fontSize: 18, lineHeight: 1.8, color: "rgba(255,255,255,0.88)" }}>
+                      {t.storyBody}
+                    </div>
+                  </GlassCard>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div style={{ minWidth: 0 }}>
+            <GlassCard title={t.choosePathway}>
+              <div
+                style={{
+                  color: "rgba(255,255,255,0.74)",
+                  fontSize: 15,
+                  lineHeight: 1.7,
+                  marginBottom: 16,
+                }}
+              >
+                {t.pathwayHint}
               </div>
-            </aside>
-          </main>
+
+              <div style={{ display: "grid", gap: 14 }}>
+                {roleCards.map((role) => {
+                  const content = t.roleContent[role.key];
+                  const active = screen === "role" && selectedRole === role.key;
+                  return (
+                    <RoleTile
+                      key={role.key}
+                      title={content.title}
+                      intro={content.intro}
+                      image={role.image}
+                      icon={role.icon}
+                      active={active}
+                      onClick={() => openRole(role.key)}
+                    />
+                  );
+                })}
+              </div>
+            </GlassCard>
+
+            <div style={{ marginTop: 22 }}>
+              <GlassCard title={t.impactTitle}>
+                <div style={{ display: "grid", gap: 12 }}>
+                  {t.impactCards.map((item) => (
+                    <InfoBlock key={item}>{item}</InfoBlock>
+                  ))}
+                </div>
+              </GlassCard>
+            </div>
+
+            <div
+              style={{
+                marginTop: 22,
+                background: "rgba(6, 10, 8, 0.44)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                borderRadius: 24,
+                padding: 20,
+                color: "rgba(255,255,255,0.92)",
+                lineHeight: 1.8,
+                fontSize: 17,
+                fontWeight: 700,
+                backdropFilter: "blur(12px)",
+              }}
+            >
+              {t.footerLine}
+            </div>
+          </div>
         </div>
       </div>
     </div>
