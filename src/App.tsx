@@ -1739,7 +1739,7 @@ export default function App() {
         window.clearTimeout(tourAdvanceTimeoutRef.current);
       }
     };
-  }, [speech.enabled, tourIndex, language, t.guidedSteps, speech]);
+  }, [speech.enabled, tourIndex, language, t.guidedSteps]);
 
   useEffect(() => {
     if (!speech.enabled) return;
@@ -1771,7 +1771,7 @@ export default function App() {
         window.clearTimeout(tourAdvanceTimeoutRef.current);
       }
     };
-  }, [speech]);
+  }, []);
 
   const startTour = () => {
     if (tourAdvanceTimeoutRef.current) {
@@ -2217,7 +2217,7 @@ export default function App() {
                   </GlassCard>
                 </div>
 
-                {selectedRole === "youth" ? (
+                {selectedRole === "youth" && (
                   <div style={{ marginTop: 22 }}>
                     <GlassCard title={t.youthModesLabel}>
                       <div
@@ -2283,7 +2283,7 @@ export default function App() {
                       </div>
                     </GlassCard>
                   </div>
-                ) : null}
+                )}
               </>
             )}
 
