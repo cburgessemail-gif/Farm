@@ -1,7 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-type LangKey = "en" | "es" | "tl" | "it" | "he" | "pat";
+import heroImg from "../GrowArea.jpg";
+import marketImg from "../GrowArea2.jpg";
+import guestImg from "../SAM_0220.JPG";
+import customerImg from "../SAM_0221.JPG";
+import growerImg from "../SAM_0222.JPG";
+import volunteerImg from "../SAM_0223.JPG";
+import youthImg from "../SAM_0225.JPG";
+import supervisorImg from "../SAM_0237.JPG";
 
+type LangKey = "en" | "es" | "tl" | "it" | "he" | "pat";
 type RoleKey =
   | "guest"
   | "customer"
@@ -16,29 +24,23 @@ type TourStep = {
 };
 
 const images = {
-  hero: "/GrowArea.jpg",
-  guest: "/GrowArea.jpg",
-  customer: "/GrowArea2.jpg",
-  grower: "/GrowArea3.jpg",
-  volunteer: "/GrowArea4.jpg",
-  youth: "/GrowArea5.jpg",
-  supervisor: "/GrowArea6.jpg",
-  market: "/GrowArea2.jpg",
-  learning: "/GrowArea4.jpg",
-  workforce: "/GrowArea5.jpg",
-  operations: "/GrowArea6.jpg",
+  hero: heroImg,
+  guest: guestImg,
+  customer: customerImg,
+  grower: growerImg,
+  volunteer: volunteerImg,
+  youth: youthImg,
+  supervisor: supervisorImg,
+  market: marketImg,
+  learning: growerImg,
+  workforce: youthImg,
+  operations: supervisorImg,
 };
 
 const brand = {
-  bg: "#f5efe3",
   card: "rgba(255,255,255,0.88)",
   deep: "#1f4d36",
-  forest: "#2e6a4a",
-  moss: "#6d8b63",
-  sun: "#d9a441",
-  earth: "#8e684a",
   text: "#173126",
-  soft: "#edf3ee",
 };
 
 const translations: Record<
@@ -76,8 +78,6 @@ const translations: Record<
     youthIntro: string;
     supervisorIntro: string;
     marketCta: string;
-    learnMore: string;
-    viewCalendar: string;
     voiceNarration: string;
     next: string;
     previous: string;
@@ -127,8 +127,6 @@ const translations: Record<
     supervisorIntro:
       "Supervisors coordinate youth support, workforce observation, wellness resources, safety, and progress.",
     marketCta: "Go to Marketplace",
-    learnMore: "Explore Learning",
-    viewCalendar: "Open Calendar",
     voiceNarration: "Voice Narration",
     next: "Next",
     previous: "Previous",
@@ -141,7 +139,7 @@ const translations: Record<
     tagline:
       "Un ecosistema acogedor para aprender, cultivar, comprar, trabajar y regresar.",
     intro:
-      "Esta demostración restaura la visión de la plataforma como un ecosistema agrícola vivo, no como una presentación. Cada rol entra al mismo mundo con un propósito y una ruta diferente.",
+      "Esta demostración restaura la visión de la plataforma como un ecosistema agrícola vivo, no como una presentación.",
     startDemo: "Entrar a la Demostración",
     guidedTour: "Iniciar Recorrido Guiado",
     stopTour: "Detener Recorrido",
@@ -165,20 +163,18 @@ const translations: Record<
     youthTitle: "Joven Participante",
     supervisorTitle: "Supervisor",
     guestIntro:
-      "Los invitados descubren la granja, los eventos, el aprendizaje estacional y el espíritu de la comunidad regenerativa.",
+      "Los invitados descubren la granja, los eventos y el espíritu de la comunidad regenerativa.",
     customerIntro:
-      "Los clientes entran rápidamente al mercado, siguen sus hábitos de compra y reciben recetas y orientación nutricional.",
+      "Los clientes entran rápidamente al mercado y reciben recetas y orientación nutricional.",
     growerIntro:
-      "Los productores acceden a planificación de cultivos, oportunidades de suministros, tareas estacionales y talleres.",
+      "Los productores acceden a planificación de cultivos, tareas estacionales y talleres.",
     volunteerIntro:
-      "Los voluntarios encuentran funciones de servicio, tareas de eventos y formas significativas de contribuir.",
+      "Los voluntarios encuentran funciones de servicio y formas significativas de contribuir.",
     youthIntro:
       "Los jóvenes ven aprendizaje guiado, tareas prácticas, apoyo al bienestar y caminos profesionales.",
     supervisorIntro:
-      "Los supervisores coordinan apoyo juvenil, observación laboral, seguridad y progreso.",
+      "Los supervisores coordinan apoyo juvenil, seguridad y progreso.",
     marketCta: "Ir al Mercado",
-    learnMore: "Explorar Aprendizaje",
-    viewCalendar: "Abrir Calendario",
     voiceNarration: "Narración",
     next: "Siguiente",
     previous: "Anterior",
@@ -191,7 +187,7 @@ const translations: Record<
     tagline:
       "Isang magiliw na ecosystem para matuto, magtanim, mamili, magtrabaho, at bumalik.",
     intro:
-      "Ibinabalik ng demo na ito ang platform bilang buhay na ecosystem ng bukid — hindi presentasyon. Ang bawat papel ay pumapasok sa iisang mundo na may iba’t ibang layunin at daan.",
+      "Ibinabalik ng demo na ito ang platform bilang buhay na ecosystem ng bukid, hindi presentasyon.",
     startDemo: "Pumasok sa Demo",
     guidedTour: "Simulan ang Guided Tour",
     stopTour: "Itigil ang Tour",
@@ -214,21 +210,18 @@ const translations: Record<
     volunteerTitle: "Boluntaryo",
     youthTitle: "Kabataang Kalahok",
     supervisorTitle: "Supervisor",
-    guestIntro:
-      "Natutuklasan ng mga bisita ang bukid, mga kaganapan, pana-panahong pagkatuto, at diwa ng regenerative community.",
+    guestIntro: "Natutuklasan ng mga bisita ang bukid at ang diwa ng komunidad.",
     customerIntro:
-      "Madaling nakakarating ang mamimili sa marketplace, nakikita ang buying habits, at may gabay sa nutrisyon at resipe.",
+      "Madaling nakakarating ang mamimili sa marketplace at may gabay sa nutrisyon.",
     growerIntro:
-      "Nakakakuha ang grower ng crop planning, supply opportunities, seasonal tasks, workshops, at support.",
+      "Nakakakuha ang grower ng crop planning, tasks, workshops, at support.",
     volunteerIntro:
-      "Nakikita ng volunteer ang service pathways, event roles, at makabuluhang ambag.",
+      "Nakikita ng volunteer ang service pathways at makabuluhang ambag.",
     youthIntro:
-      "Nakikita ng kabataan ang guided learning, practical tasks, wellness support, at career pathways.",
+      "Nakikita ng kabataan ang guided learning, practical tasks, at career pathways.",
     supervisorIntro:
-      "Pinamamahalaan ng supervisor ang youth support, safety, wellness resources, at progress.",
+      "Pinamamahalaan ng supervisor ang youth support, safety, at progress.",
     marketCta: "Pumunta sa Marketplace",
-    learnMore: "Tingnan ang Learning",
-    viewCalendar: "Buksan ang Kalendaryo",
     voiceNarration: "Boses na Gabay",
     next: "Susunod",
     previous: "Nakaraan",
@@ -264,21 +257,18 @@ const translations: Record<
     volunteerTitle: "Volontario",
     youthTitle: "Partecipante Giovane",
     supervisorTitle: "Supervisore",
-    guestIntro:
-      "Gli ospiti scoprono la fattoria, gli eventi e lo spirito della comunità rigenerativa.",
+    guestIntro: "Gli ospiti scoprono la fattoria e lo spirito della comunità.",
     customerIntro:
-      "I clienti entrano rapidamente nel mercato, seguono gli acquisti e ricevono ricette e guida nutrizionale.",
+      "I clienti entrano rapidamente nel mercato e ricevono guida nutrizionale.",
     growerIntro:
-      "I coltivatori accedono a pianificazione delle colture, forniture, attività stagionali e laboratori.",
+      "I coltivatori accedono a pianificazione delle colture e attività stagionali.",
     volunteerIntro:
-      "I volontari trovano ruoli di servizio, attività evento e modi significativi per contribuire.",
+      "I volontari trovano ruoli di servizio e modi significativi per contribuire.",
     youthIntro:
-      "I giovani vedono apprendimento guidato, attività pratiche, supporto al benessere e percorsi professionali.",
+      "I giovani vedono apprendimento guidato, attività pratiche e percorsi professionali.",
     supervisorIntro:
-      "I supervisori coordinano supporto ai giovani, sicurezza, benessere e progressi.",
+      "I supervisori coordinano supporto ai giovani, sicurezza e progressi.",
     marketCta: "Vai al Mercato",
-    learnMore: "Esplora Formazione",
-    viewCalendar: "Apri Calendario",
     voiceNarration: "Narrazione",
     next: "Avanti",
     previous: "Indietro",
@@ -288,14 +278,12 @@ const translations: Record<
   },
   he: {
     appTitle: "הדגמת המערכת של Bronson Family Farm",
-    tagline:
-      "מערכת מזמינה ללמידה, גידול, קנייה, עבודה וחזרה.",
-    intro:
-      "הדגמה זו מחזירה את חזון הפלטפורמה כמערכת חיה של חווה — לא מצגת.",
+    tagline: "מערכת מזמינה ללמידה, גידול, קנייה, עבודה וחזרה.",
+    intro: "הדגמה זו מחזירה את חזון הפלטפורמה כמערכת חיה של חווה ולא מצגת.",
     startDemo: "כניסה להדגמה",
     guidedTour: "התחלת סיור מודרך",
     stopTour: "עצירת סיור",
-    chooseRole: "בחרי/בחר תפקיד",
+    chooseRole: "בחרי או בחר תפקיד",
     ecosystem: "מערכת",
     weather: "מזג אוויר",
     calendar: "לוח שנה",
@@ -308,27 +296,19 @@ const translations: Record<
     roleLabel: "תפקיד",
     enterRole: "כניסה",
     backHome: "חזרה לדף הבית",
-    guestTitle: "אורח/ת",
-    customerTitle: "לקוח/ה",
-    growerTitle: "מגדל/ת",
-    volunteerTitle: "מתנדב/ת",
-    youthTitle: "משתתף/ת נוער",
-    supervisorTitle: "מפקח/ת",
-    guestIntro:
-      "האורחים מגלים את החווה, האירועים, הלמידה העונתית ורוח הקהילה המתחדשת.",
-    customerIntro:
-      "לקוחות נכנסים במהירות לשוק, עוקבים אחר הרגלי קנייה ומקבלים מתכונים והדרכה תזונתית.",
-    growerIntro:
-      "מגדלים מקבלים תכנון גידולים, הזדמנויות אספקה, משימות עונתיות וסדנאות.",
-    volunteerIntro:
-      "מתנדבים מוצאים מסלולי שירות, תפקידי אירועים ודרכים משמעותיות לתרום.",
-    youthIntro:
-      "בני נוער רואים למידה מודרכת, משימות מעשיות, תמיכה ברווחה ומסלולי קריירה.",
-    supervisorIntro:
-      "מפקחים מתאמים תמיכה לנוער, בטיחות, משאבי רווחה והתקדמות.",
+    guestTitle: "אורח",
+    customerTitle: "לקוח",
+    growerTitle: "מגדל",
+    volunteerTitle: "מתנדב",
+    youthTitle: "משתתף נוער",
+    supervisorTitle: "מפקח",
+    guestIntro: "האורחים מגלים את החווה ואת רוח הקהילה.",
+    customerIntro: "לקוחות נכנסים במהירות לשוק ומקבלים הדרכה תזונתית.",
+    growerIntro: "מגדלים מקבלים תכנון גידולים ומשימות עונתיות.",
+    volunteerIntro: "מתנדבים מוצאים מסלולי שירות ודרכים לתרום.",
+    youthIntro: "בני נוער רואים למידה מודרכת, משימות מעשיות ומסלולי קריירה.",
+    supervisorIntro: "מפקחים מתאמים תמיכה לנוער, בטיחות והתקדמות.",
     marketCta: "לשוק",
-    learnMore: "ללמידה",
-    viewCalendar: "פתח לוח שנה",
     voiceNarration: "קריינות",
     next: "הבא",
     previous: "הקודם",
@@ -341,7 +321,7 @@ const translations: Record<
     tagline:
       "A warm, welcoming place fi learn, grow, buy, work, an come back.",
     intro:
-      "Dis demo bring back di platform vision like a real living farm ecosystem — not no slideshow ting.",
+      "Dis demo bring back di platform vision like a real living farm ecosystem.",
     startDemo: "Enter Di Demo",
     guidedTour: "Start Guided Tour",
     stopTour: "Stop Tour",
@@ -364,21 +344,16 @@ const translations: Record<
     volunteerTitle: "Volunteer",
     youthTitle: "Youth",
     supervisorTitle: "Supervisor",
-    guestIntro:
-      "Guest discover di farm, di events, di seasonal learning, an di spirit a regenerative community.",
+    guestIntro: "Guest discover di farm an di spirit a community.",
     customerIntro:
-      "Customer move quick into di marketplace, keep track a buying habits, an get recipe an nutrition guidance.",
-    growerIntro:
-      "Grower get crop planning, supply chances, seasonal tasks, workshop, an support.",
-    volunteerIntro:
-      "Volunteer find service pathways, event roles, an real ways fi help.",
+      "Customer move quick into di marketplace an get nutrition guidance.",
+    growerIntro: "Grower get crop planning, tasks, workshop, an support.",
+    volunteerIntro: "Volunteer find service pathways an real ways fi help.",
     youthIntro:
       "Youth see guided learning, practical work, wellness support, an career pathways.",
     supervisorIntro:
       "Supervisor coordinate youth support, safety, wellness resources, an progress.",
     marketCta: "Go A Marketplace",
-    learnMore: "Explore Learning",
-    viewCalendar: "Open Calendar",
     voiceNarration: "Voice Guide",
     next: "Next",
     previous: "Previous",
@@ -417,7 +392,6 @@ const guidedTourSteps: TourStep[] = [
 
 function useTypewriter(text: string, speed = 18) {
   const [displayed, setDisplayed] = useState("");
-
   useEffect(() => {
     let i = 0;
     setDisplayed("");
@@ -428,7 +402,6 @@ function useTypewriter(text: string, speed = 18) {
     }, speed);
     return () => window.clearInterval(id);
   }, [text, speed]);
-
   return displayed;
 }
 
@@ -483,10 +456,7 @@ function roleImage(role: RoleKey) {
   }
 }
 
-function moduleLabel(
-  moduleId: string,
-  t: (typeof translations)["en"]
-): string {
+function moduleLabel(moduleId: string, t: (typeof translations)["en"]) {
   switch (moduleId) {
     case "ecosystem":
       return t.ecosystem;
@@ -519,18 +489,10 @@ function App() {
   const [voiceOn, setVoiceOn] = useState(true);
   const [homeMode, setHomeMode] = useState(true);
   const [currentModule, setCurrentModule] = useState<string>("ecosystem");
-  const [buyingHistory] = useState([
-    "Tomatoes",
-    "Collards",
-    "Peppers",
-    "Spinach",
-    "Cabbage",
-  ]);
   const [seasonalMessage, setSeasonalMessage] = useState("");
-  const narrationRef = useRef<HTMLDivElement | null>(null);
-
   const t = translations[lang];
   const rtl = lang === "he";
+  const narrationRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const month = new Date().getMonth();
@@ -568,17 +530,15 @@ function App() {
         }
         return prev + 1;
       });
-    }, 5000);
+    }, 4500);
 
     return () => window.clearTimeout(id);
   }, [tourRunning, tourIndex]);
 
   useEffect(() => {
     if (!voiceOn || !("speechSynthesis" in window)) return;
-
     const text = getNarration(selectedRole, currentModule, t);
     if (!text) return;
-
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.rate = lang === "pat" ? 0.88 : 0.95;
@@ -594,7 +554,6 @@ function App() {
         ? "he-IL"
         : "en-US";
     window.speechSynthesis.speak(utter);
-
     return () => window.speechSynthesis.cancel();
   }, [selectedRole, currentModule, voiceOn, lang, t]);
 
@@ -602,7 +561,6 @@ function App() {
     () => getNarration(selectedRole, currentModule, t),
     [selectedRole, currentModule, t]
   );
-
   const typedNarration = useTypewriter(narration, 15);
 
   function openRole(role: RoleKey) {
@@ -1038,8 +996,7 @@ function App() {
                           currentModule === m
                             ? "white"
                             : "rgba(255,255,255,0.16)",
-                        color:
-                          currentModule === m ? brand.deep : "white",
+                        color: currentModule === m ? brand.deep : "white",
                       }}
                     >
                       {moduleLabel(m, t)}
@@ -1080,7 +1037,6 @@ function App() {
                   role: selectedRole,
                   moduleId: currentModule,
                   t,
-                  buyingHistory,
                   setCurrentModule,
                 })}
               </div>
@@ -1132,11 +1088,7 @@ function App() {
                       {voiceOn ? t.pause : t.resume}
                     </button>
                     <button
-                      onClick={() =>
-                        setTourIndex((i) =>
-                          i > 0 ? i - 1 : 0
-                        )
-                      }
+                      onClick={() => setTourIndex((i) => (i > 0 ? i - 1 : 0))}
                       style={smallDarkButton()}
                     >
                       {t.previous}
@@ -1210,13 +1162,11 @@ function renderModule({
   role,
   moduleId,
   t,
-  buyingHistory,
   setCurrentModule,
 }: {
   role: RoleKey;
   moduleId: string;
   t: (typeof translations)["en"];
-  buyingHistory: string[];
   setCurrentModule: (moduleId: string) => void;
 }) {
   if (moduleId === "ecosystem") {
@@ -1225,8 +1175,7 @@ function renderModule({
         <LargeImageBanner image={images.learning} />
         <p style={bodyText()}>
           The ecosystem connects farm life, education, agritourism, food access,
-          youth development, growers, and returning community participation. It
-          is meant to feel alive, warm, and useful.
+          youth development, growers, and returning community participation.
         </p>
         <ThreeColCards
           items={[
@@ -1263,15 +1212,6 @@ function renderModule({
         >
           {t.marketCta}
         </button>
-
-        <div style={sectionTitle()}>Buying History</div>
-        <div style={chipWrap()}>
-          {buyingHistory.map((item) => (
-            <span key={item} style={chip()}>
-              {item}
-            </span>
-          ))}
-        </div>
 
         <ThreeColCards
           items={[
@@ -1325,7 +1265,6 @@ function renderModule({
   if (moduleId === "recipes") {
     return (
       <div style={{ display: "grid", gap: 16 }}>
-        <div style={sectionTitle()}>Recipe Pathways</div>
         <ThreeColCards
           items={[
             {
@@ -1665,34 +1604,6 @@ function bodyText(): React.CSSProperties {
     fontSize: 17,
     lineHeight: 1.8,
     margin: 0,
-  };
-}
-
-function sectionTitle(): React.CSSProperties {
-  return {
-    fontSize: 22,
-    fontWeight: 900,
-    color: brand.deep,
-  };
-}
-
-function chipWrap(): React.CSSProperties {
-  return {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 10,
-  };
-}
-
-function chip(): React.CSSProperties {
-  return {
-    display: "inline-flex",
-    alignItems: "center",
-    padding: "10px 14px",
-    borderRadius: 999,
-    background: "rgba(31,77,54,0.1)",
-    color: brand.deep,
-    fontWeight: 800,
   };
 }
 
