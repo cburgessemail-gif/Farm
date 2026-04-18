@@ -29,6 +29,7 @@ const copy = {
     impact: "See Community Impact",
     story: "Why I Built This",
     ecosystem: "How the Ecosystem Works",
+    continue: "Continue",
     back: "Back",
     backHome: "Back to Entrance",
     backToEcosystem: "Back to Ecosystem",
@@ -447,6 +448,12 @@ export default function App() {
                 </button>
               </div>
             </div>
+
+            <div className="story-actions">
+              <button className="secondary" onClick={() => setView("impact")}>
+                {t.continue}: {t.impactTitle}
+              </button>
+            </div>
           </div>
         </section>
       );
@@ -483,6 +490,11 @@ export default function App() {
               ]}
               actions={[t.actionYouth, t.actionImpact]}
             />
+            <div className="story-actions">
+              <button className="secondary" onClick={() => setView("impact")}>
+                {t.continue}: {t.impactTitle}
+              </button>
+            </div>
           </div>
         </section>
       );
@@ -519,6 +531,11 @@ export default function App() {
               ]}
               actions={[t.actionYouth, t.actionParent]}
             />
+            <div className="story-actions">
+              <button className="secondary" onClick={() => setView("impact")}>
+                {t.continue}: {t.impactTitle}
+              </button>
+            </div>
           </div>
         </section>
       );
@@ -571,6 +588,15 @@ export default function App() {
                 <div className="section-label">Wellness Connection</div>
                 <div className="detail-lead">{t.dataWellness}</div>
               </div>
+            </div>
+
+            <div className="story-actions">
+              <button className="primary" onClick={() => setView("partnerships")}>
+                {t.continue}: {t.partnershipsTitle}
+              </button>
+              <button className="secondary" onClick={() => setView("ecosystem")}>
+                {t.backToEcosystem}
+              </button>
             </div>
           </div>
         </section>
@@ -628,6 +654,15 @@ export default function App() {
                   that create better outcomes together.
                 </p>
               </div>
+            </div>
+
+            <div className="story-actions">
+              <button className="primary" onClick={() => setView("entrance")}>
+                {t.backHome}
+              </button>
+              <button className="secondary" onClick={() => setView("ecosystem")}>
+                {t.backToEcosystem}
+              </button>
             </div>
           </div>
         </section>
@@ -1343,8 +1378,7 @@ export default function App() {
                   <div className="story-nav-card">
                     <h3 className="story-nav-title">{t.ecosystem}</h3>
                     <p className="story-nav-copy">
-                      Move from founder story into the actual structure of the
-                      ecosystem.
+                      Continue into the working structure of the platform.
                     </p>
                   </div>
                   <div className="story-nav-card">
@@ -1356,52 +1390,20 @@ export default function App() {
                 </aside>
 
                 <div className="story-sequence">
-                  <StoryChapter
-                    tag={t.chapter1}
-                    title={t.chapter1Title}
-                    text={t.chapter1Text}
-                  />
-                  <StoryChapter
-                    tag={t.chapter2}
-                    title={t.chapter2Title}
-                    text={t.chapter2Text}
-                  />
-                  <StoryChapter
-                    tag={t.chapter3}
-                    title={t.chapter3Title}
-                    text={t.chapter3Text}
-                  />
-                  <StoryChapter
-                    tag={t.chapter4}
-                    title={t.chapter4Title}
-                    text={t.chapter4Text}
-                  />
-                  <StoryChapter
-                    tag={t.chapter5}
-                    title={t.chapter5Title}
-                    text={t.chapter5Text}
-                  />
-                  <StoryChapter
-                    tag={t.chapter6}
-                    title={t.chapter6Title}
-                    text={t.chapter6Text}
-                  />
-                  <StoryChapter
-                    tag={t.chapter7}
-                    title={t.chapter7Title}
-                    text={t.chapter7Text}
-                  />
-                  <StoryChapter
-                    tag={t.chapter8}
-                    title={t.chapter8Title}
-                    text={t.chapter8Text}
-                  />
+                  <StoryChapter tag={t.chapter1} title={t.chapter1Title} text={t.chapter1Text} />
+                  <StoryChapter tag={t.chapter2} title={t.chapter2Title} text={t.chapter2Text} />
+                  <StoryChapter tag={t.chapter3} title={t.chapter3Title} text={t.chapter3Text} />
+                  <StoryChapter tag={t.chapter4} title={t.chapter4Title} text={t.chapter4Text} />
+                  <StoryChapter tag={t.chapter5} title={t.chapter5Title} text={t.chapter5Text} />
+                  <StoryChapter tag={t.chapter6} title={t.chapter6Title} text={t.chapter6Text} />
+                  <StoryChapter tag={t.chapter7} title={t.chapter7Title} text={t.chapter7Text} />
+                  <StoryChapter tag={t.chapter8} title={t.chapter8Title} text={t.chapter8Text} />
                 </div>
               </div>
 
               <div className="story-actions">
                 <button className="primary" onClick={() => setView("ecosystem")}>
-                  {t.ecosystem}
+                  {t.continue}: {t.ecosystemTitle}
                 </button>
                 <button className="secondary" onClick={() => setView("impact")}>
                   {t.viewImpact}
@@ -1491,6 +1493,12 @@ export default function App() {
                     {t.enterAccessPoint}
                   </a>
                 </div>
+              </div>
+
+              <div className="story-actions">
+                <button className="primary" onClick={() => setView("impact")}>
+                  {t.continue}: {t.impactTitle}
+                </button>
               </div>
             </div>
           </section>
