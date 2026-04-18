@@ -27,6 +27,28 @@ import {
   X,
 } from "lucide-react";
 
+type LanguageKey = "en" | "es" | "tl" | "it" | "patwa" | "he";
+type ScreenKey =
+  | "home"
+  | "story"
+  | "guest"
+  | "customer"
+  | "marketplace"
+  | "grower"
+  | "valueAdded"
+  | "youth"
+  | "volunteers"
+  | "planner"
+  | "events"
+  | "wellness";
+
+type YouthViewKey = "overview" | "parent" | "supervisor";
+type RecipeCard = {
+  title: string;
+  text: string;
+  details: string;
+};
+
 const IMAGES = {
   entrance: "/GrowArea.jpg",
   story: "/large (10).jpg",
@@ -53,21 +75,6 @@ const IMAGES = {
   legacy: "/Samerra4.jpg",
   growArea: "/GrowArea.jpg",
 };
-
-type LanguageKey = "en" | "es" | "tl" | "it" | "patwa" | "he";
-type ScreenKey =
-  | "home"
-  | "story"
-  | "guest"
-  | "customer"
-  | "marketplace"
-  | "grower"
-  | "valueAdded"
-  | "youth"
-  | "volunteers"
-  | "planner"
-  | "events"
-  | "wellness";
 
 const SCREEN_ORDER: ScreenKey[] = [
   "home",
@@ -99,19 +106,35 @@ const SCREEN_IMAGES: Record<ScreenKey, string> = {
   wellness: IMAGES.entrance,
 };
 
-const T: Record<
+const COPY: Record<
   LanguageKey,
   {
     brand: string;
     subbrand: string;
-    screenTitles: Record<ScreenKey, string>;
-    screenBodies: Record<ScreenKey, string>;
+    titles: Record<ScreenKey, string>;
+    bodies: Record<ScreenKey, string>;
+    nav: {
+      entrance: string;
+      story: string;
+      roles: string;
+      events: string;
+      wellness: string;
+      marketplace: string;
+      voiceOn: string;
+      voiceOff: string;
+      startTour: string;
+      stopTour: string;
+      cropPlanner: string;
+      backHome: string;
+      previous: string;
+      next: string;
+    };
   }
 > = {
   en: {
     brand: "Bronson Family Farm",
     subbrand: "Farm & Family Alliance Ecosystem Demo",
-    screenTitles: {
+    titles: {
       home: "Welcome to the ecosystem",
       story: "The story behind the farm",
       guest: "Guest pathway",
@@ -125,7 +148,7 @@ const T: Record<
       events: "Events and community experiences",
       wellness: "Health, nutrition, and food education",
     },
-    screenBodies: {
+    bodies: {
       home: "You are entering a regenerative farm and community ecosystem where land becomes opportunity, food becomes wellness, learning becomes workforce development, and visitors become participants in something larger.",
       story: "Inspired by family farming traditions and shaped for Youngstown's future, this farm brings together legacy, land restoration, food access, agritourism, and practical community opportunity.",
       guest: "Guests explore the vision, experience the land, attend events, and discover how this farm is restoring place, purpose, and possibility.",
@@ -139,11 +162,28 @@ const T: Record<
       events: "Events bring people back for learning, shopping, demonstrations, relationship-building, and shared community experience.",
       wellness: "This pathway helps people connect fresh food with practical wellness, healthier choices, recipes, diabetes awareness, and everyday life.",
     },
+    nav: {
+      entrance: "Entrance",
+      story: "Our Story",
+      roles: "Role Pathways",
+      events: "View Events",
+      wellness: "Health & Nutrition",
+      marketplace: "Go to Marketplace",
+      voiceOn: "Voice narration on",
+      voiceOff: "Voice narration off",
+      startTour: "Start Guided Tour",
+      stopTour: "Stop Guided Tour",
+      cropPlanner: "Open Crop Planner",
+      backHome: "Back to entrance",
+      previous: "Previous",
+      next: "Next",
+    },
   },
+
   es: {
     brand: "Bronson Family Farm",
     subbrand: "Demostración del Ecosistema de Farm & Family Alliance",
-    screenTitles: {
+    titles: {
       home: "Bienvenido al ecosistema",
       story: "La historia detrás de la granja",
       guest: "Ruta del visitante",
@@ -157,7 +197,7 @@ const T: Record<
       events: "Eventos y experiencias comunitarias",
       wellness: "Salud, nutrición y educación alimentaria",
     },
-    screenBodies: {
+    bodies: {
       home: "Está entrando en un ecosistema agrícola y comunitario regenerativo donde la tierra se convierte en oportunidad, la comida en bienestar y el aprendizaje en desarrollo de la fuerza laboral.",
       story: "Inspirada en tradiciones familiares de cultivo y diseñada para el futuro de Youngstown, esta granja une legado, restauración de la tierra, acceso a los alimentos y oportunidad comunitaria.",
       guest: "Los visitantes exploran la visión, experimentan la tierra, asisten a eventos y descubren cómo esta granja está restaurando lugar, propósito y posibilidad.",
@@ -171,11 +211,28 @@ const T: Record<
       events: "Los eventos hacen que las personas regresen para aprender, comprar, ver demostraciones y vivir experiencias comunitarias compartidas.",
       wellness: "Esta ruta ayuda a las personas a conectar alimentos frescos con bienestar práctico, mejores decisiones, recetas, conciencia sobre la diabetes y la vida cotidiana.",
     },
+    nav: {
+      entrance: "Entrada",
+      story: "Nuestra historia",
+      roles: "Rutas",
+      events: "Ver eventos",
+      wellness: "Salud y nutrición",
+      marketplace: "Ir al mercado",
+      voiceOn: "Narración activada",
+      voiceOff: "Narración desactivada",
+      startTour: "Iniciar recorrido guiado",
+      stopTour: "Detener recorrido guiado",
+      cropPlanner: "Abrir planificador",
+      backHome: "Volver a la entrada",
+      previous: "Anterior",
+      next: "Siguiente",
+    },
   },
+
   tl: {
     brand: "Bronson Family Farm",
     subbrand: "Farm & Family Alliance Ecosystem Demo",
-    screenTitles: {
+    titles: {
       home: "Maligayang pagdating sa ecosystem",
       story: "Ang kuwento ng bukid",
       guest: "Landas ng bisita",
@@ -189,7 +246,7 @@ const T: Record<
       events: "Mga event at karanasang pangkomunidad",
       wellness: "Kalusugan, nutrisyon, at edukasyon sa pagkain",
     },
-    screenBodies: {
+    bodies: {
       home: "Pumapasok ka sa isang regenerative farm at community ecosystem kung saan ang lupa ay nagiging oportunidad, ang pagkain ay nagiging wellness, at ang pagkatuto ay nagiging workforce development.",
       story: "Hinubog ng tradisyon ng pagsasaka ng pamilya at ng hinaharap ng Youngstown, pinagsasama ng bukid na ito ang pamana, pagpapanumbalik ng lupa, access sa pagkain, at oportunidad sa komunidad.",
       guest: "Tinutuklas ng mga bisita ang bisyon, nararanasan ang lupa, dumadalo sa mga event, at nakikita kung paano ibinabalik ng bukid na ito ang lugar, layunin, at posibilidad.",
@@ -203,11 +260,28 @@ const T: Record<
       events: "Nagbabalik ang mga tao dahil sa mga event para sa pagkatuto, pamimili, demonstrations, relationship-building, at shared community experience.",
       wellness: "Tinutulungan ng pathway na ito ang mga tao na ikonekta ang sariwang pagkain sa praktikal na wellness, mas mabubuting pagpili, recipes, diabetes awareness, at araw-araw na buhay.",
     },
+    nav: {
+      entrance: "Pasukan",
+      story: "Kuwento",
+      roles: "Mga landas",
+      events: "Tingnan ang events",
+      wellness: "Kalusugan at nutrisyon",
+      marketplace: "Pumunta sa marketplace",
+      voiceOn: "Naka-on ang boses",
+      voiceOff: "Naka-off ang boses",
+      startTour: "Simulan ang gabay",
+      stopTour: "Itigil ang gabay",
+      cropPlanner: "Buksan ang planner",
+      backHome: "Bumalik sa pasukan",
+      previous: "Nakaraan",
+      next: "Susunod",
+    },
   },
+
   it: {
     brand: "Bronson Family Farm",
     subbrand: "Demo Ecosistema Farm & Family Alliance",
-    screenTitles: {
+    titles: {
       home: "Benvenuto nell'ecosistema",
       story: "La storia della fattoria",
       guest: "Percorso ospite",
@@ -221,7 +295,7 @@ const T: Record<
       events: "Eventi ed esperienze della comunità",
       wellness: "Salute, nutrizione ed educazione alimentare",
     },
-    screenBodies: {
+    bodies: {
       home: "Stai entrando in un ecosistema agricolo e comunitario rigenerativo dove la terra diventa opportunità, il cibo diventa benessere e l'apprendimento diventa sviluppo della forza lavoro.",
       story: "Ispirata dalle tradizioni agricole familiari e plasmata per il futuro di Youngstown, questa fattoria unisce eredità, ripristino della terra, accesso al cibo e opportunità comunitarie.",
       guest: "Gli ospiti esplorano la visione, vivono la terra, partecipano agli eventi e scoprono come questa fattoria stia restaurando luogo, scopo e possibilità.",
@@ -235,11 +309,28 @@ const T: Record<
       events: "Gli eventi riportano le persone per imparare, acquistare, vedere dimostrazioni, costruire relazioni e condividere esperienze comunitarie.",
       wellness: "Questo percorso aiuta le persone a collegare il cibo fresco al benessere pratico, a scelte migliori, ricette, consapevolezza del diabete e vita quotidiana.",
     },
+    nav: {
+      entrance: "Ingresso",
+      story: "La nostra storia",
+      roles: "Percorsi",
+      events: "Vedi eventi",
+      wellness: "Salute e nutrizione",
+      marketplace: "Vai al marketplace",
+      voiceOn: "Voce attiva",
+      voiceOff: "Voce disattivata",
+      startTour: "Avvia tour guidato",
+      stopTour: "Ferma tour guidato",
+      cropPlanner: "Apri pianificatore",
+      backHome: "Torna all’ingresso",
+      previous: "Precedente",
+      next: "Successivo",
+    },
   },
+
   patwa: {
     brand: "Bronson Family Farm",
     subbrand: "Farm & Family Alliance Ecosystem Demo",
-    screenTitles: {
+    titles: {
       home: "Welcome to di ecosystem",
       story: "Di story behind di farm",
       guest: "Guest pathway",
@@ -253,7 +344,7 @@ const T: Record<
       events: "Events an community experiences",
       wellness: "Health, nutrition, an food education",
     },
-    screenBodies: {
+    bodies: {
       home: "Yuh a step into a regenerative farm an community ecosystem weh turn land into opportunity, food into wellness, an learning into workforce development.",
       story: "Inspired by family farming tradition an shaped fi Youngstown future, dis farm bring together legacy, land restoration, food access, an community opportunity.",
       guest: "Guests explore di vision, experience di land, join events, an see how dis farm a restore place, purpose, an possibility.",
@@ -267,11 +358,28 @@ const T: Record<
       events: "Events bring people back fi learning, shopping, demonstrations, relationship-building, an shared community experience.",
       wellness: "Dis pathway help people connect fresh food wid practical wellness, better choices, recipes, diabetes awareness, an everyday life.",
     },
+    nav: {
+      entrance: "Entrance",
+      story: "Wi Story",
+      roles: "Pathways",
+      events: "View Events",
+      wellness: "Health an Nutrition",
+      marketplace: "Go a Marketplace",
+      voiceOn: "Voice deh pon",
+      voiceOff: "Voice off",
+      startTour: "Start Guided Tour",
+      stopTour: "Stop Guided Tour",
+      cropPlanner: "Open Crop Planner",
+      backHome: "Back a Entrance",
+      previous: "Previous",
+      next: "Next",
+    },
   },
+
   he: {
     brand: "Bronson Family Farm",
     subbrand: "הדגמת מערכת Farm & Family Alliance",
-    screenTitles: {
+    titles: {
       home: "ברוכים הבאים למערכת",
       story: "הסיפור מאחורי החווה",
       guest: "מסלול אורח",
@@ -285,7 +393,7 @@ const T: Record<
       events: "אירועים וחוויות קהילתיות",
       wellness: "בריאות, תזונה וחינוך למזון",
     },
-    screenBodies: {
+    bodies: {
       home: "אתם נכנסים למערכת חקלאית וקהילתית רגנרטיבית שבה האדמה הופכת להזדמנות, המזון הופך לרווחה והלמידה הופכת לפיתוח כוח עבודה.",
       story: "בהשראת מסורות חקלאיות משפחתיות ובעיצוב לעתידה של יאנגסטאון, החווה הזאת מחברת בין מורשת, שיקום הקרקע, גישה למזון והזדמנות קהילתית.",
       guest: "אורחים חוקרים את החזון, חווים את האדמה, משתתפים באירועים ומגלים כיצד החווה הזו מחזירה מקום, מטרה ואפשרות.",
@@ -299,8 +407,63 @@ const T: Record<
       events: "אירועים מחזירים אנשים ללמידה, קניות, הדגמות, בניית קשרים וחוויה קהילתית משותפת.",
       wellness: "המסלול הזה עוזר לאנשים לחבר בין מזון טרי לרווחה מעשית, לבחירות טובות יותר, למתכונים, למודעות לסוכרת ולחיי היומיום.",
     },
+    nav: {
+      entrance: "כניסה",
+      story: "הסיפור שלנו",
+      roles: "מסלולים",
+      events: "צפו באירועים",
+      wellness: "בריאות ותזונה",
+      marketplace: "לשוק",
+      voiceOn: "קריינות פועלת",
+      voiceOff: "קריינות כבויה",
+      startTour: "התחל סיור מודרך",
+      stopTour: "עצור סיור מודרך",
+      cropPlanner: "פתח תכנון",
+      backHome: "חזרה לכניסה",
+      previous: "קודם",
+      next: "הבא",
+    },
   },
 };
+
+const RECIPES: RecipeCard[] = [
+  {
+    title: "Collard Greens Bowl",
+    text: "A simple bowl using collards, onions, peppers, and beans with a light seasoning approach.",
+    details:
+      "Use collards as the anchor, add onions and peppers for flavor, then pair with beans or another simple protein. This works well as a low-cost, fiber-rich meal that connects fresh greens to everyday cooking.",
+  },
+  {
+    title: "Fresh Tomato & Cucumber Salad",
+    text: "A quick fresh-food option that helps people compare natural ingredients with processed alternatives.",
+    details:
+      "Slice tomatoes and cucumbers, add a light vinaigrette or lemon, and season gently. This recipe is useful in the demo because it makes fresh food feel easy, visible, and approachable.",
+  },
+  {
+    title: "Broccoli & Cabbage Stir-Fry",
+    text: "A practical meal idea built around vegetables, color, fiber, and low-cost family cooking.",
+    details:
+      "Use broccoli, cabbage, garlic, and a small amount of oil with basic seasonings. This recipe supports the idea that healthy meals can be made with simple ingredients and flexible portions.",
+  },
+  {
+    title: "Pepper and Greens Skillet",
+    text: "A flexible stove-top recipe using greens, peppers, garlic, and simple pantry ingredients.",
+    details:
+      "This is a practical everyday recipe that works with what the farm grows. It supports the message that fresh produce can fit work, play, and everyday home life.",
+  },
+  {
+    title: "Lettuce Wrap Meal Prep",
+    text: "A lighter meal-prep option that connects fresh produce with healthier everyday habits.",
+    details:
+      "Use lettuce as the wrap and fill with chopped vegetables, beans, or lean protein. This is good for portion awareness, freshness, and lighter meal choices.",
+  },
+  {
+    title: "Diabetes-Friendly Produce Plate",
+    text: "A visual way to connect vegetables, portion awareness, and practical food choices for everyday wellness.",
+    details:
+      "Arrange non-starchy vegetables, fresh greens, and a balanced protein portion in a simple plate model. This supports diabetes awareness without making the experience feel clinical.",
+  },
+];
 
 function useSpeech() {
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
@@ -315,9 +478,7 @@ function useSpeech() {
   useEffect(() => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     loadVoices();
-    window.speechSynthesis.onvoiceschanged = () => {
-      loadVoices();
-    };
+    window.speechSynthesis.onvoiceschanged = () => loadVoices();
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
     };
@@ -333,12 +494,12 @@ function useSpeech() {
       patwa: ["en-JM", "en-US", "en-GB", "en"],
       he: ["he-IL", "he"],
     };
-    const wanted = preferred[lang];
-    for (const code of wanted) {
+
+    for (const code of preferred[lang]) {
       const exact = voices.find((v) => v.lang?.toLowerCase() === code.toLowerCase());
       if (exact) return exact;
     }
-    for (const code of wanted) {
+    for (const code of preferred[lang]) {
       const partial = voices.find((v) =>
         v.lang?.toLowerCase().startsWith(code.slice(0, 2).toLowerCase())
       );
@@ -355,21 +516,21 @@ function useSpeech() {
 
   const speak = (text: string, lang: LanguageKey) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-
     const utter = new SpeechSynthesisUtterance(text);
-    const map: Record<LanguageKey, string> = {
-      en: "en-US",
-      es: "es-ES",
-      tl: "fil-PH",
-      it: "it-IT",
-      patwa: "en-JM",
-      he: "he-IL",
-    };
-
-    utter.lang = map[lang];
+    utter.lang =
+      lang === "en"
+        ? "en-US"
+        : lang === "es"
+        ? "es-ES"
+        : lang === "tl"
+        ? "fil-PH"
+        : lang === "it"
+        ? "it-IT"
+        : lang === "patwa"
+        ? "en-JM"
+        : "he-IL";
     utter.rate = 0.95;
     utter.pitch = 1;
-
     const voice = pickVoice(lang);
     if (voice) utter.voice = voice;
 
@@ -530,6 +691,7 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     fontWeight: 600,
     fontSize: 15,
+    textDecoration: "none",
   },
   statGrid: {
     display: "grid",
@@ -628,6 +790,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: "1px solid rgba(255,255,255,0.1)",
     cursor: "pointer",
     background: "#112018",
+    textAlign: "left",
   },
   galleryImage: {
     width: "100%",
@@ -664,6 +827,15 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 24,
     border: "1px solid rgba(255,255,255,0.12)",
     boxShadow: "0 20px 80px rgba(0,0,0,0.3)",
+  },
+  modalCard: {
+    width: "min(760px, 95vw)",
+    borderRadius: 28,
+    background: "linear-gradient(180deg, rgba(35,57,43,0.92), rgba(17,27,21,0.96))",
+    border: "1px solid rgba(214,233,214,0.14)",
+    padding: 26,
+    boxShadow: "0 20px 80px rgba(0,0,0,0.34)",
+    color: "#fff",
   },
   closeBtn: {
     position: "fixed",
@@ -702,15 +874,16 @@ const marketplaceAccent = {
   border: "1px solid rgba(224,206,168,0.14)",
 };
 
-function App() {
+export default function App() {
   const [language, setLanguage] = useState<LanguageKey>("en");
-  const copy = T[language] || T.en;
   const [screen, setScreen] = useState<ScreenKey>("home");
   const [voiceOn, setVoiceOn] = useState(true);
   const [tourOn, setTourOn] = useState(false);
   const [imageModal, setImageModal] = useState<string | null>(null);
+  const [recipeModal, setRecipeModal] = useState<RecipeCard | null>(null);
+  const [youthView, setYouthView] = useState<YouthViewKey>("overview");
   const { speak, stop } = useSpeech();
-
+  const copy = COPY[language] || COPY.en;
   const currentIndex = SCREEN_ORDER.indexOf(screen);
 
   const gallery = useMemo(
@@ -737,7 +910,7 @@ function App() {
       return;
     }
 
-    const text = copy.screenBodies[screen];
+    const text = copy.bodies[screen];
     const id = window.setTimeout(() => {
       speak(text, language);
     }, 250);
@@ -761,10 +934,12 @@ function App() {
   const goto = (next: ScreenKey) => {
     setTourOn(false);
     setScreen(next);
+    if (next !== "youth") setYouthView("overview");
   };
 
   const nextScreen = () => goto(SCREEN_ORDER[(currentIndex + 1) % SCREEN_ORDER.length]);
-  const prevScreen = () => goto(SCREEN_ORDER[(currentIndex - 1 + SCREEN_ORDER.length) % SCREEN_ORDER.length]);
+  const prevScreen = () =>
+    goto(SCREEN_ORDER[(currentIndex - 1 + SCREEN_ORDER.length) % SCREEN_ORDER.length]);
 
   const roleTiles = [
     {
@@ -811,73 +986,834 @@ function App() {
     },
   ];
 
-  const detailBlocks: Record<ScreenKey, { title: string; text: string; icon: React.ReactNode }[]> = {
+  const detailBlocks: Record<
+    ScreenKey,
+    { title: string; text: string; icon: React.ReactNode }[]
+  > = {
     home: [
-      { title: "Families belong here", text: "This ecosystem is designed to feel welcoming, useful, and worth returning to.", icon: <Users size={20} /> },
-      { title: "Marketplace through GrownBy", text: "Customers should feel that food access is close by, not hidden.", icon: <Store size={20} /> },
-      { title: "Living ecosystem", text: "Growers, youth, volunteers, guests, and producers each have a real pathway.", icon: <Leaf size={20} /> },
+      {
+        title: "Families belong here",
+        text: "This ecosystem is designed to feel welcoming, useful, and worth returning to.",
+        icon: <Users size={20} />,
+      },
+      {
+        title: "Marketplace through GrownBy",
+        text: "Customers should feel that food access is close by, not hidden.",
+        icon: <Store size={20} />,
+      },
+      {
+        title: "Living ecosystem",
+        text: "Growers, youth, volunteers, guests, and producers each have a real pathway.",
+        icon: <Leaf size={20} />,
+      },
     ],
     story: [
-      { title: "Family legacy", text: "The farm carries Bronson and Lorenzana legacy into a future-focused Youngstown vision.", icon: <Trees size={20} /> },
-      { title: "Land restoration", text: "The project restores land while creating food, education, and agritourism opportunity.", icon: <Tractor size={20} /> },
-      { title: "Community future", text: "This is about more than a site. It is an ecosystem for long-term return and growth.", icon: <BadgeCheck size={20} /> },
+      {
+        title: "Family legacy",
+        text: "The farm carries Bronson and Lorenzana legacy into a future-focused Youngstown vision.",
+        icon: <Trees size={20} />,
+      },
+      {
+        title: "Land restoration",
+        text: "The project restores land while creating food, education, and agritourism opportunity.",
+        icon: <Tractor size={20} />,
+      },
+      {
+        title: "Community future",
+        text: "This is about more than a site. It is an ecosystem for long-term return and growth.",
+        icon: <BadgeCheck size={20} />,
+      },
     ],
     guest: [
-      { title: "Clear welcome", text: "Guests learn what this place is, why it matters, and where they can go next.", icon: <UserRound size={20} /> },
-      { title: "Airport relationship", text: "Visitors should understand the story of the FAA-approved grow areas and support for the vision.", icon: <Info size={20} /> },
-      { title: "Return value", text: "Events, demonstrations, and seasonal change keep people coming back.", icon: <CheckCircle2 size={20} /> },
+      {
+        title: "Clear welcome",
+        text: "Guests learn what this place is, why it matters, and where they can go next.",
+        icon: <UserRound size={20} />,
+      },
+      {
+        title: "Airport relationship",
+        text: "Visitors should understand the story of the FAA-approved grow areas and support for the vision.",
+        icon: <Info size={20} />,
+      },
+      {
+        title: "Return value",
+        text: "Events, demonstrations, and seasonal change keep people coming back.",
+        icon: <CheckCircle2 size={20} />,
+      },
     ],
     customer: [
-      { title: "Fresh food first", text: "Customers should see produce, seedlings, and Bubble Babies with clarity, warmth, and a direct path to purchase.", icon: <ShoppingBasket size={20} /> },
-      { title: "Recipes and nutrition", text: "Food guidance, recipe ideas, and healthier living support help customers return for more than shopping.", icon: <BookOpen size={20} /> },
-      { title: "Fast route to GrownBy", text: "Many users will want a direct move from interest to marketplace, so this pathway should feel simple and immediate.", icon: <Store size={20} /> },
+      {
+        title: "Fresh food first",
+        text: "Customers should see produce, seedlings, and Bubble Babies with clarity, warmth, and a direct path to purchase.",
+        icon: <ShoppingBasket size={20} />,
+      },
+      {
+        title: "Recipes and nutrition",
+        text: "Food guidance, recipe ideas, and healthier living support help customers return for more than shopping.",
+        icon: <BookOpen size={20} />,
+      },
+      {
+        title: "Fast route to GrownBy",
+        text: "Many users will want a direct move from interest to marketplace, so this pathway should feel simple and immediate.",
+        icon: <Store size={20} />,
+      },
     ],
     marketplace: [
-      { title: "GrownBy centered", text: "The marketplace is a core part of the ecosystem and should feel close at hand.", icon: <Store size={20} /> },
-      { title: "Product pathways", text: "Seedlings, produce, and future offerings can be surfaced with strong visual clarity.", icon: <Leaf size={20} /> },
-      { title: "Return behavior", text: "This area can grow into reminders, favorites, and preorder patterns over time.", icon: <HeartPulse size={20} /> },
+      {
+        title: "GrownBy centered",
+        text: "The marketplace is a core part of the ecosystem and should feel close at hand.",
+        icon: <Store size={20} />,
+      },
+      {
+        title: "Product pathways",
+        text: "Seedlings, produce, and future offerings can be surfaced with strong visual clarity.",
+        icon: <Leaf size={20} />,
+      },
+      {
+        title: "Return behavior",
+        text: "This area can grow into reminders, favorites, and preorder patterns over time.",
+        icon: <HeartPulse size={20} />,
+      },
     ],
     grower: [
-      { title: "Planning tools", text: "Growers need seasonal timing, inventory awareness, and readiness support.", icon: <CalendarDays size={20} /> },
-      { title: "Collaboration", text: "The grower pathway should feel connected to a broader ecosystem, not isolated.", icon: <Sprout size={20} /> },
-      { title: "Practical value", text: "This platform should be useful enough that growers want to revisit it regularly.", icon: <BadgeCheck size={20} /> },
+      {
+        title: "Planning tools",
+        text: "Growers need seasonal timing, inventory awareness, and readiness support.",
+        icon: <CalendarDays size={20} />,
+      },
+      {
+        title: "Collaboration",
+        text: "The grower pathway should feel connected to a broader ecosystem, not isolated.",
+        icon: <Sprout size={20} />,
+      },
+      {
+        title: "Practical value",
+        text: "This platform should be useful enough that growers want to revisit it regularly.",
+        icon: <BadgeCheck size={20} />,
+      },
     ],
     valueAdded: [
-      { title: "From product to presentation", text: "This pathway supports stronger local product visibility through branding and experience.", icon: <Briefcase size={20} /> },
-      { title: "Demonstrations", text: "Events and market experiences can increase value and customer connection.", icon: <Store size={20} /> },
-      { title: "Shared network", text: "The goal is participation in a broader ecosystem of visibility and opportunity.", icon: <Users size={20} /> },
+      {
+        title: "From product to presentation",
+        text: "This pathway supports stronger local product visibility through branding and experience.",
+        icon: <Briefcase size={20} />,
+      },
+      {
+        title: "Demonstrations",
+        text: "Events and market experiences can increase value and customer connection.",
+        icon: <Store size={20} />,
+      },
+      {
+        title: "Shared network",
+        text: "The goal is participation in a broader ecosystem of visibility and opportunity.",
+        icon: <Users size={20} />,
+      },
     ],
     youth: [
-      { title: "Living classroom", text: "Youth experience agriculture, STEAM, teamwork, responsibility, and entrepreneurship in a real-world setting.", icon: <GraduationCap size={20} /> },
-      { title: "Parent Portal included", text: "Families can stay connected to program structure, communication, participation, and progress through a parent-facing view inside Youth Workforce.", icon: <Users size={20} /> },
-      { title: "Built-in support", text: "Supervisor guidance, structure, logistics, accountability, and wellness support are part of the Youth Workforce pathway.", icon: <ShieldCheck size={20} /> },
+      {
+        title: "Living classroom",
+        text: "Youth experience agriculture, STEAM, teamwork, responsibility, and entrepreneurship in a real-world setting.",
+        icon: <GraduationCap size={20} />,
+      },
+      {
+        title: "Parent Portal included",
+        text: "Families can stay connected to program structure, communication, participation, and progress through a parent-facing view inside Youth Workforce.",
+        icon: <Users size={20} />,
+      },
+      {
+        title: "Built-in support",
+        text: "Supervisor guidance, structure, logistics, accountability, and wellness support are part of the Youth Workforce pathway.",
+        icon: <ShieldCheck size={20} />,
+      },
     ],
     volunteers: [
-      { title: "Service pathway", text: "Volunteers help make the ecosystem visible, welcoming, and functional through shared work and presence.", icon: <Users size={20} /> },
-      { title: "Event and farm support", text: "This includes setup, hospitality, planting help, educational activities, and community participation.", icon: <CalendarDays size={20} /> },
-      { title: "Belonging and return", text: "The volunteer pathway should help people feel needed, appreciated, and connected enough to come back.", icon: <HeartPulse size={20} /> },
+      {
+        title: "Service pathway",
+        text: "Volunteers help make the ecosystem visible, welcoming, and functional through shared work and presence.",
+        icon: <Users size={20} />,
+      },
+      {
+        title: "Event and farm support",
+        text: "This includes setup, hospitality, planting help, educational activities, and community participation.",
+        icon: <CalendarDays size={20} />,
+      },
+      {
+        title: "Belonging and return",
+        text: "The volunteer pathway should help people feel needed, appreciated, and connected enough to come back.",
+        icon: <HeartPulse size={20} />,
+      },
     ],
     planner: [
-      { title: "Season status", text: "Warm season planning is active, with field prep, seedling movement, irrigation thinking, and event readiness underway.", icon: <CalendarDays size={20} /> },
-      { title: "Next planting window", text: "Upcoming planting windows help align production timing, volunteer coordination, grower activity, and community-facing supply.", icon: <Sprout size={20} /> },
-      { title: "Harvest and event readiness", text: "The planner helps connect crops, staffing, weather, inventory, and event preparation so the ecosystem feels alive and practical.", icon: <CloudSun size={20} /> },
+      {
+        title: "Season status",
+        text: "Warm season planning is active, with field prep, seedling movement, irrigation thinking, and event readiness underway.",
+        icon: <CalendarDays size={20} />,
+      },
+      {
+        title: "Next planting window",
+        text: "Upcoming planting windows help align production timing, volunteer coordination, grower activity, and community-facing supply.",
+        icon: <Sprout size={20} />,
+      },
+      {
+        title: "Harvest and event readiness",
+        text: "The planner helps connect crops, staffing, weather, inventory, and event preparation so the ecosystem feels alive and practical.",
+        icon: <CloudSun size={20} />,
+      },
     ],
     events: [
-      { title: "Return engine", text: "Events create repeated entry into the ecosystem for learning, shopping, demonstrations, and community connection.", icon: <Users size={20} /> },
-      { title: "Reservations and check-in", text: "This space can preview RSVP, organized arrival, and role-based guest flow for future event experiences.", icon: <CalendarDays size={20} /> },
-      { title: "Partners and demos", text: "Educational partners, sponsor-led demonstrations, and guided experiences help make the farm feel active and worth revisiting.", icon: <BadgeCheck size={20} /> },
+      {
+        title: "Return engine",
+        text: "Events create repeated entry into the ecosystem for learning, shopping, demonstrations, and community connection.",
+        icon: <Users size={20} />,
+      },
+      {
+        title: "Reservations and check-in",
+        text: "This space can preview RSVP, organized arrival, and role-based guest flow for future event experiences.",
+        icon: <CalendarDays size={20} />,
+      },
+      {
+        title: "Partners and demos",
+        text: "Educational partners, sponsor-led demonstrations, and guided experiences help make the farm feel active and worth revisiting.",
+        icon: <BadgeCheck size={20} />,
+      },
     ],
     wellness: [
-      { title: "Food and health connection", text: "Fresh food connects to energy, family habits, diabetes awareness, movement, and overall quality of life.", icon: <HeartPulse size={20} /> },
-      { title: "Natural vs processed", text: "The platform helps explain why food choices matter, especially when rising costs push families toward harmful substitutes.", icon: <Leaf size={20} /> },
-      { title: "Practical support", text: "Nutrition education, recipe ideas, and healthier-at-home guidance should feel useful, simple, and close at hand.", icon: <BookOpen size={20} /> },
+      {
+        title: "Food and health connection",
+        text: "Fresh food connects to energy, family habits, diabetes awareness, movement, and overall quality of life.",
+        icon: <HeartPulse size={20} />,
+      },
+      {
+        title: "Natural vs processed",
+        text: "The platform helps explain why food choices matter, especially when rising costs push families toward harmful substitutes.",
+        icon: <Leaf size={20} />,
+      },
+      {
+        title: "Practical support",
+        text: "Nutrition education, recipe ideas, and healthier-at-home guidance should feel useful, simple, and close at hand.",
+        icon: <BookOpen size={20} />,
+      },
     ],
+  };
+
+  const renderYouthFeature = () => {
+    const youthText =
+      youthView === "overview"
+        ? "A structured living classroom where youth gain hands-on experience in agriculture, teamwork, responsibility, entrepreneurship, and future readiness with family visibility and supervisor support built into the program."
+        : youthView === "parent"
+        ? "Parent Portal is built into Youth Workforce so families can stay connected to participation, progress, communication, expectations, and encouragement."
+        : "Supervisor support is built into Youth Workforce through structure, logistics, accountability, wellness guidance, and day-to-day leadership.";
+
+    const youthTags =
+      youthView === "overview"
+        ? ["Learning", "Parent Portal", "Supervisor Support", "STEAM", "Future Readiness"]
+        : youthView === "parent"
+        ? ["Communication", "Participation", "Progress", "Trust", "Family Support"]
+        : ["Structure", "Logistics", "Accountability", "Wellness", "Leadership"];
+
+    return (
+      <div
+        style={{
+          borderRadius: 24,
+          overflow: "hidden",
+          marginBottom: 6,
+          border: "1px solid rgba(180,220,190,0.18)",
+          background: "linear-gradient(180deg, rgba(32,58,52,0.42), rgba(16,26,22,0.52))",
+          boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
+        }}
+      >
+        <img
+          src={IMAGES.youth}
+          alt="Youth Workforce"
+          style={{
+            width: "100%",
+            height: 210,
+            objectFit: "cover",
+            display: "block",
+          }}
+        />
+        <div style={{ padding: 18 }}>
+          <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
+            {youthView === "overview"
+              ? "Youth Workforce Program"
+              : youthView === "parent"
+              ? "Parent Portal Inside Youth Workforce"
+              : "Supervisor Support Inside Youth Workforce"}
+          </div>
+          <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
+            {youthText}
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
+            {youthTags.map((item) => (
+              <button
+                key={item}
+                style={{
+                  ...styles.pill,
+                  padding: "7px 11px",
+                  fontSize: 12,
+                  background: "rgba(148,196,160,0.18)",
+                }}
+                onClick={() => {
+                  if (item === "Parent Portal") setYouthView("parent");
+                  if (item === "Supervisor Support") setYouthView("supervisor");
+                  if (item === "Learning" || item === "STEAM" || item === "Future Readiness") {
+                    setYouthView("overview");
+                  }
+                }}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <button style={styles.ghostBtn} onClick={() => setYouthView("overview")}>
+              Program Overview
+            </button>
+            <button style={styles.ghostBtn} onClick={() => setYouthView("parent")}>
+              Parent Portal
+            </button>
+            <button style={styles.ghostBtn} onClick={() => setYouthView("supervisor")}>
+              Supervisor Support
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderFeaturePanel = () => {
+    if (screen === "customer") {
+      return (
+        <div
+          style={{
+            borderRadius: 24,
+            overflow: "hidden",
+            marginBottom: 6,
+            border: "1px solid rgba(214,233,190,0.18)",
+            background: "linear-gradient(180deg, rgba(58,74,36,0.34), rgba(20,28,18,0.48))",
+            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
+          }}
+        >
+          <img
+            src={IMAGES.customer}
+            alt="Customer pathway"
+            style={{ width: "100%", height: 210, objectFit: "cover", display: "block" }}
+          />
+          <div style={{ padding: 18 }}>
+            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
+              Customer Food Path
+            </div>
+            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
+              This pathway helps families move from interest to access by connecting fresh food,
+              seedlings, recipes, nutrition guidance, and a direct route into the marketplace.
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {["Fresh Food", "Seedlings", "Bubble Babies", "Recipes", "Nutrition"].map(
+                (item) => (
+                  <button
+                    key={item}
+                    style={{
+                      ...styles.pill,
+                      padding: "7px 11px",
+                      fontSize: 12,
+                      background: "rgba(190,196,120,0.16)",
+                    }}
+                    onClick={() =>
+                      item === "Recipes" || item === "Nutrition"
+                        ? goto("wellness")
+                        : item === "Fresh Food" || item === "Seedlings" || item === "Bubble Babies"
+                        ? goto("marketplace")
+                        : goto("customer")
+                    }
+                  >
+                    {item}
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (screen === "marketplace") {
+      return (
+        <div
+          style={{
+            borderRadius: 24,
+            overflow: "hidden",
+            marginBottom: 6,
+            border: "1px solid rgba(214,233,190,0.18)",
+            background: "linear-gradient(180deg, rgba(72,66,34,0.34), rgba(24,22,16,0.48))",
+            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
+          }}
+        >
+          <img
+            src={IMAGES.marketplace}
+            alt="Marketplace"
+            style={{ width: "100%", height: 210, objectFit: "cover", display: "block" }}
+          />
+          <div style={{ padding: 18 }}>
+            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
+              Marketplace Through GrownBy
+            </div>
+            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
+              This is where interest becomes action through fresh food, seedlings, and future
+              offerings connected to the farm’s wider ecosystem.
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {["GrownBy", "Fresh Food", "Seedlings", "Preorders", "Return Visits"].map((item) => (
+                <button
+                  key={item}
+                  style={{
+                    ...styles.pill,
+                    padding: "7px 11px",
+                    fontSize: 12,
+                    background: "rgba(196,170,120,0.16)",
+                  }}
+                  onClick={() =>
+                    item === "Return Visits"
+                      ? goto("customer")
+                      : item === "GrownBy" || item === "Fresh Food" || item === "Seedlings"
+                      ? window.open(
+                          "https://grownby.com/farms/bronson-family-farm/shop",
+                          "_blank",
+                          "noopener,noreferrer"
+                        )
+                      : goto("marketplace")
+                  }
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (screen === "youth") return renderYouthFeature();
+
+    if (screen === "volunteers") {
+      return (
+        <div
+          style={{
+            borderRadius: 24,
+            overflow: "hidden",
+            marginBottom: 6,
+            border: "1px solid rgba(214,233,190,0.18)",
+            background: "linear-gradient(180deg, rgba(68,74,44,0.34), rgba(24,28,18,0.48))",
+            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
+          }}
+        >
+          <img
+            src={IMAGES.volunteers}
+            alt="Volunteers"
+            style={{ width: "100%", height: 210, objectFit: "cover", display: "block" }}
+          />
+          <div style={{ padding: 18 }}>
+            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
+              Volunteer Pathway
+            </div>
+            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
+              A welcoming community service pathway where people can support growing, events,
+              hospitality, setup, and shared learning while becoming part of the larger mission
+              of the farm.
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {["Service", "Hospitality", "Events", "Community", "Shared Work"].map((item) => (
+                <button
+                  key={item}
+                  style={{
+                    ...styles.pill,
+                    padding: "7px 11px",
+                    fontSize: 12,
+                    background: "rgba(196,186,120,0.16)",
+                  }}
+                  onClick={() =>
+                    item === "Events"
+                      ? goto("events")
+                      : item === "Community"
+                      ? goto("wellness")
+                      : goto("volunteers")
+                  }
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        style={{
+          borderRadius: 22,
+          overflow: "hidden",
+          marginBottom: 16,
+          border: "1px solid rgba(214,233,214,0.10)",
+        }}
+      >
+        <img
+          src={SCREEN_IMAGES[screen]}
+          alt={copy.titles[screen]}
+          style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }}
+        />
+      </div>
+    );
+  };
+
+  const renderActions = () => {
+    switch (screen) {
+      case "guest":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("story")}>
+              Story
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("events")}>
+              Events
+            </button>
+            <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.community)}>
+              Open Gallery
+            </button>
+          </>
+        );
+
+      case "customer":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("marketplace")}>
+              Go to Marketplace
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("wellness")}>
+              Recipes & Nutrition
+            </button>
+
+            <div style={{ ...styles.infoBox, ...customerAccent }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                Customer path priority
+              </div>
+              <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                This pathway is designed to move people quickly toward GrownBy, then bring them
+                back for fresh food guidance, healthier choices, and repeat visits.
+              </div>
+            </div>
+
+            <div style={{ ...styles.infoBox, ...customerAccent }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                Food access with meaning
+              </div>
+              <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                The goal is not only to shop, but to help families build healthier habits,
+                understand natural food, and return to the ecosystem for ongoing support.
+              </div>
+            </div>
+          </>
+        );
+
+      case "marketplace":
+        return (
+          <>
+            <a
+              href="https://grownby.com/farms/bronson-family-farm/shop"
+              target="_blank"
+              rel="noreferrer"
+              style={{ ...styles.whiteBtn, justifyContent: "center" }}
+            >
+              Open GrownBy Store
+            </a>
+            <button style={styles.ghostBtn} onClick={() => goto("customer")}>
+              Back to Customer Path
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("wellness")}>
+              Food Guidance
+            </button>
+
+            <div style={{ ...styles.infoBox, ...marketplaceAccent }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                Marketplace destination
+              </div>
+              <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                The marketplace should feel direct, trustworthy, and easy to use while still
+                staying connected to the larger story of fresh food, health, and self-sufficiency.
+              </div>
+            </div>
+          </>
+        );
+
+      case "grower":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("planner")}>
+              Open Crop Planner
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("events")}>
+              Seasonal Events
+            </button>
+            <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>
+              Coordination View
+            </button>
+          </>
+        );
+
+      case "valueAdded":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("events")}>
+              Demonstrations
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>
+              Market Access
+            </button>
+            <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.produce)}>
+              Product Presentation
+            </button>
+          </>
+        );
+
+      case "youth":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("planner")}>
+              Learning Schedule
+            </button>
+            <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>
+              STEAM & Training
+            </button>
+            <button
+              style={styles.ghostBtn}
+              onClick={() => {
+                goto("youth");
+                setYouthView("parent");
+              }}
+            >
+              Parent Portal
+            </button>
+            <button
+              style={styles.ghostBtn}
+              onClick={() => {
+                goto("youth");
+                setYouthView("supervisor");
+              }}
+            >
+              Supervisor Support
+            </button>
+
+            <div style={{ ...styles.infoBox, ...youthAccent }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                Parent Portal included
+              </div>
+              <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                Families can stay connected to structure, communication, participation, progress,
+                and support through a parent-facing layer within Youth Workforce.
+              </div>
+            </div>
+
+            <div style={{ ...styles.infoBox, ...youthAccent }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                Supervisor support built in
+              </div>
+              <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                Supervisor guidance is part of the program through structure, logistics,
+                accountability, encouragement, and wellness support.
+              </div>
+            </div>
+          </>
+        );
+
+      case "volunteers":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("events")}>
+              Event Support
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("youth")}>
+              Youth Connection
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("wellness")}>
+              Community Care
+            </button>
+
+            <div style={{ ...styles.infoBox, ...volunteerAccent }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                Service and belonging
+              </div>
+              <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                Volunteers help make the ecosystem visible, welcoming, and functional through
+                shared work, presence, and community support.
+              </div>
+            </div>
+
+            <div style={{ ...styles.infoBox, ...volunteerAccent }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                Event and farm support
+              </div>
+              <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                This can include setup, hospitality, planting help, educational activities, and
+                participation in farm events and visitor experiences.
+              </div>
+            </div>
+          </>
+        );
+
+      case "story":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("guest")}>
+              Enter as Guest
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("events")}>
+              Community Experiences
+            </button>
+            <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.legacy)}>
+              Legacy View
+            </button>
+          </>
+        );
+
+      case "planner":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("grower")}>
+              Grower Path
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("events")}>
+              Event Readiness
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>
+              Inventory to Market
+            </button>
+          </>
+        );
+
+      case "events":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("guest")}>
+              Guest Experiences
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>
+              Vendor & Market Flow
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("wellness")}>
+              Health Education
+            </button>
+          </>
+        );
+
+      case "wellness":
+        return (
+          <>
+            <button style={styles.whiteBtn} onClick={() => goto("customer")}>
+              Customer Food Path
+            </button>
+            <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>
+              Shop Fresh Food
+            </button>
+            <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.nutrition)}>
+              Nutrition View
+            </button>
+            <div style={styles.infoBox}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                Wellness cluster
+              </div>
+              <div
+                style={{
+                  lineHeight: 1.65,
+                  color: "rgba(241,248,241,0.88)",
+                  marginBottom: 10,
+                }}
+              >
+                This area should help people connect food access with simple recipes, diabetes
+                awareness, better choices, and everyday wellness.
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {["Fresh Choices", "Recipes", "Nutrition", "Diabetes Awareness", "Healthier at Home"].map(
+                  (item) => (
+                    <button
+                      key={item}
+                      style={{ ...styles.pill, padding: "7px 11px", fontSize: 12 }}
+                      onClick={() =>
+                        item === "Recipes"
+                          ? setRecipeModal(RECIPES[0])
+                          : item === "Nutrition" || item === "Diabetes Awareness" || item === "Healthier at Home"
+                          ? goto("wellness")
+                          : goto("customer")
+                      }
+                    >
+                      {item}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+          </>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  const renderBottomPanel = () => {
+    if (screen === "wellness") {
+      return (
+        <>
+          <div style={styles.miniLabel}>Recipes & nutrition</div>
+          <div style={{ marginBottom: 14, color: "rgba(239,247,239,0.88)" }}>
+            Fresh food should lead to practical ideas families can actually use.
+          </div>
+
+          <div style={styles.detailGrid}>
+            {RECIPES.map((recipe) => (
+              <button
+                key={recipe.title}
+                style={{ ...styles.infoBox, textAlign: "left", cursor: "pointer" }}
+                onClick={() => setRecipeModal(recipe)}
+              >
+                <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                  {recipe.title}
+                </div>
+                <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                  {recipe.text}
+                </div>
+              </button>
+            ))}
+          </div>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <div style={styles.miniLabel}>Image gallery</div>
+        <div style={{ marginBottom: 14, color: "rgba(239,247,239,0.88)" }}>
+          Using the other farm photos instead of repeating the same two images.
+        </div>
+        <div style={styles.galleryGrid}>
+          {gallery.map((img, idx) => (
+            <button
+              key={`${img}-${idx}`}
+              style={styles.galleryItem}
+              onClick={() => setImageModal(img)}
+            >
+              <img src={img} alt={`Farm ${idx + 1}`} style={styles.galleryImage} />
+            </button>
+          ))}
+        </div>
+      </>
+    );
   };
 
   return (
     <div style={styles.app} dir={language === "he" ? "rtl" : "ltr"}>
       <div style={styles.hero}>
-        <img src={SCREEN_IMAGES[screen]} alt={copy.screenTitles[screen]} style={styles.bgImage} />
+        <img src={SCREEN_IMAGES[screen]} alt={copy.titles[screen]} style={styles.bgImage} />
         <div style={styles.bgOverlay} />
 
         <div style={styles.shell}>
@@ -889,12 +1825,12 @@ function App() {
 
             <div style={styles.nav}>
               {[
-                ["home", <Home size={16} />, "Entrance"],
-                ["story", <Info size={16} />, "Our Story"],
-                ["guest", <Users size={16} />, "Role Pathways"],
-                ["events", <CalendarDays size={16} />, "View Events"],
-                ["wellness", <HeartPulse size={16} />, "Health & Nutrition"],
-                ["marketplace", <Store size={16} />, "Go to Marketplace"],
+                ["home", <Home size={16} />, copy.nav.entrance],
+                ["story", <Info size={16} />, copy.nav.story],
+                ["guest", <Users size={16} />, copy.nav.roles],
+                ["events", <CalendarDays size={16} />, copy.nav.events],
+                ["wellness", <HeartPulse size={16} />, copy.nav.wellness],
+                ["marketplace", <Store size={16} />, copy.nav.marketplace],
               ].map(([key, icon, label]) => (
                 <button
                   key={String(key)}
@@ -913,7 +1849,7 @@ function App() {
                 }}
                 style={styles.pill}
               >
-                <Mic size={16} /> {voiceOn ? "Voice narration on" : "Voice narration off"}
+                <Mic size={16} /> {voiceOn ? copy.nav.voiceOn : copy.nav.voiceOff}
               </button>
             </div>
           </div>
@@ -921,10 +1857,11 @@ function App() {
           <div style={styles.layout}>
             <div style={styles.left}>
               <div style={styles.badge}>
-                <Leaf size={16} /> {copy.screenTitles[screen]}
+                <Leaf size={16} /> {copy.titles[screen]}
               </div>
-              <h1 style={styles.title}>{copy.screenTitles[screen]}</h1>
-              <div style={styles.body}>{copy.screenBodies[screen]}</div>
+
+              <h1 style={styles.title}>{copy.titles[screen]}</h1>
+              <div style={styles.body}>{copy.bodies[screen]}</div>
 
               <div style={styles.actions}>
                 <button
@@ -934,13 +1871,18 @@ function App() {
                     setTourOn((v) => !v);
                   }}
                 >
-                  <Play size={16} /> {tourOn ? "Stop Guided Tour" : "Start Guided Tour"}
+                  <Play size={16} />
+                  {tourOn ? copy.nav.stopTour : copy.nav.startTour}
                 </button>
+
                 <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>
-                  <Store size={16} /> Go to Marketplace
+                  <Store size={16} />
+                  {copy.nav.marketplace}
                 </button>
+
                 <button style={styles.ghostBtn} onClick={() => goto("planner")}>
-                  <CalendarDays size={16} /> Open Crop Planner
+                  <CalendarDays size={16} />
+                  {copy.nav.cropPlanner}
                 </button>
               </div>
 
@@ -952,7 +1894,8 @@ function App() {
                     Warm season planning active
                   </div>
                   <div style={{ color: "rgba(239,247,239,0.88)", lineHeight: 1.6 }}>
-                    Field prep, seedling movement, event readiness, and seasonal coordination are active.
+                    Field prep, seedling movement, event readiness, and seasonal coordination are
+                    active.
                   </div>
                 </div>
 
@@ -963,7 +1906,8 @@ function App() {
                     Living schedule
                   </div>
                   <div style={{ color: "rgba(239,247,239,0.88)", lineHeight: 1.6 }}>
-                    Seedlings, events, education, youth activities, and harvest pathways connect here.
+                    Seedlings, events, education, youth activities, and harvest pathways connect
+                    here.
                   </div>
                 </div>
 
@@ -1022,16 +1966,30 @@ function App() {
                 Living ecosystem overview
               </div>
               <div style={{ lineHeight: 1.7, color: "rgba(245,250,245,0.9)", marginBottom: 18 }}>
-                This living farm ecosystem is designed to help guests, customers, growers, youth, volunteers, partners, and families move toward food self-sufficiency, economic opportunity, practical wellness, and stronger community connection.
+                This living farm ecosystem is designed to help guests, customers, growers, youth,
+                volunteers, partners, and families move toward food self-sufficiency, economic
+                opportunity, practical wellness, and stronger community connection.
               </div>
+
               <div style={{ display: "grid", gap: 12 }}>
                 {detailBlocks[screen].map((item) => (
                   <div key={item.title} style={styles.infoBox}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        fontSize: 18,
+                        fontWeight: 700,
+                        marginBottom: 8,
+                      }}
+                    >
                       {item.icon}
                       {item.title}
                     </div>
-                    <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>{item.text}</div>
+                    <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                      {item.text}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1041,9 +1999,18 @@ function App() {
           {screen === "home" && (
             <div style={styles.section}>
               <div style={{ fontSize: 30, fontWeight: 800, marginBottom: 8 }}>Role pathways</div>
-              <div style={{ color: "rgba(239,247,239,0.88)", lineHeight: 1.7, maxWidth: 900, marginBottom: 18 }}>
-                Each role should feel welcomed, informed, and able to move forward. These pathways are built to create return visits, not one-time clicks.
+              <div
+                style={{
+                  color: "rgba(239,247,239,0.88)",
+                  lineHeight: 1.7,
+                  maxWidth: 900,
+                  marginBottom: 18,
+                }}
+              >
+                Each role should feel welcomed, informed, and able to move forward. These pathways
+                are built to create return visits, not one-time clicks.
               </div>
+
               <div style={styles.roleGrid}>
                 {roleTiles.map((role) => (
                   <button
@@ -1063,7 +2030,8 @@ function App() {
                           }
                         : {}),
                       transform: "translateY(0)",
-                      transition: "transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease",
+                      transition:
+                        "transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = "translateY(-6px)";
@@ -1126,21 +2094,47 @@ function App() {
                       </div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                         {role.next.map((item: string) => (
-                          <span
+                          <button
                             key={item}
                             style={{
-                              display: "inline-flex",
-                              alignItems: "center",
+                              ...styles.pill,
                               padding: "7px 11px",
-                              borderRadius: 999,
-                              background: "rgba(141,185,137,0.18)",
-                              border: "1px solid rgba(255,255,255,0.16)",
                               fontSize: 12,
-                              letterSpacing: "0.04em",
+                              background: "rgba(141,185,137,0.18)",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (item === "Story") goto("story");
+                              else if (
+                                item === "Events" ||
+                                item === "Service" ||
+                                item === "Community"
+                              )
+                                goto("events");
+                              else if (
+                                item === "Marketplace" ||
+                                item === "Market Access"
+                              )
+                                goto("marketplace");
+                              else if (
+                                item === "Recipes" ||
+                                item === "Nutrition" ||
+                                item === "Parent Portal" ||
+                                item === "Support"
+                              )
+                                goto("wellness");
+                              else if (
+                                item === "Planner" ||
+                                item === "Learning" ||
+                                item === "Seasonal Guidance" ||
+                                item === "Coordination"
+                              )
+                                goto("planner");
+                              else goto(role.key);
                             }}
                           >
                             {item}
-                          </span>
+                          </button>
                         ))}
                       </div>
                     </div>
@@ -1158,433 +2152,34 @@ function App() {
                   <div style={styles.detailGrid}>
                     {detailBlocks[screen].map((item) => (
                       <div key={item.title} style={styles.infoBox}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                            fontSize: 18,
+                            fontWeight: 700,
+                            marginBottom: 8,
+                          }}
+                        >
                           {item.icon}
                           {item.title}
                         </div>
-                        <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>{item.text}</div>
+                        <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                          {item.text}
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div style={styles.sideCard}>
-                  <div
-                    style={{
-                      borderRadius: 22,
-                      overflow: "hidden",
-                      marginBottom: 16,
-                      border: "1px solid rgba(214,233,214,0.10)",
-                    }}
-                  >
-                    <img
-                      src={SCREEN_IMAGES[screen]}
-                      alt={copy.screenTitles[screen]}
-                      style={{
-                        width: "100%",
-                        height: 180,
-                        objectFit: "cover",
-                        display: "block",
-                      }}
-                    />
-                  </div>
+                  {renderFeaturePanel()}
 
-                  <div style={styles.miniLabel}>Next strongest moves</div>
-                  <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>
-                    {screen === "guest" && (
-                      <>
-                        <button style={styles.ghostBtn} onClick={() => goto("story")}>Story</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("events")}>Events</button>
-                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.community)}>Open Gallery</button>
-                      </>
-                    )}
+                  <div style={styles.miniLabel}>Destinations</div>
+                  <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>{renderActions()}</div>
 
-                    {screen === "customer" && (
-                      <>
-                        <div
-                          style={{
-                            borderRadius: 24,
-                            overflow: "hidden",
-                            marginBottom: 6,
-                            border: "1px solid rgba(214,233,190,0.18)",
-                            background: "linear-gradient(180deg, rgba(58,74,36,0.34), rgba(20,28,18,0.48))",
-                            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
-                          }}
-                        >
-                          <img
-                            src={IMAGES.customer}
-                            alt="Customer pathway"
-                            style={{
-                              width: "100%",
-                              height: 210,
-                              objectFit: "cover",
-                              display: "block",
-                            }}
-                          />
-                          <div style={{ padding: 18 }}>
-                            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
-                              Customer Food Path
-                            </div>
-                            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
-                              This pathway helps families move from interest to access by connecting fresh food, seedlings, recipes, nutrition guidance, and a direct route into the marketplace.
-                            </div>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                              {["Fresh Food", "Seedlings", "Bubble Babies", "Recipes", "Nutrition"].map((item) => (
-                                <span
-                                  key={item}
-                                  style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    padding: "7px 11px",
-                                    borderRadius: 999,
-                                    background: "rgba(190,196,120,0.16)",
-                                    border: "1px solid rgba(233,238,221,0.16)",
-                                    fontSize: 12,
-                                    letterSpacing: "0.04em",
-                                  }}
-                                >
-                                  {item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <button style={styles.whiteBtn} onClick={() => goto("marketplace")}>
-                          Go to Marketplace
-                        </button>
-                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>
-                          Recipes & Nutrition
-                        </button>
-
-                        <div style={{ ...styles.infoBox, ...customerAccent }}>
-                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Customer path priority</div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            This pathway is designed to move people quickly toward GrownBy, then bring them back for fresh food guidance, healthier choices, and repeat visits.
-                          </div>
-                        </div>
-
-                        <div style={{ ...styles.infoBox, ...customerAccent }}>
-                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Food access with meaning</div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            The goal is not only to shop, but to help families build healthier habits, understand natural food, and return to the ecosystem for ongoing support.
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {screen === "marketplace" && (
-                      <>
-                        <div
-                          style={{
-                            borderRadius: 24,
-                            overflow: "hidden",
-                            marginBottom: 6,
-                            border: "1px solid rgba(214,233,190,0.18)",
-                            background: "linear-gradient(180deg, rgba(72,66,34,0.34), rgba(24,22,16,0.48))",
-                            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
-                          }}
-                        >
-                          <img
-                            src={IMAGES.marketplace}
-                            alt="Marketplace"
-                            style={{
-                              width: "100%",
-                              height: 210,
-                              objectFit: "cover",
-                              display: "block",
-                            }}
-                          />
-                          <div style={{ padding: 18 }}>
-                            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
-                              Marketplace Through GrownBy
-                            </div>
-                            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
-                              This is where interest becomes action through fresh food, seedlings, and future offerings connected to the farm’s wider ecosystem.
-                            </div>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                              {["GrownBy", "Fresh Food", "Seedlings", "Preorders", "Return Visits"].map((item) => (
-                                <span
-                                  key={item}
-                                  style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    padding: "7px 11px",
-                                    borderRadius: 999,
-                                    background: "rgba(196,170,120,0.16)",
-                                    border: "1px solid rgba(233,238,221,0.16)",
-                                    fontSize: 12,
-                                    letterSpacing: "0.04em",
-                                  }}
-                                >
-                                  {item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <a
-                          href="https://grownby.com/farms/bronson-family-farm/shop"
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{ ...styles.whiteBtn, justifyContent: "center" }}
-                        >
-                          Open GrownBy Store
-                        </a>
-                        <button style={styles.ghostBtn} onClick={() => goto("customer")}>
-                          Back to Customer Path
-                        </button>
-                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>
-                          Food Guidance
-                        </button>
-
-                        <div style={{ ...styles.infoBox, ...marketplaceAccent }}>
-                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                            Marketplace destination
-                          </div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            The marketplace should feel direct, trustworthy, and easy to use while still staying connected to the larger story of fresh food, health, and self-sufficiency.
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {screen === "grower" && (
-                      <>
-                        <button style={styles.whiteBtn} onClick={() => goto("planner")}>Open Crop Planner</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("events")}>Seasonal Events</button>
-                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>Coordination View</button>
-                      </>
-                    )}
-
-                    {screen === "valueAdded" && (
-                      <>
-                        <button style={styles.whiteBtn} onClick={() => goto("events")}>Demonstrations</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Market Access</button>
-                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.produce)}>Product Presentation</button>
-                      </>
-                    )}
-
-                    {screen === "youth" && (
-                      <>
-                        <div
-                          style={{
-                            borderRadius: 24,
-                            overflow: "hidden",
-                            marginBottom: 6,
-                            border: "1px solid rgba(180,220,190,0.18)",
-                            background: "linear-gradient(180deg, rgba(32,58,52,0.42), rgba(16,26,22,0.52))",
-                            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
-                          }}
-                        >
-                          <img
-                            src={IMAGES.youth}
-                            alt="Youth Workforce"
-                            style={{
-                              width: "100%",
-                              height: 210,
-                              objectFit: "cover",
-                              display: "block",
-                            }}
-                          />
-                          <div style={{ padding: 18 }}>
-                            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
-                              Youth Workforce Program
-                            </div>
-                            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
-                              A structured living classroom where youth gain hands-on experience in agriculture, teamwork, responsibility, entrepreneurship, and future readiness with family visibility and supervisor support built into the program.
-                            </div>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                              {["Learning", "Parent Portal", "Supervisor Support", "STEAM", "Future Readiness"].map((item) => (
-                                <span
-                                  key={item}
-                                  style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    padding: "7px 11px",
-                                    borderRadius: 999,
-                                    background: "rgba(148,196,160,0.18)",
-                                    border: "1px solid rgba(221,238,221,0.16)",
-                                    fontSize: 12,
-                                    letterSpacing: "0.04em",
-                                  }}
-                                >
-                                  {item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <button style={styles.whiteBtn} onClick={() => goto("planner")}>Learning Schedule</button>
-                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>STEAM & Training</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Parent Portal & Support</button>
-
-                        <div style={{ ...styles.infoBox, ...youthAccent }}>
-                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                            Parent Portal included
-                          </div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            Families can stay connected to structure, communication, participation, progress, and support through a parent-facing layer within Youth Workforce.
-                          </div>
-                        </div>
-
-                        <div style={{ ...styles.infoBox, ...youthAccent }}>
-                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                            Supervisor support built in
-                          </div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            Supervisor guidance is part of the program through structure, logistics, accountability, encouragement, and wellness support.
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {screen === "volunteers" && (
-                      <>
-                        <div
-                          style={{
-                            borderRadius: 24,
-                            overflow: "hidden",
-                            marginBottom: 6,
-                            border: "1px solid rgba(214,233,190,0.18)",
-                            background: "linear-gradient(180deg, rgba(68,74,44,0.34), rgba(24,28,18,0.48))",
-                            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
-                          }}
-                        >
-                          <img
-                            src={IMAGES.volunteers}
-                            alt="Volunteers"
-                            style={{
-                              width: "100%",
-                              height: 210,
-                              objectFit: "cover",
-                              display: "block",
-                            }}
-                          />
-                          <div style={{ padding: 18 }}>
-                            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
-                              Volunteer Pathway
-                            </div>
-                            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
-                              A welcoming community service pathway where people can support growing, events, hospitality, setup, and shared learning while becoming part of the larger mission of the farm.
-                            </div>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                              {["Service", "Hospitality", "Events", "Community", "Shared Work"].map((item) => (
-                                <span
-                                  key={item}
-                                  style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    padding: "7px 11px",
-                                    borderRadius: 999,
-                                    background: "rgba(196,186,120,0.16)",
-                                    border: "1px solid rgba(233,238,221,0.16)",
-                                    fontSize: 12,
-                                    letterSpacing: "0.04em",
-                                  }}
-                                >
-                                  {item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <button style={styles.whiteBtn} onClick={() => goto("events")}>Event Support</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("youth")}>Youth Connection</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Community Care</button>
-
-                        <div style={{ ...styles.infoBox, ...volunteerAccent }}>
-                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                            Service and belonging
-                          </div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            Volunteers help make the ecosystem visible, welcoming, and functional through shared work, presence, and community support.
-                          </div>
-                        </div>
-
-                        <div style={{ ...styles.infoBox, ...volunteerAccent }}>
-                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                            Event and farm support
-                          </div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            This can include setup, hospitality, planting help, educational activities, and participation in farm events and visitor experiences.
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {screen === "story" && (
-                      <>
-                        <button style={styles.whiteBtn} onClick={() => goto("guest")}>Enter as Guest</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("events")}>Community Experiences</button>
-                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.legacy)}>Legacy View</button>
-                      </>
-                    )}
-
-                    {screen === "planner" && (
-                      <>
-                        <button style={styles.whiteBtn} onClick={() => goto("grower")}>Grower Path</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("events")}>Event Readiness</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Inventory to Market</button>
-                      </>
-                    )}
-
-                    {screen === "events" && (
-                      <>
-                        <button style={styles.whiteBtn} onClick={() => goto("guest")}>Guest Experiences</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Vendor & Market Flow</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Health Education</button>
-                      </>
-                    )}
-
-                    {screen === "wellness" && (
-                      <>
-                        <button style={styles.whiteBtn} onClick={() => goto("customer")}>Customer Food Path</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Shop Fresh Food</button>
-                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.nutrition)}>Nutrition View</button>
-                        <div style={styles.infoBox}>
-                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Wellness cluster</div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)", marginBottom: 10 }}>
-                            This area should help people connect food access with simple recipes, diabetes awareness, better choices, and everyday wellness.
-                          </div>
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                            {["Fresh Choices", "Recipes", "Nutrition", "Diabetes Awareness", "Healthier at Home"].map((item) => (
-                              <span
-                                key={item}
-                                style={{
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  padding: "7px 11px",
-                                  borderRadius: 999,
-                                  background: "rgba(141,185,137,0.18)",
-                                  border: "1px solid rgba(255,255,255,0.16)",
-                                  fontSize: 12,
-                                  letterSpacing: "0.04em",
-                                }}
-                              >
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-                  <div style={styles.miniLabel}>Image gallery</div>
-                  <div style={{ marginBottom: 14, color: "rgba(239,247,239,0.88)" }}>
-                    Using the other farm photos instead of repeating the same two images.
-                  </div>
-                  <div style={styles.galleryGrid}>
-                    {gallery.map((img, idx) => (
-                      <button key={`${img}-${idx}`} style={styles.galleryItem} onClick={() => setImageModal(img)}>
-                        <img src={img} alt={`Farm ${idx + 1}`} style={styles.galleryImage} />
-                      </button>
-                    ))}
-                  </div>
+                  {renderBottomPanel()}
                 </div>
               </div>
             </div>
@@ -1592,27 +2187,68 @@ function App() {
 
           <div style={styles.section}>
             <div style={styles.sideCard}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                  flexWrap: "wrap",
+                }}
+              >
                 <div>
                   <div style={styles.miniLabel}>Explore modules</div>
-                  <div style={{ fontSize: 28, fontWeight: 800 }}>Designed to feel like a living destination</div>
+                  <div style={{ fontSize: 28, fontWeight: 800 }}>
+                    Designed to feel like a living destination
+                  </div>
                 </div>
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <button style={styles.ghostBtn} onClick={prevScreen}><ArrowLeft size={16} /> Previous</button>
-                  <button style={styles.ghostBtn} onClick={() => goto("home")}><Home size={16} /> Back to entrance</button>
-                  <button style={styles.whiteBtn} onClick={nextScreen}><ArrowRight size={16} /> Next</button>
+                  <button style={styles.ghostBtn} onClick={prevScreen}>
+                    <ArrowLeft size={16} /> {copy.nav.previous}
+                  </button>
+                  <button style={styles.ghostBtn} onClick={() => goto("home")}>
+                    <Home size={16} /> {copy.nav.backHome}
+                  </button>
+                  <button style={styles.whiteBtn} onClick={nextScreen}>
+                    <ArrowRight size={16} /> {copy.nav.next}
+                  </button>
                 </div>
               </div>
+
               <div style={styles.footerModuleGrid}>
                 {[
-                  "Marketplace through GrownBy",
-                  "Events and reservation pathways",
-                  "Crop planning and seasonal guidance",
-                  "Youth workforce, family, and supervisor support",
-                  "Volunteer service and community participation",
-                  "Nutrition, recipes, wellness, and community partnerships",
+                  {
+                    label: "Marketplace through GrownBy",
+                    to: "marketplace" as ScreenKey,
+                  },
+                  {
+                    label: "Events and reservation pathways",
+                    to: "events" as ScreenKey,
+                  },
+                  {
+                    label: "Crop planning and seasonal guidance",
+                    to: "planner" as ScreenKey,
+                  },
+                  {
+                    label: "Youth workforce, family, and supervisor support",
+                    to: "youth" as ScreenKey,
+                  },
+                  {
+                    label: "Volunteer service and community participation",
+                    to: "volunteers" as ScreenKey,
+                  },
+                  {
+                    label: "Nutrition, recipes, wellness, and community partnerships",
+                    to: "wellness" as ScreenKey,
+                  },
                 ].map((item) => (
-                  <div key={item} style={styles.moduleBox}>{item}</div>
+                  <button
+                    key={item.label}
+                    style={{ ...styles.moduleBox, textAlign: "left", cursor: "pointer" }}
+                    onClick={() => goto(item.to)}
+                  >
+                    {item.label}
+                  </button>
                 ))}
               </div>
             </div>
@@ -1628,8 +2264,55 @@ function App() {
           <img src={imageModal} alt="Expanded farm view" style={styles.modalImage} />
         </div>
       )}
+
+      {recipeModal && (
+        <div style={styles.modal}>
+          <button style={styles.closeBtn} onClick={() => setRecipeModal(null)}>
+            <X size={20} />
+          </button>
+          <div style={styles.modalCard}>
+            <div style={{ fontSize: 13, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.72, marginBottom: 10 }}>
+              Recipe destination
+            </div>
+            <div style={{ fontSize: 32, fontWeight: 800, marginBottom: 14 }}>{recipeModal.title}</div>
+            <div style={{ fontSize: 18, lineHeight: 1.7, color: "rgba(241,248,241,0.92)", marginBottom: 14 }}>
+              {recipeModal.text}
+            </div>
+            <div style={{ lineHeight: 1.75, color: "rgba(241,248,241,0.86)", marginBottom: 20 }}>
+              {recipeModal.details}
+            </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <button
+                style={styles.whiteBtn}
+                onClick={() => {
+                  setRecipeModal(null);
+                  goto("marketplace");
+                }}
+              >
+                Go to Marketplace
+              </button>
+              <button
+                style={styles.ghostBtn}
+                onClick={() => {
+                  setRecipeModal(null);
+                  goto("wellness");
+                }}
+              >
+                Back to Wellness
+              </button>
+              <button
+                style={styles.ghostBtn}
+                onClick={() => {
+                  setRecipeModal(null);
+                  goto("customer");
+                }}
+              >
+                Customer Food Path
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-export default App;
