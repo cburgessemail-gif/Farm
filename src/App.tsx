@@ -132,12 +132,7 @@ function translucentBackground(image?: string) {
   if (image) {
     return `linear-gradient(rgba(20,40,30,0.55), rgba(20,40,30,0.35)), url(${image}) center / cover no-repeat`;
   }
-
-  return `linear-gradient(
-    135deg,
-    rgba(46,106,74,0.85),
-    rgba(141,166,96,0.75)
-  )`;
+  return `linear-gradient(135deg, rgba(46,106,74,0.85), rgba(141,166,96,0.75))`;
 }
 
 function roleTitle(role: RoleKey) {
@@ -298,6 +293,147 @@ function getNarration(
   }
 
   return "Explore the next part of the Bronson Family Farm ecosystem.";
+}
+
+function LargeImageBanner({ background }: { background: string }) {
+  return (
+    <div
+      style={{
+        height: 220,
+        borderRadius: 24,
+        background,
+      }}
+    />
+  );
+}
+
+function MetricCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      style={{
+        background: "white",
+        borderRadius: 18,
+        padding: 14,
+        border: `1px solid ${brand.line}`,
+      }}
+    >
+      <div style={{ fontSize: 12, opacity: 0.68, fontWeight: 700 }}>{label}</div>
+      <div
+        style={{
+          marginTop: 6,
+          fontSize: 20,
+          fontWeight: 900,
+          color: brand.deep,
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function ThreeColCards({
+  items,
+}: {
+  items: { title: string; text: string }[];
+}) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: 14,
+      }}
+    >
+      {items.map((item) => (
+        <div
+          key={item.title}
+          style={{
+            background: "white",
+            borderRadius: 20,
+            padding: 18,
+            border: `1px solid ${brand.line}`,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 18,
+              fontWeight: 900,
+              color: brand.deep,
+              marginBottom: 8,
+            }}
+          >
+            {item.title}
+          </div>
+          <div style={{ lineHeight: 1.65 }}>{item.text}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ScheduleList({ items }: { items: string[] }) {
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      {items.map((item) => (
+        <div
+          key={item}
+          style={{
+            background: "white",
+            borderRadius: 18,
+            padding: "14px 16px",
+            border: `1px solid ${brand.line}`,
+            lineHeight: 1.6,
+          }}
+        >
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProgressBars({
+  items,
+}: {
+  items: { label: string; value: number }[];
+}) {
+  return (
+    <div style={{ display: "grid", gap: 14 }}>
+      {items.map((item) => (
+        <div key={item.label}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontWeight: 700,
+              marginBottom: 6,
+            }}
+          >
+            <span>{item.label}</span>
+            <span>{item.value}%</span>
+          </div>
+          <div
+            style={{
+              height: 12,
+              background: "#e4ede5",
+              borderRadius: 999,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${item.value}%`,
+                background: brand.deep,
+                borderRadius: 999,
+              }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function renderStandardModule(
@@ -725,697 +861,6 @@ function renderYouthView(view: YouthViewKey) {
   );
 }
 
-function App() {
-  const [homeMode, setHomeMode] = useState(true);
-  const [selectedRole, setSelectedRole] = useState<RoleKey>("guest");
-  const [currentModule, setCurrentModule] = useState<string>("overview");
-  const [youthView, setYouthView] = useState<YouthViewKey>("youthHome");
-  const [voiceOn, setVoiceOn] = useState(false);
-  const [now, setNow] = useState(new Date());
-  const [announcementIndex, setAnnouncementIndex] = useState(0);
-  const [weather, setWeather] = useState<WeatherState>({
-    loading: true,
-    city: "Youngstown, OH",
-  });
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setAnnouncementIndex((prev) => (prev + 1) % announcements.length);
-    }, 4500);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadWeather() {
-      try {
-        setWeather((prev) => ({ ...prev, loading: true, error: undefined }));
-
-        const geoRes = await fetch(
-          "https://geocoding-api.open-meteo.com/v1/search?name=Youngstown&count=1&language=en&format=json"
-        );
-        const geoJson = await geoRes.json();
-        const first = geoJson?.results?.[0];
-
-        if (!first) throw new Error("Could not find location");
-
-        const forecastRes = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${first.latitude}&longitude=${first.longitude}&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto`
-        );
-        const forecastJson = await forecastRes.json();
-
-        if (cancelled) return;
-
-        setWeather({
-          loading: false,
-          city: `${first.name}, ${first.admin1 ?? "OH"}`,
-          temp: Math.round(forecastJson?.current?.temperature_2m ?? 0),
-          wind: Math.round(forecastJson?.current?.wind_speed_10m ?? 0),
-          high: Math.round(forecastJson?.daily?.temperature_2m_max?.[0] ?? 0),
-          low: Math.round(forecastJson?.daily?.temperature_2m_min?.[0] ?? 0),
-          description:
-            weatherDescriptions[forecastJson?.current?.weather_code] ??
-            "Current conditions",
-        });
-      } catch {
-        if (cancelled) return;
-        setWeather({
-          loading: false,
-          city: "Youngstown, OH",
-          error: "Weather unavailable right now",
-        });
-      }
-    }
-
-    loadWeather();
-    const timer = window.setInterval(loadWeather, 1000 * 60 * 15);
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!voiceOn || !("speechSynthesis" in window)) return;
-
-    const text = getNarration(selectedRole, currentModule, youthView);
-    window.speechSynthesis.cancel();
-
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 0.93;
-    utter.pitch = 1;
-    utter.lang = "en-US";
-    window.speechSynthesis.speak(utter);
-
-    return () => window.speechSynthesis.cancel();
-  }, [voiceOn, selectedRole, currentModule, youthView]);
-
-  const narration = useMemo(
-    () => getNarration(selectedRole, currentModule, youthView),
-    [selectedRole, currentModule, youthView]
-  );
-
-  function openRole(role: RoleKey) {
-    setSelectedRole(role);
-    setHomeMode(false);
-
-    if (role === "guest") setCurrentModule("overview");
-    if (role === "customer") setCurrentModule("market");
-    if (role === "grower") setCurrentModule("planning");
-    if (role === "volunteer") setCurrentModule("events");
-    if (role === "youth") {
-      setCurrentModule("youth");
-      setYouthView("youthHome");
-    }
-  }
-
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: brand.bg,
-        color: brand.text,
-        fontFamily:
-          "'Segoe UI', Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-      }}
-    >
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 20,
-          backdropFilter: "blur(10px)",
-          background: "rgba(245,239,227,0.86)",
-          borderBottom: `1px solid ${brand.line}`,
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1440,
-            margin: "0 auto",
-            padding: "16px 20px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 14,
-            flexWrap: "wrap",
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontSize: 28,
-                fontWeight: 900,
-                letterSpacing: "-0.04em",
-                color: brand.deep,
-              }}
-            >
-              Bronson Family Farm Ecosystem Demo
-            </div>
-            <div style={{ fontSize: 13, opacity: 0.76 }}>
-              Interactive live prototype
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <LivePill label={formatDate(now)} />
-            <LivePill label={formatTime(now)} />
-            <button onClick={() => setVoiceOn((v) => !v)} style={pillButton(voiceOn)}>
-              Voice Narration: {voiceOn ? "ON" : "OFF"}
-            </button>
-            {!homeMode && (
-              <button onClick={() => setHomeMode(true)} style={pillButton(false)}>
-                Back to Home
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {homeMode ? (
-        <main>
-          <section
-            style={{
-              position: "relative",
-              minHeight: 620,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage: `linear-gradient(90deg, rgba(15,44,30,0.76), rgba(15,44,30,0.38)), url(${images.hero})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
-
-            <div
-              style={{
-                position: "relative",
-                maxWidth: 1440,
-                margin: "0 auto",
-                padding: "68px 20px 72px",
-                display: "grid",
-                gridTemplateColumns: "1.2fr 0.85fr",
-                gap: 24,
-              }}
-            >
-              <div style={{ color: "white", alignSelf: "center" }}>
-                <div
-                  style={{
-                    display: "inline-block",
-                    background: "rgba(255,255,255,0.16)",
-                    border: "1px solid rgba(255,255,255,0.18)",
-                    padding: "8px 14px",
-                    borderRadius: 999,
-                    marginBottom: 18,
-                    fontWeight: 700,
-                  }}
-                >
-                  Bronson Family Farm • Farm & Family Alliance
-                </div>
-
-                <h1
-                  style={{
-                    margin: 0,
-                    fontSize: "clamp(42px, 6vw, 74px)",
-                    lineHeight: 1.02,
-                    letterSpacing: "-0.05em",
-                    maxWidth: 900,
-                  }}
-                >
-                  A living ecosystem for growing, learning, buying, working, and returning.
-                </h1>
-
-                <p
-                  style={{
-                    fontSize: 20,
-                    lineHeight: 1.7,
-                    maxWidth: 820,
-                    color: "rgba(255,255,255,0.96)",
-                    marginTop: 18,
-                  }}
-                >
-                  This version feels more like a platform: live weather, live time,
-                  rotating updates, role dashboards, and a dedicated Youth Workforce
-                  system with youth, parent, supervisor, attendance, and support layers.
-                </p>
-
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 14,
-                    flexWrap: "wrap",
-                    marginTop: 26,
-                  }}
-                >
-                  <button onClick={() => openRole("guest")} style={heroButton()}>
-                    Enter Live Demo
-                  </button>
-                  <button onClick={() => openRole("youth")} style={heroButton(true)}>
-                    Open Youth Workforce
-                  </button>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  alignSelf: "end",
-                  display: "grid",
-                  gap: 16,
-                }}
-              >
-                <GlassCard>
-                  <div style={eyebrowLight()}>LIVE UPDATES</div>
-                  <div style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.45 }}>
-                    {announcements[announcementIndex]}
-                  </div>
-                </GlassCard>
-
-                <GlassCard>
-                  <div style={eyebrowLight()}>YOUNGSTOWN WEATHER</div>
-                  {weather.loading ? (
-                    <div style={{ fontSize: 20, fontWeight: 700 }}>Loading weather…</div>
-                  ) : weather.error ? (
-                    <div style={{ fontSize: 18 }}>{weather.error}</div>
-                  ) : (
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: 12,
-                        alignItems: "end",
-                      }}
-                    >
-                      <div>
-                        <div style={{ fontSize: 18, opacity: 0.9 }}>{weather.city}</div>
-                        <div style={{ fontSize: 42, fontWeight: 900 }}>{weather.temp}°F</div>
-                        <div style={{ fontSize: 18 }}>{weather.description}</div>
-                      </div>
-                      <div style={{ fontSize: 16, lineHeight: 1.8 }}>
-                        <div>High: {weather.high}°F</div>
-                        <div>Low: {weather.low}°F</div>
-                        <div>Wind: {weather.wind} mph</div>
-                      </div>
-                    </div>
-                  )}
-                </GlassCard>
-              </div>
-            </div>
-          </section>
-
-          <section
-            style={{
-              maxWidth: 1440,
-              margin: "0 auto",
-              padding: "28px 20px 56px",
-            }}
-          >
-            <div
-              style={{
-                fontSize: 32,
-                fontWeight: 900,
-                color: brand.deep,
-                marginBottom: 18,
-                letterSpacing: "-0.04em",
-              }}
-            >
-              Choose Your Role
-            </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(270px, 1fr))",
-                gap: 20,
-              }}
-            >
-              {roles.map((role) => (
-                <RoleCard
-                  key={role}
-                  title={roleTitle(role)}
-                  intro={roleIntro(role)}
-                  image={roleImage(role)}
-                  role={role}
-                  onOpen={() => openRole(role)}
-                />
-              ))}
-            </div>
-          </section>
-        </main>
-      ) : (
-        <main
-          style={{
-            maxWidth: 1440,
-            margin: "0 auto",
-            padding: "22px 20px 40px",
-            display: "grid",
-            gridTemplateColumns: "320px 1fr",
-            gap: 22,
-          }}
-        >
-          <aside
-            style={{
-              background: brand.card,
-              borderRadius: 28,
-              padding: 18,
-              border: `1px solid ${brand.line}`,
-              boxShadow: "0 18px 42px rgba(22,37,29,0.08)",
-              height: "fit-content",
-              position: "sticky",
-              top: 94,
-            }}
-          >
-            <div
-              style={{
-                borderRadius: 22,
-                overflow: "hidden",
-                height: 188,
-                background: roleImage(selectedRole)
-                  ? translucentBackground(roleImage(selectedRole))
-                  : roleBackground(selectedRole),
-                marginBottom: 16,
-                display: "flex",
-                alignItems: "end",
-                padding: 16,
-              }}
-            >
-              {!roleImage(selectedRole) && (
-                <div
-                  style={{
-                    display: "inline-block",
-                    padding: "8px 12px",
-                    borderRadius: 999,
-                    background: "rgba(255,255,255,0.14)",
-                    color: "white",
-                    fontWeight: 800,
-                    border: "1px solid rgba(255,255,255,0.18)",
-                  }}
-                >
-                  {roleVisuals[selectedRole].title}
-                </div>
-              )}
-            </div>
-
-            <div style={{ fontSize: 12, fontWeight: 800, opacity: 0.6 }}>ROLE</div>
-            <div
-              style={{
-                fontSize: 28,
-                fontWeight: 900,
-                color: brand.deep,
-                letterSpacing: "-0.04em",
-                margin: "4px 0 10px",
-              }}
-            >
-              {roleTitle(selectedRole)}
-            </div>
-            <div style={{ lineHeight: 1.7, marginBottom: 18 }}>
-              {roleIntro(selectedRole)}
-            </div>
-
-            <div style={{ display: "grid", gap: 10 }}>
-              {roles.map((role) => (
-                <button
-                  key={role}
-                  onClick={() => openRole(role)}
-                  style={{
-                    textAlign: "left",
-                    padding: "12px 14px",
-                    borderRadius: 16,
-                    border: `1px solid ${brand.line}`,
-                    background:
-                      role === selectedRole ? "rgba(31,77,54,0.12)" : "white",
-                    color: brand.deep,
-                    cursor: "pointer",
-                    fontWeight: 700,
-                  }}
-                >
-                  {roleTitle(role)}
-                </button>
-              ))}
-            </div>
-
-            <div style={{ marginTop: 18 }}>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 800,
-                  opacity: 0.6,
-                  marginBottom: 8,
-                }}
-              >
-                LIVE ANNOUNCEMENT
-              </div>
-              <div
-                style={{
-                  background: brand.soft,
-                  borderRadius: 16,
-                  padding: 14,
-                  lineHeight: 1.6,
-                }}
-              >
-                {announcements[announcementIndex]}
-              </div>
-            </div>
-          </aside>
-
-          <section style={{ display: "grid", gap: 22 }}>
-            <section
-              style={{
-                position: "relative",
-                overflow: "hidden",
-                minHeight: 320,
-                borderRadius: 30,
-                background:
-                  selectedRole === "customer" && currentModule === "market"
-                    ? moduleBackground("market", "customer")
-                    : roleImage(selectedRole)
-                    ? translucentBackground(roleImage(selectedRole))
-                    : roleBackground(selectedRole),
-                boxShadow: "0 18px 48px rgba(19,31,24,0.15)",
-              }}
-            >
-              <div style={{ padding: 30, color: "white", maxWidth: 930 }}>
-                <div
-                  style={{
-                    display: "inline-block",
-                    padding: "8px 14px",
-                    borderRadius: 999,
-                    background: "rgba(255,255,255,0.14)",
-                    border: "1px solid rgba(255,255,255,0.18)",
-                    fontWeight: 800,
-                    marginBottom: 14,
-                  }}
-                >
-                  {roleTitle(selectedRole)}
-                </div>
-
-                <h2
-                  style={{
-                    margin: 0,
-                    fontSize: "clamp(30px,4vw,56px)",
-                    lineHeight: 1.04,
-                    letterSpacing: "-0.05em",
-                  }}
-                >
-                  {roleIntro(selectedRole)}
-                </h2>
-
-                <div
-                  style={{
-                    marginTop: 22,
-                    display: "flex",
-                    gap: 12,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {selectedRole !== "youth" ? (
-                    getStandardTabs(selectedRole as Exclude<RoleKey, "youth">).map((m) => (
-                      <button
-                        key={m.id}
-                        onClick={() => setCurrentModule(m.id)}
-                        style={heroTab(currentModule === m.id)}
-                      >
-                        {m.label}
-                      </button>
-                    ))
-                  ) : (
-                    getYouthTabs().map((m) => (
-                      <button
-                        key={m.id}
-                        onClick={() => setYouthView(m.id)}
-                        style={heroTab(youthView === m.id)}
-                      >
-                        {m.label}
-                      </button>
-                    ))
-                  )}
-                </div>
-              </div>
-            </section>
-
-            <section
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.28fr 0.82fr",
-                gap: 22,
-              }}
-            >
-              <div
-                style={{
-                  background: brand.card,
-                  borderRadius: 28,
-                  padding: 24,
-                  border: `1px solid ${brand.line}`,
-                  boxShadow: "0 18px 42px rgba(22,37,29,0.08)",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 30,
-                    fontWeight: 900,
-                    color: brand.deep,
-                    letterSpacing: "-0.04em",
-                    marginBottom: 16,
-                  }}
-                >
-                  {selectedRole === "youth"
-                    ? getYouthTabs().find((x) => x.id === youthView)?.label
-                    : getStandardTabs(selectedRole as Exclude<RoleKey, "youth">).find(
-                        (x) => x.id === currentModule
-                      )?.label}
-                </div>
-
-                {selectedRole === "youth"
-                  ? renderYouthView(youthView)
-                  : renderStandardModule(
-                      selectedRole as Exclude<RoleKey, "youth">,
-                      currentModule
-                    )}
-              </div>
-
-              <div style={{ display: "grid", gap: 22 }}>
-                <div
-                  style={{
-                    background: "#173126",
-                    color: "white",
-                    borderRadius: 28,
-                    padding: 22,
-                    boxShadow: "0 18px 42px rgba(22,37,29,0.14)",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 800,
-                      letterSpacing: "0.08em",
-                      opacity: 0.75,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Guided Narration
-                  </div>
-                  <div
-                    style={{
-                      marginTop: 12,
-                      minHeight: 126,
-                      fontSize: 18,
-                      lineHeight: 1.75,
-                    }}
-                  >
-                    {narration}
-                  </div>
-                  <div style={{ marginTop: 18 }}>
-                    <button onClick={() => setVoiceOn((v) => !v)} style={smallDarkButton()}>
-                      {voiceOn ? "Pause Voice" : "Resume Voice"}
-                    </button>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    background: brand.card,
-                    borderRadius: 28,
-                    padding: 22,
-                    border: `1px solid ${brand.line}`,
-                    boxShadow: "0 18px 42px rgba(22,37,29,0.08)",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 22,
-                      fontWeight: 900,
-                      color: brand.deep,
-                      marginBottom: 12,
-                    }}
-                  >
-                    Live Conditions
-                  </div>
-
-                  {weather.loading ? (
-                    <div style={{ lineHeight: 1.7 }}>Loading weather…</div>
-                  ) : weather.error ? (
-                    <div style={{ lineHeight: 1.7 }}>{weather.error}</div>
-                  ) : (
-                    <>
-                      <div style={{ lineHeight: 1.7 }}>
-                        <strong>{weather.city}</strong>
-                        <br />
-                        {weather.description}
-                      </div>
-
-                      <div
-                        style={{
-                          marginTop: 14,
-                          display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
-                          gap: 10,
-                        }}
-                      >
-                        <MetricCard label="Temp" value={`${weather.temp}°F`} />
-                        <MetricCard label="Wind" value={`${weather.wind} mph`} />
-                        <MetricCard label="High" value={`${weather.high}°F`} />
-                        <MetricCard label="Low" value={`${weather.low}°F`} />
-                      </div>
-                    </>
-                  )}
-
-                  <div
-                    style={{
-                      marginTop: 16,
-                      fontSize: 12,
-                      opacity: 0.68,
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    Weather data powered by Open-Meteo.
-                  </div>
-                </div>
-              </div>
-            </section>
-          </section>
-        </main>
-      )}
-    </div>
-  );
-}
-
 function RoleCard({
   title,
   intro,
@@ -1516,147 +961,6 @@ function GlassCard({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-    </div>
-  );
-}
-
-function LargeImageBanner({ background }: { background: string }) {
-  return (
-    <div
-      style={{
-        height: 220,
-        borderRadius: 24,
-        background,
-      }}
-    />
-  );
-}
-
-function MetricCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div
-      style={{
-        background: "white",
-        borderRadius: 18,
-        padding: 14,
-        border: `1px solid ${brand.line}`,
-      }}
-    >
-      <div style={{ fontSize: 12, opacity: 0.68, fontWeight: 700 }}>{label}</div>
-      <div
-        style={{
-          marginTop: 6,
-          fontSize: 20,
-          fontWeight: 900,
-          color: brand.deep,
-        }}
-      >
-        {value}
-      </div>
-    </div>
-  );
-}
-
-function ThreeColCards({
-  items,
-}: {
-  items: { title: string; text: string }[];
-}) {
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-        gap: 14,
-      }}
-    >
-      {items.map((item) => (
-        <div
-          key={item.title}
-          style={{
-            background: "white",
-            borderRadius: 20,
-            padding: 18,
-            border: `1px solid ${brand.line}`,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 18,
-              fontWeight: 900,
-              color: brand.deep,
-              marginBottom: 8,
-            }}
-          >
-            {item.title}
-          </div>
-          <div style={{ lineHeight: 1.65 }}>{item.text}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ScheduleList({ items }: { items: string[] }) {
-  return (
-    <div style={{ display: "grid", gap: 12 }}>
-      {items.map((item) => (
-        <div
-          key={item}
-          style={{
-            background: "white",
-            borderRadius: 18,
-            padding: "14px 16px",
-            border: `1px solid ${brand.line}`,
-            lineHeight: 1.6,
-          }}
-        >
-          {item}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ProgressBars({
-  items,
-}: {
-  items: { label: string; value: number }[];
-}) {
-  return (
-    <div style={{ display: "grid", gap: 14 }}>
-      {items.map((item) => (
-        <div key={item.label}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontWeight: 700,
-              marginBottom: 6,
-            }}
-          >
-            <span>{item.label}</span>
-            <span>{item.value}%</span>
-          </div>
-          <div
-            style={{
-              height: 12,
-              background: "#e4ede5",
-              borderRadius: 999,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                height: "100%",
-                width: `${item.value}%`,
-                background: brand.deep,
-                borderRadius: 999,
-              }}
-            />
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
