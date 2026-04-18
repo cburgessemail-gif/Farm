@@ -513,12 +513,12 @@ function App() {
   const prevScreen = () => goto(SCREEN_ORDER[(currentIndex - 1 + SCREEN_ORDER.length) % SCREEN_ORDER.length]);
 
   const roleTiles = [
-    { key: "guest" as ScreenKey, title: "Guest", text: "Discover the farm, the story, the land, events, and the airport-connected grow areas.", image: IMAGES.guest },
-    { key: "customer" as ScreenKey, title: "Customer", text: "Move quickly to GrownBy, then return for recipes, nutrition, and food guidance.", image: IMAGES.customer },
-    { key: "grower" as ScreenKey, title: "Grower", text: "Access planning, seasonal guidance, training, and ecosystem support.", image: IMAGES.grower },
-    { key: "valueAdded" as ScreenKey, title: "Value-Added Producer", text: "Explore branding, packaging, demonstrations, and local market opportunity.", image: IMAGES.valueAdded },
-    { key: "youth" as ScreenKey, title: "Youth Workforce", text: "See the farm as a living classroom for agriculture, STEAM, teamwork, and entrepreneurship.", image: IMAGES.youth },
-    { key: "supervisor" as ScreenKey, title: "Supervisor", text: "Support youth workforce through scheduling, oversight, wellness support, and accountability.", image: IMAGES.supervisor },
+    { key: "guest" as ScreenKey, title: "Guest", text: "Discover the farm, the story, the land, events, and the airport-connected grow areas.", image: IMAGES.guest, next: ["Story", "Events", "Gallery"] },
+    { key: "customer" as ScreenKey, title: "Customer", text: "Move quickly to GrownBy, then return for recipes, nutrition, and food guidance.", image: IMAGES.customer, next: ["Marketplace", "Recipes", "Nutrition"] },
+    { key: "grower" as ScreenKey, title: "Grower", text: "Access planning, seasonal guidance, training, and ecosystem support.", image: IMAGES.grower, next: ["Planner", "Seasonal Guidance", "Coordination"] },
+    { key: "valueAdded" as ScreenKey, title: "Value-Added Producer", text: "Explore branding, packaging, demonstrations, and local market opportunity.", image: IMAGES.valueAdded, next: ["Branding", "Packaging", "Market Access"] },
+    { key: "youth" as ScreenKey, title: "Youth Workforce", text: "See the farm as a living classroom for agriculture, STEAM, teamwork, and entrepreneurship.", image: IMAGES.youth, next: ["Learning", "STEAM", "Responsibilities"] },
+    { key: "supervisor" as ScreenKey, title: "Supervisor", text: "Support youth workforce through scheduling, oversight, wellness support, and accountability.", image: IMAGES.supervisor, next: ["Scheduling", "Check-In", "Support"] },
   ];
 
   const detailBlocks: Record<ScreenKey, { title: string; text: string; icon: React.ReactNode }[]> = {
@@ -568,9 +568,9 @@ function App() {
       { title: "Logistics and accountability", text: "Scheduling, check-ins, responsibilities, and day-of support belong here.", icon: <CheckCircle2 size={20} /> },
     ],
     planner: [
-      { title: "Seasonal planning", text: "This area connects crop timing, events, inventory readiness, and coordination.", icon: <CalendarDays size={20} /> },
-      { title: "Weather-aware thinking", text: "Real farming decisions depend on seasonality and conditions.", icon: <CloudSun size={20} /> },
-      { title: "Operational readiness", text: "The planner helps the ecosystem feel practical and real, not decorative.", icon: <BadgeCheck size={20} /> },
+      { title: "Season status", text: "Warm season planning is active, with field prep, seedling movement, and event readiness underway.", icon: <CalendarDays size={20} /> },
+      { title: "Next planting window", text: "Upcoming planting windows help align production timing, volunteer coordination, and grower activity.", icon: <Sprout size={20} /> },
+      { title: "Harvest and event readiness", text: "The planner should help connect crops, staffing, weather, and community-facing events.", icon: <CloudSun size={20} /> },
     ],
     events: [
       { title: "Return engine", text: "Events create repeated entry into the ecosystem for learning, shopping, and connection.", icon: <Users size={20} /> },
@@ -709,7 +709,26 @@ function App() {
                     <div style={styles.roleOverlay} />
                     <div style={styles.roleContent}>
                       <div style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>{role.title}</div>
-                      <div style={{ lineHeight: 1.7, color: "rgba(255,255,255,0.9)" }}>{role.text}</div>
+                      <div style={{ lineHeight: 1.7, color: "rgba(255,255,255,0.9)", marginBottom: 12 }}>{role.text}</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                        {role.next.map((item: string) => (
+                          <span
+                            key={item}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              padding: "7px 11px",
+                              borderRadius: 999,
+                              background: "rgba(255,255,255,0.14)",
+                              border: "1px solid rgba(255,255,255,0.16)",
+                              fontSize: 12,
+                              letterSpacing: "0.04em",
+                            }}
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -736,6 +755,90 @@ function App() {
                 </div>
 
                 <div style={styles.sideCard}>
+                  <div style={styles.miniLabel}>Next strongest moves</div>
+                  <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>
+                    {screen === "guest" && (
+                      <>
+                        <button style={styles.ghostBtn} onClick={() => goto("story")}>Story</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("events")}>Events</button>
+                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.community)}>Open Gallery</button>
+                      </>
+                    )}
+                    {screen === "customer" && (
+                      <>
+                        <button style={{ ...styles.whiteBtn, justifyContent: "center" }} onClick={() => goto("marketplace")}>Go to Marketplace</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Recipes & Nutrition</button>
+                        <div style={styles.infoBox}>
+                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Customer path priority</div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)" }}>This pathway is designed to move people quickly toward GrownBy, then bring them back for food education, healthier choices, and return visits.</div>
+                        </div>
+                      </>
+                    )}
+                    {screen === "marketplace" && (
+                      <>
+                        <a href="https://grownby.com/farms/bronson-family-farm/shop" target="_blank" rel="noreferrer" style={{ ...styles.whiteBtn, justifyContent: "center", textDecoration: "none" }}>Open GrownBy Store</a>
+                        <button style={styles.ghostBtn} onClick={() => goto("customer")}>Back to Customer Path</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Food Guidance</button>
+                      </>
+                    )}
+                    {screen === "grower" && (
+                      <>
+                        <button style={styles.whiteBtn} onClick={() => goto("planner")}>Open Crop Planner</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("events")}>Seasonal Events</button>
+                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>Coordination View</button>
+                      </>
+                    )}
+                    {screen === "valueAdded" && (
+                      <>
+                        <button style={styles.whiteBtn} onClick={() => goto("events")}>Demonstrations</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Market Access</button>
+                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.produce)}>Product Presentation</button>
+                      </>
+                    )}
+                    {screen === "youth" && (
+                      <>
+                        <button style={styles.whiteBtn} onClick={() => goto("supervisor")}>Supervisor Support</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("planner")}>Learning Schedule</button>
+                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>STEAM & Training</button>
+                      </>
+                    )}
+                    {screen === "supervisor" && (
+                      <>
+                        <button style={styles.whiteBtn} onClick={() => goto("youth")}>Back to Youth Workforce</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("planner")}>Scheduling</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Support Resources</button>
+                      </>
+                    )}
+                    {screen === "story" && (
+                      <>
+                        <button style={styles.whiteBtn} onClick={() => goto("guest")}>Enter as Guest</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("events")}>Community Experiences</button>
+                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.legacy)}>Legacy View</button>
+                      </>
+                    )}
+                    {screen === "planner" && (
+                      <>
+                        <button style={styles.whiteBtn} onClick={() => goto("grower")}>Grower Path</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("events")}>Event Readiness</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Inventory to Market</button>
+                      </>
+                    )}
+                    {screen === "events" && (
+                      <>
+                        <button style={styles.whiteBtn} onClick={() => goto("guest")}>Guest Experiences</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Vendor & Market Flow</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Health Education</button>
+                      </>
+                    )}
+                    {screen === "wellness" && (
+                      <>
+                        <button style={styles.whiteBtn} onClick={() => goto("customer")}>Customer Food Path</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Shop Fresh Food</button>
+                        <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.nutrition)}>Nutrition View</button>
+                      </>
+                    )}
+                  </div>
+
                   <div style={styles.miniLabel}>Image gallery</div>
                   <div style={{ marginBottom: 14, color: "rgba(255,255,255,0.82)" }}>Using the other farm photos instead of repeating the same two images.</div>
                   <div style={styles.galleryGrid}>
