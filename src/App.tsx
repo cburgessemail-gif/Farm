@@ -23,8 +23,6 @@ type WeatherState = {
 const brand = {
   bg: "linear-gradient(180deg, #f5efe3 0%, #e8f2e9 100%)",
   deep: "#1f4d36",
-  forest: "#2e6a4a",
-  moss: "#6d8b63",
   text: "#173126",
   card: "rgba(255,255,255,0.92)",
   line: "rgba(31,77,54,0.10)",
@@ -33,14 +31,7 @@ const brand = {
 
 const images = {
   hero: "/GrowArea.jpg",
-  guest: "/SAM_0220.JPG",
-  customer: "/SAM_0221.JPG",
-  grower: "/SAM_0222.JPG",
-  volunteer: "/SAM_0223.JPG",
-  youth: "/SAM_0225.JPG",
-  learning: "/SAM_0222.JPG",
-  workforce: "/SAM_0225.JPG",
-  operations: "/SAM_0237.JPG",
+  customer: "/GrowArea2.jpg",
   market: "/GrowArea2.jpg",
 };
 
@@ -53,13 +44,7 @@ const announcements = [
   "Youth Workforce includes youth, parents, supervisors, attendance, and support visibility.",
 ];
 
-const buyingHistory = [
-  "Tomatoes",
-  "Collards",
-  "Peppers",
-  "Spinach",
-  "Cabbage",
-];
+const buyingHistory = ["Tomatoes", "Collards", "Peppers", "Spinach", "Cabbage"];
 
 const weatherDescriptions: Record<number, string> = {
   0: "Clear",
@@ -82,6 +67,605 @@ const weatherDescriptions: Record<number, string> = {
   82: "Heavy showers",
   95: "Thunderstorm",
 };
+
+const roleVisuals: Record<RoleKey, { title: string; background: string }> = {
+  guest: {
+    title: "Welcome Pathway",
+    background:
+      "radial-gradient(circle at top left, rgba(217,164,65,0.30), transparent 28%), linear-gradient(135deg, #214d39 0%, #2f6a4b 48%, #8aa06a 100%)",
+  },
+  customer: {
+    title: "Marketplace Pathway",
+    background: `linear-gradient(90deg, rgba(16,40,28,0.78), rgba(16,40,28,0.30)), url(${images.customer})`,
+  },
+  grower: {
+    title: "Grower Operations",
+    background:
+      "radial-gradient(circle at top right, rgba(255,255,255,0.10), transparent 24%), linear-gradient(135deg, #314b2b 0%, #4a6b3d 48%, #7f9b5a 100%)",
+  },
+  volunteer: {
+    title: "Community Service Flow",
+    background:
+      "radial-gradient(circle at bottom left, rgba(217,164,65,0.24), transparent 24%), linear-gradient(135deg, #4b3a2a 0%, #6b543c 44%, #9f7d57 100%)",
+  },
+  youth: {
+    title: "Youth Workforce System",
+    background:
+      "radial-gradient(circle at top center, rgba(255,255,255,0.12), transparent 26%), linear-gradient(135deg, #1e3c57 0%, #2d5878 45%, #4f7ca5 100%)",
+  },
+};
+
+function translucentBackground(image?: string) {
+  if (image) {
+    return `linear-gradient(rgba(20,40,30,0.55), rgba(20,40,30,0.35)), url(${image}) center / cover no-repeat`;
+  }
+
+  return `linear-gradient(
+    135deg,
+    rgba(46,106,74,0.85),
+    rgba(141,166,96,0.75)
+  )`;
+}
+
+function roleTitle(role: RoleKey) {
+  switch (role) {
+    case "guest":
+      return "Guest";
+    case "customer":
+      return "Customer";
+    case "grower":
+      return "Grower";
+    case "volunteer":
+      return "Volunteer";
+    case "youth":
+      return "Youth Workforce";
+  }
+}
+
+function roleIntro(role: RoleKey) {
+  switch (role) {
+    case "guest":
+      return "Discover the farm, events, seasonal learning, and the spirit of regenerative community.";
+    case "customer":
+      return "Move quickly into marketplace pathways, nutrition guidance, and recipe support.";
+    case "grower":
+      return "Access crop planning, weather awareness, seasonal tasks, and operations visibility.";
+    case "volunteer":
+      return "See service pathways, events, support needs, and practical ways to contribute.";
+    case "youth":
+      return "Enter the Youth Workforce system with youth, parent, supervisor, attendance, and support views.";
+  }
+}
+
+function roleImage(role: RoleKey) {
+  if (role === "customer") return images.customer;
+  return "";
+}
+
+function roleBackground(role: RoleKey) {
+  return roleVisuals[role].background;
+}
+
+function getStandardTabs(role: Exclude<RoleKey, "youth">) {
+  switch (role) {
+    case "guest":
+      return [
+        { id: "overview", label: "Overview" },
+        { id: "events", label: "Events" },
+        { id: "learn", label: "Learning" },
+      ];
+    case "customer":
+      return [
+        { id: "market", label: "Marketplace" },
+        { id: "nutrition", label: "Nutrition" },
+        { id: "recipes", label: "Recipes" },
+      ];
+    case "grower":
+      return [
+        { id: "planning", label: "Crop Planning" },
+        { id: "weather", label: "Weather" },
+        { id: "operations", label: "Operations" },
+      ];
+    case "volunteer":
+      return [
+        { id: "events", label: "Events" },
+        { id: "learn", label: "Learning" },
+        { id: "operations", label: "Operations" },
+      ];
+  }
+}
+
+function getYouthTabs() {
+  return [
+    { id: "youthHome" as YouthViewKey, label: "Youth Dashboard" },
+    { id: "parentPortal" as YouthViewKey, label: "Parent Portal" },
+    { id: "supervisor" as YouthViewKey, label: "Supervisor Dashboard" },
+    { id: "progress" as YouthViewKey, label: "Progress" },
+    { id: "attendance" as YouthViewKey, label: "Attendance" },
+    { id: "support" as YouthViewKey, label: "Support" },
+  ];
+}
+
+function getNarration(
+  role: RoleKey,
+  currentModule: string,
+  youthView: YouthViewKey
+) {
+  if (role === "guest" && currentModule === "overview") {
+    return "Welcome into the living ecosystem of Bronson Family Farm. This area introduces the land, the mission, and the community pathway.";
+  }
+  if (role === "guest" && currentModule === "events") {
+    return "This area shows how visitors connect with farm activities, demonstrations, and seasonal gatherings.";
+  }
+  if (role === "guest" && currentModule === "learn") {
+    return "Here, visitors can understand the farm’s purpose, values, and practical learning opportunities.";
+  }
+
+  if (role === "customer" && currentModule === "market") {
+    return "This pathway moves directly into shopping, fresh food access, and practical buying choices.";
+  }
+  if (role === "customer" && currentModule === "nutrition") {
+    return "This section connects food choices to wellness, energy, and the realities of rising food costs.";
+  }
+  if (role === "customer" && currentModule === "recipes") {
+    return "Here, fresh purchases are turned into practical meals families can actually prepare and enjoy.";
+  }
+
+  if (role === "grower" && currentModule === "planning") {
+    return "This area focuses on timing, crop sequencing, field readiness, and the rhythm of growing.";
+  }
+  if (role === "grower" && currentModule === "weather") {
+    return "This section helps shape decisions around planting, watering, field work, and overall conditions.";
+  }
+  if (role === "grower" && currentModule === "operations") {
+    return "Here, field readiness, supply movement, and daily coordination come together.";
+  }
+
+  if (role === "volunteer" && currentModule === "events") {
+    return "This view helps volunteers see where support is needed and how they fit into the day.";
+  }
+  if (role === "volunteer" && currentModule === "learn") {
+    return "This section gives volunteers context so service connects to purpose.";
+  }
+  if (role === "volunteer" && currentModule === "operations") {
+    return "This view supports clarity, timing, and practical contribution across the site.";
+  }
+
+  if (role === "youth" && youthView === "youthHome") {
+    return "This dashboard introduces the youth experience through learning, responsibility, wellness, and growth.";
+  }
+  if (role === "youth" && youthView === "parentPortal") {
+    return "This portal gives families visibility into attendance, schedule, progress, and support confidence.";
+  }
+  if (role === "youth" && youthView === "supervisor") {
+    return "This dashboard supports staff oversight, youth coordination, structure, and response.";
+  }
+  if (role === "youth" && youthView === "progress") {
+    return "This area tracks growth in teamwork, consistency, confidence, and readiness.";
+  }
+  if (role === "youth" && youthView === "attendance") {
+    return "This section keeps youth, families, and staff aligned around participation and reliability.";
+  }
+  if (role === "youth" && youthView === "support") {
+    return "This area surfaces wellness attention, encouragement, and practical support resources.";
+  }
+
+  return "Explore the next part of the ecosystem.";
+}
+
+function renderStandardModule(
+  role: Exclude<RoleKey, "youth">,
+  moduleId: string
+) {
+  if (role === "guest" && moduleId === "overview") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <LargeImageBanner image="" fallbackRole="guest" />
+        <p style={bodyText()}>
+          The ecosystem connects farm life, food access, education, agritourism,
+          community participation, and workforce development. It should feel alive,
+          useful, and welcoming.
+        </p>
+        <ThreeColCards
+          items={[
+            {
+              title: "Regenerative Land",
+              text: "Restoring land, building soil, and reconnecting people to natural food systems.",
+            },
+            {
+              title: "Community Pathways",
+              text: "Guests, customers, growers, volunteers, and workforce participants all enter differently.",
+            },
+            {
+              title: "Return Experience",
+              text: "The design encourages people to come back for learning, events, buying, and participation.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if ((role === "guest" || role === "volunteer") && moduleId === "events") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          The event layer connects community activity, demonstrations, volunteer
+          pathways, and seasonal visibility.
+        </p>
+        <ScheduleList
+          items={[
+            "Growers Supply Market preparation and event setup",
+            "Demonstrations, workshops, and family learning sessions",
+            "Volunteer check-in, support stations, and role assignments",
+            "Seasonal tours, community outreach, and event follow-up",
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if ((role === "guest" || role === "volunteer") && moduleId === "learn") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <LargeImageBanner image="" fallbackRole={role} />
+        <p style={bodyText()}>
+          Learning is woven throughout the farm experience. It gives context,
+          purpose, and practical tools before people act.
+        </p>
+        <ThreeColCards
+          items={[
+            {
+              title: "Food & Health",
+              text: "Nutrition, processed food awareness, recipes, and practical wellness guidance.",
+            },
+            {
+              title: "Farm Learning",
+              text: "Growing systems, seasonal tasks, stewardship, and environmental awareness.",
+            },
+            {
+              title: "Life Skills",
+              text: "Responsibility, teamwork, confidence, and pathway awareness.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (role === "customer" && moduleId === "market") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <LargeImageBanner image={images.market} fallbackRole="customer" />
+        <p style={bodyText()}>
+          Customers move directly into marketplace pathways, discover what is
+          available, and connect purchases to nutrition and recipe support.
+        </p>
+        <div style={sectionTitle()}>Recent Interest</div>
+        <div style={chipWrap()}>
+          {buyingHistory.map((item) => (
+            <span key={item} style={chip()}>
+              {item}
+            </span>
+          ))}
+        </div>
+        <ThreeColCards
+          items={[
+            {
+              title: "Fresh Access",
+              text: "Find produce, seedlings, and farm-connected goods in one place.",
+            },
+            {
+              title: "Smart Guidance",
+              text: "Shopping can connect to health goals, household priorities, and food education.",
+            },
+            {
+              title: "Quick Movement",
+              text: "The customer pathway is intentionally fast because many people come to buy first.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (role === "customer" && moduleId === "nutrition") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          Nutrition guidance helps compare natural food with heavily processed
+          food and shows how rising costs can push families toward substitutes
+          that slowly harm health.
+        </p>
+        <ThreeColCards
+          items={[
+            {
+              title: "Food & Energy",
+              text: "Natural foods can support stable energy, focus, and long-term health.",
+            },
+            {
+              title: "Processed Food Reality",
+              text: "Families often choose overprocessed substitutes under economic pressure.",
+            },
+            {
+              title: "Practical Support",
+              text: "This guidance is framed for real life, limited budgets, and household decision-making.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (role === "customer" && moduleId === "recipes") {
+    return (
+      <ThreeColCards
+        items={[
+          {
+            title: "Tomato & Pepper Skillet",
+            text: "Simple fresh vegetables for a quick family meal.",
+          },
+          {
+            title: "Collard & Cabbage Bowl",
+            text: "A hearty meal that supports fiber, minerals, and fullness.",
+          },
+          {
+            title: "Spinach Add-In Guide",
+            text: "Easy ways to work greens into breakfast, lunch, and dinner.",
+          },
+        ]}
+      />
+    );
+  }
+
+  if (role === "grower" && moduleId === "planning") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <LargeImageBanner image="" fallbackRole="grower" />
+        <p style={bodyText()}>
+          Crop planning helps growers align timing, land readiness, weather,
+          and work sequence.
+        </p>
+        <ScheduleList
+          items={[
+            "Seed starting and transplant timing",
+            "Field preparation and seasonal sequencing",
+            "Water, weather, and growth attention points",
+            "Harvest readiness and operations planning",
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (role === "grower" && moduleId === "weather") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          Weather visibility supports timing, watering, event comfort, and daily field decisions.
+        </p>
+        <ThreeColCards
+          items={[
+            {
+              title: "Field Rhythm",
+              text: "Use weather to shape timing and readiness across the site.",
+            },
+            {
+              title: "Watering Awareness",
+              text: "Heat, wind, and temperature all influence irrigation attention.",
+            },
+            {
+              title: "Workday Comfort",
+              text: "Conditions affect youth, volunteers, visitors, and supervisors too.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if ((role === "grower" || role === "volunteer") && moduleId === "operations") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <LargeImageBanner image="" fallbackRole={role} />
+        <p style={bodyText()}>
+          Operations brings together field readiness, daily movement, support needs,
+          and practical coordination across the farm.
+        </p>
+        <ThreeColCards
+          items={[
+            {
+              title: "Field & Event Readiness",
+              text: "Track setup, task timing, weather awareness, and movement across the site.",
+            },
+            {
+              title: "Role-Based Visibility",
+              text: "Different people see different layers, but everything remains connected.",
+            },
+            {
+              title: "Supportive Oversight",
+              text: "The system is meant to guide people without feeling cold or corporate.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  return <div style={bodyText()}>Module loading…</div>;
+}
+
+function renderYouthView(view: YouthViewKey) {
+  if (view === "youthHome") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <LargeImageBanner image="" fallbackRole="youth" />
+        <p style={bodyText()}>
+          The Youth Workforce dashboard gives participants a clear entry point into
+          tasks, learning, wellness, timing, and progress.
+        </p>
+        <ThreeColCards
+          items={[
+            {
+              title: "Today’s Focus",
+              text: "Orientation, field support, teamwork, and practical responsibility.",
+            },
+            {
+              title: "Learning Path",
+              text: "Youth can connect farm work to confidence, skill building, and future pathways.",
+            },
+            {
+              title: "Wellness Awareness",
+              text: "Support structures are visible so participation feels guided, not confusing.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (view === "parentPortal") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          The Parent Portal gives families visibility into participation,
+          schedule, attendance, progress, and support communication.
+        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 14,
+          }}
+        >
+          <MetricCard label="Youth Status" value="Active" />
+          <MetricCard label="Attendance" value="Present" />
+          <MetricCard label="Next Shift" value="Tue 8:00 AM" />
+          <MetricCard label="Support Flag" value="Stable" />
+        </div>
+        <ThreeColCards
+          items={[
+            {
+              title: "Family Visibility",
+              text: "Parents can see if youth are present, progressing, and supported.",
+            },
+            {
+              title: "Communication",
+              text: "A parent view should reduce confusion and strengthen trust.",
+            },
+            {
+              title: "Program Confidence",
+              text: "Families understand what the workforce experience is building over time.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (view === "supervisor") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          Supervisor belongs inside Youth Workforce as a support function for youth,
+          not as a separate ecosystem role.
+        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 14,
+          }}
+        >
+          <MetricCard label="Youth On Site" value="12" />
+          <MetricCard label="Needs Review" value="2" />
+          <MetricCard label="Wellness Checks" value="4" />
+          <MetricCard label="Task Groups" value="3" />
+        </div>
+        <ThreeColCards
+          items={[
+            {
+              title: "Observation",
+              text: "Track youth presence, engagement, and general support needs.",
+            },
+            {
+              title: "Structure",
+              text: "Supervisors coordinate timing, task groups, and safety awareness.",
+            },
+            {
+              title: "Support Resources",
+              text: "The dashboard should help support staff respond with clarity and consistency.",
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (view === "progress") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          Progress shows growth in responsibility, teamwork, practical skills,
+          consistency, and confidence.
+        </p>
+        <ProgressBars
+          items={[
+            { label: "Attendance Consistency", value: 82 },
+            { label: "Teamwork", value: 76 },
+            { label: "Task Completion", value: 84 },
+            { label: "Leadership Readiness", value: 63 },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  if (view === "attendance") {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <p style={bodyText()}>
+          Attendance helps youth, families, and supervisors stay aligned about
+          presence, timing, and reliability.
+        </p>
+        <ScheduleList
+          items={[
+            "Mon • Present • Orientation & planning",
+            "Tue • Present • Field activity and team tasks",
+            "Wed • Present • Learning and support check",
+            "Thu • Present • Production and cleanup",
+            "Fri • Scheduled • Workforce pathway session",
+          ]}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: "grid", gap: 16 }}>
+      <p style={bodyText()}>
+        Support keeps the Youth Workforce system humane. It includes wellness attention,
+        encouragement, resources, and practical response.
+      </p>
+      <ThreeColCards
+        items={[
+          {
+            title: "Wellness",
+            text: "Track visible support needs and appropriate response pathways.",
+          },
+          {
+            title: "Encouragement",
+            text: "The system should reinforce growth, not only problems or gaps.",
+          },
+          {
+            title: "Resource Visibility",
+            text: "Support staff resources can be surfaced where they are actually needed.",
+          },
+        ]}
+      />
+    </div>
+  );
+}
 
 function App() {
   const [homeMode, setHomeMode] = useState(true);
@@ -141,7 +725,7 @@ function App() {
             weatherDescriptions[forecastJson?.current?.weather_code] ??
             "Current conditions",
         });
-      } catch (error) {
+      } catch {
         if (cancelled) return;
         setWeather({
           loading: false,
@@ -318,8 +902,7 @@ function App() {
                     maxWidth: 900,
                   }}
                 >
-                  A living ecosystem for growing, learning, buying, working, and
-                  returning.
+                  A living ecosystem for growing, learning, buying, working, and returning.
                 </h1>
 
                 <p
@@ -370,9 +953,7 @@ function App() {
                 <GlassCard>
                   <div style={eyebrowLight()}>YOUNGSTOWN WEATHER</div>
                   {weather.loading ? (
-                    <div style={{ fontSize: 20, fontWeight: 700 }}>
-                      Loading weather…
-                    </div>
+                    <div style={{ fontSize: 20, fontWeight: 700 }}>Loading weather…</div>
                   ) : weather.error ? (
                     <div style={{ fontSize: 18 }}>{weather.error}</div>
                   ) : (
@@ -386,9 +967,7 @@ function App() {
                     >
                       <div>
                         <div style={{ fontSize: 18, opacity: 0.9 }}>{weather.city}</div>
-                        <div style={{ fontSize: 42, fontWeight: 900 }}>
-                          {weather.temp}°F
-                        </div>
+                        <div style={{ fontSize: 42, fontWeight: 900 }}>{weather.temp}°F</div>
                         <div style={{ fontSize: 18 }}>{weather.description}</div>
                       </div>
                       <div style={{ fontSize: 16, lineHeight: 1.8 }}>
@@ -435,6 +1014,7 @@ function App() {
                   title={roleTitle(role)}
                   intro={roleIntro(role)}
                   image={roleImage(role)}
+                  role={role}
                   onOpen={() => openRole(role)}
                 />
               ))}
@@ -469,12 +1049,31 @@ function App() {
                 borderRadius: 22,
                 overflow: "hidden",
                 height: 188,
-                backgroundImage: `url(${roleImage(selectedRole)})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                background: roleImage(selectedRole)
+                  ? translucentBackground(roleImage(selectedRole))
+                  : roleBackground(selectedRole),
                 marginBottom: 16,
+                display: "flex",
+                alignItems: "end",
+                padding: 16,
               }}
-            />
+            >
+              {!roleImage(selectedRole) && (
+                <div
+                  style={{
+                    display: "inline-block",
+                    padding: "8px 12px",
+                    borderRadius: 999,
+                    background: "rgba(255,255,255,0.14)",
+                    color: "white",
+                    fontWeight: 800,
+                    border: "1px solid rgba(255,255,255,0.18)",
+                  }}
+                >
+                  {roleVisuals[selectedRole].title}
+                </div>
+              )}
+            </div>
 
             <div style={{ fontSize: 12, fontWeight: 800, opacity: 0.6 }}>ROLE</div>
             <div
@@ -545,11 +1144,9 @@ function App() {
                 overflow: "hidden",
                 minHeight: 320,
                 borderRadius: 30,
-                backgroundImage: `linear-gradient(90deg, rgba(16,40,28,0.78), rgba(16,40,28,0.28)), url(${roleImage(
-                  selectedRole
-                )})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                background: roleImage(selectedRole)
+                  ? translucentBackground(roleImage(selectedRole))
+                  : roleBackground(selectedRole),
                 boxShadow: "0 18px 48px rgba(19,31,24,0.15)",
               }}
             >
@@ -758,581 +1355,17 @@ function App() {
   );
 }
 
-function roleTitle(role: RoleKey) {
-  switch (role) {
-    case "guest":
-      return "Guest";
-    case "customer":
-      return "Customer";
-    case "grower":
-      return "Grower";
-    case "volunteer":
-      return "Volunteer";
-    case "youth":
-      return "Youth Workforce";
-  }
-}
-
-function roleIntro(role: RoleKey) {
-  switch (role) {
-    case "guest":
-      return "Discover the farm, events, seasonal learning, and the spirit of regenerative community.";
-    case "customer":
-      return "Move quickly into marketplace pathways, nutrition guidance, and recipe support.";
-    case "grower":
-      return "Access crop planning, weather awareness, seasonal tasks, and operations visibility.";
-    case "volunteer":
-      return "See service pathways, events, support needs, and practical ways to contribute.";
-    case "youth":
-      return "Enter the Youth Workforce system with youth, parent, supervisor, attendance, and support views.";
-  }
-}
-
-function roleImage(role: RoleKey) {
-  switch (role) {
-    case "guest":
-      return images.guest;
-    case "customer":
-      return images.customer;
-    case "grower":
-      return images.grower;
-    case "volunteer":
-      return images.volunteer;
-    case "youth":
-      return images.youth;
-  }
-}
-
-function getStandardTabs(role: Exclude<RoleKey, "youth">) {
-  switch (role) {
-    case "guest":
-      return [
-        { id: "overview", label: "Overview" },
-        { id: "events", label: "Events" },
-        { id: "learn", label: "Learning" },
-      ];
-    case "customer":
-      return [
-        { id: "market", label: "Marketplace" },
-        { id: "nutrition", label: "Nutrition" },
-        { id: "recipes", label: "Recipes" },
-      ];
-    case "grower":
-      return [
-        { id: "planning", label: "Crop Planning" },
-        { id: "weather", label: "Weather" },
-        { id: "operations", label: "Operations" },
-      ];
-    case "volunteer":
-      return [
-        { id: "events", label: "Events" },
-        { id: "learn", label: "Learning" },
-        { id: "operations", label: "Operations" },
-      ];
-  }
-}
-
-function getYouthTabs() {
-  return [
-    { id: "youthHome" as YouthViewKey, label: "Youth Dashboard" },
-    { id: "parentPortal" as YouthViewKey, label: "Parent Portal" },
-    { id: "supervisor" as YouthViewKey, label: "Supervisor Dashboard" },
-    { id: "progress" as YouthViewKey, label: "Progress" },
-    { id: "attendance" as YouthViewKey, label: "Attendance" },
-    { id: "support" as YouthViewKey, label: "Support" },
-  ];
-}
-
-function renderStandardModule(
-  role: Exclude<RoleKey, "youth">,
-  moduleId: string
-) {
-  if (role === "guest" && moduleId === "overview") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <LargeImageBanner image={images.learning} />
-        <p style={bodyText()}>
-          The ecosystem connects farm life, food access, education, agritourism,
-          community participation, and workforce development. It should feel alive,
-          useful, and welcoming.
-        </p>
-        <ThreeColCards
-          items={[
-            {
-              title: "Regenerative Land",
-              text: "Restoring land, building soil, and reconnecting people to natural food systems.",
-            },
-            {
-              title: "Community Pathways",
-              text: "Guests, customers, growers, volunteers, and workforce participants all enter differently.",
-            },
-            {
-              title: "Return Experience",
-              text: "The design encourages people to come back for learning, events, buying, and participation.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if ((role === "guest" || role === "volunteer") && moduleId === "events") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <p style={bodyText()}>
-          The event layer connects community activity, demonstrations, volunteer
-          pathways, and seasonal visibility.
-        </p>
-        <ScheduleList
-          items={[
-            "Growers Supply Market preparation and event setup",
-            "Demonstrations, workshops, and family learning sessions",
-            "Volunteer check-in, support stations, and role assignments",
-            "Seasonal tours, community outreach, and event follow-up",
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if ((role === "guest" || role === "volunteer") && moduleId === "learn") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <LargeImageBanner image={images.learning} />
-        <p style={bodyText()}>
-          Learning is woven throughout the farm experience. It gives context,
-          purpose, and practical tools before people act.
-        </p>
-        <ThreeColCards
-          items={[
-            {
-              title: "Food & Health",
-              text: "Nutrition, processed food awareness, recipes, and practical wellness guidance.",
-            },
-            {
-              title: "Farm Learning",
-              text: "Growing systems, seasonal tasks, stewardship, and environmental awareness.",
-            },
-            {
-              title: "Life Skills",
-              text: "Responsibility, teamwork, confidence, and pathway awareness.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (role === "customer" && moduleId === "market") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <LargeImageBanner image={images.market} />
-        <p style={bodyText()}>
-          Customers move directly into marketplace pathways, discover what is
-          available, and connect purchases to nutrition and recipe support.
-        </p>
-        <div style={sectionTitle()}>Recent Interest</div>
-        <div style={chipWrap()}>
-          {buyingHistory.map((item) => (
-            <span key={item} style={chip()}>
-              {item}
-            </span>
-          ))}
-        </div>
-        <ThreeColCards
-          items={[
-            {
-              title: "Fresh Access",
-              text: "Find produce, seedlings, and farm-connected goods in one place.",
-            },
-            {
-              title: "Smart Guidance",
-              text: "Shopping can connect to health goals, household priorities, and food education.",
-            },
-            {
-              title: "Quick Movement",
-              text: "The customer pathway is intentionally fast because many people come to buy first.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (role === "customer" && moduleId === "nutrition") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <p style={bodyText()}>
-          Nutrition guidance helps compare natural food with heavily processed
-          food and shows how rising costs can push families toward substitutes
-          that slowly harm health.
-        </p>
-        <ThreeColCards
-          items={[
-            {
-              title: "Food & Energy",
-              text: "Natural foods can support stable energy, focus, and long-term health.",
-            },
-            {
-              title: "Processed Food Reality",
-              text: "Families often choose overprocessed substitutes under economic pressure.",
-            },
-            {
-              title: "Practical Support",
-              text: "This guidance is framed for real life, limited budgets, and household decision-making.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (role === "customer" && moduleId === "recipes") {
-    return (
-      <ThreeColCards
-        items={[
-          {
-            title: "Tomato & Pepper Skillet",
-            text: "Simple fresh vegetables for a quick family meal.",
-          },
-          {
-            title: "Collard & Cabbage Bowl",
-            text: "A hearty meal that supports fiber, minerals, and fullness.",
-          },
-          {
-            title: "Spinach Add-In Guide",
-            text: "Easy ways to work greens into breakfast, lunch, and dinner.",
-          },
-        ]}
-      />
-    );
-  }
-
-  if (role === "grower" && moduleId === "planning") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <LargeImageBanner image={images.learning} />
-        <p style={bodyText()}>
-          Crop planning helps growers align timing, land readiness, weather,
-          and work sequence.
-        </p>
-        <ScheduleList
-          items={[
-            "Seed starting and transplant timing",
-            "Field preparation and seasonal sequencing",
-            "Water, weather, and growth attention points",
-            "Harvest readiness and operations planning",
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (role === "grower" && moduleId === "weather") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <p style={bodyText()}>
-          Weather visibility supports timing, watering, event comfort, and daily field decisions.
-        </p>
-        <ThreeColCards
-          items={[
-            {
-              title: "Field Rhythm",
-              text: "Use weather to shape timing and readiness across the site.",
-            },
-            {
-              title: "Watering Awareness",
-              text: "Heat, wind, and temperature all influence irrigation attention.",
-            },
-            {
-              title: "Workday Comfort",
-              text: "Conditions affect youth, volunteers, visitors, and supervisors too.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if ((role === "grower" || role === "volunteer") && moduleId === "operations") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <LargeImageBanner image={images.operations} />
-        <p style={bodyText()}>
-          Operations brings together field readiness, daily movement, support needs,
-          and practical coordination across the farm.
-        </p>
-        <ThreeColCards
-          items={[
-            {
-              title: "Field & Event Readiness",
-              text: "Track setup, task timing, weather awareness, and movement across the site.",
-            },
-            {
-              title: "Role-Based Visibility",
-              text: "Different people see different layers, but everything remains connected.",
-            },
-            {
-              title: "Supportive Oversight",
-              text: "The system is meant to guide people without feeling cold or corporate.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  return <div style={bodyText()}>Module loading…</div>;
-}
-
-function renderYouthView(view: YouthViewKey) {
-  if (view === "youthHome") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <LargeImageBanner image={images.workforce} />
-        <p style={bodyText()}>
-          The Youth Workforce dashboard gives participants a clear entry point into
-          tasks, learning, wellness, timing, and progress.
-        </p>
-        <ThreeColCards
-          items={[
-            {
-              title: "Today’s Focus",
-              text: "Orientation, field support, teamwork, and practical responsibility.",
-            },
-            {
-              title: "Learning Path",
-              text: "Youth can connect farm work to confidence, skill building, and future pathways.",
-            },
-            {
-              title: "Wellness Awareness",
-              text: "Support structures are visible so participation feels guided, not confusing.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (view === "parentPortal") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <p style={bodyText()}>
-          The Parent Portal gives families visibility into participation,
-          schedule, attendance, progress, and support communication.
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 14,
-          }}
-        >
-          <MetricCard label="Youth Status" value="Active" />
-          <MetricCard label="Attendance" value="Present" />
-          <MetricCard label="Next Shift" value="Tue 8:00 AM" />
-          <MetricCard label="Support Flag" value="Stable" />
-        </div>
-        <ThreeColCards
-          items={[
-            {
-              title: "Family Visibility",
-              text: "Parents can see if youth are present, progressing, and supported.",
-            },
-            {
-              title: "Communication",
-              text: "A parent view should reduce confusion and strengthen trust.",
-            },
-            {
-              title: "Program Confidence",
-              text: "Families understand what the workforce experience is building over time.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (view === "supervisor") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <p style={bodyText()}>
-          Supervisor belongs inside Youth Workforce as a support function for youth,
-          not as a separate ecosystem role.
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 14,
-          }}
-        >
-          <MetricCard label="Youth On Site" value="12" />
-          <MetricCard label="Needs Review" value="2" />
-          <MetricCard label="Wellness Checks" value="4" />
-          <MetricCard label="Task Groups" value="3" />
-        </div>
-        <ThreeColCards
-          items={[
-            {
-              title: "Observation",
-              text: "Track youth presence, engagement, and general support needs.",
-            },
-            {
-              title: "Structure",
-              text: "Supervisors coordinate timing, task groups, and safety awareness.",
-            },
-            {
-              title: "Support Resources",
-              text: "The dashboard should help support staff respond with clarity and consistency.",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (view === "progress") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <p style={bodyText()}>
-          Progress shows growth in responsibility, teamwork, practical skills,
-          consistency, and confidence.
-        </p>
-        <ProgressBars
-          items={[
-            { label: "Attendance Consistency", value: 82 },
-            { label: "Teamwork", value: 76 },
-            { label: "Task Completion", value: 84 },
-            { label: "Leadership Readiness", value: 63 },
-          ]}
-        />
-      </div>
-    );
-  }
-
-  if (view === "attendance") {
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <p style={bodyText()}>
-          Attendance helps youth, families, and supervisors stay aligned about
-          presence, timing, and reliability.
-        </p>
-        <ScheduleList
-          items={[
-            "Mon • Present • Orientation & planning",
-            "Tue • Present • Field activity and team tasks",
-            "Wed • Present • Learning and support check",
-            "Thu • Present • Production and cleanup",
-            "Fri • Scheduled • Workforce pathway session",
-          ]}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ display: "grid", gap: 16 }}>
-      <p style={bodyText()}>
-        Support keeps the Youth Workforce system humane. It includes wellness attention,
-        encouragement, resources, and practical response.
-      </p>
-      <ThreeColCards
-        items={[
-          {
-            title: "Wellness",
-            text: "Track visible support needs and appropriate response pathways.",
-          },
-          {
-            title: "Encouragement",
-            text: "The system should reinforce growth, not only problems or gaps.",
-          },
-          {
-            title: "Resource Visibility",
-            text: "Support staff resources can be surfaced where they are actually needed.",
-          },
-        ]}
-      />
-    </div>
-  );
-}
-
-function getNarration(
-  role: RoleKey,
-  currentModule: string,
-  youthView: YouthViewKey
-) {
-  if (role === "guest" && currentModule === "overview") {
-    return "Welcome into the living ecosystem of Bronson Family Farm. This area introduces the land, the mission, and the community pathway.";
-  }
-  if (role === "guest" && currentModule === "events") {
-    return "This area shows how visitors connect with farm activities, demonstrations, and seasonal gatherings.";
-  }
-  if (role === "guest" && currentModule === "learn") {
-    return "Here, visitors can understand the farm’s purpose, values, and practical learning opportunities.";
-  }
-
-  if (role === "customer" && currentModule === "market") {
-    return "This pathway moves directly into shopping, fresh food access, and practical buying choices.";
-  }
-  if (role === "customer" && currentModule === "nutrition") {
-    return "This section connects food choices to wellness, energy, and the realities of rising food costs.";
-  }
-  if (role === "customer" && currentModule === "recipes") {
-    return "Here, fresh purchases are turned into practical meals families can actually prepare and enjoy.";
-  }
-
-  if (role === "grower" && currentModule === "planning") {
-    return "This area focuses on timing, crop sequencing, field readiness, and the rhythm of growing.";
-  }
-  if (role === "grower" && currentModule === "weather") {
-    return "This section helps shape decisions around planting, watering, field work, and overall conditions.";
-  }
-  if (role === "grower" && currentModule === "operations") {
-    return "Here, field readiness, supply movement, and daily coordination come together.";
-  }
-
-  if (role === "volunteer" && currentModule === "events") {
-    return "This view helps volunteers see where support is needed and how they fit into the day.";
-  }
-  if (role === "volunteer" && currentModule === "learn") {
-    return "This section gives volunteers context so service connects to purpose.";
-  }
-  if (role === "volunteer" && currentModule === "operations") {
-    return "This view supports clarity, timing, and practical contribution across the site.";
-  }
-
-  if (role === "youth" && youthView === "youthHome") {
-    return "This dashboard introduces the youth experience through learning, responsibility, wellness, and growth.";
-  }
-  if (role === "youth" && youthView === "parentPortal") {
-    return "This portal gives families visibility into attendance, schedule, progress, and support confidence.";
-  }
-  if (role === "youth" && youthView === "supervisor") {
-    return "This dashboard supports staff oversight, youth coordination, structure, and response.";
-  }
-  if (role === "youth" && youthView === "progress") {
-    return "This area tracks growth in teamwork, consistency, confidence, and readiness.";
-  }
-  if (role === "youth" && youthView === "attendance") {
-    return "This section keeps youth, families, and staff aligned around participation and reliability.";
-  }
-  if (role === "youth" && youthView === "support") {
-    return "This area surfaces wellness attention, encouragement, and practical support resources.";
-  }
-
-  return "Explore the next part of the ecosystem.";
-}
-
 function RoleCard({
   title,
   intro,
   image,
+  role,
   onOpen,
 }: {
   title: string;
   intro: string;
   image: string;
+  role: RoleKey;
   onOpen: () => void;
 }) {
   return (
@@ -1348,11 +1381,28 @@ function RoleCard({
       <div
         style={{
           height: 220,
-          backgroundImage: `url(${image})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          background: image ? translucentBackground(image) : roleBackground(role),
+          display: "flex",
+          alignItems: "end",
+          padding: 18,
         }}
-      />
+      >
+        {!image && (
+          <div
+            style={{
+              display: "inline-block",
+              padding: "8px 12px",
+              borderRadius: 999,
+              background: "rgba(255,255,255,0.14)",
+              color: "white",
+              fontWeight: 800,
+              border: "1px solid rgba(255,255,255,0.18)",
+            }}
+          >
+            {title}
+          </div>
+        )}
+      </div>
       <div style={{ padding: 20 }}>
         <div
           style={{
@@ -1409,15 +1459,19 @@ function GlassCard({ children }: { children: React.ReactNode }) {
   );
 }
 
-function LargeImageBanner({ image }: { image: string }) {
+function LargeImageBanner({
+  image,
+  fallbackRole,
+}: {
+  image?: string;
+  fallbackRole: RoleKey;
+}) {
   return (
     <div
       style={{
         height: 220,
         borderRadius: 24,
-        backgroundImage: `linear-gradient(90deg, rgba(18,40,28,0.22), rgba(18,40,28,0.08)), url(${image})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        background: image ? translucentBackground(image) : roleBackground(fallbackRole),
       }}
     />
   );
