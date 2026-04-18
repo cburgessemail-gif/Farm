@@ -2,28 +2,28 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
+  BadgeCheck,
+  BookOpen,
+  Briefcase,
   CalendarDays,
+  CheckCircle2,
   CloudSun,
+  GraduationCap,
+  HeartPulse,
+  Home,
+  Info,
+  Languages,
   Leaf,
   Mic,
   Play,
+  ShieldCheck,
   ShoppingBasket,
   Sprout,
   Store,
-  Users,
-  UserRound,
-  Trees,
-  HeartPulse,
-  GraduationCap,
-  Briefcase,
-  ShieldCheck,
   Tractor,
-  BookOpen,
-  BadgeCheck,
-  CheckCircle2,
-  Languages,
-  Home,
-  Info,
+  Trees,
+  UserRound,
+  Users,
   X,
 } from "lucide-react";
 
@@ -42,7 +42,6 @@ const IMAGES = {
   wellness: "/Samaeera2.jpg",
   events: "/Samaeera3.jpg",
   planning: "/GrowArea2.jpg",
-  weather: "/large (1).jpg",
   family: "/large (10).jpg",
   logistics: "/Samerra4.jpg",
   airport: "/GrowArea.jpg",
@@ -52,6 +51,7 @@ const IMAGES = {
   nutrition: "/culinary_edibleflowers.jpeg",
   future: "/GrowArea2.jpg",
   legacy: "/Samerra4.jpg",
+  growArea: "/GrowArea.jpg",
 };
 
 type LanguageKey = "en" | "es" | "tl" | "it" | "patwa" | "he";
@@ -87,16 +87,16 @@ const SCREEN_ORDER: ScreenKey[] = [
 const SCREEN_IMAGES: Record<ScreenKey, string> = {
   home: IMAGES.entrance,
   story: IMAGES.story,
-  guest: IMAGES.guest,
-  customer: IMAGES.customer,
-  marketplace: IMAGES.marketplace,
-  grower: IMAGES.grower,
-  valueAdded: IMAGES.valueAdded,
-  youth: IMAGES.youth,
-  volunteers: IMAGES.volunteers,
+  guest: IMAGES.entrance,
+  customer: IMAGES.entrance,
+  marketplace: IMAGES.entrance,
+  grower: IMAGES.growArea,
+  valueAdded: IMAGES.growArea,
+  youth: IMAGES.growArea,
+  volunteers: IMAGES.growArea,
   planner: IMAGES.planning,
-  events: IMAGES.events,
-  wellness: IMAGES.wellness,
+  events: IMAGES.entrance,
+  wellness: IMAGES.entrance,
 };
 
 const T: Record<
@@ -304,7 +304,6 @@ const T: Record<
 
 function useSpeech() {
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
-  const timeoutRef = useRef<number | null>(null);
 
   const loadVoices = () => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return [];
@@ -321,7 +320,6 @@ function useSpeech() {
     };
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
-      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
     };
   }, []);
 
@@ -350,10 +348,6 @@ function useSpeech() {
   };
 
   const stop = () => {
-    if (timeoutRef.current) {
-      window.clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -361,7 +355,7 @@ function useSpeech() {
 
   const speak = (text: string, lang: LanguageKey) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    stop();
+
     const utter = new SpeechSynthesisUtterance(text);
     const map: Record<LanguageKey, string> = {
       en: "en-US",
@@ -371,16 +365,18 @@ function useSpeech() {
       patwa: "en-JM",
       he: "he-IL",
     };
+
     utter.lang = map[lang];
     utter.rate = 0.95;
     utter.pitch = 1;
+
     const voice = pickVoice(lang);
     if (voice) utter.voice = voice;
 
-    timeoutRef.current = window.setTimeout(() => {
-      window.speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
+    window.setTimeout(() => {
       window.speechSynthesis.speak(utter);
-    }, 180);
+    }, 120);
   };
 
   return { speak, stop };
@@ -591,7 +587,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: "absolute",
     inset: 0,
     background:
-      "linear-gradient(to top, rgba(0,0,0,0.82), rgba(8,32,18,0.42), rgba(0,0,0,0.10))",
+      "linear-gradient(to top, rgba(0,0,0,0.72), rgba(8,32,18,0.24), rgba(0,0,0,0.08))",
   },
   roleContent: {
     position: "relative",
@@ -686,6 +682,26 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
+const youthAccent = {
+  background: "linear-gradient(180deg, rgba(34,74,60,0.34), rgba(18,30,24,0.48))",
+  border: "1px solid rgba(182,226,196,0.16)",
+};
+
+const volunteerAccent = {
+  background: "linear-gradient(180deg, rgba(82,78,42,0.30), rgba(28,30,18,0.46))",
+  border: "1px solid rgba(220,214,168,0.14)",
+};
+
+const customerAccent = {
+  background: "linear-gradient(180deg, rgba(82,86,42,0.30), rgba(28,30,18,0.46))",
+  border: "1px solid rgba(220,220,168,0.14)",
+};
+
+const marketplaceAccent = {
+  background: "linear-gradient(180deg, rgba(86,72,38,0.30), rgba(30,24,16,0.46))",
+  border: "1px solid rgba(224,206,168,0.14)",
+};
+
 function App() {
   const [language, setLanguage] = useState<LanguageKey>("en");
   const copy = T[language] || T.en;
@@ -716,16 +732,20 @@ function App() {
   );
 
   useEffect(() => {
-    stop();
-    if (!voiceOn) return;
+    if (!voiceOn) {
+      stop();
+      return;
+    }
+
+    const text = copy.screenBodies[screen];
     const id = window.setTimeout(() => {
-      speak(copy.screenBodies[screen], language);
-    }, 180);
+      speak(text, language);
+    }, 250);
+
     return () => {
       window.clearTimeout(id);
-      stop();
     };
-  }, [screen, language, voiceOn, copy, stop, speak]);
+  }, [screen, language, voiceOn]);
 
   useEffect(() => {
     if (!tourOn) return;
@@ -1031,6 +1051,17 @@ function App() {
                     onClick={() => goto(role.key)}
                     style={{
                       ...styles.roleTile,
+                      ...(role.key === "youth"
+                        ? {
+                            boxShadow: "0 24px 70px rgba(10,40,24,0.34)",
+                            border: "1px solid rgba(182,226,196,0.22)",
+                          }
+                        : role.key === "volunteers"
+                        ? {
+                            boxShadow: "0 24px 70px rgba(48,42,12,0.28)",
+                            border: "1px solid rgba(220,214,168,0.20)",
+                          }
+                        : {}),
                       transform: "translateY(0)",
                       transition: "transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease",
                     }}
@@ -1041,8 +1072,18 @@ function App() {
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow = "0 20px 60px rgba(0,0,0,0.18)";
-                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.16)";
+                      e.currentTarget.style.boxShadow =
+                        role.key === "youth"
+                          ? "0 24px 70px rgba(10,40,24,0.34)"
+                          : role.key === "volunteers"
+                          ? "0 24px 70px rgba(48,42,12,0.28)"
+                          : "0 20px 60px rgba(0,0,0,0.18)";
+                      e.currentTarget.style.borderColor =
+                        role.key === "youth"
+                          ? "rgba(182,226,196,0.22)"
+                          : role.key === "volunteers"
+                          ? "rgba(220,214,168,0.20)"
+                          : "rgba(255,255,255,0.16)";
                     }}
                   >
                     <img
@@ -1128,6 +1169,26 @@ function App() {
                 </div>
 
                 <div style={styles.sideCard}>
+                  <div
+                    style={{
+                      borderRadius: 22,
+                      overflow: "hidden",
+                      marginBottom: 16,
+                      border: "1px solid rgba(214,233,214,0.10)",
+                    }}
+                  >
+                    <img
+                      src={SCREEN_IMAGES[screen]}
+                      alt={copy.screenTitles[screen]}
+                      style={{
+                        width: "100%",
+                        height: 180,
+                        objectFit: "cover",
+                        display: "block",
+                      }}
+                    />
+                  </div>
+
                   <div style={styles.miniLabel}>Next strongest moves</div>
                   <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>
                     {screen === "guest" && (
@@ -1140,31 +1201,73 @@ function App() {
 
                     {screen === "customer" && (
                       <>
-                        <button style={{ ...styles.whiteBtn, justifyContent: "center" }} onClick={() => goto("marketplace")}>Go to Marketplace</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Recipes & Nutrition</button>
-                        <div style={styles.infoBox}>
+                        <div
+                          style={{
+                            borderRadius: 24,
+                            overflow: "hidden",
+                            marginBottom: 6,
+                            border: "1px solid rgba(214,233,190,0.18)",
+                            background: "linear-gradient(180deg, rgba(58,74,36,0.34), rgba(20,28,18,0.48))",
+                            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
+                          }}
+                        >
+                          <img
+                            src={IMAGES.customer}
+                            alt="Customer pathway"
+                            style={{
+                              width: "100%",
+                              height: 210,
+                              objectFit: "cover",
+                              display: "block",
+                            }}
+                          />
+                          <div style={{ padding: 18 }}>
+                            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
+                              Customer Food Path
+                            </div>
+                            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
+                              This pathway helps families move from interest to access by connecting fresh food, seedlings, recipes, nutrition guidance, and a direct route into the marketplace.
+                            </div>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                              {["Fresh Food", "Seedlings", "Bubble Babies", "Recipes", "Nutrition"].map((item) => (
+                                <span
+                                  key={item}
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    padding: "7px 11px",
+                                    borderRadius: 999,
+                                    background: "rgba(190,196,120,0.16)",
+                                    border: "1px solid rgba(233,238,221,0.16)",
+                                    fontSize: 12,
+                                    letterSpacing: "0.04em",
+                                  }}
+                                >
+                                  {item}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <button style={styles.whiteBtn} onClick={() => goto("marketplace")}>
+                          Go to Marketplace
+                        </button>
+                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>
+                          Recipes & Nutrition
+                        </button>
+
+                        <div style={{ ...styles.infoBox, ...customerAccent }}>
                           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Customer path priority</div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)", marginBottom: 10 }}>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
                             This pathway is designed to move people quickly toward GrownBy, then bring them back for fresh food guidance, healthier choices, and repeat visits.
                           </div>
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                            {["Fresh Food", "Seedlings", "Bubble Babies", "Recipes", "Nutrition"].map((item) => (
-                              <span
-                                key={item}
-                                style={{
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  padding: "7px 11px",
-                                  borderRadius: 999,
-                                  background: "rgba(141,185,137,0.18)",
-                                  border: "1px solid rgba(255,255,255,0.16)",
-                                  fontSize: 12,
-                                  letterSpacing: "0.04em",
-                                }}
-                              >
-                                {item}
-                              </span>
-                            ))}
+                        </div>
+
+                        <div style={{ ...styles.infoBox, ...customerAccent }}>
+                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Food access with meaning</div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                            The goal is not only to shop, but to help families build healthier habits, understand natural food, and return to the ecosystem for ongoing support.
                           </div>
                         </div>
                       </>
@@ -1172,11 +1275,78 @@ function App() {
 
                     {screen === "marketplace" && (
                       <>
-                        <a href="https://grownby.com/farms/bronson-family-farm/shop" target="_blank" rel="noreferrer" style={{ ...styles.whiteBtn, justifyContent: "center" }}>
+                        <div
+                          style={{
+                            borderRadius: 24,
+                            overflow: "hidden",
+                            marginBottom: 6,
+                            border: "1px solid rgba(214,233,190,0.18)",
+                            background: "linear-gradient(180deg, rgba(72,66,34,0.34), rgba(24,22,16,0.48))",
+                            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
+                          }}
+                        >
+                          <img
+                            src={IMAGES.marketplace}
+                            alt="Marketplace"
+                            style={{
+                              width: "100%",
+                              height: 210,
+                              objectFit: "cover",
+                              display: "block",
+                            }}
+                          />
+                          <div style={{ padding: 18 }}>
+                            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
+                              Marketplace Through GrownBy
+                            </div>
+                            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
+                              This is where interest becomes action through fresh food, seedlings, and future offerings connected to the farm’s wider ecosystem.
+                            </div>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                              {["GrownBy", "Fresh Food", "Seedlings", "Preorders", "Return Visits"].map((item) => (
+                                <span
+                                  key={item}
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    padding: "7px 11px",
+                                    borderRadius: 999,
+                                    background: "rgba(196,170,120,0.16)",
+                                    border: "1px solid rgba(233,238,221,0.16)",
+                                    fontSize: 12,
+                                    letterSpacing: "0.04em",
+                                  }}
+                                >
+                                  {item}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <a
+                          href="https://grownby.com/farms/bronson-family-farm/shop"
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ ...styles.whiteBtn, justifyContent: "center" }}
+                        >
                           Open GrownBy Store
                         </a>
-                        <button style={styles.ghostBtn} onClick={() => goto("customer")}>Back to Customer Path</button>
-                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Food Guidance</button>
+                        <button style={styles.ghostBtn} onClick={() => goto("customer")}>
+                          Back to Customer Path
+                        </button>
+                        <button style={styles.ghostBtn} onClick={() => goto("wellness")}>
+                          Food Guidance
+                        </button>
+
+                        <div style={{ ...styles.infoBox, ...marketplaceAccent }}>
+                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                            Marketplace destination
+                          </div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                            The marketplace should feel direct, trustworthy, and easy to use while still staying connected to the larger story of fresh food, health, and self-sufficiency.
+                          </div>
+                        </div>
                       </>
                     )}
 
@@ -1198,15 +1368,74 @@ function App() {
 
                     {screen === "youth" && (
                       <>
+                        <div
+                          style={{
+                            borderRadius: 24,
+                            overflow: "hidden",
+                            marginBottom: 6,
+                            border: "1px solid rgba(180,220,190,0.18)",
+                            background: "linear-gradient(180deg, rgba(32,58,52,0.42), rgba(16,26,22,0.52))",
+                            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
+                          }}
+                        >
+                          <img
+                            src={IMAGES.youth}
+                            alt="Youth Workforce"
+                            style={{
+                              width: "100%",
+                              height: 210,
+                              objectFit: "cover",
+                              display: "block",
+                            }}
+                          />
+                          <div style={{ padding: 18 }}>
+                            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
+                              Youth Workforce Program
+                            </div>
+                            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
+                              A structured living classroom where youth gain hands-on experience in agriculture, teamwork, responsibility, entrepreneurship, and future readiness with family visibility and supervisor support built into the program.
+                            </div>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                              {["Learning", "Parent Portal", "Supervisor Support", "STEAM", "Future Readiness"].map((item) => (
+                                <span
+                                  key={item}
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    padding: "7px 11px",
+                                    borderRadius: 999,
+                                    background: "rgba(148,196,160,0.18)",
+                                    border: "1px solid rgba(221,238,221,0.16)",
+                                    fontSize: 12,
+                                    letterSpacing: "0.04em",
+                                  }}
+                                >
+                                  {item}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
                         <button style={styles.whiteBtn} onClick={() => goto("planner")}>Learning Schedule</button>
                         <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.training)}>STEAM & Training</button>
                         <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Parent Portal & Support</button>
-                        <div style={styles.infoBox}>
+
+                        <div style={{ ...styles.infoBox, ...youthAccent }}>
                           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                            Youth Workforce includes family and supervisor support
+                            Parent Portal included
                           </div>
                           <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            Parent Portal access and supervisor support are built into the Youth Workforce program so families can stay informed and youth can move through the program with structure, accountability, wellness guidance, and encouragement.
+                            Families can stay connected to structure, communication, participation, progress, and support through a parent-facing layer within Youth Workforce.
+                          </div>
+                        </div>
+
+                        <div style={{ ...styles.infoBox, ...youthAccent }}>
+                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                            Supervisor support built in
+                          </div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                            Supervisor guidance is part of the program through structure, logistics, accountability, encouragement, and wellness support.
                           </div>
                         </div>
                       </>
@@ -1214,15 +1443,74 @@ function App() {
 
                     {screen === "volunteers" && (
                       <>
+                        <div
+                          style={{
+                            borderRadius: 24,
+                            overflow: "hidden",
+                            marginBottom: 6,
+                            border: "1px solid rgba(214,233,190,0.18)",
+                            background: "linear-gradient(180deg, rgba(68,74,44,0.34), rgba(24,28,18,0.48))",
+                            boxShadow: "0 18px 50px rgba(0,0,0,0.22)",
+                          }}
+                        >
+                          <img
+                            src={IMAGES.volunteers}
+                            alt="Volunteers"
+                            style={{
+                              width: "100%",
+                              height: 210,
+                              objectFit: "cover",
+                              display: "block",
+                            }}
+                          />
+                          <div style={{ padding: 18 }}>
+                            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8, color: "#ffffff" }}>
+                              Volunteer Pathway
+                            </div>
+                            <div style={{ lineHeight: 1.7, color: "rgba(241,248,241,0.90)", marginBottom: 14 }}>
+                              A welcoming community service pathway where people can support growing, events, hospitality, setup, and shared learning while becoming part of the larger mission of the farm.
+                            </div>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                              {["Service", "Hospitality", "Events", "Community", "Shared Work"].map((item) => (
+                                <span
+                                  key={item}
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    padding: "7px 11px",
+                                    borderRadius: 999,
+                                    background: "rgba(196,186,120,0.16)",
+                                    border: "1px solid rgba(233,238,221,0.16)",
+                                    fontSize: 12,
+                                    letterSpacing: "0.04em",
+                                  }}
+                                >
+                                  {item}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
                         <button style={styles.whiteBtn} onClick={() => goto("events")}>Event Support</button>
                         <button style={styles.ghostBtn} onClick={() => goto("youth")}>Youth Connection</button>
                         <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Community Care</button>
-                        <div style={styles.infoBox}>
+
+                        <div style={{ ...styles.infoBox, ...volunteerAccent }}>
                           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-                            Volunteer destination
+                            Service and belonging
                           </div>
                           <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
-                            Volunteers support the ecosystem through service, event help, setup, hospitality, and shared participation in the farm’s community mission.
+                            Volunteers help make the ecosystem visible, welcoming, and functional through shared work, presence, and community support.
+                          </div>
+                        </div>
+
+                        <div style={{ ...styles.infoBox, ...volunteerAccent }}>
+                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+                            Event and farm support
+                          </div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(241,248,241,0.88)" }}>
+                            This can include setup, hospitality, planting help, educational activities, and participation in farm events and visitor experiences.
                           </div>
                         </div>
                       </>
