@@ -124,15 +124,15 @@ const T = {
       home: "A regenerative farm, agritourism destination, and community platform rooted in land, family legacy, and practical access to resources.",
       story: "Inspired by family farming traditions and shaped for Youngstown's future, this farm joins legacy, food access, agritourism, and community infrastructure.",
       guest: "Guests discover the farm story, the land, the airport relationship, events, and the resources that make this place worth returning to.",
-      customer: "Customers move quickly toward fresh food, seedlings, Bubble Babies, recipes, nutrition guidance, and better understanding of natural food compared with processed food.",
+      customer: "Customers move quickly toward fresh food, seedlings, Bubble Babies, recipes, nutrition guidance, and a clearer understanding of why natural food matters.",
       marketplace: "The marketplace centers GrownBy so people can move from learning to purchasing without losing connection to the farm ecosystem.",
       grower: "Growers return for planning, timing, seasonal support, collaboration, and the structure needed to keep growing.",
       valueAdded: "Value-added producers can explore branding, packaging, demonstrations, and local market opportunities.",
       youth: "Youth workforce connects agriculture, STEAM, entrepreneurship, teamwork, and responsibility in one living environment.",
       supervisor: "Supervisor exists inside youth workforce, supporting scheduling, accountability, logistics, wellness support, and staffing resources.",
-      planner: "This planning hub connects seasons, inventory, readiness, grower coordination, and event timing across the ecosystem.",
-      events: "Events create reasons for people to return again and again for learning, shopping, demonstrations, wellness, and community.",
-      wellness: "Health and nutrition are part of the mission. The platform helps people understand food quality, healthier choices, and practical wellness support.",
+      planner: "This planning hub connects seasons, inventory, readiness, grower coordination, weather-aware thinking, and event timing across the ecosystem.",
+      events: "Events create reasons for people to return again and again for learning, shopping, demonstrations, wellness, and community connection.",
+      wellness: "Health and nutrition are part of the mission. The platform helps people connect fresh food with practical wellness, healthier choices, recipes, and everyday life.",
     },
   },
 };
@@ -538,9 +538,9 @@ function App() {
       { title: "Return value", text: "Events, demonstrations, and seasonal change keep people coming back.", icon: <CheckCircle2 size={20} /> },
     ],
     customer: [
-      { title: "Food access", text: "Customers should see produce, seedlings, and Bubble Babies with clarity and purpose.", icon: <ShoppingBasket size={20} /> },
-      { title: "Recipes and nutrition", text: "Food guidance and healthy living support help customers return for more than shopping.", icon: <BookOpen size={20} /> },
-      { title: "Fast route to GrownBy", text: "Many users will want a direct move from interest to marketplace.", icon: <Store size={20} /> },
+      { title: "Fresh food first", text: "Customers should see produce, seedlings, and Bubble Babies with clarity, warmth, and a direct path to purchase.", icon: <ShoppingBasket size={20} /> },
+      { title: "Recipes and nutrition", text: "Food guidance, recipe ideas, and healthier living support help customers return for more than shopping.", icon: <BookOpen size={20} /> },
+      { title: "Fast route to GrownBy", text: "Many users will want a direct move from interest to marketplace, so this pathway should feel simple and immediate.", icon: <Store size={20} /> },
     ],
     marketplace: [
       { title: "GrownBy centered", text: "The marketplace is a core part of the ecosystem and should feel close at hand.", icon: <Store size={20} /> },
@@ -568,19 +568,19 @@ function App() {
       { title: "Logistics and accountability", text: "Scheduling, check-ins, responsibilities, and day-of support belong here.", icon: <CheckCircle2 size={20} /> },
     ],
     planner: [
-      { title: "Season status", text: "Warm season planning is active, with field prep, seedling movement, and event readiness underway.", icon: <CalendarDays size={20} /> },
-      { title: "Next planting window", text: "Upcoming planting windows help align production timing, volunteer coordination, and grower activity.", icon: <Sprout size={20} /> },
-      { title: "Harvest and event readiness", text: "The planner should help connect crops, staffing, weather, and community-facing events.", icon: <CloudSun size={20} /> },
+      { title: "Season status", text: "Warm season planning is active, with field prep, seedling movement, irrigation thinking, and event readiness underway.", icon: <CalendarDays size={20} /> },
+      { title: "Next planting window", text: "Upcoming planting windows help align production timing, volunteer coordination, grower activity, and community-facing supply.", icon: <Sprout size={20} /> },
+      { title: "Harvest and event readiness", text: "The planner helps connect crops, staffing, weather, inventory, and event preparation so the ecosystem feels alive and practical.", icon: <CloudSun size={20} /> },
     ],
     events: [
-      { title: "Return engine", text: "Events create repeated entry into the ecosystem for learning, shopping, and connection.", icon: <Users size={20} /> },
-      { title: "Reservations and check-in", text: "This space can preview RSVP and role-based arrival experiences.", icon: <CalendarDays size={20} /> },
-      { title: "Partners and demos", text: "Educational and sponsor-led activities help make the farm feel alive.", icon: <BadgeCheck size={20} /> },
+      { title: "Return engine", text: "Events create repeated entry into the ecosystem for learning, shopping, demonstrations, and community connection.", icon: <Users size={20} /> },
+      { title: "Reservations and check-in", text: "This space can preview RSVP, organized arrival, and role-based guest flow for future event experiences.", icon: <CalendarDays size={20} /> },
+      { title: "Partners and demos", text: "Educational partners, sponsor-led demonstrations, and guided experiences help make the farm feel active and worth revisiting.", icon: <BadgeCheck size={20} /> },
     ],
     wellness: [
-      { title: "Food and health connection", text: "Fresh food connects to energy, family habits, diabetes awareness, and quality of life.", icon: <HeartPulse size={20} /> },
+      { title: "Food and health connection", text: "Fresh food connects to energy, family habits, diabetes awareness, movement, and overall quality of life.", icon: <HeartPulse size={20} /> },
       { title: "Natural vs processed", text: "The platform helps explain why food choices matter, especially when rising costs push families toward harmful substitutes.", icon: <Leaf size={20} /> },
-      { title: "Practical support", text: "Nutrition education, recipe ideas, and healthier-at-home guidance belong here.", icon: <BookOpen size={20} /> },
+      { title: "Practical support", text: "Nutrition education, recipe ideas, and healthier-at-home guidance should feel useful, simple, and close at hand.", icon: <BookOpen size={20} /> },
     ],
   };
 
@@ -770,7 +770,26 @@ function App() {
                         <button style={styles.ghostBtn} onClick={() => goto("wellness")}>Recipes & Nutrition</button>
                         <div style={styles.infoBox}>
                           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Customer path priority</div>
-                          <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)" }}>This pathway is designed to move people quickly toward GrownBy, then bring them back for food education, healthier choices, and return visits.</div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)", marginBottom: 10 }}>This pathway is designed to move people quickly toward GrownBy, then bring them back for fresh food guidance, healthier choices, and repeat visits.</div>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                            {["Fresh Food", "Seedlings", "Bubble Babies", "Recipes", "Nutrition"].map((item) => (
+                              <span
+                                key={item}
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  padding: "7px 11px",
+                                  borderRadius: 999,
+                                  background: "rgba(255,255,255,0.14)",
+                                  border: "1px solid rgba(255,255,255,0.16)",
+                                  fontSize: 12,
+                                  letterSpacing: "0.04em",
+                                }}
+                              >
+                                {item}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </>
                     )}
@@ -835,6 +854,29 @@ function App() {
                         <button style={styles.whiteBtn} onClick={() => goto("customer")}>Customer Food Path</button>
                         <button style={styles.ghostBtn} onClick={() => goto("marketplace")}>Shop Fresh Food</button>
                         <button style={styles.ghostBtn} onClick={() => setImageModal(IMAGES.nutrition)}>Nutrition View</button>
+                        <div style={styles.infoBox}>
+                          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Wellness cluster</div>
+                          <div style={{ lineHeight: 1.65, color: "rgba(255,255,255,0.84)", marginBottom: 10 }}>This area should help people connect food access with simple recipes, diabetes awareness, better choices, and everyday wellness.</div>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                            {["Fresh Choices", "Recipes", "Nutrition", "Diabetes Awareness", "Healthier at Home"].map((item) => (
+                              <span
+                                key={item}
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  padding: "7px 11px",
+                                  borderRadius: 999,
+                                  background: "rgba(255,255,255,0.14)",
+                                  border: "1px solid rgba(255,255,255,0.16)",
+                                  fontSize: 12,
+                                  letterSpacing: "0.04em",
+                                }}
+                              >
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       </>
                     )}
                   </div>
