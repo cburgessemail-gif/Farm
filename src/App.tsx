@@ -195,6 +195,21 @@ const RECIPES: RecipeCard[] = [
   },
 ];
 
+const TOUR_NARRATION: Record<ScreenKey, string> = {
+  home: "Welcome to Bronson Family Farm. This is a living ecosystem where land, food, learning, and community come together.",
+  story: "This story begins with family legacy, land restoration, and a vision for food access, agritourism, and community opportunity.",
+  guest: "Guests discover the land, the vision, and the experiences that make people want to return.",
+  customer: "The customer pathway connects fresh food, seedlings, recipes, and practical support for healthier living.",
+  marketplace: "Here, the marketplace feels direct and useful, guiding people into the Bronson Family Farm store through GrownBy.",
+  wellness: "Fresh food leads to practical wellness through recipes, nutrition guidance, and healthier daily choices.",
+  grower: "Growers enter a working pathway focused on timing, readiness, collaboration, and production support.",
+  planner: "The planning center connects seasons, labor, timing, inventory, events, and market flow across the ecosystem.",
+  youth: "Youth Workforce is a structured living classroom with parent visibility and supervisor support built into the program.",
+  volunteers: "Volunteers strengthen the ecosystem through service, hospitality, events, and shared community work.",
+  events: "Events bring the ecosystem to life through demonstrations, education, shopping, and public engagement.",
+  closing: "This ecosystem invites the viewer to shop, partner, volunteer, return, and continue the journey.",
+};
+
 const DESTINATIONS: Record<string, Destination> = {
   Entrance: { type: "screen", value: "home" },
   "Our Story": { type: "screen", value: "story" },
@@ -213,6 +228,9 @@ const DESTINATIONS: Record<string, Destination> = {
   Planner: { type: "screen", value: "planner" },
   Wellness: { type: "screen", value: "wellness" },
   Marketplace: { type: "screen", value: "marketplace" },
+  Grower: { type: "screen", value: "grower" },
+  "Youth Workforce": { type: "screen", value: "youth" },
+  "Volunteer Path": { type: "screen", value: "volunteers" },
 
   Recipes: { type: "screen", value: "wellness" },
   Nutrition: { type: "screen", value: "wellness" },
@@ -240,15 +258,12 @@ const DESTINATIONS: Record<string, Destination> = {
   "Supervisor Support": { type: "youth", value: "supervisor" },
   "STEAM & Training": { type: "image", value: IMAGES.training },
   "Learning Schedule": { type: "screen", value: "planner" },
-  "Youth Workforce": { type: "screen", value: "youth" },
 
   Service: { type: "screen", value: "volunteers" },
   Community: { type: "screen", value: "wellness" },
   "Event Support": { type: "screen", value: "events" },
   "Youth Connection": { type: "screen", value: "youth" },
   "Community Care": { type: "screen", value: "wellness" },
-  "Volunteer Path": { type: "screen", value: "volunteers" },
-  Volunteers: { type: "screen", value: "volunteers" },
 
   GrownBy: {
     type: "url",
@@ -306,9 +321,16 @@ const DESTINATIONS: Record<string, Destination> = {
   "Community Experiences": { type: "screen", value: "events" },
   "Legacy View": { type: "image", value: IMAGES.legacy },
   "Coordination View": { type: "image", value: IMAGES.training },
+
+  "Begin with the Vision": { type: "screen", value: "story" },
+  "Follow the Food Path": { type: "screen", value: "customer" },
+  "Enter the Working Ecosystem": { type: "screen", value: "planner" },
 };
 
-const PATHWAY_STEPS: Record<ScreenKey, { title: string; text: string; goTo: ScreenKey }[]> = {
+const PATHWAY_STEPS: Record<
+  ScreenKey,
+  { title: string; text: string; goTo: ScreenKey }[]
+> = {
   home: [
     {
       title: "Start here",
@@ -385,4 +407,50 @@ const PATHWAY_STEPS: Record<ScreenKey, { title: string; text: string; goTo: Scre
     },
     {
       title: "Connect food to guidance",
-      text: "Continue into wellness
+      text: "Continue into wellness and nutrition.",
+      goTo: "wellness",
+    },
+    {
+      title: "Return to customer path",
+      text: "Move back into the broader customer journey.",
+      goTo: "customer",
+    },
+  ],
+  grower: [
+    {
+      title: "Open planning",
+      text: "Begin with season, timing, and readiness.",
+      goTo: "planner",
+    },
+    {
+      title: "See event flow",
+      text: "Connect production to events.",
+      goTo: "events",
+    },
+    {
+      title: "Move toward market timing",
+      text: "Follow inventory toward destination.",
+      goTo: "marketplace",
+    },
+  ],
+  valueAdded: [
+    {
+      title: "See presentation opportunities",
+      text: "Start with demonstrations and product visibility.",
+      goTo: "events",
+    },
+    {
+      title: "Connect to market access",
+      text: "Move toward marketplace presence.",
+      goTo: "marketplace",
+    },
+    {
+      title: "Return to production context",
+      text: "Reconnect with grower planning.",
+      goTo: "grower",
+    },
+  ],
+  youth: [
+    {
+      title: "Understand the program",
+      text: "Start with the Youth Workforce
