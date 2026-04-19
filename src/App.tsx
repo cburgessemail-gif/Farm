@@ -71,6 +71,8 @@ function PlaceholderDestination({
         style={{ backgroundImage: "url('/GrowArea.jpg')" }}
       />
       <div className="absolute inset-0 bg-gradient-to-br from-slate-950/85 via-emerald-950/70 to-slate-900/80" />
+      <div className="absolute inset-0 bg-black/20" />
+
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-8 md:px-10">
         <div className="mb-8 flex flex-wrap gap-3">
           <PillButton onClick={() => setScreen("home")}>Entrance</PillButton>
