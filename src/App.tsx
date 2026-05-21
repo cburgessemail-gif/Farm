@@ -1,342 +1,480 @@
-import React, { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  CloudSun,
+  Users,
+  Tractor,
+  ShoppingBasket,
+  Sprout,
+  HeartHandshake,
+  GraduationCap,
+  MessageSquare,
+  ArrowLeft,
+  ArrowRight,
+  Home,
+  Play,
+  Pause,
+  Trees,
+  Map,
+  Sun,
+  Trophy,
+} from "lucide-react";
 
-type Screen =
-  | "home"
-  | "story"
-  | "roles"
-  | "events"
-  | "nutrition"
-  | "marketplace";
-
-type Language =
+type LangKey =
   | "English"
   | "Español"
   | "Tagalog"
   | "Italiano"
-  | "Patwa"
-  | "Hebrew";
+  | "עברית"
+  | "Français";
 
-function PillButton({
-  children,
-  onClick,
-  active = false,
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  active?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`rounded-full border px-5 py-3 text-sm font-medium backdrop-blur-md transition hover:scale-[1.01] ${
-        active
-          ? "border-emerald-200/30 bg-emerald-400/20 text-white"
-          : "border-white/10 bg-white/10 text-white hover:bg-white/15"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
+const LANGS: LangKey[] = [
+  "English",
+  "Español",
+  "Tagalog",
+  "Italiano",
+  "עברית",
+  "Français",
+];
 
-function GlassCard({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`rounded-[2rem] border border-white/10 bg-black/20 shadow-2xl backdrop-blur-xl ${className}`}
-    >
-      {children}
-    </div>
-  );
-}
+const ui = {
+  English: {
+    start: "Enter Ecosystem",
+    next: "Next",
+    back: "Back",
+    home: "Home",
+    guided: "Begin Guided Tour",
+    pause: "Pause Tour",
+    pathways: "Explore Pathways",
+    continue: "Continue Your Journey",
+    feedback: "Feedback & Reflection",
+    ending: "Ending Decision",
+  },
+};
 
-function PlaceholderDestination({
-  title,
-  description,
-  setScreen,
-}: {
+type Pathway = {
+  id: string;
   title: string;
-  description: string;
-  setScreen: (screen: Screen) => void;
-}) {
-  return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/GrowArea.jpg')" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/85 via-emerald-950/70 to-slate-900/80" />
-      <div className="absolute inset-0 bg-black/20" />
+  icon: any;
+  image: string;
+  intro: string;
+  experience: string[];
+  decisions: string[];
+  nextPathways: string[];
+  reflection: string;
+};
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-8 md:px-10">
-        <div className="mb-8 flex flex-wrap gap-3">
-          <PillButton onClick={() => setScreen("home")}>Entrance</PillButton>
-          <PillButton onClick={() => setScreen("story")}>Our Story</PillButton>
-          <PillButton onClick={() => setScreen("roles")}>Role Pathways</PillButton>
-          <PillButton onClick={() => setScreen("events")}>View Events</PillButton>
-          <PillButton onClick={() => setScreen("nutrition")}>Health & Nutrition</PillButton>
-          <PillButton onClick={() => setScreen("marketplace")}>Go to Marketplace</PillButton>
-        </div>
-
-        <GlassCard className="p-8 md:p-10">
-          <div className="text-xs uppercase tracking-[0.28em] text-emerald-100/70">
-            Bronson Family Farm
-          </div>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-            {title}
-          </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-emerald-50/85">
-            {description}
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <PillButton onClick={() => setScreen("home")} active>
-              Return to Entrance
-            </PillButton>
-            <PillButton onClick={() => setScreen("marketplace")}>
-              Go to Marketplace
-            </PillButton>
-          </div>
-        </GlassCard>
-      </div>
-    </div>
-  );
-}
-
-function HomeStoryScreen({
-  language,
-  setLanguage,
-  setScreen,
-}: {
-  language: Language;
-  setLanguage: (language: Language) => void;
-  setScreen: (screen: Screen) => void;
-}) {
-  const languages: Language[] = [
-    "English",
-    "Español",
-    "Tagalog",
-    "Italiano",
-    "Patwa",
-    "Hebrew",
-  ];
-
-  const overviewItems = useMemo(
-    () => [
-      {
-        title: "Family legacy",
-        text: "The farm carries Bronson and Lorenzana legacy into a future-focused Youngstown vision.",
-      },
-      {
-        title: "Land restoration",
-        text: "The project restores land while creating food, education, and agritourism opportunity.",
-      },
-      {
-        title: "Community future",
-        text: "This is about more than a site. It is an ecosystem for long-term return and growth.",
-      },
+const PATHWAYS: Pathway[] = [
+  {
+    id: "guest",
+    title: "Guest Experience",
+    icon: Trees,
+    image: "/images/airport-road.jpg",
+    intro:
+      "Welcome to Bronson Family Farm — a place-based connected ecosystem located at the Historic Lansdowne Airport in Youngstown, Ohio.",
+    experience: [
+      "Experience the outdoor growing areas and ecosystem pathways.",
+      "Learn how agriculture, workforce development, and community connect together.",
+      "Explore how food systems can transform communities.",
+      "Understand the vision for an off-grid, educational, community-centered ecosystem.",
     ],
-    []
-  );
+    decisions: [
+      "Explore Marketplace",
+      "Attend an Event",
+      "Become a Volunteer",
+      "Learn About Youth Workforce",
+      "Return to Ecosystem Map",
+    ],
+    nextPathways: ["Marketplace", "Youth Workforce", "Grower"],
+    reflection:
+      "What part of the ecosystem connected with you most today?",
+  },
 
-  return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/GrowArea.jpg')" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/80 via-emerald-950/55 to-slate-900/70" />
-      <div className="absolute inset-0 bg-black/15" />
+  {
+    id: "youth",
+    title: "Youth Workforce Pathway",
+    icon: GraduationCap,
+    image: "/images/youth-team.jpg",
+    intro:
+      "The Youth Workforce Program develops leadership, responsibility, teamwork, and real-world agricultural experience.",
+    experience: [
+      "Daily check-in and supervisor guidance.",
+      "Hands-on cultivation and ecosystem participation.",
+      "Marketplace preparation and inventory exposure.",
+      "Leadership, communication, and teamwork development.",
+      "Motivational activity blocks and wellness engagement.",
+      "Pathway advancement opportunities.",
+    ],
+    decisions: [
+      "Complete Enrollment",
+      "Meet Supervisors",
+      "Explore Leadership Track",
+      "Become Future Mentor",
+      "Continue to Grower Pathway",
+    ],
+    nextPathways: ["Grower", "Marketplace", "Leadership"],
+    reflection:
+      "How did today’s work help build confidence, teamwork, or leadership?",
+  },
 
-      <div className="relative z-10 mx-auto max-w-[1500px] px-6 py-8 md:px-10">
-        <header className="mb-8">
-          <div className="mb-3 text-sm uppercase tracking-[0.32em] text-emerald-100/75">
-            Farm &amp; Family Alliance Ecosystem Demo
-          </div>
+  {
+    id: "grower",
+    title: "Grower Pathway",
+    icon: Sprout,
+    image: "/images/grower-field.jpg",
+    intro:
+      "The Grower Pathway supports community growers with tools, education, production systems, and market access.",
+    experience: [
+      "Learn companion planting and ecosystem growing methods.",
+      "Explore Bubble Babies™ seed-starting systems.",
+      "Participate in irrigation, harvesting, and crop planning.",
+      "Connect to community market opportunities.",
+      "Learn sustainable and regenerative growing practices.",
+    ],
+    decisions: [
+      "Join Grower Network",
+      "Attend Grower Training",
+      "Sell Through Marketplace",
+      "Mentor Youth Workforce",
+      "Become Ecosystem Partner",
+    ],
+    nextPathways: ["Marketplace", "Partner", "Youth Workforce"],
+    reflection:
+      "What role could you play in strengthening local food systems?",
+  },
 
-          <h1 className="text-4xl font-semibold tracking-tight md:text-6xl">
-            Bronson Family Farm
-          </h1>
+  {
+    id: "marketplace",
+    title: "Marketplace Pathway",
+    icon: ShoppingBasket,
+    image: "/images/marketplace.jpg",
+    intro:
+      "The Marketplace connects growers, customers, nutrition, and local economic activity.",
+    experience: [
+      "Explore fresh produce and value-added products.",
+      "Learn about SNAP-accessible food systems.",
+      "Experience QR-based ecosystem engagement.",
+      "See how growers connect to community purchasing.",
+      "Participate in seasonal and event-based marketplace activity.",
+    ],
+    decisions: [
+      "Shop Marketplace",
+      "Become Vendor",
+      "Learn About SNAP Access",
+      "Join Grower Pathway",
+      "Return to Ecosystem",
+    ],
+    nextPathways: ["Grower", "Partner", "Customer"],
+    reflection:
+      "How can local marketplaces improve community health and food access?",
+  },
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <PillButton onClick={() => setScreen("home")}>Entrance</PillButton>
-            <PillButton onClick={() => setScreen("story")} active>
-              Our Story
-            </PillButton>
-            <PillButton onClick={() => setScreen("roles")}>Role Pathways</PillButton>
-            <PillButton onClick={() => setScreen("events")}>View Events</PillButton>
-            <PillButton onClick={() => setScreen("nutrition")}>Health &amp; Nutrition</PillButton>
-            <PillButton onClick={() => setScreen("marketplace")}>Go to Marketplace</PillButton>
-            <PillButton active>Voice narration on</PillButton>
-          </div>
-        </header>
-
-        <section className="grid gap-6 lg:grid-cols-[1.6fr_0.9fr]">
-          <div className="relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-black/20 p-8 shadow-2xl backdrop-blur-xl md:p-10">
-            <div className="mb-5 inline-flex rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.3em] text-emerald-100/80">
-              The story behind the farm
-            </div>
-
-            <h2 className="max-w-4xl text-5xl font-semibold leading-[0.95] tracking-tight md:text-7xl">
-              The story behind the farm
-            </h2>
-
-            <p className="mt-8 max-w-4xl text-xl leading-10 text-emerald-50/85">
-              Inspired by family farming traditions and shaped for Youngstown’s future,
-              this farm brings together legacy, land restoration, food access,
-              agritourism, and practical community opportunity.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <PillButton active>Start Guided Tour</PillButton>
-              <PillButton onClick={() => setScreen("marketplace")}>
-                Go to Marketplace
-              </PillButton>
-              <PillButton onClick={() => setScreen("roles")}>
-                Open Crop Planner
-              </PillButton>
-            </div>
-
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
-              <GlassCard className="p-5">
-                <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">
-                  Seasonal conditions
-                </div>
-                <h3 className="mt-3 text-3xl font-semibold leading-tight">
-                  Warm season planning active
-                </h3>
-                <p className="mt-3 text-base leading-8 text-emerald-50/80">
-                  Field prep, seedling movement, event readiness, and seasonal coordination are active.
-                </p>
-              </GlassCard>
-
-              <GlassCard className="p-5">
-                <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">
-                  Farm calendar
-                </div>
-                <h3 className="mt-3 text-3xl font-semibold leading-tight">
-                  Living schedule
-                </h3>
-                <p className="mt-3 text-base leading-8 text-emerald-50/80">
-                  Seedlings, events, education, youth activities, and harvest pathways connect here.
-                </p>
-              </GlassCard>
-
-              <GlassCard className="p-5">
-                <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">
-                  Choose language
-                </div>
-                <h3 className="mt-3 text-3xl font-semibold">{language}</h3>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => setLanguage(lang)}
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                        language === lang
-                          ? "bg-white text-slate-900"
-                          : "border border-white/10 bg-white/10 text-white hover:bg-white/15"
-                      }`}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              </GlassCard>
-            </div>
-          </div>
-
-          <GlassCard className="p-6 md:p-7">
-            <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">
-              A place people want to return to
-            </div>
-
-            <h3 className="mt-4 text-4xl font-semibold leading-tight">
-              Living ecosystem overview
-            </h3>
-
-            <p className="mt-5 text-lg leading-9 text-emerald-50/82">
-              This living farm ecosystem is designed to help guests, customers,
-              growers, youth, volunteers, partners, and families move toward
-              food self-sufficiency, economic opportunity, practical wellness,
-              and stronger community connection.
-            </p>
-
-            <div className="mt-6 space-y-4">
-              {overviewItems.map((item) => (
-                <GlassCard key={item.title} className="p-5">
-                  <h4 className="text-2xl font-semibold">{item.title}</h4>
-                  <p className="mt-3 text-base leading-8 text-emerald-50/80">
-                    {item.text}
-                  </p>
-                </GlassCard>
-              ))}
-            </div>
-          </GlassCard>
-        </section>
-      </div>
-    </div>
-  );
-}
+  {
+    id: "partner",
+    title: "Partner Pathway",
+    icon: HeartHandshake,
+    image: "/images/community-partners.jpg",
+    intro:
+      "Partners help strengthen infrastructure, workforce development, food systems, education, and community revitalization.",
+    experience: [
+      "Support youth workforce development.",
+      "Collaborate on community food access initiatives.",
+      "Help build sustainable infrastructure.",
+      "Connect education, workforce, and agriculture together.",
+      "Participate in ecosystem growth and long-term impact.",
+    ],
+    decisions: [
+      "Schedule Partnership Meeting",
+      "Support Youth Workforce",
+      "Sponsor Ecosystem Activity",
+      "Invest in Community Growth",
+      "Return to Ecosystem",
+    ],
+    nextPathways: ["Youth Workforce", "Marketplace", "Grower"],
+    reflection:
+      "How can collaboration strengthen long-term community systems?",
+  },
+];
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("story");
-  const [language, setLanguage] = useState<Language>("English");
+  const [current, setCurrent] = useState(0);
+  const [tour, setTour] = useState(false);
+  const [lang, setLang] = useState<LangKey>("English");
+  const [time, setTime] = useState(new Date());
 
-  if (screen === "home" || screen === "story") {
-    return (
-      <HomeStoryScreen
-        language={language}
-        setLanguage={setLanguage}
-        setScreen={setScreen}
-      />
-    );
-  }
+  const currentPathway = PATHWAYS[current];
 
-  if (screen === "roles") {
-    return (
-      <PlaceholderDestination
-        title="Role Pathways"
-        description="This area will help visitors understand how guests, customers, growers, youth, supervisors, and partners move through the ecosystem."
-        setScreen={setScreen}
-      />
-    );
-  }
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
 
-  if (screen === "events") {
-    return (
-      <PlaceholderDestination
-        title="Events & Experiences"
-        description="This area will show live events, demonstrations, gatherings, and the ways events create visibility, trust, and learning."
-        setScreen={setScreen}
-      />
-    );
-  }
+    return () => clearInterval(timer);
+  }, []);
 
-  if (screen === "nutrition") {
-    return (
-      <PlaceholderDestination
-        title="Health & Nutrition"
-        description="This area will connect natural food, recipes, healthier choices, and practical community wellness."
-        setScreen={setScreen}
-      />
-    );
-  }
+  useEffect(() => {
+    if (!tour) return;
 
-  if (screen === "marketplace") {
-    return (
-      <PlaceholderDestination
-        title="Marketplace"
-        description="This area will connect visitors to produce, seedlings, Bubble Babies™, and seasonal Bronson Family Farm offerings."
-        setScreen={setScreen}
-      />
-    );
-  }
+    const interval = setInterval(() => {
+      setCurrent((prev) =>
+        prev < PATHWAYS.length - 1 ? prev + 1 : 0
+      );
+    }, 14000);
 
-  return null;
+    return () => clearInterval(interval);
+  }, [tour]);
+
+  const hour = time.getHours();
+
+  const backgroundClass = useMemo(() => {
+    if (hour < 11)
+      return "from-emerald-950 via-green-900 to-lime-800";
+    if (hour < 17)
+      return "from-green-900 via-emerald-700 to-yellow-700";
+    return "from-slate-950 via-emerald-950 to-orange-900";
+  }, [hour]);
+
+  const Icon = currentPathway.icon;
+
+  return (
+    <div
+      className={`min-h-screen w-full bg-gradient-to-br ${backgroundClass} text-white transition-all duration-1000 overflow-hidden`}
+    >
+      {/* HEADER */}
+
+      <div className="w-full px-6 py-4 border-b border-white/10 backdrop-blur-lg bg-black/20 flex items-center justify-between">
+        <div>
+          <div className="text-3xl font-black tracking-wide">
+            BRONSON FAMILY FARM
+          </div>
+
+          <div className="text-sm text-green-200 mt-1">
+            Connected Food Ecosystem Experience
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <CloudSun className="w-6 h-6 text-yellow-300" />
+
+          <div className="text-sm">
+            Youngstown, Ohio
+            <div className="text-xs opacity-80">
+              {time.toLocaleTimeString()}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* MAIN */}
+
+      <div className="grid lg:grid-cols-2 gap-8 p-6 h-[calc(100vh-110px)] overflow-auto">
+        {/* IMAGE */}
+
+        <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black/30">
+          <img
+            src={currentPathway.image}
+            alt={currentPathway.title}
+            className="w-full h-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+          <div className="absolute bottom-0 left-0 p-8">
+            <div className="flex items-center gap-3 mb-4">
+              <Icon className="w-10 h-10 text-lime-300" />
+
+              <div className="text-4xl font-black">
+                {currentPathway.title}
+              </div>
+            </div>
+
+            <div className="max-w-2xl text-lg text-white/90 leading-relaxed">
+              {currentPathway.intro}
+            </div>
+          </div>
+        </div>
+
+        {/* CONTENT */}
+
+        <div className="flex flex-col gap-5 overflow-auto pr-2">
+          {/* LIVE ECOSYSTEM */}
+
+          <div className="rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl p-5">
+            <div className="flex items-center gap-2 text-xl font-bold mb-4">
+              <Sun className="w-6 h-6 text-yellow-300" />
+              Live Ecosystem
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="bg-black/20 rounded-2xl p-4">
+                <div className="opacity-70">Weather</div>
+                <div className="text-2xl font-bold">72°F</div>
+              </div>
+
+              <div className="bg-black/20 rounded-2xl p-4">
+                <div className="opacity-70">Youth Active</div>
+                <div className="text-2xl font-bold">50</div>
+              </div>
+
+              <div className="bg-black/20 rounded-2xl p-4">
+                <div className="opacity-70">Growers Engaged</div>
+                <div className="text-2xl font-bold">40+</div>
+              </div>
+
+              <div className="bg-black/20 rounded-2xl p-4">
+                <div className="opacity-70">Community Partners</div>
+                <div className="text-2xl font-bold">10+</div>
+              </div>
+            </div>
+          </div>
+
+          {/* EXPERIENCE */}
+
+          <div className="rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl p-6">
+            <div className="text-2xl font-black mb-4">
+              Experience This Pathway
+            </div>
+
+            <div className="space-y-3">
+              {currentPathway.experience.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start gap-3 bg-black/20 rounded-2xl p-4"
+                >
+                  <Map className="w-5 h-5 mt-1 text-lime-300" />
+
+                  <div className="leading-relaxed">{item}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ENDING DECISION */}
+
+          <div className="rounded-3xl border border-lime-400/40 bg-lime-500/10 backdrop-blur-xl p-6">
+            <div className="text-2xl font-black mb-4 text-lime-300">
+              Ending Decision
+            </div>
+
+            <div className="grid gap-3">
+              {currentPathway.decisions.map((item, idx) => (
+                <button
+                  key={idx}
+                  className="text-left bg-black/20 hover:bg-lime-500/20 transition-all rounded-2xl p-4 border border-white/10"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* CONTINUE JOURNEY */}
+
+          <div className="rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl p-6">
+            <div className="text-2xl font-black mb-4">
+              Continue Your Journey
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {currentPathway.nextPathways.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="px-4 py-2 rounded-full bg-emerald-600/40 border border-white/10"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* FEEDBACK */}
+
+          <div className="rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl p-6">
+            <div className="flex items-center gap-2 text-2xl font-black mb-4">
+              <MessageSquare className="w-6 h-6 text-sky-300" />
+              Feedback & Reflection
+            </div>
+
+            <div className="text-lg mb-5 text-white/90">
+              {currentPathway.reflection}
+            </div>
+
+            <textarea
+              placeholder="Share your thoughts about the ecosystem..."
+              className="w-full h-32 rounded-2xl bg-black/30 border border-white/10 p-4 text-white resize-none outline-none"
+            />
+
+            <button className="mt-4 px-6 py-3 rounded-2xl bg-lime-500 hover:bg-lime-400 transition-all text-black font-bold">
+              Submit Reflection
+            </button>
+          </div>
+
+          {/* MOTIVATION */}
+
+          <div className="rounded-3xl border border-yellow-400/20 bg-yellow-500/10 backdrop-blur-xl p-6">
+            <div className="flex items-center gap-2 text-xl font-bold mb-3">
+              <Trophy className="w-6 h-6 text-yellow-300" />
+              Daily Ecosystem Motivation
+            </div>
+
+            <div className="text-lg leading-relaxed text-yellow-100">
+              “We’re building our future together. Every role strengthens the ecosystem.”
+            </div>
+          </div>
+
+          {/* NAVIGATION */}
+
+          <div className="flex flex-wrap gap-3 pt-3 pb-10">
+            <button
+              onClick={() =>
+                setCurrent((prev) =>
+                  prev > 0 ? prev - 1 : PATHWAYS.length - 1
+                )
+              }
+              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-black/30 hover:bg-black/50 transition-all"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Back
+            </button>
+
+            <button
+              onClick={() =>
+                setCurrent((prev) =>
+                  prev < PATHWAYS.length - 1 ? prev + 1 : 0
+                )
+              }
+              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-lime-500 hover:bg-lime-400 transition-all text-black font-bold"
+            >
+              Next
+              <ArrowRight className="w-5 h-5" />
+            </button>
+
+            <button
+              onClick={() => setCurrent(0)}
+              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-black/30 hover:bg-black/50 transition-all"
+            >
+              <Home className="w-5 h-5" />
+              Home
+            </button>
+
+            <button
+              onClick={() => setTour(!tour)}
+              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 transition-all"
+            >
+              {tour ? (
+                <>
+                  <Pause className="w-5 h-5" />
+                  Pause Tour
+                </>
+              ) : (
+                <>
+                  <Play className="w-5 h-5" />
+                  Begin Guided Tour
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
