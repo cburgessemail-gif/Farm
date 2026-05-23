@@ -1,1222 +1,671 @@
-import React, { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 
-type Screen =
+type LangKey = "English" | "Español" | "Tagalog" | "Italiano" | "עברית" | "Français";
+type ScreenKey =
   | "home"
-  | "story"
-  | "roles"
-  | "events"
-  | "nutrition"
-  | "marketplace"
-  | "supervisor"
-  | "parent"
-  | "launch";
-
-type Language =
-  | "English"
-  | "Español"
-  | "Tagalog"
-  | "Italiano"
-  | "Patwa"
-  | "Hebrew";
-
-type PathwayKey =
+  | "ecosystem"
   | "guest"
   | "customer"
-  | "youth"
   | "grower"
-  | "marketplace"
-  | "partner"
+  | "valueAdded"
+  | "youth"
   | "supervisor"
-  | "parent";
+  | "partner"
+  | "story"
+  | "marketplace"
+  | "planner"
+  | "events"
+  | "wellness"
+  | "decision"
+  | "feedback";
 
-type JourneyStage = {
-  stage: string;
-  purpose: string;
-  action: string;
-  outcome: string;
-};
-
-type Pathway = {
-  label: string;
+type Action = { label: string; to?: ScreenKey; href?: string; modal?: keyof typeof IMAGES };
+type DetailBlock = { title: string; text: string };
+type ScreenContent = {
+  eyebrow: string;
   title: string;
   subtitle: string;
-  need: string;
-  experience: string[];
-  rhythm: string[];
-  journey: JourneyStage[];
-  foodFlow?: string[];
-  live: string[];
-  decisions: string[];
-  next: PathwayKey[];
-  reflection: string;
   image: string;
   imageAlt: string;
+  mission: string;
+  need: string;
+  destination: string;
+  details: DetailBlock[];
+  actions: Action[];
 };
 
-type SupervisorMetric = {
-  label: string;
-  value: string;
-  note: string;
+const LANGS: LangKey[] = ["English", "Español", "Tagalog", "Italiano", "עברית", "Français"];
+
+const IMAGES = {
+  entrance: "/images/GrowArea.jpg",
+  ecosystem: "/images/GrowArea2.jpg",
+  guest: "/images/SAM_0377.JPG",
+  customer: "/images/SAM_0380.JPG",
+  grower: "/images/SAM_0384.JPG",
+  valueAdded: "/images/SAM_0391.JPG",
+  youth: "/images/SAM_0393.JPG",
+  supervisor: "/images/SAM_0396.JPG",
+  partner: "/images/SAM_0401.JPG",
+  story: "/images/SAM_0402.JPG",
+  marketplace: "/images/SAM_0405.JPG",
+  planner: "/images/SAM_0407.JPG",
+  events: "/images/SAM_0410.JPG",
+  wellness: "/images/SAM_0412.JPG",
+  decision: "/images/SAM_0415.JPG",
+  feedback: "/images/SAM_0417.JPG",
+  community: "/images/SAM_0420.JPG",
+  training: "/images/SAM_0423.JPG",
+  produce: "/images/SAM_0425.JPG",
+  nutrition: "/images/SAM_0427.JPG",
+  legacy: "/images/SAM_0430.JPG",
 };
 
-const translations: Record<Language, Record<string, string>> = {
+const UI: Record<LangKey, Record<string, string>> = {
   English: {
-    demo: "Farm & Family Alliance Ecosystem Demo",
-    farm: "Bronson Family Farm",
-    tagline: "Connected Food Ecosystem Experience",
-    start: "Start Guided Tour",
-    marketplace: "Go to Marketplace",
-    pathways: "Open Role Pathways",
-    narration: "Voice narration on",
-    story: "The story behind the farm",
-    overview: "Living ecosystem overview",
-    chooseLanguage: "Choose language",
-    rolePathways: "Role Pathways",
-    entrance: "Entrance",
-    ourStory: "Our Story",
-    events: "View Events",
-    nutrition: "Health & Nutrition",
-    supervisor: "Supervisor Tools",
-    parent: "Parent Portal",
-    launch: "Launch Readiness",
+    demo: "BRONSON FAMILY FARM ECOSYSTEM",
+    mainTitle: "Connected Food Ecosystem Experience",
+    start: "Start",
+    back: "Back",
+    next: "Next",
+    guided: "Begin Guided Tour",
+    pause: "Pause Tour",
+    roles: "Choose a pathway",
+    mission: "Mission",
+    need: "Need being met",
+    destination: "Destination / Decision",
+    strongest: "Next strongest moves",
+    gallery: "Image gallery",
+    return: "Return to Ecosystem",
+    feedback: "Feedback & Contact",
   },
   Español: {
-    demo: "Demostración del Ecosistema Farm & Family Alliance",
-    farm: "Bronson Family Farm",
-    tagline: "Experiencia de ecosistema alimentario conectado",
-    start: "Iniciar recorrido guiado",
-    marketplace: "Ir al mercado",
-    pathways: "Abrir caminos de roles",
-    narration: "Narración de voz activada",
-    story: "La historia detrás de la granja",
-    overview: "Resumen del ecosistema vivo",
-    chooseLanguage: "Elegir idioma",
-    rolePathways: "Caminos de roles",
-    entrance: "Entrada",
-    ourStory: "Nuestra historia",
-    events: "Ver eventos",
-    nutrition: "Salud y nutrición",
-    supervisor: "Herramientas de supervisor",
-    parent: "Portal familiar",
-    launch: "Preparación de lanzamiento",
+    demo: "ECOSISTEMA DE BRONSON FAMILY FARM",
+    mainTitle: "Experiencia de ecosistema alimentario conectado",
+    start: "Comenzar",
+    back: "Atrás",
+    next: "Siguiente",
+    guided: "Iniciar recorrido guiado",
+    pause: "Pausar recorrido",
+    roles: "Elija un camino",
+    mission: "Misión",
+    need: "Necesidad atendida",
+    destination: "Destino / Decisión",
+    strongest: "Próximos pasos",
+    gallery: "Galería de imágenes",
+    return: "Volver al ecosistema",
+    feedback: "Comentarios y contacto",
   },
   Tagalog: {
-    demo: "Farm & Family Alliance Ecosystem Demo",
-    farm: "Bronson Family Farm",
-    tagline: "Konektadong karanasan sa sistema ng pagkain",
-    start: "Simulan ang gabay na paglilibot",
-    marketplace: "Pumunta sa pamilihan",
-    pathways: "Buksan ang mga landas ng papel",
-    narration: "Naka-on ang boses na gabay",
-    story: "Ang kuwento sa likod ng bukid",
-    overview: "Buhay na kabuuang sistema",
-    chooseLanguage: "Pumili ng wika",
-    rolePathways: "Mga landas ng papel",
-    entrance: "Pasukan",
-    ourStory: "Aming Kuwento",
-    events: "Tingnan ang mga kaganapan",
-    nutrition: "Kalusugan at Nutrisyon",
-    supervisor: "Mga gamit ng superbisor",
-    parent: "Portal ng magulang",
-    launch: "Handa sa paglulunsad",
+    demo: "ECOSYSTEM NG BRONSON FAMILY FARM",
+    mainTitle: "Konektadong karanasan sa pagkain at komunidad",
+    start: "Magsimula",
+    back: "Bumalik",
+    next: "Susunod",
+    guided: "Simulan ang gabay na tour",
+    pause: "Ihinto muna ang tour",
+    roles: "Pumili ng landas",
+    mission: "Misyon",
+    need: "Pangangailangang tinutugunan",
+    destination: "Patutunguhan / Desisyon",
+    strongest: "Susunod na pinakamalakas na hakbang",
+    gallery: "Gallery ng larawan",
+    return: "Bumalik sa ecosystem",
+    feedback: "Feedback at contact",
   },
   Italiano: {
-    demo: "Demo dell'ecosistema Farm & Family Alliance",
-    farm: "Bronson Family Farm",
-    tagline: "Esperienza di ecosistema alimentare connesso",
-    start: "Avvia tour guidato",
-    marketplace: "Vai al mercato",
-    pathways: "Apri i percorsi dei ruoli",
-    narration: "Narrazione vocale attiva",
-    story: "La storia dietro la fattoria",
-    overview: "Panoramica dell'ecosistema vivo",
-    chooseLanguage: "Scegli lingua",
-    rolePathways: "Percorsi dei ruoli",
-    entrance: "Ingresso",
-    ourStory: "La nostra storia",
-    events: "Vedi eventi",
-    nutrition: "Salute e nutrizione",
-    supervisor: "Strumenti supervisore",
-    parent: "Portale famiglia",
-    launch: "Prontezza al lancio",
+    demo: "ECOSISTEMA BRONSON FAMILY FARM",
+    mainTitle: "Esperienza alimentare comunitaria connessa",
+    start: "Inizia",
+    back: "Indietro",
+    next: "Avanti",
+    guided: "Avvia tour guidato",
+    pause: "Pausa tour",
+    roles: "Scegli un percorso",
+    mission: "Missione",
+    need: "Bisogno servito",
+    destination: "Destinazione / Decisione",
+    strongest: "Prossime mosse",
+    gallery: "Galleria immagini",
+    return: "Ritorna all'ecosistema",
+    feedback: "Feedback e contatto",
   },
-  Patwa: {
-    demo: "Farm & Family Alliance Ecosystem Demo",
-    farm: "Bronson Family Farm",
-    tagline: "Connected food ecosystem experience",
-    start: "Start di guided tour",
-    marketplace: "Go a marketplace",
-    pathways: "Open role pathways",
-    narration: "Voice narration deh on",
-    story: "Di story behind di farm",
-    overview: "Living ecosystem overview",
-    chooseLanguage: "Choose language",
-    rolePathways: "Role Pathways",
-    entrance: "Entrance",
-    ourStory: "Our Story",
-    events: "View Events",
-    nutrition: "Health & Nutrition",
-    supervisor: "Supervisor Tools",
-    parent: "Parent Portal",
-    launch: "Launch Readiness",
+  עברית: {
+    demo: "המערכת של חוות משפחת ברונסון",
+    mainTitle: "חוויה קהילתית מחוברת סביב מזון",
+    start: "התחלה",
+    back: "חזרה",
+    next: "הבא",
+    guided: "התחל סיור מודרך",
+    pause: "השהה סיור",
+    roles: "בחר מסלול",
+    mission: "משימה",
+    need: "הצורך שנענה",
+    destination: "יעד / החלטה",
+    strongest: "הצעדים הבאים",
+    gallery: "גלריית תמונות",
+    return: "חזרה למערכת",
+    feedback: "משוב ויצירת קשר",
   },
-  Hebrew: {
-    demo: "הדגמת המערכת של Farm & Family Alliance",
-    farm: "Bronson Family Farm",
-    tagline: "חוויית מערכת מזון מחוברת",
-    start: "התחל סיור מודרך",
-    marketplace: "עבור לשוק",
-    pathways: "פתח מסלולי תפקידים",
-    narration: "קריינות פעילה",
-    story: "הסיפור מאחורי החווה",
-    overview: "סקירת מערכת חיה",
-    chooseLanguage: "בחר שפה",
-    rolePathways: "מסלולי תפקידים",
-    entrance: "כניסה",
-    ourStory: "הסיפור שלנו",
-    events: "אירועים",
-    nutrition: "בריאות ותזונה",
-    supervisor: "כלי מפקח",
-    parent: "פורטל משפחה",
-    launch: "מוכנות להשקה",
+  Français: {
+    demo: "ÉCOSYSTÈME BRONSON FAMILY FARM",
+    mainTitle: "Expérience alimentaire communautaire connectée",
+    start: "Commencer",
+    back: "Retour",
+    next: "Suivant",
+    guided: "Démarrer la visite guidée",
+    pause: "Pause",
+    roles: "Choisir un parcours",
+    mission: "Mission",
+    need: "Besoin comblé",
+    destination: "Destination / Décision",
+    strongest: "Prochaines étapes",
+    gallery: "Galerie d'images",
+    return: "Retour à l'écosystème",
+    feedback: "Commentaires et contact",
   },
 };
 
-const languages: Language[] = [
-  "English",
-  "Español",
-  "Tagalog",
-  "Italiano",
-  "Patwa",
-  "Hebrew",
+const SCREEN_ORDER: ScreenKey[] = [
+  "home",
+  "ecosystem",
+  "guest",
+  "story",
+  "customer",
+  "marketplace",
+  "grower",
+  "planner",
+  "valueAdded",
+  "youth",
+  "supervisor",
+  "partner",
+  "events",
+  "wellness",
+  "decision",
+  "feedback",
 ];
 
-function t(language: Language, key: string) {
-  return translations[language][key] || translations.English[key] || key;
-}
+const ROLE_TILES: { key: ScreenKey; title: string; text: string; next: string[]; image: string }[] = [
+  { key: "guest", title: "Guest", text: "Discover the farm, the story, events, and the airport-connected grow areas.", next: ["Story", "Events", "Gallery"], image: IMAGES.guest },
+  { key: "customer", title: "Customer", text: "Move quickly to GrownBy, then return for recipes, nutrition, and fresh food guidance.", next: ["Marketplace", "Recipes", "Nutrition"], image: IMAGES.customer },
+  { key: "grower", title: "Grower", text: "Access planning, seasonal guidance, training, and ecosystem coordination.", next: ["Planner", "Seasonal Guidance", "Coordination"], image: IMAGES.grower },
+  { key: "valueAdded", title: "Value-Added Producer", text: "Explore branding, packaging, demonstrations, and local market opportunity.", next: ["Branding", "Packaging", "Market Access"], image: IMAGES.valueAdded },
+  { key: "youth", title: "Youth Workforce", text: "Experience the farm as a living classroom for agriculture, STEAM, teamwork, and enterprise.", next: ["Learning", "STEAM", "Responsibilities"], image: IMAGES.youth },
+  { key: "supervisor", title: "Supervisor", text: "Support youth workforce through scheduling, check-ins, wellness support, and accountability.", next: ["Scheduling", "Check-In", "Support"], image: IMAGES.supervisor },
+  { key: "partner", title: "Partner / Investor", text: "See where resources, funding, sponsorship, and collaboration strengthen the ecosystem.", next: ["Support", "Investment", "Impact"], image: IMAGES.partner },
+];
 
-function PillButton({
-  children,
-  onClick,
-  active = false,
-  type = "button",
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  active?: boolean;
-  type?: "button" | "submit";
-}) {
-  return (
-    <button
-      type={type}
-      onClick={onClick}
-      className={`rounded-full border px-5 py-3 text-sm font-medium backdrop-blur-md transition hover:scale-[1.01] ${
-        active
-          ? "border-emerald-200/30 bg-emerald-400/20 text-white"
-          : "border-white/10 bg-white/10 text-white hover:bg-white/15"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function GlassCard({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`rounded-[2rem] border border-white/10 bg-black/20 shadow-2xl backdrop-blur-xl ${className}`}
-    >
-      {children}
-    </div>
-  );
-}
-
-const pathwayData: Record<PathwayKey, Pathway> = {
+const CONTENT: Record<ScreenKey, ScreenContent> = {
+  home: {
+    eyebrow: "Welcome",
+    title: "Step into the Farm. Experience the wonders of life.",
+    subtitle: "A guided ecosystem for food access, growers, youth workforce, marketplace activity, health education, and community return.",
+    image: IMAGES.entrance,
+    imageAlt: "Bronson Family Farm entrance and growing area",
+    mission: "Invite people into the farm through a warm, visual, intuitive entry point.",
+    need: "People need to understand the story before they are asked to participate.",
+    destination: "Begin the guided tour or choose a pathway.",
+    details: [
+      { title: "One connected system", text: "The farm is not a single event or slide. It is a living ecosystem connecting people, food, land, learning, and opportunity." },
+      { title: "Built for action", text: "Every button leads somewhere specific: shop, learn, participate, supervise, volunteer, sponsor, or give feedback." },
+      { title: "Youth launch ready", text: "The structure supports the June 8 through August 28, 2026 Youth Workforce Program with supervisor and pathway logic." },
+    ],
+    actions: [{ label: "Enter Ecosystem", to: "ecosystem" }, { label: "Begin Guided Tour", to: "ecosystem" }],
+  },
+  ecosystem: {
+    eyebrow: "The Model",
+    title: "Connected Food Ecosystem",
+    subtitle: "Bronson Family Farm brings together growers, customers, youth, supervisors, partners, and community resources in one operational pathway system.",
+    image: IMAGES.ecosystem,
+    imageAlt: "Bronson Family Farm growing system",
+    mission: "Show how the whole model works before a person chooses their role.",
+    need: "The community needs more than food distribution. It needs tools, knowledge, people, training, and return pathways.",
+    destination: "Choose a role pathway and move from interest to decision.",
+    details: [
+      { title: "Food access", text: "Fresh food moves toward families, marketplace customers, schools, and community destinations." },
+      { title: "Grower supply market", text: "Tools, training, demonstrations, seeds, seedlings, planning, and sales channels support local growers." },
+      { title: "Wraparound ecosystem", text: "Youth, families, growers, vendors, partners, and supervisors are connected instead of operating separately." },
+    ],
+    actions: [{ label: "Choose Guest Path", to: "guest" }, { label: "Go to Youth Workforce", to: "youth" }, { label: "Partner / Investor View", to: "partner" }],
+  },
   guest: {
-    label: "Guest",
-    title: "Guest Experience",
-    subtitle: "Enter the farm, understand the place, and discover where you fit.",
-    need: "Guests need a clear first experience that explains why Bronson Family Farm is more than a farm. It is a place-based food, education, workforce, wellness, and marketplace ecosystem.",
-    experience: [
-      "Arrive through the farm entrance and experience the Historic Lansdowne Airport setting.",
-      "Learn how land, legacy, food access, workforce development, wellness, and marketplace activity connect.",
-      "See how the farm becomes a destination for families, growers, schools, youth, partners, and community members.",
-      "Choose whether to explore the marketplace, youth workforce, grower pathway, events, or partnership opportunities.",
+    eyebrow: "Guest Pathway",
+    title: "Come experience the farm first.",
+    subtitle: "Guests enter through story, place, events, beauty, and discovery before deciding how they want to participate.",
+    image: IMAGES.guest,
+    imageAlt: "Guest pathway farm image",
+    mission: "Help visitors understand why Bronson Family Farm exists and why the land matters.",
+    need: "Guests need a welcoming entry before they become customers, volunteers, donors, or advocates.",
+    destination: "Decide whether to attend, share, volunteer, shop, or bring others.",
+    details: [
+      { title: "Story and place", text: "The airport-connected farm, the growing areas, and the family legacy create a memorable first experience." },
+      { title: "Events as entry points", text: "Growers Supply Market and community events create natural reasons to return." },
+      { title: "Share the invitation", text: "Guests should leave with a simple story they can tell someone else." },
     ],
-    rhythm: ["Welcome", "Orientation", "Pathway selection", "Feedback", "Next step"],
-    journey: [
-      {
-        stage: "Arrival",
-        purpose: "Reduce confusion and help visitors feel welcomed.",
-        action: "Show the entrance, land, airport context, and why this place matters.",
-        outcome: "The guest understands they are entering a working food ecosystem.",
-      },
-      {
-        stage: "Orientation",
-        purpose: "Explain the model before asking for participation.",
-        action: "Connect food, youth, growers, marketplace, schools, partners, and wellness.",
-        outcome: "The guest can identify which pathway fits their interest.",
-      },
-      {
-        stage: "Decision",
-        purpose: "Move from curiosity to action.",
-        action: "Offer marketplace, volunteer, grower, youth, event, and partner choices.",
-        outcome: "The guest takes a next step instead of leaving with only information.",
-      },
+    actions: [{ label: "Open Story", to: "story" }, { label: "See Events", to: "events" }, { label: "Open Gallery", modal: "community" }],
+  },
+  story: {
+    eyebrow: "Story / Legacy",
+    title: "The farm carries family, land, culture, and future opportunity.",
+    subtitle: "The ecosystem honors the Bronson and Lorenzana legacy while building a practical food and workforce destination in Youngstown.",
+    image: IMAGES.story,
+    imageAlt: "Legacy pathway image",
+    mission: "Ground the demo in purpose before asking people to act.",
+    need: "People need meaning, trust, and context to understand why this work matters.",
+    destination: "Return to a role pathway with a stronger reason to participate.",
+    details: [
+      { title: "Legacy", text: "Family history, faith, education, agriculture, and community responsibility shape the farm's purpose." },
+      { title: "Place-based work", text: "The farm is rooted in Youngstown and speaks to food access, land use, workforce, and community revitalization." },
+      { title: "Future-building", text: "The story points forward: youth, growers, marketplace systems, and regional collaboration." },
     ],
-    live: ["Seasonal farm status", "Current event readiness", "Marketplace activity", "Community pathway interest"],
-    decisions: ["Explore the Marketplace", "Attend an event", "Learn about Youth Workforce", "Become a volunteer", "Share feedback"],
-    next: ["marketplace", "youth", "grower", "partner"],
-    reflection: "What part of the ecosystem made you want to learn more?",
-    image: "/GrowArea.jpg",
-    imageAlt: "Bronson Family Farm growing area",
+    actions: [{ label: "Enter as Guest", to: "guest" }, { label: "Choose a Pathway", to: "ecosystem" }, { label: "Leave Feedback", to: "feedback" }],
   },
   customer: {
-    label: "Customer",
-    title: "Customer Experience",
-    subtitle: "Connect fresh food, family wellness, local purchasing, and community impact.",
-    need: "Customers need access to fresh local food, simple nutrition education, seasonal products, and a clear reason to support local growers and youth production.",
-    experience: [
-      "Explore seasonal produce, seedlings, Bubble Babies™, and value-added items.",
-      "Understand how purchasing supports youth, growers, schools, families, and community destinations.",
-      "Connect food choices to recipes, nutrition, wellness, and practical household health.",
-      "Move from customer interest into marketplace participation, events, or grower learning.",
+    eyebrow: "Customer Pathway",
+    title: "Fresh food, nutrition, recipes, and return visits.",
+    subtitle: "Customers move quickly to the marketplace, then return for food guidance, nutrition education, and healthier choices.",
+    image: IMAGES.customer,
+    imageAlt: "Customer pathway image",
+    mission: "Convert interest into fresh food access and repeat participation.",
+    need: "Families need easier access to locally grown food and simple guidance for using it well.",
+    destination: "Shop, learn how to use the food, return, and share with others.",
+    details: [
+      { title: "Marketplace first", text: "The customer path should make the store easy to find without burying the action." },
+      { title: "Food guidance", text: "Recipes, nutrition notes, and produce education help customers feel confident." },
+      { title: "Healthy return loop", text: "Customers come back for seasonal produce, events, demonstrations, and wellness education." },
     ],
-    rhythm: ["View seasonal products", "Learn the food story", "Choose purchase or preorder", "Share with family and friends"],
-    journey: [
-      {
-        stage: "Discover",
-        purpose: "Help customers see food as health, learning, and local impact.",
-        action: "Show products, recipes, seedlings, Bubble Babies™, and food destinations.",
-        outcome: "The customer understands what is available and why it matters.",
-      },
-      {
-        stage: "Choose",
-        purpose: "Turn interest into local purchasing power.",
-        action: "Offer marketplace, preorder, event, and nutrition pathways.",
-        outcome: "The customer supports the local food system directly.",
-      },
-      {
-        stage: "Return",
-        purpose: "Build repeat healthy choices.",
-        action: "Invite sharing, recurring marketplace visits, and grower learning.",
-        outcome: "The customer becomes part of community sustainability.",
-      },
-    ],
-    foodFlow: ["Youth and growers produce food", "Food is harvested and prepared", "Marketplace receives inventory", "Families, schools, and destinations are served"],
-    live: ["Available products", "Harvest movement", "Marketplace readiness", "Nutrition education moments"],
-    decisions: ["Shop the Marketplace", "Preorder seasonal items", "Join a farm event", "Become a grower", "Share with family and friends"],
-    next: ["marketplace", "grower", "guest", "partner"],
-    reflection: "How can fresh local food improve your family or community?",
-    image: "/GrowArea2.jpg",
-    imageAlt: "Fresh farm production area",
-  },
-  youth: {
-    label: "Youth Workforce",
-    title: "Youth Workforce Journey",
-    subtitle: "Youth grow food with real destinations: marketplace, schools, and community.",
-    need: "Youth need purposeful work, structure, motivation, leadership development, and a reason to stay engaged beyond social media. Their work must visibly matter.",
-    experience: [
-      "Check in with supervisors and begin with weather, safety, hydration, PPE, and motivation.",
-      "Join cultivation teams for planting, weeding, watering, harvesting, composting, and site stewardship.",
-      "Participate in motivational activity blocks, team challenges, RC demonstrations, leadership moments, and reflection circles.",
-      "Learn how harvested food moves to the marketplace, schools, events, families, and other community destinations.",
-      "Build badges in responsibility, teamwork, communication, safety, cultivation, marketplace exposure, and leadership.",
-    ],
-    rhythm: [
-      "8:00 arrival, check-in, weather, PPE, and hydration",
-      "Morning activation, proverb, goal, and team assignment",
-      "Cultivation, infrastructure, harvest, and stewardship work",
-      "Motivational activity block to refresh attention",
-      "Marketplace exposure, reflection, documentation, and closing circle",
-    ],
-    journey: [
-      {
-        stage: "Check In",
-        purpose: "Create safety, structure, and belonging at the start of the day.",
-        action: "Supervisor confirms attendance, PPE, hydration, weather, and team placement.",
-        outcome: "Youth know where they belong and what they are responsible for.",
-      },
-      {
-        stage: "Work With Purpose",
-        purpose: "Connect physical work to food, marketplace, schools, and community.",
-        action: "Youth cultivate, harvest, compost, steward land, and document progress.",
-        outcome: "Youth see that their work feeds real people and supports real destinations.",
-      },
-      {
-        stage: "Motivation & Reflection",
-        purpose: "Reduce social media distraction and build self-awareness.",
-        action: "Use proverbs, challenges, RC demonstrations, leadership prompts, and closing circles.",
-        outcome: "Youth leave with a skill, a story, and a reason to return.",
-      },
-    ],
-    foodFlow: ["Youth grow food", "Harvest and wash/prep", "Marketplace inventory", "Schools and youth-serving destinations", "Families and community wellness"],
-    live: ["Youth active today", "Attendance and PPE status", "Team assignments", "Harvest readiness", "Supervisor observations"],
-    decisions: ["Complete enrollment", "Meet supervisors", "Explore leadership track", "Become a future mentor", "Continue to Grower Pathway"],
-    next: ["supervisor", "marketplace", "grower", "parent"],
-    reflection: "How did today’s work help feed families, schools, marketplaces, or the community?",
-    image: "/GrowArea.jpg",
-    imageAlt: "Youth workforce growing space",
-  },
-  grower: {
-    label: "Grower",
-    title: "Grower Pathway",
-    subtitle: "Grow more successfully with tools, training, market access, and ecosystem support.",
-    need: "Growers need practical knowledge, shared infrastructure, education, market access, and a community system that helps production reach people.",
-    experience: [
-      "Learn companion planting, crop planning, seed starting, irrigation, harvest timing, and production basics.",
-      "Connect to Bubble Babies™, demonstrations, grower education, and shared supply systems.",
-      "Move produce and products toward marketplace channels, schools, events, and community destinations.",
-      "Support youth learning by showing how growing connects to business, wellness, and community food systems.",
-    ],
-    rhythm: ["Assess growing needs", "Plan crops and timing", "Use farm knowledge and supplies", "Prepare for market and community destinations"],
-    journey: [
-      {
-        stage: "Assess",
-        purpose: "Identify what the grower needs to produce successfully.",
-        action: "Review crop goals, space, supplies, timing, irrigation, and training needs.",
-        outcome: "The grower knows the next practical step.",
-      },
-      {
-        stage: "Prepare",
-        purpose: "Turn interest into productive growing activity.",
-        action: "Use education, Bubble Babies™, demonstrations, and shared market planning.",
-        outcome: "The grower is ready to produce for household, market, or community use.",
-      },
-      {
-        stage: "Connect",
-        purpose: "Move production into the ecosystem.",
-        action: "Link produce to marketplace, schools, events, youth mentorship, or partner channels.",
-        outcome: "The grower participates in a larger regional food system.",
-      },
-    ],
-    foodFlow: ["Grower production", "Farm support systems", "Marketplace", "Schools and events", "Community food access"],
-    live: ["Grower interest", "Crop windows", "Supply needs", "Market readiness"],
-    decisions: ["Join the Grower Network", "Attend training", "Sell through Marketplace", "Mentor Youth Workforce", "Become a partner grower"],
-    next: ["marketplace", "partner", "youth", "customer"],
-    reflection: "What would help you grow more successfully?",
-    image: "/GrowArea2.jpg",
-    imageAlt: "Grower support and production area",
+    actions: [{ label: "Go to Marketplace", to: "marketplace" }, { label: "Recipes & Nutrition", to: "wellness" }, { label: "Open GrownBy Store", href: "https://grownby.com/farms/bronson-family-farm/shop" }],
   },
   marketplace: {
-    label: "Marketplace",
-    title: "Marketplace Pathway",
-    subtitle: "The economic engine connecting growers, youth, customers, schools, and community.",
-    need: "The marketplace needs to show how production becomes purchasing power, food access, education, and community sustainability.",
-    experience: [
-      "View seasonal produce, seedlings, Bubble Babies™, value-added products, and farm offerings.",
-      "Understand how youth-grown and grower-produced food becomes real inventory.",
-      "Connect purchasing to nutrition, schools, events, families, and community destinations.",
-      "Move from shopping into customer loyalty, grower participation, vendor activity, or partnership support.",
+    eyebrow: "Marketplace",
+    title: "Move food from farm to families, schools, and community destinations.",
+    subtitle: "The marketplace connects products, preorders, SNAP-aware shopping logic, grower supply activity, and community-facing sales.",
+    image: IMAGES.marketplace,
+    imageAlt: "Marketplace pathway image",
+    mission: "Turn growing activity into economic, nutritional, and community value.",
+    need: "The ecosystem needs a sales channel so food, seedlings, and value-added products can move beyond the field.",
+    destination: "Shop, preorder, become a vendor, or connect production to a buyer destination.",
+    details: [
+      { title: "GrownBy connection", text: "Customers should be able to move directly to the Bronson Family Farm store." },
+      { title: "Inventory to market", text: "Produce, seedlings, Bubble Babies, and value-added products need a visible path to purchase." },
+      { title: "Community destinations", text: "Food grown by youth and growers can support marketplace customers, schools, and other destinations." },
     ],
-    rhythm: ["Harvest received", "Inventory prepared", "Products displayed or listed", "Customers and destinations served"],
-    journey: [
-      {
-        stage: "Receive",
-        purpose: "Show that the marketplace begins with production.",
-        action: "Receive harvest, seedlings, Bubble Babies™, vendor items, and value-added products.",
-        outcome: "Inventory has a source, story, and destination.",
-      },
-      {
-        stage: "Sell & Educate",
-        purpose: "Connect purchasing with nutrition and community impact.",
-        action: "Display items, explain use, share recipes, and route customers to preorders.",
-        outcome: "Customers buy with understanding, not just interest.",
-      },
-      {
-        stage: "Sustain",
-        purpose: "Keep the ecosystem economically active.",
-        action: "Track demand, vendor participation, destination orders, and repeat customers.",
-        outcome: "Marketplace activity supports youth, growers, and community food access.",
-      },
-    ],
-    foodFlow: ["Field production", "Harvest records", "Marketplace display", "Customer purchase", "Community impact"],
-    live: ["Product availability", "Preorder activity", "Vendor participation", "Destination demand"],
-    decisions: ["Shop the Marketplace", "Become a vendor", "Learn about SNAP access", "Support youth production", "Return to Ecosystem"],
-    next: ["customer", "grower", "partner", "youth"],
-    reflection: "What products or services should the marketplace offer next?",
-    image: "/ConnectFoodEcosystem_withimages.jpeg",
-    imageAlt: "Connected food ecosystem marketplace image",
+    actions: [{ label: "Open GrownBy Store", href: "https://grownby.com/farms/bronson-family-farm/shop" }, { label: "Back to Customer", to: "customer" }, { label: "Inventory to Planner", to: "planner" }],
   },
-  partner: {
-    label: "Partner",
-    title: "Partner Pathway",
-    subtitle: "Partners expand capacity, infrastructure, workforce, food access, and community trust.",
-    need: "Partners need to see where their support fits and how investment strengthens youth workforce, schools, marketplace activity, food access, and long-term revitalization.",
-    experience: [
-      "Support youth workforce development, supervisor capacity, training, and safety systems.",
-      "Help connect food production to schools, families, events, and community destinations.",
-      "Invest in irrigation, storage, transportation, marketplace systems, technology, and long-term operations.",
-      "Collaborate through education, wellness, workforce, food access, and community development.",
+  grower: {
+    eyebrow: "Grower Pathway",
+    title: "Tools, knowledge, planning, and support for growers.",
+    subtitle: "Growers enter the ecosystem for seasonal planning, demonstrations, supplies, coordination, and access to market opportunity.",
+    image: IMAGES.grower,
+    imageAlt: "Grower pathway image",
+    mission: "Help more people grow successfully and connect what they grow to community value.",
+    need: "Small growers need timing, tools, guidance, supplies, and a place to connect with buyers and other producers.",
+    destination: "Plan, grow, coordinate, sell, teach, or become part of the supply market.",
+    details: [
+      { title: "Seasonal guidance", text: "Planting windows, weather awareness, and crop timing keep the ecosystem practical." },
+      { title: "Shared knowledge", text: "Workshops and demonstrations help growers learn by seeing and doing." },
+      { title: "Market connection", text: "The grower path should lead naturally to inventory, marketplace, and community distribution." },
     ],
-    rhythm: ["Identify shared mission", "Select support area", "Connect resources to pathway needs", "Track outcomes and impact"],
-    journey: [
-      {
-        stage: "Align",
-        purpose: "Help partners understand where they fit.",
-        action: "Match their mission to youth, food access, infrastructure, events, health, or marketplace needs.",
-        outcome: "Partner support is targeted instead of general.",
-      },
-      {
-        stage: "Contribute",
-        purpose: "Turn support into operating capacity.",
-        action: "Sponsor, donate, train, provide supplies, support distribution, or fund systems.",
-        outcome: "The ecosystem becomes more stable and measurable.",
-      },
-      {
-        stage: "Track Impact",
-        purpose: "Make partnership visible and accountable.",
-        action: "Report youth participation, food destinations, market movement, and community outcomes.",
-        outcome: "Partners can see the value of continued investment.",
-      },
+    actions: [{ label: "Open Crop Planner", to: "planner" }, { label: "Seasonal Events", to: "events" }, { label: "Marketplace Access", to: "marketplace" }],
+  },
+  planner: {
+    eyebrow: "Planner",
+    title: "Planning connects crops, weather, workforce, events, and market readiness.",
+    subtitle: "The planner makes the ecosystem operational instead of decorative by connecting farm work to timing and outcomes.",
+    image: IMAGES.planner,
+    imageAlt: "Crop planner image",
+    mission: "Give growers, supervisors, and operators one place to think through readiness.",
+    need: "Farming decisions depend on timing, people, crop stage, weather, inventory, and destinations.",
+    destination: "Move from planning to growing, harvesting, event readiness, or marketplace delivery.",
+    details: [
+      { title: "Season status", text: "Warm season planning is active, with field prep, seedling movement, and event readiness underway." },
+      { title: "Next planting window", text: "Upcoming planting windows align production timing, volunteers, youth workforce, and grower activity." },
+      { title: "Harvest and event readiness", text: "The planner connects crops, staffing, weather, and community-facing events." },
     ],
-    live: ["Infrastructure needs", "Youth workforce support", "Event opportunities", "Community outcome tracking"],
-    decisions: ["Schedule a meeting", "Sponsor Youth Workforce", "Support food distribution", "Invest in infrastructure", "Become an ecosystem partner"],
-    next: ["youth", "marketplace", "grower", "supervisor"],
-    reflection: "Where could your organization strengthen this ecosystem?",
-    image: "/GrowArea.jpg",
-    imageAlt: "Partner support at the farm",
+    actions: [{ label: "Grower Path", to: "grower" }, { label: "Event Readiness", to: "events" }, { label: "Inventory to Market", to: "marketplace" }],
+  },
+  valueAdded: {
+    eyebrow: "Value-Added Producer Pathway",
+    title: "Turn products into demonstrations, packaging, branding, and income.",
+    subtitle: "Value-added producers connect creativity, food safety, packaging, customer education, and market access.",
+    image: IMAGES.valueAdded,
+    imageAlt: "Value-added producer image",
+    mission: "Help growers and producers increase value while teaching the community how local food can become local enterprise.",
+    need: "Producers need a pathway for product presentation, demonstrations, branding, packaging, and sales readiness.",
+    destination: "Prepare a product, demonstrate it, sell it, or partner with the marketplace.",
+    details: [
+      { title: "Product presentation", text: "Packaging, labeling, story, and shelf-readiness help products move from idea to customer." },
+      { title: "Demonstrations", text: "Live demos help customers understand how to use, cook, preserve, and value local food." },
+      { title: "Market access", text: "The pathway connects producers to events, customers, and the marketplace." },
+    ],
+    actions: [{ label: "Demonstrations", to: "events" }, { label: "Market Access", to: "marketplace" }, { label: "Product Presentation", modal: "produce" }],
+  },
+  youth: {
+    eyebrow: "Youth Workforce Pathway",
+    title: "More than a job. We are building our future.",
+    subtitle: "Youth ages 14–18 experience agriculture, STEAM, teamwork, responsibility, enterprise, and community purpose from June 8 through August 28, 2026.",
+    image: IMAGES.youth,
+    imageAlt: "Youth workforce pathway image",
+    mission: "Build responsibility, confidence, skills, and real work experience through a living farm environment.",
+    need: "Youth need structured work, caring supervision, meaningful activity, less social media distraction, and a reason to see themselves in the future.",
+    destination: "Complete daily responsibilities, grow food for the marketplace and community, earn progress, and reflect on next steps.",
+    details: [
+      { title: "Daily rhythm", text: "Check-in, PPE, assignments, field work, learning blocks, motivational activities, supervisor observations, and reflection." },
+      { title: "Food with purpose", text: "The food youth grow supports the marketplace, schools, and other community destinations." },
+      { title: "Motivational activity", text: "Short daily challenges, proverbs, farm missions, and team reflection create healthy focus away from social media." },
+    ],
+    actions: [{ label: "Supervisor Support", to: "supervisor" }, { label: "Learning Schedule", to: "planner" }, { label: "STEAM & Training", modal: "training" }],
   },
   supervisor: {
-    label: "Supervisor",
-    title: "Supervisor Mobile Tracking",
-    subtitle: "Phone-based oversight for attendance, PPE, daily tasks, youth progress, and pathway advancement.",
-    need: "Supervisors need a simple mobile-first operating layer to manage 15 youth per aide, support safety, document progress, and keep the program measurable.",
-    experience: [
-      "Check attendance and assign youth to daily teams.",
-      "Confirm PPE, hydration, safety readiness, and role assignments before work begins.",
-      "Track task completion, teamwork, communication, leadership, participation, and safety awareness.",
-      "Record observations from a phone while youth work in the field.",
-      "Submit daily notes that support badges, parent updates, and final assessments.",
+    eyebrow: "Supervisor Pathway",
+    title: "Mobile-first support for youth workforce accountability.",
+    subtitle: "Supervisors use phones to support attendance, assignments, PPE, wellness, observations, progress, and daily notes.",
+    image: IMAGES.supervisor,
+    imageAlt: "Supervisor pathway image",
+    mission: "Give aides and supervisors a simple, reliable structure for supporting 50 youth without confusion.",
+    need: "Supervisors need quick check-ins, clear assignments, safety reminders, and a way to document progress from the field.",
+    destination: "Track attendance, support youth, complete observations, flag needs, and close the day with notes.",
+    details: [
+      { title: "Phone-first assessment", text: "The supervisor view is designed for mobile use: quick taps, simple forms, clear statuses, and no office dependency." },
+      { title: "Accountability", text: "Attendance, PPE, task completion, behavior, teamwork, and Life Skills Progression observations belong here." },
+      { title: "Support loop", text: "Supervisors connect youth, parents/guardians, program leadership, and daily operations." },
     ],
-    rhythm: ["Morning roster and PPE check", "Team deployment and field observations", "Task completion and behavior notes", "End-of-day assessment and parent-ready summary"],
-    journey: [
-      {
-        stage: "Roster",
-        purpose: "Know who is present and ready before work starts.",
-        action: "Mark attendance, confirm PPE, hydration, and assign teams.",
-        outcome: "The day begins with safety and accountability.",
-      },
-      {
-        stage: "Observe",
-        purpose: "Capture progress without pulling youth out of the work experience.",
-        action: "Use phone-based checklists for teamwork, communication, safety, and task completion.",
-        outcome: "Supervisor notes become real-time evidence of growth.",
-      },
-      {
-        stage: "Report",
-        purpose: "Turn daily work into measurable development.",
-        action: "Submit daily assessment, badge notes, parent-ready comments, and support needs.",
-        outcome: "Youth progress is visible to supervisors, families, and program leadership.",
-      },
-    ],
-    live: ["Attendance count", "PPE completion", "Team locations", "Youth progress notes"],
-    decisions: ["Open daily attendance", "Complete PPE check", "Record youth observations", "Submit daily assessment", "Review pathway progress"],
-    next: ["youth", "parent", "partner", "marketplace"],
-    reflection: "What support does this youth need to succeed tomorrow?",
-    image: "/GrowArea2.jpg",
-    imageAlt: "Supervisor mobile tracking in the field",
+    actions: [{ label: "Back to Youth Workforce", to: "youth" }, { label: "Scheduling", to: "planner" }, { label: "Support Resources", to: "wellness" }],
   },
-  parent: {
-    label: "Parent / Guardian",
-    title: "Parent & Guardian Connection",
-    subtitle: "Families see progress, participation, achievements, communication, and community contribution.",
-    need: "Parents and guardians need confidence that youth are safe, growing, learning, contributing, and connected to meaningful opportunity.",
-    experience: [
-      "View attendance and participation summaries.",
-      "See badges, growth moments, leadership progress, and supervisor notes.",
-      "Understand how youth work connects to food for the marketplace, schools, and community destinations.",
-      "Receive communication about events, milestones, and next opportunities.",
+  partner: {
+    eyebrow: "Partner / Investor Pathway",
+    title: "Support the infrastructure that lets the ecosystem work.",
+    subtitle: "Partners help with tools, fencing, water, solar, transportation, workforce, education, wellness, market access, and operating capacity.",
+    image: IMAGES.partner,
+    imageAlt: "Partner pathway image",
+    mission: "Make it easy for supporters to understand where their resources create direct impact.",
+    need: "The farm needs reliable infrastructure, equipment, funding, technical support, and long-term collaboration.",
+    destination: "Choose a sponsorship, partnership, donation, technical support role, or investment conversation.",
+    details: [
+      { title: "Specific asks", text: "Water, solar, fencing, storage, tools, tables, canopies, transportation, wash stations, and workforce supports are practical needs." },
+      { title: "Measurable impact", text: "Partners should see how their support strengthens youth, growers, food access, and local enterprise." },
+      { title: "Mutual benefit", text: "The strongest partnerships create value for the community and for the organizations involved." },
     ],
-    rhythm: ["Daily participation summary", "Weekly progress update", "Achievement and badge review", "Family feedback and next opportunity"],
-    journey: [
-      {
-        stage: "Inform",
-        purpose: "Give families confidence and reduce uncertainty.",
-        action: "Show attendance, safety, participation, and daily activity summaries.",
-        outcome: "Families know youth are safe and engaged.",
-      },
-      {
-        stage: "Celebrate",
-        purpose: "Make growth visible beyond the workday.",
-        action: "Share badges, leadership moments, supervisor notes, and reflection prompts.",
-        outcome: "Youth can talk about progress at home.",
-      },
-      {
-        stage: "Connect",
-        purpose: "Invite families into the larger ecosystem.",
-        action: "Offer events, marketplace, volunteer, feedback, and next-step opportunities.",
-        outcome: "Families become part of the farm community.",
-      },
+    actions: [{ label: "See Events", to: "events" }, { label: "Leave Feedback", to: "feedback" }, { label: "Return to Ecosystem", to: "ecosystem" }],
+  },
+  events: {
+    eyebrow: "Events",
+    title: "Events bring people back into the ecosystem.",
+    subtitle: "Growers Supply Market, seed giveaways, demonstrations, wellness education, and community days create repeated entry points.",
+    image: IMAGES.events,
+    imageAlt: "Events image",
+    mission: "Use events as living demonstrations of the food ecosystem.",
+    need: "The community needs repeated, welcoming reasons to learn, shop, volunteer, and connect.",
+    destination: "Attend, register, volunteer, sponsor, demonstrate, sell, or invite others.",
+    details: [
+      { title: "Return engine", text: "Events create repeated entry into the ecosystem for learning, shopping, and connection." },
+      { title: "Demonstration space", text: "Partners, growers, youth, and value-added producers can show the work in real time." },
+      { title: "Community trust", text: "Events make the farm visible, welcoming, useful, and memorable." },
     ],
-    live: ["Youth attendance", "Badges earned", "Supervisor update", "Upcoming events"],
-    decisions: ["View youth progress", "Read supervisor update", "Submit comment", "Attend farm event", "Support next pathway"],
-    next: ["youth", "marketplace", "partner", "guest"],
-    reflection: "What growth have you noticed in your youth?",
-    image: "/GrowArea.jpg",
-    imageAlt: "Parent and guardian connection to the farm",
+    actions: [{ label: "Guest Experiences", to: "guest" }, { label: "Vendor & Market Flow", to: "marketplace" }, { label: "Health Education", to: "wellness" }],
+  },
+  wellness: {
+    eyebrow: "Wellness / Nutrition",
+    title: "Food is health, learning, culture, and confidence.",
+    subtitle: "The wellness path connects produce, recipes, nutrition education, screenings, family support, and healthier daily choices.",
+    image: IMAGES.wellness,
+    imageAlt: "Wellness image",
+    mission: "Help people use fresh food in practical, healthy, culturally meaningful ways.",
+    need: "Fresh food access must be paired with confidence, recipes, nutrition knowledge, and supportive community experiences.",
+    destination: "Shop, cook, learn, share, return, and improve family health habits.",
+    details: [
+      { title: "Nutrition education", text: "Customers and families can learn what to do with seasonal produce." },
+      { title: "Mental wellness", text: "Gardening and outdoor participation support connection, calm, purpose, and belonging." },
+      { title: "Family return loop", text: "Wellness connects customers, youth, parents, volunteers, and community partners." },
+    ],
+    actions: [{ label: "Customer Food Path", to: "customer" }, { label: "Shop Fresh Food", to: "marketplace" }, { label: "Nutrition View", modal: "nutrition" }],
+  },
+  decision: {
+    eyebrow: "Ending Decision",
+    title: "What do you want to do next?",
+    subtitle: "Every pathway ends with a clear choice so the user does not get lost in the demo.",
+    image: IMAGES.decision,
+    imageAlt: "Decision image",
+    mission: "Convert the experience into action.",
+    need: "A demo must not only explain. It must help people decide how they belong in the ecosystem.",
+    destination: "Choose a role, take action, share the farm, or leave feedback.",
+    details: [
+      { title: "I want to become a grower", text: "Move to planning, training, supplies, and marketplace coordination." },
+      { title: "I want to support youth", text: "Move to the youth workforce and supervisor support pathways." },
+      { title: "I want to shop, sponsor, or partner", text: "Move to marketplace, partner, or feedback/contact." },
+    ],
+    actions: [{ label: "Become a Grower", to: "grower" }, { label: "Support Youth", to: "youth" }, { label: "Feedback & Contact", to: "feedback" }],
+  },
+  feedback: {
+    eyebrow: "Feedback / Contact",
+    title: "Tell us how you want to connect.",
+    subtitle: "The ecosystem closes with feedback, contact, sharing, and the next invitation back into the farm.",
+    image: IMAGES.feedback,
+    imageAlt: "Feedback image",
+    mission: "Give every viewer a respectful way to respond, share, ask questions, or offer support.",
+    need: "People need a clear final step after they understand the model.",
+    destination: "Contact Bronson Family Farm, share the ecosystem, or return to a pathway.",
+    details: [
+      { title: "Contact", text: "Phone: 330-275-1604. Website: bronsonfamilyfarm.com." },
+      { title: "Share", text: "Invite a grower, family, youth supervisor, partner, customer, or supporter to experience the farm." },
+      { title: "Return", text: "The demo should always allow people to return to the ecosystem instead of ending abruptly." },
+    ],
+    actions: [{ label: "Return to Ecosystem", to: "ecosystem" }, { label: "Shop GrownBy", href: "https://grownby.com/farms/bronson-family-farm/shop" }, { label: "Decision Screen", to: "decision" }],
   },
 };
 
-function NavBar({
-  screen,
-  setScreen,
-  language,
-}: {
-  screen: Screen;
-  setScreen: (screen: Screen) => void;
-  language: Language;
-}) {
-  return (
-    <div className="mb-8 flex flex-wrap gap-3">
-      <PillButton onClick={() => setScreen("home")} active={screen === "home"}>
-        {t(language, "entrance")}
-      </PillButton>
-      <PillButton onClick={() => setScreen("story")} active={screen === "story"}>
-        {t(language, "ourStory")}
-      </PillButton>
-      <PillButton onClick={() => setScreen("roles")} active={screen === "roles"}>
-        {t(language, "rolePathways")}
-      </PillButton>
-      <PillButton onClick={() => setScreen("supervisor")} active={screen === "supervisor"}>
-        {t(language, "supervisor")}
-      </PillButton>
-      <PillButton onClick={() => setScreen("parent")} active={screen === "parent"}>
-        {t(language, "parent")}
-      </PillButton>
-      <PillButton onClick={() => setScreen("events")} active={screen === "events"}>
-        {t(language, "events")}
-      </PillButton>
-      <PillButton onClick={() => setScreen("nutrition")} active={screen === "nutrition"}>
-        {t(language, "nutrition")}
-      </PillButton>
-      <PillButton onClick={() => setScreen("marketplace")} active={screen === "marketplace"}>
-        {t(language, "marketplace")}
-      </PillButton>
-      <PillButton onClick={() => setScreen("launch")} active={screen === "launch"}>
-        {t(language, "launch")}
-      </PillButton>
-    </div>
-  );
-}
+function App() {
+  const [screen, setScreen] = useState<ScreenKey>("home");
+  const [lang, setLang] = useState<LangKey>("English");
+  const [guided, setGuided] = useState(false);
+  const [imageModal, setImageModal] = useState<string | null>(null);
+  const t = UI[lang];
+  const currentIndex = SCREEN_ORDER.indexOf(screen);
+  const current = CONTENT[screen];
 
-function EcosystemShell({
-  children,
-  screen,
-  setScreen,
-  language,
-  image = "/GrowArea.jpg",
-}: {
-  children: React.ReactNode;
-  screen: Screen;
-  setScreen: (screen: Screen) => void;
-  language: Language;
-  image?: string;
-}) {
-  return (
-    <div className="relative min-h-screen overflow-x-hidden bg-slate-950 text-white">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url('${image}')` }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/85 via-emerald-950/70 to-slate-900/80" />
-      <div className="absolute inset-0 bg-black/20" />
-      <div className="relative z-10 mx-auto max-w-[1500px] px-5 py-7 md:px-10">
-        <NavBar screen={screen} setScreen={setScreen} language={language} />
-        {children}
-      </div>
-    </div>
-  );
-}
+  const progress = useMemo(() => Math.round(((currentIndex + 1) / SCREEN_ORDER.length) * 100), [currentIndex]);
 
-function LiveEcosystemStrip() {
-  const items = [
-    { label: "Live Weather", value: "Field conditions active" },
-    { label: "Youth Workforce", value: "50 expected first round" },
-    { label: "Food Destinations", value: "Marketplace • Schools • Community" },
-    { label: "Daily Rhythm", value: "Arrival • Work • Reflection" },
-  ];
+  const goto = (next: ScreenKey) => {
+    setGuided(false);
+    setScreen(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const nextScreen = () => goto(SCREEN_ORDER[(currentIndex + 1) % SCREEN_ORDER.length]);
+  const prevScreen = () => goto(SCREEN_ORDER[(currentIndex - 1 + SCREEN_ORDER.length) % SCREEN_ORDER.length]);
+
+  useEffect(() => {
+    if (!guided) return;
+    const timer = window.setTimeout(() => {
+      setScreen((prev) => {
+        const i = SCREEN_ORDER.indexOf(prev);
+        return SCREEN_ORDER[(i + 1) % SCREEN_ORDER.length];
+      });
+    }, 6800);
+    return () => window.clearTimeout(timer);
+  }, [guided, screen]);
+
+  const performAction = (action: Action) => {
+    if (action.href) window.open(action.href, "_blank", "noopener,noreferrer");
+    if (action.modal) setImageModal(IMAGES[action.modal]);
+    if (action.to) goto(action.to);
+  };
 
   return (
-    <div className="grid gap-4 md:grid-cols-4">
-      {items.map((item) => (
-        <GlassCard key={item.label} className="p-5">
-          <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">
-            {item.label}
+    <main style={styles.shell} dir={lang === "עברית" ? "rtl" : "ltr"}>
+      <div style={styles.bg} />
+      <header style={styles.topbar}>
+        <button style={styles.brandButton} onClick={() => goto("home")}>
+          <span style={styles.brandMark}>BFF</span>
+          <span>
+            <span style={styles.brandTiny}>{t.demo}</span>
+            <span style={styles.brandTitle}>{t.mainTitle}</span>
+          </span>
+        </button>
+        <div style={styles.topControls}>
+          <select value={lang} onChange={(e) => setLang(e.target.value as LangKey)} style={styles.select}>
+            {LANGS.map((item) => <option key={item}>{item}</option>)}
+          </select>
+          <button style={styles.smallBtn} onClick={() => setGuided((v) => !v)}>{guided ? t.pause : t.guided}</button>
+        </div>
+      </header>
+
+      <section style={styles.progressWrap}>
+        <div style={{ ...styles.progressBar, width: `${progress}%` }} />
+      </section>
+
+      <section style={styles.heroGrid}>
+        <article style={styles.heroText}>
+          <div style={styles.eyebrow}>{current.eyebrow}</div>
+          <h1 style={styles.title}>{current.title}</h1>
+          <p style={styles.subtitle}>{current.subtitle}</p>
+          <div style={styles.actionRow}>
+            {current.actions.map((action) => (
+              <button key={action.label} style={styles.whiteBtn} onClick={() => performAction(action)}>{action.label}</button>
+            ))}
           </div>
-          <div className="mt-3 text-xl font-semibold leading-tight">{item.value}</div>
-        </GlassCard>
-      ))}
-    </div>
-  );
-}
+        </article>
+        <aside style={styles.imagePanel}>
+          <img src={current.image} alt={current.imageAlt} style={styles.heroImage} onError={(e) => { (e.currentTarget as HTMLImageElement).src = IMAGES.entrance; }} />
+          <div style={styles.imageFade} />
+          <div style={styles.imageCaption}>{current.imageAlt}</div>
+        </aside>
+      </section>
 
-function HomeStoryScreen({
-  language,
-  setLanguage,
-  setScreen,
-}: {
-  language: Language;
-  setLanguage: (language: Language) => void;
-  setScreen: (screen: Screen) => void;
-}) {
-  const overviewItems = useMemo(
-    () => [
-      {
-        title: "Family legacy",
-        text: "The farm carries Bronson and Lorenzana legacy into a future-focused Youngstown vision.",
-      },
-      {
-        title: "Land restoration",
-        text: "The project restores land while creating food, education, workforce, marketplace, and agritourism opportunity.",
-      },
-      {
-        title: "Community future",
-        text: "This is an ecosystem for long-term return, growth, school connection, nutrition, and community wellness.",
-      },
-    ],
-    []
-  );
-
-  return (
-    <div className="relative min-h-screen overflow-x-hidden bg-slate-950 text-white">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/GrowArea.jpg')" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/80 via-emerald-950/55 to-slate-900/70" />
-      <div className="absolute inset-0 bg-black/15" />
-
-      <div className="relative z-10 mx-auto max-w-[1500px] px-5 py-7 md:px-10">
-        <header className="mb-8">
-          <div className="mb-3 text-sm uppercase tracking-[0.32em] text-emerald-100/75">
-            {t(language, "demo")}
-          </div>
-
-          <h1 className="text-4xl font-semibold tracking-tight md:text-6xl">
-            {t(language, "farm")}
-          </h1>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <PillButton onClick={() => setScreen("home")}>{t(language, "entrance")}</PillButton>
-            <PillButton onClick={() => setScreen("story")} active>
-              {t(language, "ourStory")}
-            </PillButton>
-            <PillButton onClick={() => setScreen("roles")}>{t(language, "rolePathways")}</PillButton>
-            <PillButton onClick={() => setScreen("events")}>{t(language, "events")}</PillButton>
-            <PillButton onClick={() => setScreen("nutrition")}>{t(language, "nutrition")}</PillButton>
-            <PillButton onClick={() => setScreen("marketplace")}>{t(language, "marketplace")}</PillButton>
-            <PillButton active>{t(language, "narration")}</PillButton>
-          </div>
-        </header>
-
-        <section className="grid gap-6 lg:grid-cols-[1.6fr_0.9fr]">
-          <div className="relative overflow-hidden rounded-[2.25rem] border border-white/10 bg-black/20 p-6 shadow-2xl backdrop-blur-xl md:p-10">
-            <div className="mb-5 inline-flex rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.3em] text-emerald-100/80">
-              {t(language, "story")}
-            </div>
-
-            <h2 className="max-w-4xl text-4xl font-semibold leading-[0.98] tracking-tight md:text-7xl">
-              {t(language, "tagline")}
-            </h2>
-
-            <p className="mt-8 max-w-4xl text-lg leading-9 text-emerald-50/85 md:text-xl md:leading-10">
-              Inspired by family farming traditions and shaped for Youngstown’s future,
-              this farm brings together legacy, land restoration, food access,
-              agritourism, workforce development, marketplace systems, schools,
-              and practical community opportunity.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <PillButton active>{t(language, "start")}</PillButton>
-              <PillButton onClick={() => setScreen("marketplace")}>{t(language, "marketplace")}</PillButton>
-              <PillButton onClick={() => setScreen("roles")}>{t(language, "pathways")}</PillButton>
-            </div>
-
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
-              <GlassCard className="p-5">
-                <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">Seasonal conditions</div>
-                <h3 className="mt-3 text-2xl font-semibold leading-tight md:text-3xl">Warm season planning active</h3>
-                <p className="mt-3 text-base leading-8 text-emerald-50/80">
-                  Field prep, youth activity, harvest movement, school destinations,
-                  event readiness, and marketplace coordination are active.
-                </p>
-              </GlassCard>
-
-              <GlassCard className="p-5">
-                <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">Farm calendar</div>
-                <h3 className="mt-3 text-2xl font-semibold leading-tight md:text-3xl">Living schedule</h3>
-                <p className="mt-3 text-base leading-8 text-emerald-50/80">
-                  Arrival, motivation, team deployment, cultivation, harvest,
-                  reflection, marketplace exposure, and closing circle connect here.
-                </p>
-              </GlassCard>
-
-              <GlassCard className="p-5">
-                <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">{t(language, "chooseLanguage")}</div>
-                <h3 className="mt-3 text-2xl font-semibold md:text-3xl">{language}</h3>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => setLanguage(lang)}
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                        language === lang
-                          ? "bg-white text-slate-900"
-                          : "border border-white/10 bg-white/10 text-white hover:bg-white/15"
-                      }`}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              </GlassCard>
-            </div>
-          </div>
-
-          <GlassCard className="p-6 md:p-7">
-            <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">
-              A place people want to return to
-            </div>
-            <h3 className="mt-4 text-3xl font-semibold leading-tight md:text-4xl">
-              {t(language, "overview")}
-            </h3>
-            <p className="mt-5 text-lg leading-9 text-emerald-50/82">
-              This living farm ecosystem helps guests, customers, growers, youth,
-              supervisors, parents, volunteers, partners, and families move toward
-              food self-sufficiency, economic opportunity, practical wellness, and
-              stronger community connection.
-            </p>
-            <div className="mt-6 space-y-4">
-              {overviewItems.map((item) => (
-                <GlassCard key={item.title} className="p-5">
-                  <h4 className="text-2xl font-semibold">{item.title}</h4>
-                  <p className="mt-3 text-base leading-8 text-emerald-50/80">{item.text}</p>
-                </GlassCard>
-              ))}
-            </div>
-          </GlassCard>
-        </section>
-
-        <section className="mt-6">
-          <LiveEcosystemStrip />
-        </section>
-      </div>
-    </div>
-  );
-}
-
-function RolePathwaysScreen({
-  setScreen,
-  language,
-}: {
-  setScreen: (screen: Screen) => void;
-  language: Language;
-}) {
-  const [activePathway, setActivePathway] = useState<PathwayKey>("youth");
-  const pathway = pathwayData[activePathway];
-
-  return (
-    <EcosystemShell screen="roles" setScreen={setScreen} language={language} image={pathway.image}>
-      <section className="grid gap-6 lg:grid-cols-[0.85fr_1.45fr]">
-        <GlassCard className="p-6 md:p-8">
-          <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Connected ecosystem movement</div>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">{t(language, "rolePathways")}</h1>
-          <p className="mt-5 text-lg leading-9 text-emerald-50/85">
-            Each role is a living journey. The viewer enters a pathway, understands
-            the need being met, sees the daily experience, follows where food and
-            activity move, makes an ending decision, and continues through the ecosystem.
-          </p>
-          <div className="mt-8 grid gap-3">
-            {(Object.keys(pathwayData) as PathwayKey[]).map((key) => (
-              <button
-                key={key}
-                onClick={() => setActivePathway(key)}
-                className={`rounded-2xl border p-4 text-left transition ${
-                  activePathway === key
-                    ? "border-emerald-200/40 bg-emerald-400/20"
-                    : "border-white/10 bg-white/10 hover:bg-white/15"
-                }`}
-              >
-                <div className="text-xs uppercase tracking-[0.22em] text-emerald-100/65">Pathway</div>
-                <div className="mt-1 text-2xl font-semibold">{pathwayData[key].label}</div>
+      {screen === "ecosystem" && (
+        <section style={styles.rolesSection}>
+          <div style={styles.sectionTitle}>{t.roles}</div>
+          <div style={styles.roleGrid}>
+            {ROLE_TILES.map((role) => (
+              <button key={role.key} style={{ ...styles.roleTile, backgroundImage: `linear-gradient(180deg, rgba(5,20,14,.12), rgba(5,20,14,.88)), url(${role.image})` }} onClick={() => goto(role.key)}>
+                <div style={styles.roleTitle}>{role.title}</div>
+                <div style={styles.roleText}>{role.text}</div>
+                <div style={styles.chips}>{role.next.map((item) => <span style={styles.chip} key={item}>{item}</span>)}</div>
               </button>
             ))}
           </div>
-        </GlassCard>
+        </section>
+      )}
 
-        <div className="space-y-6">
-          <GlassCard className="overflow-hidden p-0">
-            <div className="grid gap-0 xl:grid-cols-[1.15fr_0.85fr]">
-              <div className="p-6 md:p-8">
-                <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Current journey</div>
-                <h2 className="mt-4 text-4xl font-semibold leading-tight md:text-5xl">{pathway.title}</h2>
-                <p className="mt-4 text-2xl leading-9 text-emerald-100/90">{pathway.subtitle}</p>
-                <p className="mt-5 text-lg leading-9 text-emerald-50/85">{pathway.need}</p>
-              </div>
-              <div className="min-h-[280px] bg-black/20 p-4">
-                <div
-                  className="h-full min-h-[260px] rounded-[1.5rem] border border-white/10 bg-cover bg-center shadow-xl"
-                  style={{ backgroundImage: `url('${pathway.image}')` }}
-                  aria-label={pathway.imageAlt}
-                />
-              </div>
-            </div>
-          </GlassCard>
-
-          <GlassCard className="p-6 md:p-8">
-            <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Vertical journey: purpose → action → outcome</div>
-            <div className="mt-5 grid gap-4 xl:grid-cols-3">
-              {pathway.journey.map((step) => (
-                <div key={step.stage} className="rounded-2xl border border-white/10 bg-white/10 p-5">
-                  <h3 className="text-2xl font-semibold">{step.stage}</h3>
-                  <div className="mt-4 text-xs uppercase tracking-[0.24em] text-emerald-100/65">Purpose</div>
-                  <p className="mt-2 text-base leading-7 text-emerald-50/85">{step.purpose}</p>
-                  <div className="mt-4 text-xs uppercase tracking-[0.24em] text-emerald-100/65">Action</div>
-                  <p className="mt-2 text-base leading-7 text-emerald-50/85">{step.action}</p>
-                  <div className="mt-4 text-xs uppercase tracking-[0.24em] text-emerald-100/65">Outcome</div>
-                  <p className="mt-2 text-base leading-7 text-emerald-50/85">{step.outcome}</p>
+      <section style={styles.contentGrid}>
+        <article style={styles.cardLarge}>
+          <div style={styles.threeCol}>
+            <InfoCard label={t.mission} text={current.mission} />
+            <InfoCard label={t.need} text={current.need} />
+            <InfoCard label={t.destination} text={current.destination} />
+          </div>
+          <div style={styles.detailGrid}>
+            {current.details.map((block) => (
+              <div key={block.title} style={styles.detailBlock}>
+                <div style={styles.detailIcon}>✦</div>
+                <div>
+                  <h3 style={styles.detailTitle}>{block.title}</h3>
+                  <p style={styles.detailText}>{block.text}</p>
                 </div>
-              ))}
-            </div>
-          </GlassCard>
-
-          <div className="grid gap-6 xl:grid-cols-2">
-            <GlassCard className="p-6">
-              <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Experience this pathway</div>
-              <div className="mt-5 space-y-3">
-                {pathway.experience.map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-white/10 p-4 text-base leading-8 text-emerald-50/85">{item}</div>
-                ))}
               </div>
-            </GlassCard>
-
-            <GlassCard className="p-6">
-              <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Daily rhythm</div>
-              <div className="mt-5 space-y-3">
-                {pathway.rhythm.map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-black/20 p-4 text-base leading-8 text-emerald-50/85">{item}</div>
-                ))}
-              </div>
-            </GlassCard>
-          </div>
-
-          {pathway.foodFlow && (
-            <GlassCard className="p-6 md:p-8">
-              <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Where the food goes</div>
-              <h3 className="mt-3 text-3xl font-semibold">Grow → Harvest → Prepare → Distribute → Nourish</h3>
-              <div className="mt-5 grid gap-3 md:grid-cols-5">
-                {pathway.foodFlow.map((step) => (
-                  <div key={step} className="rounded-2xl border border-white/10 bg-white/10 p-4 text-center text-sm leading-6 text-emerald-50/90">{step}</div>
-                ))}
-              </div>
-              <p className="mt-5 text-lg leading-8 text-emerald-50/85">
-                The food youth and growers help produce is not symbolic. It is connected
-                to the marketplace, schools, families, events, and other community destinations.
-              </p>
-            </GlassCard>
-          )}
-
-          <div className="grid gap-6 xl:grid-cols-3">
-            <GlassCard className="p-6">
-              <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Live ecosystem layer</div>
-              <div className="mt-5 space-y-3">
-                {pathway.live.map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-white/10 p-4 text-base leading-7">{item}</div>
-                ))}
-              </div>
-            </GlassCard>
-
-            <GlassCard className="p-6">
-              <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Ending decision</div>
-              <div className="mt-5 space-y-3">
-                {pathway.decisions.map((decision) => (
-                  <button key={decision} className="w-full rounded-2xl border border-white/10 bg-white/10 p-4 text-left text-base hover:bg-emerald-400/15">
-                    {decision}
-                  </button>
-                ))}
-              </div>
-            </GlassCard>
-
-            <GlassCard className="p-6">
-              <div className="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Continue your journey</div>
-              <div className="mt-5 flex flex-wrap gap-3">
-                {pathway.next.map((nextKey) => (
-                  <PillButton key={nextKey} onClick={() => setActivePathway(nextKey)}>{pathwayData[nextKey].label}</PillButton>
-                ))}
-              </div>
-              <div className="mt-7 text-xs uppercase tracking-[0.3em] text-emerald-100/70">Feedback / comments</div>
-              <p className="mt-3 text-base leading-8 text-emerald-50/85">{pathway.reflection}</p>
-              <textarea
-                className="mt-4 h-28 w-full resize-none rounded-2xl border border-white/10 bg-black/25 p-4 text-white outline-none placeholder:text-white/45"
-                placeholder="Share feedback, comments, or questions..."
-              />
-            </GlassCard>
-          </div>
-        </div>
-      </section>
-    </EcosystemShell>
-  );
-}
-
-function PlaceholderDestination({
-  title,
-  description,
-  setScreen,
-  language,
-  children,
-  image = "/GrowArea.jpg",
-}: {
-  title: string;
-  description: string;
-  setScreen: (screen: Screen) => void;
-  language: Language;
-  children?: React.ReactNode;
-  image?: string;
-}) {
-  return (
-    <EcosystemShell screen="home" setScreen={setScreen} language={language} image={image}>
-      <GlassCard className="p-8 md:p-10">
-        <div className="text-xs uppercase tracking-[0.28em] text-emerald-100/70">Bronson Family Farm</div>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">{title}</h1>
-        <p className="mt-6 max-w-4xl text-lg leading-8 text-emerald-50/85">{description}</p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <PillButton onClick={() => setScreen("home")} active>Return to Entrance</PillButton>
-          <PillButton onClick={() => setScreen("marketplace")}>Go to Marketplace</PillButton>
-          <PillButton onClick={() => setScreen("roles")}>Open Role Pathways</PillButton>
-        </div>
-      </GlassCard>
-      {children && <div className="mt-6">{children}</div>}
-    </EcosystemShell>
-  );
-}
-
-function EventsScreen({ setScreen, language }: { setScreen: (screen: Screen) => void; language: Language }) {
-  return (
-    <PlaceholderDestination
-      title="Events & Experiences"
-      description="Events create visibility, trust, learning, marketplace movement, school/community connections, partner engagement, and community voice."
-      setScreen={setScreen}
-      language={language}
-    >
-      <div className="grid gap-5 md:grid-cols-3">
-        {[
-          "Growers Supply Market demonstrations",
-          "Youth workforce showcases",
-          "Nutrition, wellness, and food access education",
-          "Community feedback and partner engagement",
-          "Marketplace previews and seasonal product activity",
-          "School, family, and community destination connections",
-        ].map((item) => (
-          <GlassCard key={item} className="p-5 text-lg leading-8 text-white">{item}</GlassCard>
-        ))}
-      </div>
-    </PlaceholderDestination>
-  );
-}
-
-function NutritionScreen({ setScreen, language }: { setScreen: (screen: Screen) => void; language: Language }) {
-  return (
-    <PlaceholderDestination
-      title="Health & Nutrition"
-      description="Food grown through the ecosystem becomes wellness for families, schools, youth-serving destinations, marketplace customers, and the wider community."
-      setScreen={setScreen}
-      language={language}
-    >
-      <div className="grid gap-5 md:grid-cols-3">
-        {[
-          "Youth-grown food supports real destinations.",
-          "Marketplace access connects families to fresh local produce.",
-          "Schools and youth-serving destinations become part of the food system.",
-          "Recipes, education, and demonstrations help turn produce into healthier choices.",
-          "Growers and partners strengthen regional nutrition access.",
-          "Community wellness grows through food, knowledge, and relationship.",
-        ].map((item) => (
-          <GlassCard key={item} className="p-5 text-lg leading-8 text-white">{item}</GlassCard>
-        ))}
-      </div>
-    </PlaceholderDestination>
-  );
-}
-
-function MarketplaceScreen({ setScreen, language }: { setScreen: (screen: Screen) => void; language: Language }) {
-  return (
-    <PlaceholderDestination
-      title="Marketplace"
-      description="The marketplace connects growing, learning, purchasing, schools, community destinations, and local economic activity."
-      setScreen={setScreen}
-      language={language}
-      image="/ConnectFoodEcosystem_withimages.jpeg"
-    >
-      <div className="grid gap-5 md:grid-cols-4">
-        {[
-          "Youth-grown produce",
-          "Grower products",
-          "Bubble Babies™",
-          "Seasonal harvest",
-          "School destinations",
-          "Community events",
-          "Nutrition education",
-          "Local purchasing",
-        ].map((item) => (
-          <GlassCard key={item} className="p-5 text-lg leading-8 text-white">{item}</GlassCard>
-        ))}
-      </div>
-    </PlaceholderDestination>
-  );
-}
-
-function SupervisorScreen({ setScreen, language }: { setScreen: (screen: Screen) => void; language: Language }) {
-  const metrics: SupervisorMetric[] = [
-    { label: "Roster", value: "15 youth per aide", note: "Designed for mobile check-in and field accountability." },
-    { label: "Safety", value: "PPE + hydration", note: "No PPE, no work. Safety begins before assignment." },
-    { label: "Assessment", value: "Daily notes", note: "Tracks teamwork, communication, leadership, participation, and task completion." },
-    { label: "Progress", value: "Badges + reports", note: "Converts daily work into parent-ready and program-ready progress." },
-  ];
-
-  const checklist = [
-    "Mark youth present or absent",
-    "Confirm PPE, hydration, and weather readiness",
-    "Assign youth to field, harvest, compost, marketplace, or stewardship team",
-    "Record task completion and growth observations",
-    "Flag support needs before the next workday",
-    "Submit end-of-day summary for parent and program reporting",
-  ];
-
-  return (
-    <EcosystemShell screen="supervisor" setScreen={setScreen} language={language} image="/GrowArea2.jpg">
-      <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-        <GlassCard className="p-8 md:p-10">
-          <div className="text-xs uppercase tracking-[0.28em] text-emerald-100/70">Youth Workforce Operating Layer</div>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">Supervisor Mobile Tools</h1>
-          <p className="mt-6 text-lg leading-9 text-emerald-50/85">
-            This layer prepares aides and supervisors to manage youth in the field from a phone:
-            attendance, PPE, weather readiness, team assignment, daily observation, task completion,
-            badges, parent-ready notes, and final progress reporting.
-          </p>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {metrics.map((metric) => (
-              <GlassCard key={metric.label} className="p-5">
-                <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">{metric.label}</div>
-                <h3 className="mt-3 text-3xl font-semibold">{metric.value}</h3>
-                <p className="mt-3 text-base leading-7 text-emerald-50/80">{metric.note}</p>
-              </GlassCard>
             ))}
           </div>
-        </GlassCard>
+        </article>
 
-        <GlassCard className="p-8 md:p-10">
-          <div className="text-xs uppercase tracking-[0.28em] text-emerald-100/70">Daily phone checklist</div>
-          <div className="mt-6 space-y-3">
-            {checklist.map((item, index) => (
-              <label key={item} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/10 p-4">
-                <input type="checkbox" className="mt-1 h-5 w-5 accent-emerald-400" />
-                <span className="text-base leading-7 text-emerald-50/90">
-                  <strong>{index + 1}.</strong> {item}
-                </span>
-              </label>
+        <aside style={styles.sideCard}>
+          <div style={styles.miniLabel}>{t.strongest}</div>
+          <div style={styles.sideActions}>{current.actions.map((action) => <button key={action.label} style={styles.ghostBtn} onClick={() => performAction(action)}>{action.label}</button>)}</div>
+          <button style={styles.greenBtn} onClick={() => goto("decision")}>Ending Decision</button>
+          <button style={styles.ghostBtn} onClick={() => goto("feedback")}>{t.feedback}</button>
+          <div style={styles.miniLabel}>{t.gallery}</div>
+          <div style={styles.galleryGrid}>
+            {(["community", "training", "produce", "nutrition", "legacy"] as (keyof typeof IMAGES)[]).map((img) => (
+              <button key={img} style={styles.galleryBtn} onClick={() => setImageModal(IMAGES[img])}>
+                <img src={IMAGES[img]} alt={img} style={styles.galleryImg} onError={(e) => { (e.currentTarget as HTMLImageElement).src = IMAGES.entrance; }} />
+              </button>
             ))}
           </div>
-          <div className="mt-7 rounded-2xl border border-white/10 bg-black/25 p-5">
-            <div className="text-xs uppercase tracking-[0.24em] text-emerald-100/70">Supervisor reflection</div>
-            <p className="mt-3 text-base leading-8 text-emerald-50/85">What support does this youth need to succeed tomorrow?</p>
-            <textarea className="mt-4 h-28 w-full resize-none rounded-2xl border border-white/10 bg-black/25 p-4 text-white outline-none placeholder:text-white/45" placeholder="Add daily observation notes..." />
-          </div>
-        </GlassCard>
+        </aside>
       </section>
-    </EcosystemShell>
+
+      <footer style={styles.footerNav}>
+        <button style={styles.navBtn} onClick={prevScreen}>{t.back}</button>
+        <button style={styles.navBtn} onClick={() => goto("ecosystem")}>{t.return}</button>
+        <button style={styles.navBtn} onClick={nextScreen}>{t.next}</button>
+      </footer>
+
+      {imageModal && (
+        <div style={styles.modalBackdrop} onClick={() => setImageModal(null)}>
+          <div style={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
+            <button style={styles.closeBtn} onClick={() => setImageModal(null)}>×</button>
+            <img src={imageModal} alt="Farm gallery" style={styles.modalImage} onError={(e) => { (e.currentTarget as HTMLImageElement).src = IMAGES.entrance; }} />
+          </div>
+        </div>
+      )}
+    </main>
   );
 }
 
-function ParentPortalScreen({ setScreen, language }: { setScreen: (screen: Screen) => void; language: Language }) {
-  const cards = [
-    { title: "Attendance", text: "Families see whether youth participated and completed the day." },
-    { title: "Badges", text: "Progress is shown through responsibility, teamwork, safety, cultivation, leadership, and marketplace exposure." },
-    { title: "Supervisor Notes", text: "Short updates help families understand growth, needs, and next opportunities." },
-    { title: "Community Connection", text: "Parents can attend events, support marketplace activity, and submit feedback." },
-  ];
-
+function InfoCard({ label, text }: { label: string; text: string }) {
   return (
-    <EcosystemShell screen="parent" setScreen={setScreen} language={language} image="/GrowArea.jpg">
-      <GlassCard className="p-8 md:p-10">
-        <div className="text-xs uppercase tracking-[0.28em] text-emerald-100/70">Family confidence layer</div>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">Parent & Guardian Portal</h1>
-        <p className="mt-6 max-w-5xl text-lg leading-9 text-emerald-50/85">
-          Families need to see that youth are safe, learning, contributing, and growing. This portal connects youth work to attendance,
-          badges, supervisor notes, food destinations, events, and feedback.
-        </p>
-      </GlassCard>
-      <div className="mt-6 grid gap-5 md:grid-cols-4">
-        {cards.map((card) => (
-          <GlassCard key={card.title} className="p-6">
-            <h3 className="text-2xl font-semibold">{card.title}</h3>
-            <p className="mt-3 text-base leading-8 text-emerald-50/82">{card.text}</p>
-          </GlassCard>
-        ))}
-      </div>
-      <GlassCard className="mt-6 p-6 md:p-8">
-        <div className="text-xs uppercase tracking-[0.28em] text-emerald-100/70">Family feedback</div>
-        <p className="mt-3 text-lg leading-8 text-emerald-50/85">What growth have you noticed in your youth?</p>
-        <textarea className="mt-4 h-32 w-full resize-none rounded-2xl border border-white/10 bg-black/25 p-4 text-white outline-none placeholder:text-white/45" placeholder="Parent / guardian comment..." />
-      </GlassCard>
-    </EcosystemShell>
+    <div style={styles.infoCard}>
+      <div style={styles.infoLabel}>{label}</div>
+      <div style={styles.infoText}>{text}</div>
+    </div>
   );
 }
 
-function LaunchReadinessScreen({ setScreen, language }: { setScreen: (screen: Screen) => void; language: Language }) {
-  const rows = [
-    ["Protected master App.tsx", "Use this file as the replacement foundation. Do not redesign."],
-    ["Role pathways", "Guest, Customer, Youth, Grower, Marketplace, Partner, Supervisor, Parent."],
-    ["Youth Workforce", "Daily rhythm, motivation, food destinations, supervisor tracking, parent connection."],
-    ["Supervisor training", "Phone-first attendance, PPE, observations, daily assessment, notes."],
-    ["Parent connection", "Attendance, badges, supervisor updates, event and feedback connection."],
-    ["Marketplace", "Youth-grown food, grower products, Bubble Babies™, schools, events, community destinations."],
-    ["Next implementation", "Connect form fields to database, auth, reports, and real marketplace links."],
-  ];
+const styles: Record<string, CSSProperties> = {
+  shell: { minHeight: "100vh", color: "#fff", fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial", position: "relative", overflowX: "hidden", padding: "20px clamp(16px, 3vw, 44px) 28px" },
+  bg: { position: "fixed", inset: 0, background: "radial-gradient(circle at top left, rgba(185,138,72,.34), transparent 32%), radial-gradient(circle at top right, rgba(110,139,76,.30), transparent 30%), linear-gradient(135deg, #112016 0%, #1e3a25 40%, #4d3a1f 100%)", zIndex: -2 },
+  topbar: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 14 },
+  brandButton: { display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.18)", color: "#fff", borderRadius: 18, padding: "10px 14px", cursor: "pointer" },
+  brandMark: { width: 46, height: 46, borderRadius: 14, display: "grid", placeItems: "center", background: "rgba(255,255,255,.18)", fontWeight: 900 },
+  brandTiny: { display: "block", fontSize: 11, letterSpacing: ".12em", opacity: .78, textAlign: "left" },
+  brandTitle: { display: "block", fontSize: 16, fontWeight: 800, textAlign: "left" },
+  topControls: { display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" },
+  select: { borderRadius: 999, padding: "10px 14px", border: "1px solid rgba(255,255,255,.22)", background: "rgba(255,255,255,.92)", color: "#162314", fontWeight: 700 },
+  smallBtn: { borderRadius: 999, padding: "10px 14px", border: "1px solid rgba(255,255,255,.22)", background: "rgba(255,255,255,.12)", color: "#fff", fontWeight: 800, cursor: "pointer" },
+  progressWrap: { height: 7, background: "rgba(255,255,255,.12)", borderRadius: 999, overflow: "hidden", marginBottom: 20 },
+  progressBar: { height: "100%", background: "rgba(255,255,255,.72)", borderRadius: 999, transition: "width .4s ease" },
+  heroGrid: { display: "grid", gridTemplateColumns: "minmax(0, 1.03fr) minmax(320px, .97fr)", gap: 22, alignItems: "stretch" },
+  heroText: { minHeight: 430, borderRadius: 30, padding: "clamp(24px, 4vw, 56px)", background: "linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.07))", border: "1px solid rgba(255,255,255,.18)", boxShadow: "0 24px 80px rgba(0,0,0,.24)", display: "flex", flexDirection: "column", justifyContent: "center" },
+  eyebrow: { fontSize: 13, letterSpacing: ".14em", textTransform: "uppercase", fontWeight: 900, color: "rgba(255,255,255,.76)", marginBottom: 14 },
+  title: { fontSize: "clamp(34px, 6vw, 72px)", lineHeight: .95, margin: 0, maxWidth: 900, fontWeight: 900, letterSpacing: "-.04em" },
+  subtitle: { fontSize: "clamp(17px, 2vw, 22px)", lineHeight: 1.55, color: "rgba(255,255,255,.84)", maxWidth: 780, marginTop: 18 },
+  actionRow: { display: "flex", flexWrap: "wrap", gap: 12, marginTop: 22 },
+  whiteBtn: { border: 0, borderRadius: 999, padding: "13px 18px", background: "#fff", color: "#18301f", fontWeight: 900, cursor: "pointer", boxShadow: "0 10px 24px rgba(0,0,0,.16)" },
+  imagePanel: { minHeight: 430, borderRadius: 30, overflow: "hidden", position: "relative", border: "1px solid rgba(255,255,255,.18)", boxShadow: "0 24px 80px rgba(0,0,0,.26)" },
+  heroImage: { width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 },
+  imageFade: { position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.36))" },
+  imageCaption: { position: "absolute", left: 18, right: 18, bottom: 18, padding: "12px 14px", borderRadius: 18, background: "rgba(0,0,0,.35)", backdropFilter: "blur(10px)", fontWeight: 800 },
+  rolesSection: { marginTop: 22, borderRadius: 30, padding: 22, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.18)" },
+  sectionTitle: { fontSize: 24, fontWeight: 900, marginBottom: 16 },
+  roleGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 },
+  roleTile: { minHeight: 220, textAlign: "left", color: "#fff", borderRadius: 24, border: "1px solid rgba(255,255,255,.18)", backgroundSize: "cover", backgroundPosition: "center", padding: 20, cursor: "pointer", display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" },
+  roleTitle: { fontSize: 24, fontWeight: 900, marginBottom: 8 },
+  roleText: { lineHeight: 1.55, color: "rgba(255,255,255,.88)", marginBottom: 12 },
+  chips: { display: "flex", flexWrap: "wrap", gap: 8 },
+  chip: { padding: "7px 10px", borderRadius: 999, background: "rgba(255,255,255,.15)", border: "1px solid rgba(255,255,255,.18)", fontSize: 12, fontWeight: 800 },
+  contentGrid: { display: "grid", gridTemplateColumns: "minmax(0, 1fr) 330px", gap: 22, marginTop: 22, alignItems: "start" },
+  cardLarge: { borderRadius: 30, padding: 22, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.18)" },
+  threeCol: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 18 },
+  infoCard: { borderRadius: 22, padding: 18, background: "rgba(255,255,255,.11)", border: "1px solid rgba(255,255,255,.14)" },
+  infoLabel: { fontSize: 12, letterSpacing: ".12em", textTransform: "uppercase", opacity: .75, fontWeight: 900, marginBottom: 10 },
+  infoText: { lineHeight: 1.6, color: "rgba(255,255,255,.88)", fontWeight: 650 },
+  detailGrid: { display: "grid", gap: 12 },
+  detailBlock: { display: "grid", gridTemplateColumns: "38px 1fr", gap: 12, borderRadius: 22, padding: 16, background: "rgba(0,0,0,.14)", border: "1px solid rgba(255,255,255,.12)" },
+  detailIcon: { width: 38, height: 38, borderRadius: 14, display: "grid", placeItems: "center", background: "rgba(255,255,255,.13)", fontWeight: 900 },
+  detailTitle: { margin: 0, fontSize: 18 },
+  detailText: { margin: "6px 0 0", lineHeight: 1.6, color: "rgba(255,255,255,.82)" },
+  sideCard: { borderRadius: 30, padding: 18, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.18)", position: "sticky", top: 16 },
+  miniLabel: { margin: "4px 0 12px", fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", opacity: .74, fontWeight: 900 },
+  sideActions: { display: "grid", gap: 10, marginBottom: 12 },
+  ghostBtn: { width: "100%", borderRadius: 999, padding: "12px 14px", background: "rgba(255,255,255,.10)", color: "#fff", border: "1px solid rgba(255,255,255,.18)", fontWeight: 850, cursor: "pointer" },
+  greenBtn: { width: "100%", borderRadius: 999, padding: "12px 14px", background: "rgba(210,236,161,.90)", color: "#18301f", border: 0, fontWeight: 950, cursor: "pointer", marginBottom: 10 },
+  galleryGrid: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 },
+  galleryBtn: { border: 0, padding: 0, borderRadius: 14, overflow: "hidden", background: "transparent", cursor: "pointer", aspectRatio: "1" },
+  galleryImg: { width: "100%", height: "100%", objectFit: "cover", display: "block" },
+  footerNav: { display: "flex", justifyContent: "space-between", gap: 12, marginTop: 22 },
+  navBtn: { borderRadius: 999, padding: "12px 18px", background: "rgba(255,255,255,.12)", color: "#fff", border: "1px solid rgba(255,255,255,.18)", fontWeight: 900, cursor: "pointer" },
+  modalBackdrop: { position: "fixed", inset: 0, background: "rgba(0,0,0,.72)", display: "grid", placeItems: "center", padding: 20, zIndex: 50 },
+  modalPanel: { width: "min(980px, 96vw)", height: "min(720px, 88vh)", borderRadius: 28, overflow: "hidden", position: "relative", background: "#111", boxShadow: "0 24px 80px rgba(0,0,0,.45)" },
+  modalImage: { width: "100%", height: "100%", objectFit: "contain", background: "#111" },
+  closeBtn: { position: "absolute", right: 12, top: 12, zIndex: 2, width: 42, height: 42, borderRadius: 999, border: 0, background: "rgba(255,255,255,.92)", color: "#162314", fontSize: 28, cursor: "pointer" },
+};
 
-  return (
-    <EcosystemShell screen="launch" setScreen={setScreen} language={language} image="/GrowArea.jpg">
-      <GlassCard className="p-8 md:p-10">
-        <div className="text-xs uppercase tracking-[0.28em] text-emerald-100/70">Launch control</div>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">Launch Readiness</h1>
-        <p className="mt-6 max-w-5xl text-lg leading-9 text-emerald-50/85">
-          This screen protects the launch goal: preserve the design, complete the pathways, prepare supervisors, connect parents,
-          and keep the youth workforce program tied to food production, marketplace activity, schools, and community destinations.
-        </p>
-      </GlassCard>
-      <div className="mt-6 space-y-4">
-        {rows.map(([title, description]) => (
-          <GlassCard key={title} className="grid gap-3 p-5 md:grid-cols-[0.35fr_0.65fr]">
-            <div className="text-2xl font-semibold">{title}</div>
-            <div className="text-base leading-8 text-emerald-50/85">{description}</div>
-          </GlassCard>
-        ))}
-      </div>
-    </EcosystemShell>
-  );
-}
-
-export default function App() {
-  const [screen, setScreen] = useState<Screen>("story");
-  const [language, setLanguage] = useState<Language>("English");
-
-  if (screen === "home" || screen === "story") {
-    return <HomeStoryScreen language={language} setLanguage={setLanguage} setScreen={setScreen} />;
-  }
-
-  if (screen === "roles") return <RolePathwaysScreen setScreen={setScreen} language={language} />;
-  if (screen === "events") return <EventsScreen setScreen={setScreen} language={language} />;
-  if (screen === "nutrition") return <NutritionScreen setScreen={setScreen} language={language} />;
-  if (screen === "marketplace") return <MarketplaceScreen setScreen={setScreen} language={language} />;
-  if (screen === "supervisor") return <SupervisorScreen setScreen={setScreen} language={language} />;
-  if (screen === "parent") return <ParentPortalScreen setScreen={setScreen} language={language} />;
-  if (screen === "launch") return <LaunchReadinessScreen setScreen={setScreen} language={language} />;
-
-  return null;
-}
+export default App;
